@@ -21,30 +21,9 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
 #                                                                             #
 ###############################################################################
-{
-    "name" : "Prestashop e-commerce",
-    "version" : "1.0",
-    "depends" : ["base",
-                 "product",
-                 "product_m2mcategories",
-                 'delivery',
-                 "base_sale_multichannels",
-                 "product_images_olbs",
-                ],
-    "author" : "PrestashopERPconnect Core Editors",
-    "description": """Prestashop E-commerce management
-""",
-    'images': [
-    ],
-    "website" : "https://launchpad.net/prestashoperpconnect",
-    "category" : "Generic Modules",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-                    ],
-    "active": False,
-    "installable": True,
 
-}
+import external_referential
+import product
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

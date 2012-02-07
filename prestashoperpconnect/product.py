@@ -2,7 +2,6 @@
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
-#   Copyright (C) 2012 Camptocamp                                             #
 #   Copyright (C) 2012 Akretion                                               #
 #   Author :                                                                  #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
@@ -21,30 +20,10 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
 #                                                                             #
 ###############################################################################
-{
-    "name" : "Prestashop e-commerce",
-    "version" : "1.0",
-    "depends" : ["base",
-                 "product",
-                 "product_m2mcategories",
-                 'delivery',
-                 "base_sale_multichannels",
-                 "product_images_olbs",
-                ],
-    "author" : "PrestashopERPconnect Core Editors",
-    "description": """Prestashop E-commerce management
-""",
-    'images': [
-    ],
-    "website" : "https://launchpad.net/prestashoperpconnect",
-    "category" : "Generic Modules",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-                    ],
-    "active": False,
-    "installable": True,
 
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from osv import osv, fields
+import netsvc
+from prestashop_osv import prestashop_osv
 
+class product_product(prestashop_osv):
+    _inherit='product.product'

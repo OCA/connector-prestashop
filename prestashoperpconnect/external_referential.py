@@ -2,7 +2,6 @@
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
-#   Copyright (C) 2012 Camptocamp                                             #
 #   Copyright (C) 2012 Akretion                                               #
 #   Author :                                                                  #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
@@ -21,30 +20,31 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
 #                                                                             #
 ###############################################################################
-{
-    "name" : "Prestashop e-commerce",
-    "version" : "1.0",
-    "depends" : ["base",
-                 "product",
-                 "product_m2mcategories",
-                 'delivery',
-                 "base_sale_multichannels",
-                 "product_images_olbs",
-                ],
-    "author" : "PrestashopERPconnect Core Editors",
-    "description": """Prestashop E-commerce management
-""",
-    'images': [
-    ],
-    "website" : "https://launchpad.net/prestashoperpconnect",
-    "category" : "Generic Modules",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-                    ],
-    "active": False,
-    "installable": True,
 
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from osv import osv, fields
+import netsvc
+from tools.translate import _
+from base_external_referentials.decorator import only_for_referential
+from prestapyt import PrestaShopWebServiceError, PrestaShopWebService
 
+class external_referential(osv.osv):
+    _inherit = "external.referential"
+    
+    @only_for_referential('prestashop')
+    def external_connection(self, cr, uid, id, DEBUG=False, context=None):
+        logger = netsvc.Logger()
+        if isinstance(id, list):
+            id=id[0]
+        referential = self.browse(cr, uid, id, context=context)
+        prestashop = PrestaShopWebService('%s/api'%referential.location, referential.apipass)
+        try:        
+            prestashop.get('')
+        except Exception, e:
+            raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location & password."))
+        return prestashop
+
+    @only_for_referential('prestashop')
+    def import_referential(self, cr, uid, ids, context=None):
+        print 'I will import the referential'
+        #TODO create shop (what we should do for version older than 1.5)
+        return True
