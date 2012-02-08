@@ -38,6 +38,7 @@
     ],
     "website" : "https://launchpad.net/prestashoperpconnect",
     "category" : "Generic Modules",
+    "complexity" : "expert",
     "init_xml" : [],
     "demo_xml" : [],
     'update_xml': [ 
