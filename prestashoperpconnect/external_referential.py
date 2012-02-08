@@ -25,7 +25,7 @@ from osv import osv, fields
 import netsvc
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
-from prestapyt import PrestaShopWebServiceError, PrestaShopWebService
+from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
 
 class external_referential(osv.osv):
     _inherit = "external.referential"
@@ -36,11 +36,11 @@ class external_referential(osv.osv):
         if isinstance(id, list):
             id=id[0]
         referential = self.browse(cr, uid, id, context=context)
-        prestashop = PrestaShopWebService('%s/api'%referential.location, referential.apipass, parse_type="dict")
+        prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass)
         try:        
             prestashop.head('')
         except Exception, e:
-            raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location & password."))
+            raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location & password.\n %s"%e))
         return prestashop
 
     @only_for_referential('prestashop')
