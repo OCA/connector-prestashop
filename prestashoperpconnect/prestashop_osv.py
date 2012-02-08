@@ -25,6 +25,7 @@ from osv import osv, fields
 import netsvc
 from base_external_referentials.decorator import only_for_referential
 
+
 class prestashop_osv(osv.osv):
     _register = False
 
@@ -33,7 +34,7 @@ class prestashop_osv(osv.osv):
         if not resource_filter:
             start = 0
         else:
-            start = sum(resource_filter['limit'].split(','))
+            start = sum([int(x) for x in resource_filter['limit'].split(',')])
         resource_filter = {
             'limit': "%s,%s"%(start,step),
         }
@@ -48,11 +49,10 @@ class prestashop_osv(osv.osv):
         print "Import data for %s with filter %s"%(ext_resource, resource_filter)
         ext_ids = conn.get(ext_resource, options = resource_filter)
         print 'ext_ids', ext_ids
-        key = ext_ids[ext_resource].keys()[0]
-        ext_ids = ext_ids[ext_resource][key]
-        import pdb; pdb.set_trace()
-        return ext_ids
-
+        if isinstance(ext_ids[ext_resource], dict):
+            key = ext_ids[ext_resource].keys()[0]
+            return ext_ids[ext_resource][key]
+        return []
 
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, ref_called_from, mapping, referential_id, ext_id, context):
@@ -61,4 +61,9 @@ class prestashop_osv(osv.osv):
         print "Import data for %s with id %s"%(ext_resource, ext_id)
         data = conn.get(ext_resource, ext_id)
         print data
+        key = data.keys()[0]
+        data = data[key]
         return data
+
+
+
