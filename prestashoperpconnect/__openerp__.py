@@ -24,12 +24,12 @@
 {
     "name" : "Prestashop e-commerce",
     "version" : "1.0",
-    "depends" : ["base",
+    "depends" : [
                  "product",
-                 "product_m2mcategories",
-                 'delivery',
+#                 "product_m2mcategories",
+#                 'delivery',
                  "base_sale_multichannels",
-                 "product_images_olbs",
+#                 "product_images_olbs",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """Prestashop E-commerce management
@@ -40,8 +40,12 @@
     "category" : "Generic Modules",
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : [
-                    ],
+    'update_xml': [ 
+        'external_referential_view.xml',
+        'settings/external.referential.type.csv',
+        'settings/1.5.0.0/external.referential.version.csv',
+            
+    ],
     "active": False,
     "installable": True,
 

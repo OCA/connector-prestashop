@@ -36,9 +36,9 @@ class external_referential(osv.osv):
         if isinstance(id, list):
             id=id[0]
         referential = self.browse(cr, uid, id, context=context)
-        prestashop = PrestaShopWebService('%s/api'%referential.location, referential.apipass)
+        prestashop = PrestaShopWebService('%s/api'%referential.location, referential.apipass, parse_type="dict")
         try:        
-            prestashop.get('')
+            prestashop.head('')
         except Exception, e:
             raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location & password."))
         return prestashop

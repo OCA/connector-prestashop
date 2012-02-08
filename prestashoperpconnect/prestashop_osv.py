@@ -27,8 +27,38 @@ from base_external_referentials.decorator import only_for_referential
 
 class prestashop_osv(osv.osv):
     _register = False
-    @only_for_referential('prestashop')
-    def _get_external_resources(self, cr, uid, ref_called_from, referential_id, filter, context=None):
-        print "I should fetch the data from prestashop here"
 
-        return []
+    @only_for_referential('prestashop')
+    def _get_filter(self, cr, uid, ref_called_from, referential_id, resource_filter, step, context=None):
+        if not resource_filter:
+            start = 0
+        else:
+            start = sum(resource_filter['limit'].split(','))
+        resource_filter = {
+            'limit': "%s,%s"%(start,step),
+        }
+        print 'resource_filter', resource_filter
+        return resource_filter
+
+
+    @only_for_referential('prestashop')
+    def _get_external_ids(self, cr, uid, ref_called_from, referential_id, resource_filter, mapping, context=None):
+        conn = context['conn']
+        ext_resource = mapping[self._name]['external_resource_name']
+        print "Import data for %s with filter %s"%(ext_resource, resource_filter)
+        ext_ids = conn.get(ext_resource, options = resource_filter)
+        print 'ext_ids', ext_ids
+        key = ext_ids[ext_resource].keys()[0]
+        ext_ids = ext_ids[ext_resource][key]
+        import pdb; pdb.set_trace()
+        return ext_ids
+
+
+    @only_for_referential('prestashop')
+    def _get_external_resources(self, cr, uid, ref_called_from, mapping, referential_id, ext_id, context):
+        conn = context['conn']
+        ext_resource = mapping[self._name]['external_resource_name']
+        print "Import data for %s with id %s"%(ext_resource, ext_id)
+        data = conn.get(ext_resource, ext_id)
+        print data
+        return data
