@@ -40,7 +40,7 @@ class external_referential(osv.osv):
         try:        
             prestashop.head('')
         except Exception, e:
-            raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck location & password.\n %s"%e))
+            raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck url & password.\n %s"%e))
         return prestashop
 
     @only_for_referential('prestashop')
