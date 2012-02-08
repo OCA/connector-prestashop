@@ -44,6 +44,7 @@
     'update_xml': [ 
         'external_referential_view.xml',
         'settings/external.referential.type.csv',
+        'settings/1.5.0.0/external.referential.version.csv',
         'settings/1.5.0.0/res.partner.address/external.mappinglines.template.csv',
         'settings/1.5.0.0/res.partner/external.mappinglines.template.csv',
         'settings/1.5.0.0/product.product/external.mappinglines.template.csv',
