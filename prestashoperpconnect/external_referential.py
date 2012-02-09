@@ -56,42 +56,99 @@ class external_referential(prestashop_osv):
         #referential_id = context.get('referential_id', False)
         if not referential_id: raise osv.except_osv(_('Error :'), 'Hara kiri missing referential')
         _logger.info(_("Starting synchro of languages between OERP and PS"))
-        # Loop on OERP res.lang
-        lang_obj = self.pool.get('res.lang')
-        oe_lang_ids = lang_obj.search(cr, uid, [], context=context)
-        oe_langs = lang_obj.read(cr, uid, oe_lang_ids, ['code', 'name'], context=context)
+        # Get all OERP res.lang
+        country_obj = self.pool.get('res.lang')
+        oe_lang_ids = country_obj.search(cr, uid, [], context=context)
+        oe_langs = country_obj.read(cr, uid, oe_lang_ids, ['code', 'name'], context=context)
         print "oe_langs=", oe_langs
         # Get the language IDS from PS
-        mapping = {lang_obj._name : lang_obj._get_mapping(cr, uid, referential_id, context=context)}
-        res_ps_lang = lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
+        mapping = {country_obj._name : country_obj._get_mapping(cr, uid, referential_id, context=context)}
+        res_ps_lang = country_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
         print "res_ps_lang=", res_ps_lang
-
+        # Hack to put the languages IDs from PS in a clean list
+        # (waiting for a fix in prestapyth)
         ps_lang_list = []
         for ps_lang in res_ps_lang:
             ps_lang_list.append(ps_lang['attrs']['id'])
         print "ps_lang_list =", ps_lang_list
+        # Loop on all PS languages
         for ps_lang_id in ps_lang_list:
-            # Do nothing for the IDs already mapped            pour tous les IDs déjà mappés, je fais rien... (fonction _extid_to_existing_oeid - False si rien)
-            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_id=ps_lang_id, referential_id=referential_id, context=context)
+            # Check if the PS language is already mapped to an OE language
+            oe_lang_id = country_obj.extid_to_existing_oeid(cr, uid, external_id=ps_lang_id, referential_id=referential_id, context=context)
             print "oe_lang_id=", oe_lang_id
             if oe_lang_id:
+                # Do nothing for the PS IDs are already mapped
                 _logger.info(_("PS lang ID %s is already mapped to OERP lang ID %s") %(ps_lang_id, oe_lang_id))
             else:
-                # Now I try to match between OERP and PS
+                # PS IDs not mapped => I try to match between the PS lang and the OE lang
                 # I read field in PS
-                ps_lang_dict = lang_obj._get_external_resources(cr, uid, ref_called_from=None, mapping=mapping, referential_id=referential_id, ext_id=ps_lang_id, context=context)
+                ps_lang_dict = country_obj._get_external_resources(cr, uid, ref_called_from=None, mapping=mapping, referential_id=referential_id, ext_id=ps_lang_id, context=context)
                 print "ps_lang_dict=", ps_lang_dict
-                for oe_lang in oe_langs: # Loop on OE langs
-                    if len(oe_lang['code']) >= 2 and len(ps_lang_dict[0]['language_code']) >=2:
-                        if oe_lang['code'][0:2] == ps_lang_dict[0]['language_code'][0:2]:
+                mapping_found = False
+                # Loop on OE langs
+                for oe_lang in oe_langs:
+                    # Search for a match
+                    if len(oe_lang['code']) >= 2 and len(ps_lang_dict[0]['language_code']) >=2 and oe_lang['code'][0:2].lower() == ps_lang_dict[0]['language_code'][0:2].lower():
                         # it matches, so I write the external ID
-                            lang_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_lang['id'], external_id=ps_lang_id, referential_id=referential_id, context=context)
-                            _logger.info(_("Mapping PS lang '%s' (%s) to OERP lang '%s' (%s)") %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code'], oe_lang['name'], oe_lang['code']))
-                    else:
-                        _logger.warning(_("PS lang '%s' (%s) was not mapped to any OERP lang") %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code']))
+                        country_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_lang['id'], external_id=ps_lang_id, referential_id=referential_id, context=context)
+                        _logger.info(_("Mapping PS lang '%s' (%s) to OERP lang '%s' (%s)") %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code'], oe_lang['name'], oe_lang['code']))
+                        mapping_found = True
+                        break
+                if not mapping_found:
+                    # if it doesn't match, I just print a warning
+                    _logger.warning(_("PS lang '%s' (%s) was not mapped to any OERP lang") %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code']))
         _logger.info(_("Synchro of languages between OERP and PS successfull"))
+
+
+        _logger.info(_("Starting synchro of countries between OERP and PS"))
+        # Get all OERP res.country
+        country_obj = self.pool.get('res.country')
+        oe_country_ids = country_obj.search(cr, uid, [], context=context)
+        oe_countries = country_obj.read(cr, uid, oe_country_ids, ['code', 'name'], context=context)
+        print "oe_coutrnies=", oe_countries
+        # Get the country IDS from PS
+        mapping = {country_obj._name : country_obj._get_mapping(cr, uid, referential_id, context=context)}
+        ps_country_list = country_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
+        print "ps_country_list=", ps_country_list
+        # (waiting for a fix in prestapyth)
+#        ps_country_list = []
+#        for ps_lang in res_ps_lang:
+#            ps_lang_list.append(ps_lang['attrs']['id'])
+#        print "ps_lang_list =", ps_lang_list
+        # Loop on all PS countries
+        for ps_country_id in ps_country_list:
+            # Check if the PS country is already mapped to an OE country
+            oe_country_id = country_obj.extid_to_existing_oeid(cr, uid, external_id=ps_country_id, referential_id=referential_id, context=context)
+            print "oe_c_id=", oe_country_id
+            if oe_country_id:
+                # Do nothing for the PS IDs are already mapped
+                _logger.info(_("PS country ID %s is already mapped to OERP country ID %s") %(ps_country_id, oe_country_id))
+            else:
+                # PS IDs not mapped => I try to match between the PS country and the OE country
+                # I read field in PS
+                ps_country_dict = country_obj._get_external_resources(cr, uid, ref_called_from=None, mapping=mapping, referential_id=referential_id, ext_id=ps_country_id, context=context)
+                print "ps_country_dict=", ps_country_dict
+                mapping_found = False
+                # Loop on OE countries
+                for oe_country in oe_countries:
+                    # Search for a match
+                    if len(oe_country['code']) >= 2 and len(ps_country_dict[0]['iso_code']) >=2 and oe_country['code'][0:2].lower() == ps_country_dict[0]['iso_code'][0:2].lower():
+                        # it matches, so I write the external ID
+                        country_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_country['id'], external_id=ps_country_id, referential_id=referential_id, context=context)
+                        _logger.info(_("Mapping PS country '%s' (%s) to OERP country '%s' (%s)") %(ps_country_dict[0]['name'], ps_country_dict[0]['iso_code'], oe_country['name'], oe_country['code']))
+                        mapping_found = True
+                        break
+                if not mapping_found:
+                    # if it doesn't match, I just print a warning
+                    _logger.warning(_("PS country '%s' (%s) was not mapped to any OERP country") %(ps_country_dict[0]['name'], ps_country_dict[0]['iso_code']))
+        _logger.info(_("Synchro of countries between OERP and PS successfull"))
+
+
+
         return {}
 
 class res_lang(prestashop_osv):
     _inherit='res.lang'
 
+class res_country(prestashop_osv):
+    _inherit='res.country'
