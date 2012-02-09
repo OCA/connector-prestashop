@@ -79,9 +79,10 @@ class prestashop_osv(osv.osv):
 
         #TODO Improve when the lang will be mapped
         lang_ids = lang_resource.keys()
-        main_lang_id = lang_ids.pop()
-        main_data.update(lang_resource[main_lang_id])
-        main_data.update({'ext_lang_id': main_lang_id})
+        if lang_ids:
+            main_lang_id = lang_ids.pop()
+            main_data.update(lang_resource[main_lang_id])
+            main_data.update({'ext_lang_id': main_lang_id})
         result = [main_data]
         for lang_id in lang_ids:            
             result.append(lang_resource[lang_id])
@@ -90,9 +91,10 @@ class prestashop_osv(osv.osv):
     @only_for_referential('prestashop')
     def _record_one_external_resource(self, cr, uid, row, referential_id, defaults=None, context=None, mapping=None):
         #TODO map lang
-        ext_lang_id = row['ext_lang_id']
+        ext_lang_id = row.get('ext_lang_id', False)
         lang_dict = {'2' : 'fr_FR', '1' : 'en_US'}
-        context['lang'] = lang_dict[ext_lang_id]
+        if ext_lang_id:
+            context['lang'] = lang_dict[ext_lang_id]
         print 'context', context
         return super(prestashop_osv, self)._record_one_external_resource(cr, uid, row, referential_id, defaults=defaults, context=context, mapping=mapping)
 
