@@ -49,6 +49,7 @@
         'settings/1.5.0.0/res.partner.address/external.mappinglines.template.csv',
         'settings/1.5.0.0/res.partner/external.mappinglines.template.csv',
         'settings/1.5.0.0/product.product/external.mappinglines.template.csv',
+        'settings/1.5.0.0/sale.order/external.mappinglines.template.csv',
             
     ],
     "active": False,
