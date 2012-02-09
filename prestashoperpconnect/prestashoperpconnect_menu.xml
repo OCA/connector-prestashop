@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  prestashoperpconnect for OpenERP
+  Copyright (C) 2012 Akretion Benoît Guillot <benoit.guillot@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data>
+
+        <menuitem id="menu_shoperp" name="PrestashopERPconnect" icon="terp-sale" sequence="0"/>
+		<menuitem id="menu_shoperp_core" name="Core Settings" parent="menu_shoperp" />
+		<menuitem id="menu_shoperp_core_instances" name="Prestashop Instances" parent="menu_shoperp_core" action="act_shoperp_instances_form" />
+		<menuitem id="menu_shoperp_core_shops" name="Prestashop Shops" parent="menu_shoperp_core" action="act_shoperp_shop_form" />
+    </data>
+</openerp>
