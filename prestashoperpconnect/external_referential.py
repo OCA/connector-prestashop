@@ -49,6 +49,7 @@ class external_referential(prestashop_osv):
         if context is None:
             context = {}
         self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
+        self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
         _logger.info(_("Starting synchro of countries between OERP and PS"))
         # Get all OERP res.country
         country_obj = self.pool.get('res.country')
@@ -95,6 +96,9 @@ class external_referential(prestashop_osv):
 
 class external_shop_group(prestashop_osv):
     _inherit='external.shop.group'
+
+class sale_shop(prestashop_osv):
+    _inherit='sale.shop'
 
 class res_lang(prestashop_osv):
     _inherit='res.lang'
