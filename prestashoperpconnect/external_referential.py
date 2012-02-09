@@ -105,3 +105,6 @@ class res_lang(prestashop_osv):
 
 class res_country(prestashop_osv):
     _inherit='res.country'
+
+class sale_order(prestashop_osv):
+    _inherit='sale.order'
