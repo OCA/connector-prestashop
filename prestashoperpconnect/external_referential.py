@@ -26,8 +26,9 @@ import netsvc
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
 from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
+from prestashop_osv import prestashop_osv
 
-class external_referential(osv.osv):
+class external_referential(prestashop_osv):
     _inherit = "external.referential"
     
     @only_for_referential('prestashop')
