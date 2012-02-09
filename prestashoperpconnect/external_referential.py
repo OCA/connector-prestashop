@@ -63,26 +63,34 @@ class external_referential(prestashop_osv):
         print "oe_langs=", oe_langs
         # Get the language IDS from PS
         mapping = {lang_obj._name : lang_obj._get_mapping(cr, uid, referential_id, context=context)}
-        print "get_external=", lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
-        for ps_lang_id in lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context):
+        res_ps_lang = lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
+        print "res_ps_lang=", res_ps_lang
+
+        ps_lang_list = []
+        for ps_lang in res_ps_lang:
+            ps_lang_list.append(ps_lang['attrs']['id'])
+        print "ps_lang_list =", ps_lang_list
+        for ps_lang_id in ps_lang_list:
             # Do nothing for the IDs already mapped            pour tous les IDs déjà mappés, je fais rien... (fonction _extid_to_existing_oeid - False si rien)
-            oe_lang_id = self.extid_to_existing_oeid(cr, uid, ps_lang_id, referential_id, context=context)
+            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_id=ps_lang_id, referential_id=referential_id, context=context)
+            print "oe_lang_id=", oe_lang_id
             if oe_lang_id:
                 _logger.info(_("PS lang ID %s is already mapped to OERP lang ID %s") %(ps_lang_id, oe_lang_id))
             else:
                 # Now I try to match between OERP and PS
                 # I read field in PS
-                ps_lang_dict = lang_obj.get_external_ressource(cr, uid, referential_id, ext_id=ps_lang_id, context=context)
+                ps_lang_dict = lang_obj._get_external_resources(cr, uid, ref_called_from=None, mapping=mapping, referential_id=referential_id, ext_id=ps_lang_id, context=context)
+                print "ps_lang_dict=", ps_lang_dict
                 for oe_lang in oe_langs: # Loop on OE langs
-                    if len(oe_lang['code']) >= 2 and len(ps_lang_dict['language_code']) >=2:
-                        if oe_lang['code'][0:2] == ps_lang_dict['language_code'][0:2]:
+                    if len(oe_lang['code']) >= 2 and len(ps_lang_dict[0]['language_code']) >=2:
+                        if oe_lang['code'][0:2] == ps_lang_dict[0]['language_code'][0:2]:
                         # it matches, so I write the external ID
-                            lang_obj.create_external_id(cr, uid, existing_rec_id=oe_lang['id'], external_id=ps_lang_id, referential_id=referential_id, context=context)
-                            _logger.info(_("Mapping PS lang '%s' (%s) to OERP lang '%s' (%s)") %(ps_lang_dict['name'], ps_lang_dict['language_code'], oe_lang['name'], oe_lang['code']))
+                            lang_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_lang['id'], external_id=ps_lang_id, referential_id=referential_id, context=context)
+                            _logger.info(_("Mapping PS lang '%s' (%s) to OERP lang '%s' (%s)") %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code'], oe_lang['name'], oe_lang['code']))
                     else:
-                        _logger.warning(_("PS lang '%s' (%s) was not mapped to any OERP lang") %(ps_lang_dict['name'], ps_lang_dict['language_code']))
+                        _logger.warning(_("PS lang '%s' (%s) was not mapped to any OERP lang") %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code']))
         _logger.info(_("Synchro of languages between OERP and PS successfull"))
-        return True
+        return {}
 
 class res_lang(prestashop_osv):
     _inherit='res.lang'
