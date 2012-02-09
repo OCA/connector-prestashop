@@ -7,4 +7,3 @@ else:
 "prestashop1500_res_partner_name_name","prestashop1500","base.model_res_partner","name","base.field_res_partner_name","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['name'])]","add_id = self.browse(cr, uid, record['id'])"
 "prestashop1500_res_partner_email_email","prestashop1500","base.model_res_partner","email","base.field_res_partner_email","in_out","direct","unicode",,,
 "prestashop1500_res_partner_subname_firstname","prestashop1500","base.model_res_partner","firstname","base.field_res_partner_subname","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
-"prestashop1500_res_partner_notes_note","prestashop1500","base.model_res_partner","note","base.field_res_partner_notes","in_out","direct","unicode",,,
