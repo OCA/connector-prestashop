@@ -24,6 +24,7 @@
 {
     "name" : "Prestashop e-commerce",
     "version" : "1.0",
+    "license": "AGPL-3",
     "depends" : [
                  "product",
 #                 "product_m2mcategories",
