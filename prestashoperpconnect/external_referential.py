@@ -22,17 +22,18 @@
 ###############################################################################
 
 from osv import osv, fields
-import netsvc
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
 from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
+from prestashop_osv import prestashop_osv
+import logging
+_logger = logging.getLogger(__name__)
 
-class external_referential(osv.osv):
+class external_referential(prestashop_osv):
     _inherit = "external.referential"
     
     @only_for_referential('prestashop')
     def external_connection(self, cr, uid, id, DEBUG=False, context=None):
-        logger = netsvc.Logger()
         if isinstance(id, list):
             id=id[0]
         referential = self.browse(cr, uid, id, context=context)
@@ -44,7 +45,38 @@ class external_referential(osv.osv):
         return prestashop
 
     @only_for_referential('prestashop')
-    def import_referential(self, cr, uid, ids, context=None):
-        print 'I will import the referential'
-        #TODO create shop (what we should do for version older than 1.5)
+    def _import_resource(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
+        if context is None:
+            context = {}
+        _logger.info(_("Starting to create the Prestashop referential"))
+        print 'I will maimport the referential'
+        #TODO create shop (what we should do for version older than 1.5) + group shop + languages
+        print "context=", context
+        referential_id = context.get('referential_id', False)
+        if not referential_id: raise osv.except_osv(_('Error :'), 'Hara kiri missing referential')
+        _logger.info(_("Starting synchro of languages between OERP and PS"))
+        # Loop on OERP res.lang
+        lang_obj = self.pool.get('res.lang')
+        oe_lang_ids = lang_obj.search(cr, uid, [], context=context)
+        oe_langs = lang_obj.read(cr, uid, oe_lang_ids, ['code', 'name'], context=context)
+        print "oe_langs=", oe_langs
+        # Get the language IDS from PS
+        for ps_lang_id in lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=None, context=context):
+            # Do nothing for the IDs already mapped            pour tous les IDs déjà mappés, je fais rien... (fonction _extid_to_existing_oeid - False si rien)
+            oe_lang_id = self.extid_to_existing_oeid(cr, uid, ps_lang_id, referential_id, context=context)
+            if oe_lang_id:
+                _logger.info(_("PS lang ID %s is already mapped to OERP lang ID %s") %(ps_lang_id, oe_lang_id))
+            else:
+                # Now I try to match between OERP and PS
+                # I read field in PS
+                ps_lang_dict = lang_obj.get_external_ressource(cr, uid, referential_id, ext_id=ps_lang_id, context=context)
+                for oe_lang in oe_langs: # Loop on OE langs
+                    if len(oe_lang['code']) >= 2 and len(ps_lang_dict['language_code']) >=2:
+                        if oe_lang['code'][0:2] == ps_lang_dict['language_code'][0:2]:
+                        # it matches, so I write the external ID
+                            lang_obj.create_external_id(cr, uid, existing_rec_id=oe_lang['id'], external_id=ps_lang_id, referential_id=referential_id, context=context)
+                            _logger.info(_("Mapping PS lang '%s' (%s) to OERP lang '%s' (%s)") %(ps_lang_dict['name'], ps_lang_dict['language_code'], oe_lang['name'], oe_lang['code']))
+                    else:
+                        _logger.warning(_("PS lang '%s' (%s) was not mapped to any OERP lang") %(ps_lang_dict['name'], ps_lang_dict['language_code']))
+        _logger.info(_("Synchro of languages between OERP and PS successfull"))
         return True

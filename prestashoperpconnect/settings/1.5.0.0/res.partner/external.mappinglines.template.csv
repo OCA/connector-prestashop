@@ -1,2 +1,3 @@
 "id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_erp_firstname","prestashop1500","account.model_res_partner","firstname","base.field_res_partner_name","in_out","function","unicode","","result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
+"prestashop1500_res_partner_firstname","prestashop1500","base.model_res_partner","firstname","base.field_res_partner_subname","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
+"prestashop1500_res_partner_name","prestashop1500","base.model_res_partner","name","base.field_res_partner_name","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['name'])]","add_id = self.browse(cr, uid, record['id'])"
