@@ -45,14 +45,15 @@ class external_referential(prestashop_osv):
         return prestashop
 
     @only_for_referential('prestashop')
-    def _import_resource(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
+    def _import_resources(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
         if context is None:
             context = {}
+        print 'start'
         _logger.info(_("Starting to create the Prestashop referential"))
         print 'I will maimport the referential'
         #TODO create shop (what we should do for version older than 1.5) + group shop + languages
         print "context=", context
-        referential_id = context.get('referential_id', False)
+        #referential_id = context.get('referential_id', False)
         if not referential_id: raise osv.except_osv(_('Error :'), 'Hara kiri missing referential')
         _logger.info(_("Starting synchro of languages between OERP and PS"))
         # Loop on OERP res.lang
@@ -61,7 +62,9 @@ class external_referential(prestashop_osv):
         oe_langs = lang_obj.read(cr, uid, oe_lang_ids, ['code', 'name'], context=context)
         print "oe_langs=", oe_langs
         # Get the language IDS from PS
-        for ps_lang_id in lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=None, context=context):
+        mapping = {lang_obj._name : lang_obj._get_mapping(cr, uid, referential_id, context=context)}
+        print "get_external=", lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
+        for ps_lang_id in lang_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context):
             # Do nothing for the IDs already mapped            pour tous les IDs déjà mappés, je fais rien... (fonction _extid_to_existing_oeid - False si rien)
             oe_lang_id = self.extid_to_existing_oeid(cr, uid, ps_lang_id, referential_id, context=context)
             if oe_lang_id:
@@ -80,3 +83,7 @@ class external_referential(prestashop_osv):
                         _logger.warning(_("PS lang '%s' (%s) was not mapped to any OERP lang") %(ps_lang_dict['name'], ps_lang_dict['language_code']))
         _logger.info(_("Synchro of languages between OERP and PS successfull"))
         return True
+
+class res_lang(prestashop_osv):
+    _inherit='res.lang'
+
