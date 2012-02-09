@@ -43,7 +43,7 @@ class prestashop_osv(osv.osv):
 
 
     @only_for_referential('prestashop')
-    def _get_external_ids(self, cr, uid, ref_called_from, referential_id, resource_filter, mapping, context=None):
+    def _get_external_resource_ids(self, cr, uid, ref_called_from, referential_id, resource_filter, mapping, context=None):
         conn = context['conn']
         ext_resource = mapping[self._name]['external_resource_name']
         print "Import data for %s with filter %s"%(ext_resource, resource_filter)
