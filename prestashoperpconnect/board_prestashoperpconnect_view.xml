@@ -25,7 +25,7 @@
         </record>
 
 
-        <menuitem id="menu_shoperp" name="PrestashopERPconnect" icon="terp-sale" action="open_board_shoperp"/>
+        <menuitem id="menu_shoperp" name="PrestashopERPconnect" icon="terp-sale" parent="base.menu_administration" action="open_board_shoperp"/>
 
     </data>
 </openerp>

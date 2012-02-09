@@ -49,9 +49,11 @@ class prestashop_osv(osv.osv):
         print "Import data for %s with filter %s"%(ext_resource, resource_filter)
         ext_ids = conn.get(ext_resource, options = resource_filter)
         print 'ext_ids', ext_ids
-        if isinstance(ext_ids[ext_resource], dict):
-            key = ext_ids[ext_resource].keys()[0]
-            return ext_ids[ext_resource][key]
+
+        main_key = ext_ids.keys()[0]
+        if isinstance(ext_ids[main_key], dict):
+            key = ext_ids[main_key].keys()[0]
+            return ext_ids[main_key][key]
         return []
 
     @only_for_referential('prestashop')
