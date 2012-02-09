@@ -1,0 +1,6 @@
+"id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
+"prestashoperpconnect.prestashop1500_base_sale_multichannels_model_sale_order_amount_total_total_paid","prestashoperpconnect.prestashop1500","base_sale_multichannels_model_sale_order","total_paid","sale.field_sale_order_amount_total","in_out",,"float",,,
+"prestashoperpconnect.prestashop1500_base_sale_multichannels_model_sale_order_partner_shipping_id_id_address_delivery","prestashoperpconnect.prestashop1500","base_sale_multichannels_model_sale_order","id_address_delivery","sale.field_sale_order_partner_shipping_id","in_out",,"int",,,
+"prestashoperpconnect.prestashop1500_base_sale_multichannels_model_sale_order_partner_id_id_customer","prestashoperpconnect.prestashop1500","base_sale_multichannels_model_sale_order","id_customer","sale.field_sale_order_partner_id","in_out",,"int",,,
+"prestashoperpconnect.prestashop1500_base_sale_multichannels_model_sale_order_partner_invoice_id_id_address_invoice","prestashoperpconnect.prestashop1500","base_sale_multichannels_model_sale_order","id_address_invoice","sale.field_sale_order_partner_invoice_id","in_out",,"int",,,
+
