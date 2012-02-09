@@ -1,8 +1,8 @@
 "id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
 "prestashop1500_sale_order_ext_total_amount","prestashop1500","sale.model_sale_order","total_paid","base_sale_multichannels.field_sale_order_ext_total_amount","in_out","direct","float",,,
-"prestashop1500_sale_order_address_delivery","prestashop1500","sale.model_sale_order","id_address_delivery","sale.field_sale_order_partner_shipping_id","in_out","function","int",,"result=[('partner_shipping_id',self.pool.get('res.partner.address').extid_to_oeid(cr, uid, ifield, referential_id))]",
-"prestashop1500_sale_order_customer_id","prestashop1500","sale.model_sale_order","id_customer","sale.field_sale_order_partner_id","in_out","function","int",,"result=[('partner_id',self.pool.get('res.partner').extid_to_oeid(cr, uid, ifield, referential_id))]",
-"prestashop1500_sale_order_address_invoice_id","prestashop1500","sale.model_sale_order","id_address_invoice","sale.field_sale_order_partner_invoice_id","in_out","function","int",,"result=[('partner_invoice_id',self.pool.get('res.partner.address').extid_to_oeid(cr, uid, ifield, referential_id))]",
-"prestashop1500_sale_order_address_order_id","prestashop1500","sale.model_sale_order","id_address_invoice","sale.field_sale_order_partner_order_id","in_out","function","int",,"result=[('partner_order_id',self.pool.get('res.partner.address').extid_to_oeid(cr, uid, ifield, referential_id))]",
-"prestashop1500_sale_order_shop_id","prestashop1500","sale.model_sale_order","id_shop","sale.field_sale_order_shop_id","in_out","direct","int",,,
+"prestashop1500_sale_order_address_delivery","prestashop1500","sale.model_sale_order","id_address_delivery","sale.field_sale_order_partner_shipping_id","in_out","direct","o2m",,,
+"prestashop1500_sale_order_customer_id","prestashop1500","sale.model_sale_order","id_customer","sale.field_sale_order_partner_id","in_out","direct","o2m",,,
+"prestashop1500_sale_order_address_invoice_id","prestashop1500","sale.model_sale_order","id_address_invoice","sale.field_sale_order_partner_invoice_id","in_out","direct","o2m",,,
+"prestashop1500_sale_order_address_order_id","prestashop1500","sale.model_sale_order","id_address_invoice","sale.field_sale_order_partner_order_id","in_out","direct","o2m",,,
+"prestashop1500_sale_order_shop_id","prestashop1500","sale.model_sale_order","id_shop","sale.field_sale_order_shop_id","in_out","direct","o2m",,,
 "prestashop1500_sale_order_name","prestashop1500","sale.model_sale_order","reference","sale.field_sale_order_name","in_out","direct","unicode",,,

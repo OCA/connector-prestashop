@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+    # -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -54,7 +54,8 @@
         'settings/1.5.0.0/res.partner/external.mappinglines.template.csv',
         'settings/1.5.0.0/product.product/external.mappinglines.template.csv',
         'settings/1.5.0.0/sale.order/external.mappinglines.template.csv',
-            
+        'settings/1.5.0.0/external.shop.group/external.mappinglines.template.csv',
+        'settings/1.5.0.0/sale.shop/external.mappinglines.template.csv',
     ],
     "active": False,
     "installable": True,

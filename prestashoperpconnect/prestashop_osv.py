@@ -30,7 +30,7 @@ class prestashop_osv(osv.osv):
     _register = False
 
     @only_for_referential('prestashop')
-    def _get_filter(self, cr, uid, ref_called_from, referential_id, resource_filter, step, context=None):
+    def _get_filter(self, cr, uid, external_session, step, resource_filter=None, context=None):
         if not resource_filter:
             start = 0
         else:
@@ -38,18 +38,15 @@ class prestashop_osv(osv.osv):
         resource_filter = {
             'limit': "%s,%s"%(start,step),
         }
-        print 'resource_filter', resource_filter
         return resource_filter
 
 
     @only_for_referential('prestashop')
-    def _get_external_resource_ids(self, cr, uid, ref_called_from, referential_id, resource_filter, mapping, context=None):
-        conn = context['conn']
+    def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
+        if mapping is None:
+            mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
         ext_resource = mapping[self._name]['external_resource_name']
-        print "Import data for %s with filter %s"%(ext_resource, resource_filter)
-        ext_ids = conn.get(ext_resource, options = resource_filter)
-        print 'ext_ids', ext_ids
-
+        ext_ids = external_session.connection.get(ext_resource, options = resource_filter)
         main_key = ext_ids.keys()[0]
         if isinstance(ext_ids[main_key], dict):
             key = ext_ids[main_key].keys()[0]
@@ -57,12 +54,13 @@ class prestashop_osv(osv.osv):
         return []
 
     @only_for_referential('prestashop')
-    def _get_external_resources(self, cr, uid, ref_called_from, mapping, referential_id, ext_id, context):
+    def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
+        if mapping is None:
+            mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
         lang_resource = {}
         main_data = {}
-        conn = context['conn']
         ext_resource = mapping[self._name]['external_resource_name']
-        resource = conn.get(ext_resource, ext_id)
+        resource = external_session.connection.get(ext_resource, external_id)
         resource = resource[resource.keys()[0]]
         for key in resource:
             if isinstance(resource[key], dict) and resource[key].get('language'):
@@ -91,12 +89,11 @@ class prestashop_osv(osv.osv):
         return result
 
     @only_for_referential('prestashop')
-    def _record_one_external_resource(self, cr, uid, row, referential_id, defaults=None, context=None, mapping=None):
+    def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, context=None):
         #TODO map lang
-        ext_lang_id = row.get('ext_lang_id', False)
+        ext_lang_id = resource.get('ext_lang_id', False)
         lang_dict = {'2' : 'fr_FR', '1' : 'en_US'}
         if ext_lang_id:
             context['lang'] = lang_dict[ext_lang_id]
-        print 'context', context
-        return super(prestashop_osv, self)._record_one_external_resource(cr, uid, row, referential_id, defaults=defaults, context=context, mapping=mapping)
+        return super(prestashop_osv, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, context=context)
 

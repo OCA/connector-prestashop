@@ -26,39 +26,37 @@ from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
 from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
 from prestashop_osv import prestashop_osv
-import logging
-_logger = logging.getLogger(__name__)
 
 class external_referential(prestashop_osv):
     _inherit = "external.referential"
     
     @only_for_referential('prestashop')
-    def external_connection(self, cr, uid, id, DEBUG=False, context=None):
+    def external_connection(self, cr, uid, id, debug=False, context=None):
         if isinstance(id, list):
             id=id[0]
         referential = self.browse(cr, uid, id, context=context)
         prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass)
-        try:        
+        try:
             prestashop.head('')
         except Exception, e:
             raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck url & password.\n %s"%e))
         return prestashop
 
     @only_for_referential('prestashop')
-    def _import_resources(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
+    def _import_resources(self, cr, uid, external_session, defaults=None, context=None, method="search_then_read"):
         if context is None:
             context = {}
+        referential_id = external_session.referential_id.id
         self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
         self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
-        _logger.info(_("Starting synchro of countries between OERP and PS"))
+        external_session.logger.info(_("Starting synchro of countries between OERP and PS"))
         # Get all OERP res.country
         country_obj = self.pool.get('res.country')
         oe_country_ids = country_obj.search(cr, uid, [], context=context)
         oe_countries = country_obj.read(cr, uid, oe_country_ids, ['code', 'name'], context=context)
         print "oe_coutrnies=", oe_countries
         # Get the country IDS from PS
-        mapping = {country_obj._name : country_obj._get_mapping(cr, uid, referential_id, context=context)}
-        ps_country_list = country_obj._get_external_resource_ids(cr, uid, ref_called_from=None, referential_id=referential_id, resource_filter=None, mapping=mapping, context=context)
+        ps_country_list = country_obj._get_external_resource_ids(cr, uid, external_session, context=context)
         print "ps_country_list=", ps_country_list
         # (waiting for a fix in prestapyth)
 #        ps_country_list = []
@@ -72,11 +70,11 @@ class external_referential(prestashop_osv):
             print "oe_c_id=", oe_country_id
             if oe_country_id:
                 # Do nothing for the PS IDs are already mapped
-                _logger.info(_("PS country ID %s is already mapped to OERP country ID %s") %(ps_country_id, oe_country_id))
+                external_session.logger.info(_("PS country ID %s is already mapped to OERP country ID %s") %(ps_country_id, oe_country_id))
             else:
                 # PS IDs not mapped => I try to match between the PS country and the OE country
                 # I read field in PS
-                ps_country_dict = country_obj._get_external_resources(cr, uid, ref_called_from=None, mapping=mapping, referential_id=referential_id, ext_id=ps_country_id, context=context)
+                ps_country_dict = country_obj._get_external_resources(cr, uid, external_session, ps_country_id, context=context)
                 print "ps_country_dict=", ps_country_dict
                 mapping_found = False
                 # Loop on OE countries
@@ -90,8 +88,8 @@ class external_referential(prestashop_osv):
                         break
                 if not mapping_found:
                     # if it doesn't match, I just print a warning
-                    _logger.warning(_("PS country '%s' (%s) was not mapped to any OERP country") %(ps_country_dict[0]['name'], ps_country_dict[0]['iso_code']))
-        _logger.info(_("Synchro of countries between OERP and PS successfull"))
+                    external_session.logger.warning(_("PS country '%s' (%s) was not mapped to any OERP country") %(ps_country_dict[0]['name'], ps_country_dict[0]['iso_code']))
+        external_session.logger.info(_("Synchro of countries between OERP and PS successfull"))
         return {}
 
 class external_shop_group(prestashop_osv):
