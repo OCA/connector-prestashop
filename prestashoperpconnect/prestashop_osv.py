@@ -63,7 +63,11 @@ class prestashop_osv(osv.osv):
         resource = external_session.connection.get(ext_resource, external_id)
         resource = resource[resource.keys()[0]]
         for key in resource:
-            if isinstance(resource[key], dict) and resource[key].get('language'):
+            if key == 'associations':
+                key_one = resource[key].keys()[0]
+                key_two = resource[key][key_one].keys()[0]
+                main_data[key_one] = resource[key][key_one][key_two]
+            elif isinstance(resource[key], dict) and resource[key].get('language'):
                 lang_vals = resource[key]['language']
                 if not isinstance(lang_vals, list):
                     lang_vals = [lang_vals]
@@ -76,7 +80,6 @@ class prestashop_osv(osv.osv):
                 main_data[key] = resource[key]['value']
             else:
                 main_data[key] = resource[key]
-
         #TODO Improve when the lang will be mapped
         lang_ids = lang_resource.keys()
         if lang_ids:

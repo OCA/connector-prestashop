@@ -177,17 +177,9 @@ class external_referential(prestashop_osv):
         self._map_ps_lang(cr, uid, external_session, context=context)
         return {}
 
-class external_shop_group(prestashop_osv):
-    _inherit='external.shop.group'
-
-class sale_shop(prestashop_osv):
-    _inherit='sale.shop'
-
 class res_lang(prestashop_osv):
     _inherit='res.lang'
 
 class res_country(prestashop_osv):
     _inherit='res.country'
 
-class sale_order(prestashop_osv):
-    _inherit='sale.order'
