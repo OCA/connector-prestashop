@@ -43,14 +43,26 @@ class external_referential(prestashop_osv):
             raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck url & password.\n %s"%e))
         return prestashop
 
+    def _compare_languages(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
+        if len(oe_dict[oe_field]) >= 2 \
+            and len(ps_dict[0][ps_field]) >=2 \
+            and oe_dict[oe_field][0:2].lower() == ps_dict[0][ps_field][0:2].lower():
+            return True
+        else:
+            return False
+
     def _compare_countries(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
-        if len(oe_dict[oe_field]) >= 2 and len(ps_dict[0][ps_field]) >=2 and oe_dict[oe_field][0:2].lower() == ps_dict[0][ps_field][0:2].lower():
+        if len(oe_dict[oe_field]) >= 2 \
+            and len(ps_dict[0][ps_field]) >=2 \
+            and oe_dict[oe_field][0:2].lower() == ps_dict[0][ps_field][0:2].lower():
             return True
         else:
             return False
 
     def _compare_currencies(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
-        if len(oe_dict[oe_field]) == 3 and len(ps_dict[0][ps_field]) == 3 and oe_dict[oe_field][0:3].lower() == ps_dict[0][ps_field][0:3].lower():
+        if len(oe_dict[oe_field]) == 3 \
+            and len(ps_dict[0][ps_field]) == 3 \
+            and oe_dict[oe_field][0:3].lower() == ps_dict[0][ps_field][0:3].lower():
             return True
         else:
             return False
@@ -67,17 +79,17 @@ class external_referential(prestashop_osv):
         if not oe_readable_field == oe_field:
             fields_to_read.append(oe_readable_field)
         oe_list_dict = oe_obj.read(cr, uid, oe_ids, fields_to_read, context=context)
-        print "oe_list_dict=", oe_list_dict
+        #print "oe_list_dict=", oe_list_dict
         # Get the IDS from PS
         ps_ids = oe_obj._get_external_resource_ids(cr, uid, external_session, context=context)
-        print "ps_ids=", ps_ids
+        #print "ps_ids=", ps_ids
         if not ps_ids:
             raise osv.except_osv(_('Error :'), _('Failed to query %s via PS webservice')% obj_readable_name)
         # Loop on all PS IDs
         for ps_id in ps_ids:
             # Check if the PS ID is already mapped to an OE ID
             oe_id = oe_obj.extid_to_existing_oeid(cr, uid, external_id=ps_id, referential_id=referential_id, context=context)
-            print "oe_c_id=", oe_id
+            #print "oe_c_id=", oe_id
             if oe_id:
                 # Do nothing for the PS IDs that are already mapped
                 external_session.logger.debug(_("[%s] PS ID %s is already mapped to OERP ID %s") %(obj_readable_name, ps_id, oe_id))
@@ -86,7 +98,7 @@ class external_referential(prestashop_osv):
                 # PS IDs not mapped => I try to match between the PS ID and the OE ID
                 # I read field in PS
                 ps_dict = oe_obj._get_external_resources(cr, uid, external_session, ps_id, context=context)
-                print "ps_dict=", ps_dict
+                #print "ps_dict=", ps_dict
                 mapping_found = False
                 # Loop on OE IDs
                 for oe_dict in oe_list_dict:
@@ -107,7 +119,7 @@ class external_referential(prestashop_osv):
                         % (obj_readable_name, ps_dict[0][ps_readable_field], ps_dict[0][ps_field]))
                     nr_ps_not_mapped += 1
         external_session.logger.info(
-            _("%s Synchro between OERP and PS successfull") %obj_readable_name)
+            _("[%s] Synchro between OERP and PS successfull") %obj_readable_name)
         external_session.logger.info(_("[%s] Number of PS entries already mapped = %s")
             % (obj_readable_name, nr_ps_already_mapped))
         external_session.logger.info(_("[%s] Number of PS entries mapped = %s")
@@ -117,82 +129,17 @@ class external_referential(prestashop_osv):
         return True
 
 
-
-    def _map_ps_lang(self, cr, uid, external_session, context=None):
-        """Synchronise OERP res.lang and PS languages"""
-        external_session.logger.info(_("Starting synchro of languages between OERP and PS"))
-        referential_id = external_session.referential_id.id
-        nr_ps_already_mapped = 0
-        nr_ps_mapped = 0
-        nr_ps_not_mapped = 0
-        # Get all OERP res.lang
-        lang_obj = self.pool.get('res.lang')
-        oe_lang_ids = lang_obj.search(cr, uid, [], context=context)
-        oe_langs = lang_obj.read(cr, uid, oe_lang_ids, ['code', 'name'], context=context)
-        print "oe_langs=", oe_langs
-        # Get the language IDS from PS
-        res_ps_lang = lang_obj._get_external_resource_ids(cr, uid, external_session, context=context)
-        print "res_ps_lang=", res_ps_lang
-        # Hack to put the languages IDs from PS in a clean list
-        # (waiting for a fix in prestapyth)
-        ps_lang_list = []
-        for ps_lang in res_ps_lang:
-            ps_lang_list.append(ps_lang['attrs']['id'])
-        print "ps_lang_list =", ps_lang_list
-        # Loop on all PS languages
-        for ps_lang_id in ps_lang_list:
-            # Check if the PS language is already mapped to an OE language
-            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_id=ps_lang_id,
-                referential_id=referential_id, context=context)
-            print "oe_lang_id=", oe_lang_id
-            if oe_lang_id:
-                # Do nothing for the PS IDs are already mapped
-                external_session.logger.debug(_("PS lang ID %s is already mapped to OERP lang ID %s") %(ps_lang_id, oe_lang_id))
-                nr_ps_already_mapped += 1
-            else:
-                # PS IDs not mapped => I try to match between the PS lang and the OE lang
-                # I read field in PS
-                ps_lang_dict = lang_obj._get_external_resources(cr, uid, external_session,
-                    ps_lang_id, context=context)
-                print "ps_lang_dict=", ps_lang_dict
-                mapping_found = False
-                # Loop on OE langs
-                for oe_lang in oe_langs:
-                    # Search for a match
-                    if len(oe_lang['code']) >= 2 and len(ps_lang_dict[0]['language_code']) >=2 and oe_lang['code'][0:2].lower() == ps_lang_dict[0]['language_code'][0:2].lower():
-                        # it matches, so I write the external ID
-                        lang_obj.create_external_id_vals(cr, uid,
-                            existing_rec_id=oe_lang['id'], external_id=ps_lang_id,
-                            referential_id=referential_id, context=context)
-                        external_session.logger.info(
-                            _("Mapping PS lang '%s' (%s) to OERP lang '%s' (%s)")
-                            %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code'],
-                            oe_lang['name'], oe_lang['code']))
-                        nr_ps_mapped += 1
-                        mapping_found = True
-                        break
-                if not mapping_found:
-                    # if it doesn't match, I just print a warning
-                    external_session.logger.warning(
-                        _("PS lang '%s' (%s) was not mapped to any OERP lang")
-                        %(ps_lang_dict[0]['name'], ps_lang_dict[0]['language_code']))
-                    nr_ps_not_mapped += 1
-        external_session.logger.info(_("Synchro of languages between OERP and PS successfull"))
-        external_session.logger.info(_("Number of PS languages already mapped = %s")
-            % nr_ps_already_mapped)
-        external_session.logger.info(_("Number of PS languages mapped = %s")
-            % nr_ps_mapped)
-        external_session.logger.info(_("Number of PS languages not mapped = %s")
-            % nr_ps_not_mapped)
-
-        return True
-
-
     @only_for_referential('prestashop')
     def _import_resources(self, cr, uid, external_session, defaults=None, context=None, method="search_then_read"):
         referential_id = external_session.referential_id.id
         self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
         self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
+
+        self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='LANG',
+            oe_obj=self.pool.get('res.lang'),
+            ps_field='language_code', ps_readable_field='name',
+            oe_field='code', oe_readable_field='name',
+            compare_function=self._compare_languages, context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='COUNTRY',
             oe_obj=self.pool.get('res.country'),
@@ -205,8 +152,6 @@ class external_referential(prestashop_osv):
             ps_field='iso_code', ps_readable_field='name',
             oe_field='name', oe_readable_field='name',
             compare_function=self._compare_currencies, context=context)
-        # We will convert lang to _bidirectional_synchro when prestapyth will be fixed
-        self._map_ps_lang(cr, uid, external_session, context=context)
         return {}
 
 class res_lang(prestashop_osv):
