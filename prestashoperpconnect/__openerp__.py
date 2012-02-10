@@ -58,7 +58,7 @@
         'settings/1.5.0.0/external.shop.group/external.mappinglines.template.csv',
         'settings/1.5.0.0/sale.shop/external.mappinglines.template.csv',
         'settings/1.5.0.0/sale.order.line/external.mappinglines.template.csv',
-        'settings/1.5.0.0/delivery.carriers/external.mappinglines.template.csv',
+        'settings/1.5.0.0/delivery.carrier/external.mappinglines.template.csv',
     ],
     "active": False,
     "installable": True,
