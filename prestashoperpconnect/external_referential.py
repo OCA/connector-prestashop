@@ -162,3 +162,6 @@ class res_country(prestashop_osv):
 
 class res_currency(prestashop_osv):
     _inherit='res.currency'
+
+class delivery_carrier(prestashop_osv):
+    _inherit='delivery.carrier'
