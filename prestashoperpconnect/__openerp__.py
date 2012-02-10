@@ -46,7 +46,7 @@ This module allows the synchronisation of the following objects between OpenERP 
 
 Once these objects are synchronised, it will allow the import of orders, together with the related customers and addresses.
 
-This connector uses the OpenERP modules base_sale_multichannels and base_external_referentials that bring a very sophisticated abstraction layer to build a reliable connector between OpenERP and another application. This connector requires the Prestapyt library that you can install via the command "easy_install prestapyt" (the source code of the library is managed on https://github.com/guewen/prestapyt).
+This connector uses the OpenERP modules base_sale_multichannels and base_external_referentials that bring a very sophisticated abstraction layer to build a reliable connector between OpenERP and another application. This connector requires the Prestapyt library that you can install via the command "easy_install prestapyt" (the source code of the library is managed on https://github.com/guewen/prestapyt). You also need the patch on OpenERP addons available here : https://bugs.launchpad.net/openobject-addons/+bug/930127
 
 This connector supports Prestashop 1.5.
 
