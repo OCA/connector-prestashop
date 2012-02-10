@@ -88,10 +88,12 @@ class prestashop_osv(osv.osv):
 
     @only_for_referential('prestashop')
     def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, context=None):
-        #TODO map lang
+        lang_obj = self.pool.get('res.lang')
         ext_lang_id = resource.get('ext_lang_id', False)
-        lang_dict = {'2' : 'fr_FR', '1' : 'en_US'}
         if ext_lang_id:
-            context['lang'] = lang_dict[ext_lang_id]
+            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, ext_lang_id, external_session.referential_id.id, context=context)
+            if oe_lang_id:
+                lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
+                context['lang'] = lang['code']
         return super(prestashop_osv, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, context=context)
 
