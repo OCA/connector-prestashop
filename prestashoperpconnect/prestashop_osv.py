@@ -30,11 +30,11 @@ class prestashop_osv(osv.osv):
     _register = False
 
     @only_for_referential('prestashop')
-    def _get_filter(self, cr, uid, external_session, step, resource_filter=None, context=None):
-        if not resource_filter:
+    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+        if not previous_filter:
             start = 0
         else:
-            start = sum([int(x) for x in resource_filter['limit'].split(',')])
+            start = sum([int(x) for x in previous_filter['limit'].split(',')])
         resource_filter = {
             'limit': "%s,%s"%(start,step),
         }
