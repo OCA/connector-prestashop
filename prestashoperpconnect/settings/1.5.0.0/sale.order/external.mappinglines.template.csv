@@ -7,3 +7,4 @@
 "prestashop1500_sale_order_shop_id","prestashop1500","sale.model_sale_order","id_shop","sale.field_sale_order_shop_id","in","direct","o2m",,,
 "prestashop1500_sale_order_name","prestashop1500","sale.model_sale_order","reference","sale.field_sale_order_name","in","direct","unicode",,,
 "prestashop1500_sale_order_line","prestashop1500","sale.model_sale_order","order_rows","sale.field_sale_order_order_line","in","sub-mapping","list","prestashop_1500_order_line",,
+"prestashop1500_delivery_carrier","prestashop1500","sale.model_sale_order","id_carrier","delivery.field_sale_order_carrier_id","in","direct","o2m",,,
