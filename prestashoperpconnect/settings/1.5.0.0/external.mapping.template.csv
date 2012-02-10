@@ -10,3 +10,4 @@
 "prestashop_1500_partner","prestashop1500","base.model_res_partner",,,,,,,"customers"
 "prestashop_1500_lang","prestashop1500","base.model_res_lang",,,,,,,"languages"
 "prestashop_1500_country","prestashop1500","base.model_res_country",,,,,,,"countries"
+"prestashop_1500_currency","prestashop1500","base.model_res_currency",,,,,,,"currencies"

@@ -43,6 +43,80 @@ class external_referential(prestashop_osv):
             raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck url & password.\n %s"%e))
         return prestashop
 
+    def _compare_countries(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
+        if len(oe_dict[oe_field]) >= 2 and len(ps_dict[0][ps_field]) >=2 and oe_dict[oe_field][0:2].lower() == ps_dict[0][ps_field][0:2].lower():
+            return True
+        else:
+            return False
+
+    def _compare_currencies(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
+        if len(oe_dict[oe_field]) == 3 and len(ps_dict[0][ps_field]) == 3 and oe_dict[oe_field][0:3].lower() == ps_dict[0][ps_field][0:3].lower():
+            return True
+        else:
+            return False
+
+    def _bidirectional_synchro(self, cr, uid, external_session, obj_readable_name, oe_obj, ps_field, ps_readable_field, oe_field, oe_readable_field, compare_function, context=None):
+        external_session.logger.info(_("[%s] Starting synchro between OERP and PS") %obj_readable_name)
+        referential_id = external_session.referential_id.id
+        nr_ps_already_mapped = 0
+        nr_ps_mapped = 0
+        nr_ps_not_mapped = 0
+        # Get all OERP obj
+        oe_ids = oe_obj.search(cr, uid, [], context=context)
+        fields_to_read = [oe_field]
+        if not oe_readable_field == oe_field:
+            fields_to_read.append(oe_readable_field)
+        oe_list_dict = oe_obj.read(cr, uid, oe_ids, fields_to_read, context=context)
+        print "oe_list_dict=", oe_list_dict
+        # Get the IDS from PS
+        ps_ids = oe_obj._get_external_resource_ids(cr, uid, external_session, context=context)
+        print "ps_ids=", ps_ids
+        if not ps_ids:
+            raise osv.except_osv(_('Error :'), _('Failed to query %s via PS webservice')% obj_readable_name)
+        # Loop on all PS IDs
+        for ps_id in ps_ids:
+            # Check if the PS ID is already mapped to an OE ID
+            oe_id = oe_obj.extid_to_existing_oeid(cr, uid, external_id=ps_id, referential_id=referential_id, context=context)
+            print "oe_c_id=", oe_id
+            if oe_id:
+                # Do nothing for the PS IDs that are already mapped
+                external_session.logger.debug(_("[%s] PS ID %s is already mapped to OERP ID %s") %(obj_readable_name, ps_id, oe_id))
+                nr_ps_already_mapped += 1
+            else:
+                # PS IDs not mapped => I try to match between the PS ID and the OE ID
+                # I read field in PS
+                ps_dict = oe_obj._get_external_resources(cr, uid, external_session, ps_id, context=context)
+                print "ps_dict=", ps_dict
+                mapping_found = False
+                # Loop on OE IDs
+                for oe_dict in oe_list_dict:
+                    # Search for a match
+                    if compare_function(cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=context):
+                        # it matches, so I write the external ID
+                        oe_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_dict['id'], external_id=ps_id, referential_id=referential_id, context=context)
+                        external_session.logger.info(
+                            _("[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)")
+                            % (obj_readable_name, ps_dict[0][ps_readable_field], ps_dict[0][ps_field], oe_dict[oe_readable_field], oe_dict[oe_field]))
+                        nr_ps_mapped += 1
+                        mapping_found = True
+                        break
+                if not mapping_found:
+                    # if it doesn't match, I just print a warning
+                    external_session.logger.warning(
+                        _("[%s] PS '%s' (%s) was not mapped to any OERP entry")
+                        % (obj_readable_name, ps_dict[0][ps_readable_field], ps_dict[0][ps_field]))
+                    nr_ps_not_mapped += 1
+        external_session.logger.info(
+            _("%s Synchro between OERP and PS successfull") %obj_readable_name)
+        external_session.logger.info(_("[%s] Number of PS entries already mapped = %s")
+            % (obj_readable_name, nr_ps_already_mapped))
+        external_session.logger.info(_("[%s] Number of PS entries mapped = %s")
+            % (obj_readable_name, nr_ps_mapped))
+        external_session.logger.info(_("[%s] Number of PS entries not mapped = %s")
+            % (obj_readable_name, nr_ps_not_mapped))
+        return True
+
+
 
     def _map_ps_lang(self, cr, uid, external_session, context=None):
         """Synchronise OERP res.lang and PS languages"""
@@ -114,66 +188,24 @@ class external_referential(prestashop_osv):
         return True
 
 
-    def _map_ps_country(self, cr, uid, external_session, context=None):
-        """Synchronise OERP res.country and PS countries"""
-        external_session.logger.info(_("Starting synchro of countries between OERP and PS"))
-        referential_id = external_session.referential_id.id
-        nr_ps_already_mapped = 0
-        nr_ps_mapped = 0
-        nr_ps_not_mapped = 0
-        # Get all OERP res.country
-        country_obj = self.pool.get('res.country')
-        oe_country_ids = country_obj.search(cr, uid, [], context=context)
-        oe_countries = country_obj.read(cr, uid, oe_country_ids, ['code', 'name'], context=context)
-        print "oe_coutrnies=", oe_countries
-        # Get the country IDS from PS
-        ps_country_list = country_obj._get_external_resource_ids(cr, uid, external_session, context=context)
-        print "ps_country_list=", ps_country_list
-        # Loop on all PS countries
-        for ps_country_id in ps_country_list:
-            # Check if the PS country is already mapped to an OE country
-            oe_country_id = country_obj.extid_to_existing_oeid(cr, uid, external_id=ps_country_id, referential_id=referential_id, context=context)
-            print "oe_c_id=", oe_country_id
-            if oe_country_id:
-                # Do nothing for the PS IDs are already mapped
-                external_session.logger.debug(_("PS country ID %s is already mapped to OERP country ID %s") %(ps_country_id, oe_country_id))
-                nr_ps_already_mapped += 1
-            else:
-                # PS IDs not mapped => I try to match between the PS country and the OE country
-                # I read field in PS
-                ps_country_dict = country_obj._get_external_resources(cr, uid, external_session, ps_country_id, context=context)
-                print "ps_country_dict=", ps_country_dict
-                mapping_found = False
-                # Loop on OE countries
-                for oe_country in oe_countries:
-                    # Search for a match
-                    if len(oe_country['code']) >= 2 and len(ps_country_dict[0]['iso_code']) >=2 and oe_country['code'][0:2].lower() == ps_country_dict[0]['iso_code'][0:2].lower():
-                        # it matches, so I write the external ID
-                        country_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_country['id'], external_id=ps_country_id, referential_id=referential_id, context=context)
-                        external_session.logger.info(_("Mapping PS country '%s' (%s) to OERP country '%s' (%s)") %(ps_country_dict[0]['name'], ps_country_dict[0]['iso_code'], oe_country['name'], oe_country['code']))
-                        nr_ps_mapped += 1
-                        mapping_found = True
-                        break
-                if not mapping_found:
-                    # if it doesn't match, I just print a warning
-                    external_session.logger.warning(_("PS country '%s' (%s) was not mapped to any OERP country") %(ps_country_dict[0]['name'], ps_country_dict[0]['iso_code']))
-                    nr_ps_not_mapped += 1
-        external_session.logger.info(_("Synchro of countries between OERP and PS successfull"))
-        external_session.logger.info(_("Number of PS countries already mapped = %s")
-            % nr_ps_already_mapped)
-        external_session.logger.info(_("Number of PS countries mapped = %s")
-            % nr_ps_mapped)
-        external_session.logger.info(_("Number of PS countries not mapped = %s")
-            % nr_ps_not_mapped)
-        return True
-
-
     @only_for_referential('prestashop')
     def _import_resources(self, cr, uid, external_session, defaults=None, context=None, method="search_then_read"):
         referential_id = external_session.referential_id.id
         self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
         self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
-        self._map_ps_country(cr, uid, external_session, context=context)
+
+        self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='COUNTRY',
+            oe_obj=self.pool.get('res.country'),
+            ps_field='iso_code', ps_readable_field='name',
+            oe_field='code', oe_readable_field='name',
+            compare_function=self._compare_countries, context=context)
+
+        self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='CURRENCY',
+            oe_obj=self.pool.get('res.currency'),
+            ps_field='iso_code', ps_readable_field='name',
+            oe_field='name', oe_readable_field='name',
+            compare_function=self._compare_currencies, context=context)
+        # We will convert lang to _bidirectional_synchro when prestapyth will be fixed
         self._map_ps_lang(cr, uid, external_session, context=context)
         return {}
 
@@ -183,3 +215,5 @@ class res_lang(prestashop_osv):
 class res_country(prestashop_osv):
     _inherit='res.country'
 
+class res_currency(prestashop_osv):
+    _inherit='res.currency'
