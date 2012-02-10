@@ -22,18 +22,37 @@
 #                                                                             #
 ###############################################################################
 {
-    "name" : "Prestashop e-commerce",
+    "name" : "Prestashop-OpenERP connector",
     "version" : "1.0",
     "license": "AGPL-3",
     "depends" : [
                  "product",
 #                 "product_m2mcategories",
-#                 'delivery',
                  "base_sale_multichannels",
 #                 "product_images_olbs",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
-    "description": """Prestashop E-commerce management
+    "description": """This module connects OpenERP and Prestashop.
+
+Prestashop (http://www.prestashop.com/) is a popular e-commerce plateform written in PHP/MySQL and published under the Open Software licence v3.0.
+
+This module allows the synchronisation of the following objects between OpenERP and Prestashop :
+- shop groups and shops
+- currencies
+- languages
+- countries
+- carriers
+- products
+
+Once these objects are synchronised, it will allow the import of orders, together with the related customers and addresses.
+
+This connector uses the OpenERP modules base_sale_multichannels and base_external_referentials that bring a very sophisticated abstraction layer to build a reliable connector between OpenERP and another application. This connector requires the Prestapyt library that you can install via the command "easy_install prestapyt" (the source code of the library is managed on https://github.com/guewen/prestapyt).
+
+This connector supports Prestashop 1.5.
+
+This connector was started by Akretion (http://www.akretion.com/) and Camptocamp (http://www.camptocamp.com/) during a code sprint that took place in Seythenex (Haute-Savoie, France) on 6-10 February 2012. Publishing this connector as free software was possible thanks to a large R&D effort of Akretion and Camptocamp (with some help of Julius Network Solutions). Akretion and Camptocamp form the "PrestashopERPconnect Core Editors".
+
+This connector is built on a very solid basis, but still requires deep knowledge of both OpenERP, Prestashop and the connector's internals to be deployed successfully in production. The PrestashopERPconnect Core Editors are available to help you deploy this solution for your Prestashop-based e-commerce business.
 """,
     'images': [
     ],
@@ -62,7 +81,6 @@
     ],
     "active": False,
     "installable": True,
-
+    "application": True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
