@@ -23,7 +23,7 @@
 ###############################################################################
 {
     "name" : "Prestashop-OpenERP connector",
-    "version" : "1.0",
+    "version" : "0.1", # 0.1 codenamed "In tartiflette we trust"
     "license": "AGPL-3",
     "depends" : [
                  "product",
@@ -48,7 +48,7 @@ Once these objects are synchronised, it will allow the import of orders, togethe
 
 This connector uses the OpenERP modules base_sale_multichannels and base_external_referentials that bring a very sophisticated abstraction layer to build a reliable connector between OpenERP and another application. This connector requires the Prestapyt library that you can install via the command "easy_install prestapyt" (the source code of the library is managed on https://github.com/guewen/prestapyt). You also need the patch on OpenERP addons available here : https://bugs.launchpad.net/openobject-addons/+bug/930127
 
-This connector supports Prestashop 1.5.
+This connector supports Prestashop 1.5 and uses the webservices of Prestashop ; it doesn't require any plug-in in Prestashop.
 
 This connector was started by Akretion (http://www.akretion.com/) and Camptocamp (http://www.camptocamp.com/) during a code sprint that took place in Seythenex (Haute-Savoie, France) on 6-10 February 2012. Publishing this connector as free software was possible thanks to a large R&D effort of Akretion and Camptocamp (with some help of Julius Network Solutions). Akretion and Camptocamp form the "PrestashopERPconnect Core Editors".
 
