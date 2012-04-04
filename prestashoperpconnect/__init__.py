@@ -23,6 +23,7 @@
 ###############################################################################
 
 import external_referential
+import product_category
 import product
 import res_partner
 import res_partner_address

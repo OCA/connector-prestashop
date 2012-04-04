@@ -43,18 +43,20 @@ class prestashop_osv(osv.osv):
 
     @only_for_referential('prestashop')
     def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
+        mapping_ids = self.pool.get('external.mapping').search(cr, uid, [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)])
         if mapping is None:
-            mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-        ext_resource = mapping[self._name]['external_resource_name']
+            mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
         return external_session.connection.search(ext_resource, options = resource_filter)
 
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
+        mapping_ids = self.pool.get('external.mapping').search(cr, uid, [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)])
         if mapping is None:
-            mapping = {self._name : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+            mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
         lang_resource = {}
         main_data = {}
-        ext_resource = mapping[self._name]['external_resource_name']
+        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
         resource = external_session.connection.get(ext_resource, external_id)
         resource = resource[resource.keys()[0]]
         for key in resource:
@@ -87,7 +89,7 @@ class prestashop_osv(osv.osv):
         return result
 
     @only_for_referential('prestashop')
-    def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, context=None):
+    def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
         lang_obj = self.pool.get('res.lang')
         ext_lang_id = resource.get('ext_lang_id', False)
         if ext_lang_id:
