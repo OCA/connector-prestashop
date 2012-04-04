@@ -1,0 +1,7 @@
+"id","version_id:id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
+"prestashop1400_erp_address1","prestashop1400","prestashop_1400_partner_address","address1","base.field_res_partner_address_street","in_out","direct","unicode",,,
+"prestashop1400_erp_address2","prestashop1400","prestashop_1400_partner_address","address2","base.field_res_partner_address_street2","in_out","direct","unicode",,,
+"prestashop1400_erp_phone_mobile","prestashop1400","prestashop_1400_partner_address","phone_mobile","base.field_res_partner_address_mobile","in_out","direct","unicode",,,
+"prestashop1400_erp_postcode","prestashop1400","prestashop_1400_partner_address","postcode","base.field_res_partner_address_zip","in_out","direct","unicode",,,
+"prestashop1400_erp_firstname","prestashop1400","prestashop_1400_partner_address","firstname","base.field_res_partner_address_name","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
+"prestashop1400_erp_city","prestashop1400","prestashop_1400_partner_address","city","base.field_res_partner_address_city","in_out","direct","unicode",,,
