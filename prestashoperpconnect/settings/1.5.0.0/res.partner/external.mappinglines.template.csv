@@ -1,9 +1,9 @@
-"id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_res_partner_active_deleted","prestashop1500","base.model_res_partner","deleted","base.field_res_partner_active","in_out","function","unicode",,"if ifield == ""1"":
+"id","version_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
+"prestashop1500_res_partner_active_deleted","prestashop1500","deleted","base.field_res_partner_active","in_out","function","unicode",,"if ifield == ""1"":
     result = [('active', False)]
 else:
     result = [('active', True)]",
-"prestashop1500_res_partner_website_website","prestashop1500","base.model_res_partner","website","base.field_res_partner_website","in_out","direct","unicode",,,
-"prestashop1500_res_partner_name_name","prestashop1500","base.model_res_partner","name","base.field_res_partner_name","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['name'])]","add_id = self.browse(cr, uid, record['id'])"
-"prestashop1500_res_partner_email_email","prestashop1500","base.model_res_partner","email","base.field_res_partner_email","in_out","direct","unicode",,,
-"prestashop1500_res_partner_subname_firstname","prestashop1500","base.model_res_partner","firstname","base.field_res_partner_subname","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
+"prestashop1500_res_partner_website_website","prestashop1500","website","base.field_res_partner_website","in_out","direct","unicode",,,
+"prestashop1500_res_partner_name_name","prestashop1500","name","base.field_res_partner_name","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['name'])]","add_id = self.browse(cr, uid, record['id'])"
+"prestashop1500_res_partner_email_email","prestashop1500","email","base.field_res_partner_email","in_out","direct","unicode",,,
+"prestashop1500_res_partner_subname_firstname","prestashop1500","firstname","base.field_res_partner_subname","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
