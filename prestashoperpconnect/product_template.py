@@ -2,7 +2,6 @@
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
-#   Copyright (C) 2012 Camptocamp                                             #
 #   Copyright (C) 2012 Akretion                                               #
 #   Author :                                                                  #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
@@ -22,14 +21,9 @@
 #                                                                             #
 ###############################################################################
 
-import external_referential
-import product_category
-import product_template
-import product
-import res_partner
-import res_partner_address
-import sale
+from osv import osv, fields
+import netsvc
+from prestashop_osv import prestashop_osv
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+class product_template(prestashop_osv):
+    _inherit='product.template'
