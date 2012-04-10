@@ -5,5 +5,5 @@
 "prestashoperpconnect.prestashop1400_product_product_price","prestashoperpconnect.prestashop_1400_product","price","product.field_product_product_lst_price","in_out","direct","float",,"False",,
 "prestashoperpconnect.prestashop1400_product_product_price","prestashoperpconnect.prestashop_1400_product","price","product.field_product_product_price","in_out","direct","unicode",,"False",,
 "prestashoperpconnect.prestashop1400_product_product_wholesale_price","prestashoperpconnect.prestashop_1400_product","wholesale_price","product.field_product_product_price_extra","in_out","direct","float",,"False",,
-"prestashoperpconnect.prestashop1400_product_product_id_product","prestashoperpconnect.prestashop_1400_product","id_product","product.field_product_product_product_tmpl_id","in_out","direct","int","prestashoperpconnect.prestashop1400_product_template","False",,
+"prestashoperpconnect.prestashop1400_product_product_id_product","prestashoperpconnect.prestashop_1400_product","id_product","product.field_product_product_product_tmpl_id","in_out","direct","int","prestashoperpconnect.prestashop_1400_product_template","False",,
 "prestashoperpconnect.prestashop1400_product_product_reference","prestashoperpconnect.prestashop_1400_product","reference","product.field_product_product_variants","in_out","direct","unicode",,"False",,
