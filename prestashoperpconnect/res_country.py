@@ -28,7 +28,7 @@ from prestashop_osv import prestashop_osv
 class res_contry(prestashop_osv):
     _inherit='res.country'
 
-    @only_for_referential('prestashop')
-    def _import_resources(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
+#    @only_for_referential('prestashop')
+#    def _import_resources(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
         
         
