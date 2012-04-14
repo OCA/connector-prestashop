@@ -84,7 +84,7 @@ class prestashop_osv(osv.osv):
             main_data.update(lang_resource[main_lang_id])
             main_data.update({'ext_lang_id': main_lang_id})
         result = [main_data]
-        for lang_id in lang_ids:            
+        for lang_id in lang_ids:
             result.append(lang_resource[lang_id])
         return result
 
@@ -93,7 +93,7 @@ class prestashop_osv(osv.osv):
         lang_obj = self.pool.get('res.lang')
         ext_lang_id = resource.get('ext_lang_id', False)
         if ext_lang_id:
-            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, ext_lang_id, external_session.referential_id.id, context=context)
+            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, ext_lang_id, context=context)
             if oe_lang_id:
                 lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
                 context['lang'] = lang['code']
