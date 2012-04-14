@@ -36,9 +36,6 @@ class sale_order_state(osv.osv):
     }
 
 sale_order_state()
-
-class order_state(prestashop_osv):
-    _inherit='sale.order.state'
     
 class sale_order_history(osv.osv):
     _name='sale.order.history'
@@ -46,7 +43,7 @@ class sale_order_history(osv.osv):
     _order = 'date_add desc'
     
     _columns = {
-        'order_id': fields.many2one('sale.order', 'Sale order', required=True),
+        'order_id': fields.many2one('sale.order', 'Sale order', required=True, ondelete='cascade'),
         'state_id': fields.many2one('sale.order.state', 'State', required=True),
         'date_add': fields.datetime('Date add'),
     }
@@ -54,16 +51,31 @@ class sale_order_history(osv.osv):
     _defaults = {
         'date_add': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-    
-class order_history(prestashop_osv):
-    _inherit='sale.order.history'
+sale_order_history()
     
 class external_referential(osv.osv):
     _inherit = "external.referential"
     
     def sync_order_state(self, cr, uid, ids, context=None):
         self.import_resources(cr, uid, ids, 'sale.order.state', context=context)
-        return True 
+        return True
+
+external_referential()
+
+class sale_order(osv.osv):
+    _inherit='sale.order'
+    
+    _columns = {
+        'history_ids': fields.one2many('sale.order.history', 'order_id', 'Prestashop Histories'),
+        'external_state_id': fields.related('history_ids', 'state_id', type='many2one', relation='sale.order.state', string='External State'),
+    }
+sale_order()
+
+class order_state(prestashop_osv):
+    _inherit='sale.order.state'
+    
+class order_history(prestashop_osv):
+    _inherit='sale.order.history'
     
 #    @only_for_referential('prestashop')
 #    def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):

@@ -85,6 +85,21 @@
 				</button>
 			</field>
 		</record>
+		
+		<record id="sale_order_form_with_states_view" model="ir.ui.view">
+			<field name="name">sale.order.with.states</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannel_view_order_form"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="need_to_update" position="after">
+					<field name="external_state_id"/>
+					<newline/>
+					<separator string="Histories" colspan="4"/>
+					<field name="history_ids" colspan="4" nolabel="1"/>
+				</field>
+			</field>
+		</record>
 			
     </data>
 </openerp>

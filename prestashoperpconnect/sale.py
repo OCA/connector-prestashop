@@ -41,11 +41,20 @@ class sale_order(prestashop_osv):
         order_rows = result[0]['order_rows']
         order_lines = []
         if isinstance(order_rows, dict):
-            result[0]['order_rows'] = order_lines
-            return result
+            order_rows = [order_rows]
         for order_row in order_rows:
             order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, external_session, order_row['id'], context=context)[0])
         result[0]['order_rows'] = order_lines
+        history_ids = []
+        if result[0]['id']:
+            id_order = int(result[0]['id'])
+            if resource_filter is None:
+                resource_filter = {}
+            resource_filter.update({'filter[id_order]': [id_order]})
+            histories = self.pool.get('sale.order.history')._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, context=context)
+            for history in histories:
+                history_ids.append(self.pool.get('sale.order.history')._get_external_resources(cr, uid, external_session, history, context=context)[0])
+            result[0]['history_ids'] = history_ids
         return result
 
 class sale_order_line(prestashop_osv):
