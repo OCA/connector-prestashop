@@ -25,7 +25,7 @@ from osv import osv, fields
 import netsvc
 from prestashop_osv import prestashop_osv
 
-class res_contry(prestashop_osv):
+class res_country(prestashop_osv):
     _inherit='res.country'
 
 #    @only_for_referential('prestashop')
