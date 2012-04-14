@@ -132,6 +132,9 @@ class external_referential(prestashop_osv):
     @only_for_referential('prestashop')
     def _import_resources(self, cr, uid, external_session, defaults=None, context=None, method="search_then_read"):
         referential_id = external_session.referential_id.id
+        """TODO Make this more clean because I think this "version" field is not the best way to handle this
+        (The 1.4.3 version of Prestashop don't have external shop group)
+        """
         if external_session.referential_id.version_id.version >= '1.5' or not external_session.referential_id.version_id.version:
             self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
         else:
