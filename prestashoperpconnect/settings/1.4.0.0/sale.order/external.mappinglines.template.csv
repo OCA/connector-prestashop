@@ -10,3 +10,16 @@
 "prestashoperpconnect.prestashop1400_sale_order_line","prestashoperpconnect.prestashop_1400_order","order_rows","sale.field_sale_order_order_line","in","sub-mapping","list","prestashoperpconnect.prestashop_1400_order_line","False",,,
 "prestashoperpconnect.prestashop1400_sale_order_history_ids","prestashoperpconnect.prestashop_1400_order","history_ids","prestashoperpconnect.field_sale_order_history_ids","in_out","sub-mapping","list","prestashoperpconnect.prestashop_1400_order_history","False",,,
 "prestashoperpconnect.prestashop1400_sale_order_date_upd","prestashoperpconnect.prestashop_1400_order","date_upd","sale.field_sale_order_date_order","in_out","direct","datetime",,"False",,,"%Y-%m-%d %H:%M:%S"
+"prestashoperpconnect.prestashop1400_sale_order_id_currency","prestashoperpconnect.prestashop_1400_order","id_currency","sale.field_sale_order_pricelist_id","in_out","function","int",,"False","pricelist_ids = []
+if ifield:
+    currency_data_name = 'res_currency/' + str(ifield)
+    model_data_obj = self.pool.get('ir.model.data')
+    model_data_ids = model_data_obj.search(cr, uid, [('model', '=', 'res.currency'),('name', '=', currency_data_name)])
+    model_data_id = model_data_ids and model_data_ids[0] or False
+    if model_data_id:
+        currency_id = model_data_obj.read(cr, uid, model_data_id, ['res_id'])['res_id']
+        if currency_id:
+            type = 'sale'
+            pricelist_ids = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', currency_id),('type', '=', type)])
+if pricelist_ids:
+    result = [('pricelist_id', pricelist_ids and pricelist_ids[0] or False)]",,
