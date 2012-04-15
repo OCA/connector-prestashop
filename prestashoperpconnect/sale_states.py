@@ -29,6 +29,7 @@ import time
 
 class sale_order_state(osv.osv):
     _name='sale.order.state'
+    _description = 'Sale External State'
 
     _columns = {
         'name': fields.char('Name', size=64, translate=True),
@@ -39,6 +40,7 @@ sale_order_state()
     
 class sale_order_history(osv.osv):
     _name='sale.order.history'
+    _description = 'Sale External History'
     
     _order = 'date_add desc'
     
