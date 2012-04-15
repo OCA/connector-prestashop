@@ -22,7 +22,6 @@
 ###############################################################################
 
 from osv import osv, fields
-import netsvc
 from base_external_referentials.decorator import only_for_referential
 from collections import defaultdict
 

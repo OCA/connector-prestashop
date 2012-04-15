@@ -22,7 +22,6 @@
 ###############################################################################
 
 from osv import osv, fields
-import netsvc
 from prestashop_osv import prestashop_osv
 from base_external_referentials.decorator import only_for_referential
 

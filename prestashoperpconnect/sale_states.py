@@ -22,7 +22,6 @@
 ###############################################################################
 
 from osv import osv, fields
-#import netsvc
 from prestashop_osv import prestashop_osv
 from base_external_referentials.decorator import only_for_referential
 import time
@@ -91,3 +90,5 @@ class order_history(prestashop_osv):
 #            order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, external_session, order_row['id'], context=context)[0])
 #        result[0]['order_rows'] = order_lines
 #        return result
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

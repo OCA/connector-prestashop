@@ -22,9 +22,9 @@
 ###############################################################################
 
 from osv import osv, fields
-import netsvc
 from prestashop_osv import prestashop_osv
 from base_external_referentials.decorator import only_for_referential
+import time
 
 class external_shop_group(prestashop_osv):
     _inherit='external.shop.group'
@@ -59,3 +59,50 @@ class sale_order(prestashop_osv):
 
 class sale_order_line(prestashop_osv):
     _inherit='sale.order.line'
+    
+class sale_shop(prestashop_osv):
+    _inherit = 'sale.shop'
+    
+#    @only_for_referential('prestashop')
+#    def update_orders(self, cr, uid, ids, context=None):
+#        if context is None:
+#            context = {}
+#        for shop in self.browse(cr, uid, ids):
+#            #get all orders, which the state is not draft and the date of modification is superior to the last update, to exports 
+#            req = "select ir_model_data.res_id, ir_model_data.name from sale_order inner join ir_model_data on sale_order.id = ir_model_data.res_id where ir_model_data.model='sale.order' and sale_order.shop_id=%s and ir_model_data.referential_id IS NOT NULL "
+#            param = (shop.id,)
+#
+#            if shop.last_update_order_export_date:
+#                req += "and sale_order.write_date > %s" 
+#                param = (shop.id, shop.last_update_order_export_date)
+#
+#            cr.execute(req, param)
+#            results = cr.fetchall()
+#
+#            for result in results:
+#                ids = self.pool.get('sale.order').search(cr, uid, [('id', '=', result[0])])
+#                if ids:
+#                    id = ids[0]
+#                    order = self.pool.get('sale.order').browse(cr, uid, id, context)
+#                    order_ext_id = result[1].split('sale_order/')[1]
+#                    self.update_shop_orders(cr, uid, order, order_ext_id, context)
+#                    logging.getLogger('external_synchro').info("Successfully updated order with OpenERP id %s and ext id %s in external sale system" % (id, order_ext_id))
+#            self.pool.get('sale.shop').write(cr, uid, shop.id, {'last_update_order_export_date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+#        return False
+    
+    @only_for_referential('prestashop')
+    def update_shop_orders(self, cr, uid, order, ext_id, context=None):
+        if context is None: context = {}
+        result = {}
+        date = '2012-04-15 10:46:57'
+        history_obj = self.pool.get('sale.order.history')
+        history_ids = history_obj.search(cr, uid, [('order_id', '=', order.id),('date_add', '>=', date)])
+        if history_ids:
+            self.export_history(cr, uid, [2], history_ids, context=context)
+        return result
+    
+    def export_history(self, cr, uid, ids, history_ids, context=None):
+        self.export_resources(cr, uid, ids, history_ids, 'sale.order.history', context=context)
+        return True
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
