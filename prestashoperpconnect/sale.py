@@ -28,9 +28,8 @@ import time
 
 class external_shop_group(prestashop_osv):
     _inherit='external.shop.group'
+    
 
-class sale_shop(prestashop_osv):
-    _inherit='sale.shop'
 
 class sale_order(prestashop_osv):
     _inherit='sale.order'
@@ -43,7 +42,8 @@ class sale_order(prestashop_osv):
         if isinstance(order_rows, dict):
             order_rows = [order_rows]
         for order_row in order_rows:
-            order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, external_session, order_row['id'], context=context)[0])
+            if order_row.get('id', False):
+                order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, external_session, order_row['id'], context=context)[0])
         result[0]['order_rows'] = order_lines
         history_ids = []
         if result[0]['id']:
@@ -62,6 +62,15 @@ class sale_order_line(prestashop_osv):
     
 class sale_shop(prestashop_osv):
     _inherit = 'sale.shop'
+
+    def export_prestashop_catalog(self, cr, uid, ids, context=None):
+#        self.export_resources(cr, uid, ids, 'product.category', context=context)
+        context['lang_to_export'] = ['en_US','fr_FR','de_DE','es_ES','it_IT']
+        self.export_resources(cr, uid, ids, 'product.template', context=context)
+        #TODO update the last date
+        #I don't know where it's thebest to update it ere or in the epxot functions
+        #take care about concurent write with diferent cursor
+        return True
     
 #    @only_for_referential('prestashop')
 #    def update_orders(self, cr, uid, ids, context=None):
@@ -90,19 +99,19 @@ class sale_shop(prestashop_osv):
 #            self.pool.get('sale.shop').write(cr, uid, shop.id, {'last_update_order_export_date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 #        return False
     
-    @only_for_referential('prestashop')
-    def update_shop_orders(self, cr, uid, order, ext_id, context=None):
-        if context is None: context = {}
-        result = {}
-        date = '2012-04-15 10:46:57'
-        history_obj = self.pool.get('sale.order.history')
-        history_ids = history_obj.search(cr, uid, [('order_id', '=', order.id),('date_add', '>=', date)])
-        if history_ids:
-            self.export_history(cr, uid, [2], history_ids, context=context)
-        return result
-    
-    def export_history(self, cr, uid, ids, history_ids, context=None):
-        self.export_resources(cr, uid, ids, history_ids, 'sale.order.history', context=context)
-        return True
+#    @only_for_referential('prestashop')
+#    def update_shop_orders(self, cr, uid, order, ext_id, context=None):
+#        if context is None: context = {}
+#        result = {}
+#        date = '2012-04-15 10:46:57'
+#        history_obj = self.pool.get('sale.order.history')
+#        history_ids = history_obj.search(cr, uid, [('order_id', '=', order.id),('date_add', '>=', date)])
+#        if history_ids:
+#            self.export_history(cr, uid, [2], history_ids, context=context)
+#        return result
+#    
+#    def export_history(self, cr, uid, ids, history_ids, context=None):
+#        self.export_resources(cr, uid, ids, history_ids, 'sale.order.history', context=context)
+#        return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

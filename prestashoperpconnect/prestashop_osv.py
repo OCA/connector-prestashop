@@ -97,4 +97,58 @@ class prestashop_osv(osv.osv):
                 lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
                 context['lang'] = lang['code']
         return super(prestashop_osv, self)._record_one_external_resource(cr, uid, external_session, resource, defaults=defaults, mapping=mapping, context=context)
+    
+    @only_for_referential('prestashop')
+    def ext_create(self, cr, uid, external_session, resources, context=None):
+        ext_ids = external_session.connection.search('products', options={'limit': [0,1]})
+        data = external_session.connection.get('products', resource_id=ext_ids[0])
+        lang_obj = self.pool.get('res.lang')
+        external_ids = {}
+        for existing_rec_id in resources.keys():
+            resource = resources[existing_rec_id]
+            resource_data = {}
+            key = data.keys()[0]
+            resource_data[key] = {}
+            for data_value in data[key]:
+                if isinstance(data[key][data_value],dict):
+                    if data[key][data_value].has_key('language'):
+                        resource_data[key][data_value] = {}
+                        resource_data[key][data_value]['language'] = data[key][data_value]['language']
+                        lang_vals = resource_data[key][data_value]['language']
+                        new_lang_vals = []
+                        for vals in lang_vals:
+                            if vals.has_key('value'):
+                                vals['value'] = ''
+                            if vals.has_key('attrs'):
+                                if vals['attrs'].has_key('id'):
+                                    ext_lang_id = vals['attrs'].get('id',False)
+                                    oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, ext_lang_id, context=context)
+                                    if oe_lang_id:
+                                        lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
+                                        if resource.has_key(lang['code']):
+                                            vals['value'] = resource[lang['code']].get(data_value,False) or ''
+                                        if not vals['value'] and resource.has_key('en_US') and resource['en_US'].has_key(data_value):
+                                            vals['value'] = resource['en_US'].get(data_value,False) or ''
+                            new_lang_vals.append(vals)
+                        resource_data[key][data_value]['language'] = new_lang_vals
+                else:
+                    if resource['en_US'].has_key(data_value):
+                        resource_data[key][data_value] = str(resource['en_US'][data_value])
+#                        print data_value, resource['en_US'][data_value]
+                    else:
+                        resource_data[key][data_value] = ''
+    #        associations = {'categories':{},'images':{},'combinations':{},'product_option_values':{},'product_features':{}}
+    #        resource_data.update({'associations':associations})
+            result = external_session.connection.add('products', resource_data)
+            external_id = result.get('prestashop',False) and result['prestashop'].get('product',False) and result['prestashop']['product'].get('id',False)
+            if external_id:
+                external_ids.update({existing_rec_id : external_id})
+        return external_ids
+    
+    @only_for_referential('prestashop')
+    def ext_update(self, cr, uid, external_session, resources, context=None):
+        print resources
+        return False
+    
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
