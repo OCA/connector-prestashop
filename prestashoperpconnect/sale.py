@@ -28,8 +28,6 @@ import time
 
 class external_shop_group(prestashop_osv):
     _inherit='external.shop.group'
-    
-
 
 class sale_order(prestashop_osv):
     _inherit='sale.order'
@@ -63,9 +61,20 @@ class sale_order_line(prestashop_osv):
 class sale_shop(prestashop_osv):
     _inherit = 'sale.shop'
 
+    def get_lang_to_export(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        lang_code = []
+        shop_data = self.browse(cr, uid, ids)
+        for shop in shop_data:
+            lang_code = [x.code for x in shop.exportable_lang_ids]
+        return lang_code
+
     def export_prestashop_catalog(self, cr, uid, ids, context=None):
-#        self.export_resources(cr, uid, ids, 'product.category', context=context)
-        context['lang_to_export'] = ['en_US','fr_FR','de_DE','es_ES','it_IT']
+        if context == None:
+            context = {}
+        context['lang_to_export'] = self.get_lang_to_export(cr, uid, ids, context=context)
+        self.export_resources(cr, uid, ids, 'product.category', context=context)
         self.export_resources(cr, uid, ids, 'product.template', context=context)
         #TODO update the last date
         #I don't know where it's thebest to update it ere or in the epxot functions
@@ -113,5 +122,14 @@ class sale_shop(prestashop_osv):
 #    def export_history(self, cr, uid, ids, history_ids, context=None):
 #        self.export_resources(cr, uid, ids, history_ids, 'sale.order.history', context=context)
 #        return True
+
+class sale_shop_osv(osv.osv):
+    _inherit = 'sale.shop'
+    
+    _columns = {
+        'exportable_lang_ids': fields.many2many('res.lang', 'shop_lang_rel', 'lang_id', 'shop_id', 'Exportable Languages'),
+    }
+    
+sale_shop_osv()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

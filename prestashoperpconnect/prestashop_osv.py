@@ -100,9 +100,11 @@ class prestashop_osv(osv.osv):
     
     @only_for_referential('prestashop')
     def ext_create(self, cr, uid, external_session, resources, context=None):
-        'here creating'
-        ext_ids = external_session.connection.search('products', options={'limit': [0,1]})
-        data = external_session.connection.get('products', resource_id=ext_ids[0])
+        mapping_ids = self.pool.get('external.mapping').search(cr, uid, [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)])
+        mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
+        ext_ids = external_session.connection.search(ext_resource, options={'limit': [0,1]})
+        data = external_session.connection.get(ext_resource, resource_id=ext_ids[0])
         lang_obj = self.pool.get('res.lang')
         external_ids = {}
         for existing_rec_id in resources.keys():
@@ -139,7 +141,7 @@ class prestashop_osv(osv.osv):
                         resource_data[key][data_value] = ''
     #        associations = {'categories':{},'images':{},'combinations':{},'product_option_values':{},'product_features':{}}
     #        resource_data.update({'associations':associations})
-            result = external_session.connection.add('products', resource_data)
+            result = external_session.connection.add(ext_resource, resource_data)
             external_id = result.get('prestashop',False) and result['prestashop'].get('product',False) and result['prestashop']['product'].get('id',False)
             if external_id:
                 external_ids.update({existing_rec_id : external_id})
@@ -147,11 +149,15 @@ class prestashop_osv(osv.osv):
     
     @only_for_referential('prestashop')
     def ext_update(self, cr, uid, external_session, resources, context=None):
-        'here updating'
+        mapping_ids = self.pool.get('external.mapping').search(cr, uid, [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)])
+        mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
+        ext_ids = external_session.connection.search(ext_resource, options={'limit': [0,1]})
+        data = external_session.connection.get(ext_resource, resource_id=ext_ids[0])
         lang_obj = self.pool.get('res.lang')
         for existing_rec_id in resources.keys():
             ext_id = self.oeid_to_existing_extid(cr, uid, external_session.referential_id.id, existing_rec_id, context=context)
-            data = external_session.connection.get('products', resource_id=ext_id)
+            data = external_session.connection.get(ext_resource, resource_id=ext_id)
             resource = resources[existing_rec_id]
             resource_data = {}
             key = data.keys()[0]
@@ -182,12 +188,11 @@ class prestashop_osv(osv.osv):
                     else:
                         if resource['en_US'].has_key(data_value):
                             resource_data[key][data_value] = str(resource['en_US'][data_value])
-    #                        print data_value, resource['en_US'][data_value]
                         else:
                             resource_data[key][data_value] = ''
                 else:
                     resource_data[key]['id'] = ext_id
-            result = external_session.connection.edit('products', ext_id, resource_data)
+            result = external_session.connection.edit(ext_resource, ext_id, resource_data)
         return False
     
 
