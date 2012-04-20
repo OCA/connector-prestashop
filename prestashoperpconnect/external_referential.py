@@ -34,7 +34,7 @@ class external_referential(prestashop_osv):
     @only_for_referential('prestashop')
     def external_connection(self, cr, uid, id, debug=False, logger=False, context=None):
         if isinstance(id, list):
-            id=id[0]
+            id = id[0]
         referential = self.browse(cr, uid, id, context=context)
         prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass)
         try:

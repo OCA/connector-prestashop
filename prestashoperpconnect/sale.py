@@ -3,8 +3,9 @@
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
 #   Copyright (C) 2012 Akretion                                               #
-#   Author :                                                                  #
+#   Authors :                                                                 #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
+#           Mathieu VATEL <mathieu@julius.fr>                                 #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -34,14 +35,17 @@ class sale_order(prestashop_osv):
 
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
-        result = super(sale_order, self)._get_external_resources(cr, uid, external_session, external_id=external_id, resource_filter=resource_filter, mapping=mapping, fields=fields, context=context)
+        result = super(sale_order, self)._get_external_resources(cr, uid, external_session, \
+                                            external_id=external_id, resource_filter=resource_filter, \
+                                            mapping=mapping, fields=fields, context=context)
         order_rows = result[0]['order_rows']
         order_lines = []
-        if isinstance(order_rows, dict):
+        if not isinstance(order_rows, list):
             order_rows = [order_rows]
         for order_row in order_rows:
-            if order_row.get('id', False):
-                order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, external_session, order_row['id'], context=context)[0])
+            if order_row.get('id'):
+                order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
+                                                                        external_session, order_row['id'], context=context)[0])
         result[0]['order_rows'] = order_lines
         history_ids = []
         if result[0]['id']:
@@ -49,9 +53,11 @@ class sale_order(prestashop_osv):
             if resource_filter is None:
                 resource_filter = {}
             resource_filter.update({'filter[id_order]': [id_order]})
-            histories = self.pool.get('sale.order.history')._get_external_resource_ids(cr, uid, external_session, resource_filter=resource_filter, context=context)
+            histories = self.pool.get('sale.order.history')._get_external_resource_ids(cr, uid, external_session,\
+                                                                    resource_filter=resource_filter, context=context)
             for history in histories:
-                history_ids.append(self.pool.get('sale.order.history')._get_external_resources(cr, uid, external_session, history, context=context)[0])
+                history_ids.append(self.pool.get('sale.order.history')._get_external_resources(cr, uid, \
+                                                                            external_session, history, context=context)[0])
             result[0]['history_ids'] = history_ids
         return result
 
@@ -61,7 +67,7 @@ class sale_order_line(prestashop_osv):
 class sale_shop(prestashop_osv):
     _inherit = 'sale.shop'
 
-    def get_lang_to_export(self, cr, uid, ids, context=None):
+    def get_shop_lang_to_export(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
         lang_code = []
@@ -73,7 +79,7 @@ class sale_shop(prestashop_osv):
     def export_prestashop_catalog(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
-        context['lang_to_export'] = self.get_lang_to_export(cr, uid, ids, context=context)
+        context['lang_to_export'] = self.get_shop_lang_to_export(cr, uid, ids, context=context)
         self.export_resources(cr, uid, ids, 'product.category', context=context)
         self.export_resources(cr, uid, ids, 'product.template', context=context)
         #TODO update the last date
