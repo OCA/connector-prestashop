@@ -32,9 +32,9 @@ class external_referential(prestashop_osv):
     _inherit = "external.referential"
     
     @only_for_referential('prestashop')
-    def external_connection(self, cr, uid, id, debug=False, context=None):
+    def external_connection(self, cr, uid, id, debug=False, logger=False, context=None):
         if isinstance(id, list):
-            id=id[0]
+            id = id[0]
         referential = self.browse(cr, uid, id, context=context)
         prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass)
         try:
@@ -132,7 +132,24 @@ class external_referential(prestashop_osv):
     @only_for_referential('prestashop')
     def _import_resources(self, cr, uid, external_session, defaults=None, context=None, method="search_then_read"):
         referential_id = external_session.referential_id.id
-        self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
+        """TODO Make this more clean because I think this "version" field is not the best way to handle this
+        (The 1.4.3 version of Prestashop don't have external shop group)
+        """
+        if external_session.referential_id.version_id.version >= '1.5' or not external_session.referential_id.version_id.version:
+            self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
+        else:
+            ext_shop_group_obj = self.pool.get('external.shop.group')
+            group_id = False
+            group_ids = ext_shop_group_obj.search(cr, uid, [('referential_id', '=', referential_id)])
+            if not group_ids:
+                group_shop_vals = {'name': "Shop group" + external_session.referential_id.name, 'referential_id': referential_id}
+                group_id = ext_shop_group_obj.create(cr, uid, group_shop_vals)
+            else:
+                group_id = group_ids[0]
+            if context == None:
+                context = {}
+            if group_id:
+                context.update({'default_shop_group_id':group_id})
         self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='LANG',

@@ -1,7 +1,7 @@
-"id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_delivery_carrier_name","prestashop1500","delivery.model_delivery_carrier","name","delivery.field_delivery_carrier_name","in","direct","unicode",,,
-"prestashop1500_delivery_carrier_active","prestashop1500","delivery.model_delivery_carrier","active","delivery.field_delivery_carrier_active","in","direct","bool",,,
-"prestashop1500_delivery_carrier_partner_id","prestashop1500","delivery.model_delivery_carrier","name","delivery.field_delivery_carrier_partner_id","in","function","unicode",,"partner_id = self.pool.get('res.partner').search(cr, uid, [('name', '=', ifield)], context=context)
+"id","version_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
+"prestashop1500_delivery_carrier_name","prestashop1500","name","delivery.field_delivery_carrier_name","in","direct","unicode",,,
+"prestashop1500_delivery_carrier_active","prestashop1500","active","delivery.field_delivery_carrier_active","in","direct","bool",,,
+"prestashop1500_delivery_carrier_partner_id","prestashop1500","name","delivery.field_delivery_carrier_partner_id","in","function","unicode",,"partner_id = self.pool.get('res.partner').search(cr, uid, [('name', '=', ifield)], context=context)
 if partner_id:    
     result=[('partner_id',partner_id[0])]
 else:

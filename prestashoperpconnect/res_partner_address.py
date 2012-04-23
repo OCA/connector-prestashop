@@ -22,7 +22,6 @@
 ###############################################################################
 
 from osv import osv, fields
-import netsvc
 from prestashop_osv import prestashop_osv
 
 class res_partner_address(prestashop_osv):

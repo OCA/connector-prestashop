@@ -1,0 +1,20 @@
+"id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","alternative_key","in_function","out_function"
+"prestashoperpconnect.prestashop1400_res_partner_address_id_customer","prestashoperpconnect.prestashop_1400_partner_address","id_customer","base.field_res_partner_address_partner_id","in_out","direct","int",,"False","if ifield:
+    result = [('name', ifield + ' ' + data['lastname'] or '')]
+else:
+    result = [('name', data['lastname'] or '')]","add_id = self.browse(cr, uid, record['id'])"
+"prestashoperpconnect.prestashop1400_res_partner_address_email","prestashoperpconnect.prestashop_1400_partner_address","email","base.field_res_partner_address_email","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_contact_name","prestashoperpconnect.prestashop_1400_partner_address","contact_name","base.field_res_partner_address_name","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_contact_type","prestashoperpconnect.prestashop_1400_partner_address","contact_type","base.field_res_partner_address_type","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_firstname","prestashoperpconnect.prestashop_1400_partner_address","firstname","base.field_res_partner_address_name","in_out","function","unicode",,"False","if not data['contact_name']:
+    if ifield:
+        result = [('name', ifield + ' ' + data['lastname'] or '')]
+    else:
+        result = [('name', data['lastname'] or '')]
+else:
+    result = [('name', data['contact_name'] or '')]","add_id = self.browse(cr, uid, record['id'])"
+"prestashoperpconnect.prestashop1400_res_partner_address_city","prestashoperpconnect.prestashop_1400_partner_address","city","base.field_res_partner_address_city","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_address1","prestashoperpconnect.prestashop_1400_partner_address","address1","base.field_res_partner_address_street","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_address2","prestashoperpconnect.prestashop_1400_partner_address","address2","base.field_res_partner_address_street2","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_phone_mobile","prestashoperpconnect.prestashop_1400_partner_address","phone_mobile","base.field_res_partner_address_mobile","in_out","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_res_partner_address_erp_postcode","prestashoperpconnect.prestashop_1400_partner_address","postcode","base.field_res_partner_address_zip","in_out","direct","unicode",,"False",,

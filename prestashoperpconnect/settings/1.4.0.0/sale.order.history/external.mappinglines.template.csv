@@ -1,0 +1,4 @@
+"id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","alternative_key","in_function","out_function","datetime_format"
+"prestashoperpconnect.prestashop1400_order_history_order_id","prestashoperpconnect.prestashop_1400_order_history","id_order","prestashoperpconnect.field_sale_order_history_order_id","in","direct","int",,"False",,,
+"prestashoperpconnect.prestashop1400_order_history_state_id","prestashoperpconnect.prestashop_1400_order_history","id_order_state","prestashoperpconnect.field_sale_order_history_state_id","in","direct","int",,"False",,,
+"prestashoperpconnect.prestashop1400_order_history_date_add","prestashoperpconnect.prestashop_1400_order_history","date_add","prestashoperpconnect.field_sale_order_history_date_add","in","direct","datetime",,"False",,,"%Y-%m-%d %H:%M:%S"

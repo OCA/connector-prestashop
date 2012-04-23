@@ -1,0 +1,3 @@
+id,mapping_id:id,external_field,field_id:id,type,evaluation_type,external_type,child_mapping_id:id,alternative_key,in_function,out_function
+prestashoperpconnect.sale_shop_name,prestashoperpconnect.prestashop_1400_sale_shop,name,sale.field_sale_shop_name,in_out,direct,unicode,,False,,
+

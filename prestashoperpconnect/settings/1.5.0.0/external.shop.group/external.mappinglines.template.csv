@@ -1,2 +1,2 @@
-"id","version_id:id","model_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_shop_group_name","prestashop1500","base_sale_multichannels.model_external_shop_group","name","base_sale_multichannels.field_external_shop_group_name","in_out","direct","unicode",,,
+"id","version_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
+"prestashop1500_shop_group_name","prestashop1500","name","base_sale_multichannels.field_external_shop_group_name","in_out","direct","unicode",,,

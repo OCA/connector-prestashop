@@ -1,0 +1,3 @@
+"id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","alternative_key","in_function","out_function"
+"prestashoperpconnect.prestashop1400_order_state_name","prestashoperpconnect.prestashop_1400_order_state","name","prestashoperpconnect.field_sale_order_state_name","in","direct","unicode",,"False",,
+"prestashoperpconnect.prestashop1400_sale_state_template","prestashoperpconnect.prestashop_1400_order_state","template","prestashoperpconnect.field_sale_order_state_template","in","direct","unicode",,"False",,

@@ -17,6 +17,25 @@
 			<field name="view_mode">tree,form</field>
 		<!--	<field name="domain">[('prestashop_shop', '=', True)]</field> -->
 		</record>
+		
+		
+		<record id="view_shop_form_specific_export_catalog" model="ir.ui.view">
+			<field name="name">prestashoperpconnect.sale.shop.view_form</field>
+			<field name="model">sale.shop</field>
+			<field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form" />
+            <field eval="16" name="priority"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<button name="export_catalog" position="replace">
+						<button name="export_prestashop_catalog" string="Export Catalog" colspan="1" type="object" context="{'last_exported_date':last_products_export_date}"/>
+					</button>
+					<field name="exportable_root_category_ids" position="after">
+						<field name="exportable_lang_ids"/>
+					</field>
+				</data>
+			</field>
+		</record>
 
     </data>
 </openerp>

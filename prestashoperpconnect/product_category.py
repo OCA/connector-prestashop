@@ -4,7 +4,7 @@
 #   Prestashoperpconnect for OpenERP                                          #
 #   Copyright (C) 2012 Akretion                                               #
 #   Author :                                                                  #
-#           Benoît Guillot <benoit.guillot@akretion.com>                      #
+#           Sébastien BEAU <sebastien.beau@akretion.com>                      #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -24,10 +24,5 @@
 from osv import osv, fields
 from prestashop_osv import prestashop_osv
 
-class res_country(prestashop_osv):
-    _inherit='res.country'
-
-#    @only_for_referential('prestashop')
-#    def _import_resources(self, cr, uid, ref_called_from, referential_id, defaults, context=None, method="search_then_read"):
-        
-        
+class product_category(prestashop_osv):
+    _inherit='product.category'
