@@ -1,2 +1,2 @@
-"type_id:id","id","name"
-"prestashop","prestashop1500","Version 1.5.0.0+"
+id,type_id:id,name,code
+prestashop1500,prestashop,Version 1.5.0.0+,prestashop1500
