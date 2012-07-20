@@ -1,5 +1,5 @@
-"id","version_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_sale_order_line_name","prestashop1500","product_name","sale.field_sale_order_line_name","in","direct","unicode",,,
-"prestashop1500_sale_order_line_price_unit","prestashop1500","product_price","sale.field_sale_order_line_price_unit","in","direct","float",,,
-"prestashop1500_sale_order_line_quantity","prestashop1500","product_quantity","sale.field_sale_order_line_product_uom_qty","in","direct","float",,,
-"prestashop1500_sale_order_line_product_id","prestashop1500","product_id","sale.field_sale_order_line_product_id","in","direct","list",,,
+id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
+prestashop1500_sale_order_line_name,prestashop_1500_order_line,10,in,direct,sale.field_sale_order_line_name,product_name,unicode,,,,,,
+prestashop1500_sale_order_line_price_unit,prestashop_1500_order_line,10,in,direct,sale.field_sale_order_line_price_unit,product_price,float,,,,,,
+prestashop1500_sale_order_line_quantity,prestashop_1500_order_line,10,in,direct,sale.field_sale_order_line_product_uom_qty,product_quantity,float,,,,,,
+prestashop1500_sale_order_line_product_id,prestashop_1500_order_line,10,in,direct,sale.field_sale_order_line_product_id,product_id,list,,,,,,

@@ -1,7 +1,7 @@
-"id","version_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_erp_active","prestashop1500","active","product.field_product_product_active","in_out","direct","bool",,,
-"prestashop1500_erp_available_for_sale","prestashop1500","available_for_sale","product.field_product_template_sale_ok","in_out","direct","bool",,,
-"prestashop1500_erp_wholesale_price","prestashop1500","wholesale_price","product.field_product_template_standard_price","in_out","direct","float",,,
-"prestashop1500_erp_weight","prestashop1500","weight","product.field_product_template_weight","in_out","direct","float",,,
-"prestashop1500_erp_price","prestashop1500","price","product.field_product_template_list_price","in_out","direct","float",,,
-"prestashop1500_erp_name","prestashop1500","name","product.field_product_template_name","in_out","direct","unicode",,,
+id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
+prestashop1500_erp_active,prestashop_1500_product,10,in_out,direct,product.field_product_product_active,active,bool,,,,,,
+prestashop1500_erp_available_for_sale,prestashop_1500_product,10,in_out,direct,product.field_product_template_sale_ok,available_for_sale,bool,,,,,,
+prestashop1500_erp_wholesale_price,prestashop_1500_product,10,in_out,direct,product.field_product_template_standard_price,wholesale_price,float,,,,,,
+prestashop1500_erp_weight,prestashop_1500_product,10,in_out,direct,product.field_product_template_weight,weight,float,,,,,,
+prestashop1500_erp_price,prestashop_1500_product,10,in_out,direct,product.field_product_template_list_price,price,float,,,,,,
+prestashop1500_erp_name,prestashop_1500_product,10,in_out,direct,product.field_product_template_name,name,unicode,,,,,,

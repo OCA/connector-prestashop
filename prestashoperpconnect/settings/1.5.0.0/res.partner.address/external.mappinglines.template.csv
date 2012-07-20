@@ -1,7 +1,7 @@
-"id","version_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","in_function","out_function"
-"prestashop1500_erp_address1","prestashop1500","address1","base.field_res_partner_address_street","in_out","direct","unicode",,,
-"prestashop1500_erp_address2","prestashop1500","address2","base.field_res_partner_address_street2","in_out","direct","unicode",,,
-"prestashop1500_erp_phone_mobile","prestashop1500","phone_mobile","base.field_res_partner_address_mobile","in_out","direct","unicode",,,
-"prestashop1500_erp_postcode","prestashop1500","postcode","base.field_res_partner_address_zip","in_out","direct","unicode",,,
-"prestashop1500_erp_firstname","prestashop1500","firstname","base.field_res_partner_address_name","in_out","function","unicode",,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])"
-"prestashop1500_erp_city","prestashop1500","city","base.field_res_partner_address_city","in_out","direct","unicode",,,
+id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
+prestashop1500_erp_address1,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_street,address1,unicode,,,,,,
+prestashop1500_erp_address2,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_street2,address2,unicode,,,,,,
+prestashop1500_erp_phone_mobile,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_mobile,phone_mobile,unicode,,,,,,
+prestashop1500_erp_postcode,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_zip,postcode,unicode,,,,,,
+prestashop1500_erp_firstname,prestashop_1500_partner_address,10,in_out,function,base.field_res_partner_address_name,firstname,unicode,,,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])",,
+prestashop1500_erp_city,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_city,city,unicode,,,,,,
