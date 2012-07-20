@@ -6,4 +6,4 @@ else:
 prestashop1500_res_partner_website_website,prestashop_1500_partner,10,in_out,direct,base.field_res_partner_website,website,unicode,,,,,,
 prestashop1500_res_partner_name_name,prestashop_1500_partner,10,in_out,function,base.field_res_partner_name,name,unicode,,,"result = [('name', ifield + ' ' + data['name'])]","add_id = self.browse(cr, uid, record['id'])",,
 prestashop1500_res_partner_email_email,prestashop_1500_partner,10,in_out,direct,base.field_res_partner_email,email,unicode,,,,,,
-prestashop1500_res_partner_subname_firstname,prestashop_1500_partner,10,in_out,function,base.field_res_partner_subname,firstname,unicode,,,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])",,
+prestashop1500_res_partner_subname_firstname,prestashop_1500_partner,10,in_out,function,base.field_res_partner_subname,firstname,unicode,,,"result = [('name', '%s %s'%(resource['lastname'], resource['firstname']))]","add_id = self.browse(cr, uid, record['id'])",,
