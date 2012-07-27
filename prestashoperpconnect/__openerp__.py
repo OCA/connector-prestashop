@@ -61,13 +61,14 @@ This connector is built on a very solid basis, but still requires deep knowledge
     "complexity" : "expert",
     "init_xml" : [],
     "demo_xml" : [],
-    'update_xml': [ 
+    'update_xml': [
         'external_referential_view.xml',
         'prestashoperpconnect_view.xml',
         'sale_view.xml',
         'sale_states_view.xml',
         'prestashoperpconnect_menu.xml',
         'board_prestashoperpconnect_view.xml',
+        'res_partner_data.xml',
         'settings/external.referential.type.csv',
         'settings/1.5.0.0/external.referential.version.csv',
         'settings/1.5.0.0/external.mapping.template.csv',

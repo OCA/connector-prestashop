@@ -31,6 +31,14 @@ class prestashop_osv(osv.osv):
 
     @only_for_referential('prestashop')
     def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+        """
+        Used to limit the query in external library
+        :param ExternalSession external_session : External_session that contain all params of connection
+        :param int step: Step the of the import, 100 meant you will import data per 100
+        :param dict previous_filter: the previous filter
+        :return: dictionary with a filter
+        :rtype: dict
+        """
         if not previous_filter:
             start = 0
         else:
@@ -52,10 +60,12 @@ class prestashop_osv(osv.osv):
 
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
+        #TODO begin refactor with _get_external_resource_ids()
         search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
         mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals)
         if mapping is None:
             mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+        # end refactor
         lang_resource = {}
         main_data = {}
         ext_resource = mapping[mapping_ids[0]]['external_resource_name']
@@ -101,7 +111,7 @@ class prestashop_osv(osv.osv):
                 context['lang'] = lang['code']
         return super(prestashop_osv, self)._record_one_external_resource(cr, uid, external_session, \
                         resource, defaults=defaults, mapping=mapping, context=context)
-    
+
     def transform_one_resource_to_prestashop_vals(self, cr, uid, external_session, resource, external_data, method='add', context=None):
         if context == None:
             context = {}
@@ -142,7 +152,7 @@ class prestashop_osv(osv.osv):
         if method == 'edit':
             resource_data[key]['id'] = external_id
         return resource_data
-    
+
     @only_for_referential('prestashop')
     def ext_create(self, cr, uid, external_session, resources, context=None):
         search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
@@ -165,7 +175,7 @@ class prestashop_osv(osv.osv):
             if external_id:
                 external_ids.update({existing_rec_id : external_id})
         return external_ids
-    
+
     @only_for_referential('prestashop')
     def ext_update(self, cr, uid, external_session, resources, context=None):
         search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
@@ -180,5 +190,5 @@ class prestashop_osv(osv.osv):
                                     external_data, method='edit', context=context)
             result = external_session.connection.edit(ext_resource, ext_id, resource_data)
         return False
-    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

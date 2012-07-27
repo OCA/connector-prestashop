@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  prestashoperpconnect for OpenERP
+  Copyright (C) 2012 Akretion David BEAL <david.beal@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_no_client_answer_action" model="ir.cron">
+            <field name="name">Prestashop referential customers import</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'res.partner'" name="model"/>
+            <field eval="'run_scheduled_import_customers'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+    </data>
+</openerp>
