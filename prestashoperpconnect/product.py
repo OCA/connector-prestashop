@@ -26,3 +26,18 @@ from prestashop_osv import prestashop_osv
 
 class product_product(prestashop_osv):
     _inherit='product.product'
+
+    def export_inventory(self, cr, uid, external_session, product_ids, context=None):
+        """
+
+        :param list product_ids: list of product
+        :rtype: __
+        :return: __
+        """
+        level_stock = {}
+        for product in self.browse(cr, uid, product_ids, context=context):
+            level_stock[product.id] = product.qty_available
+
+        print 'level_stock', level_stock
+
+        return True
