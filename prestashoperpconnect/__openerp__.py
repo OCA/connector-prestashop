@@ -91,8 +91,6 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'settings/1.4.0.0/sale.shop/external.mappinglines.template.csv',
         'settings/1.4.0.0/sale.order.line/external.mappinglines.template.csv',
         'settings/1.4.0.0/delivery.carrier/external.mappinglines.template.csv',
-        'settings/1.4.0.0/sale.order.state/external.mappinglines.template.csv',
-        'settings/1.4.0.0/sale.order.history/external.mappinglines.template.csv',
     ],
     "active": False,
     "installable": True,

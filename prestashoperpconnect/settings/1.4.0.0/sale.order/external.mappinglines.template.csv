@@ -8,7 +8,6 @@
 "prestashoperpconnect.prestashop1400_sale_order_name","prestashoperpconnect.prestashop_1400_order","reference","sale.field_sale_order_name","in","direct","unicode",,"False",,,
 "prestashoperpconnect.prestashop1400_delivery_carrier","prestashoperpconnect.prestashop_1400_order","id_carrier","delivery.field_sale_order_carrier_id","in","direct","int",,"False",,,
 "prestashoperpconnect.prestashop1400_sale_order_line","prestashoperpconnect.prestashop_1400_order","order_rows","sale.field_sale_order_order_line","in","sub-mapping","list","prestashoperpconnect.prestashop_1400_order_line","False",,,
-"prestashoperpconnect.prestashop1400_sale_order_history_ids","prestashoperpconnect.prestashop_1400_order","history_ids","prestashoperpconnect.field_sale_order_history_ids","in_out","sub-mapping","list","prestashoperpconnect.prestashop_1400_order_history","False",,,
 "prestashoperpconnect.prestashop1400_sale_order_date_upd","prestashoperpconnect.prestashop_1400_order","date_upd","sale.field_sale_order_date_order","in_out","direct","datetime",,"False",,,"%Y-%m-%d %H:%M:%S"
 "prestashoperpconnect.prestashop1400_sale_order_id_currency","prestashoperpconnect.prestashop_1400_order","id_currency","sale.field_sale_order_pricelist_id","in_out","function","int",,"False","pricelist_ids = []
 if ifield:
