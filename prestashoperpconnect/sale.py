@@ -38,17 +38,26 @@ class sale_order(prestashop_osv):
         result = super(sale_order, self)._get_external_resources(cr, uid, external_session, \
                                             external_id=external_id, resource_filter=resource_filter, \
                                             mapping=mapping, fields=fields, context=context)
-                                            
-        order_rows = result[0]['order_rows']
-        order_lines = []
-        if not isinstance(order_rows, list):
-            order_rows = [order_rows]
-        for order_row in order_rows:
-            if order_row.get('id'):
-                order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
-                                                                        external_session, order_row['id'], context=context)[0])
-        result[]
+        for order in result:
+            order_rows = order['order_rows']
+            order_rows_details = []
+            if not isinstance(order_rows, list):
+                order_rows = [order_rows]
+            for order_row in order_rows:
+                if order_row.get('id'):
+                    order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
+                                                                            external_session, order_row['id'], context=context)[0])
+            order['order_rows'] = order_rows_details
         return result
+
+    def _get_payment_information(self, cr, uid, external_session, order_id, resource, context=None):
+        """
+        Parse the external resource and return a dict of data converted
+        """
+        vals = super(sale_order, self)._get_payment_information(cr, uid, external_session, order_id, resource, context=context)
+        vals['paid'] = bool(float(resource['total_paid_real']))
+        vals['amount'] = float(resource['total_paid_real'])
+        return vals
 
 class sale_order_line(prestashop_osv):
     _inherit='sale.order.line'
