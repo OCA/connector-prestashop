@@ -29,7 +29,6 @@ import product
 import res_partner
 import res_partner_address
 import sale
-import sale_states
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

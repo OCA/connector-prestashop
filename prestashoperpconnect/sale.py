@@ -38,6 +38,7 @@ class sale_order(prestashop_osv):
         result = super(sale_order, self)._get_external_resources(cr, uid, external_session, \
                                             external_id=external_id, resource_filter=resource_filter, \
                                             mapping=mapping, fields=fields, context=context)
+                                            
         order_rows = result[0]['order_rows']
         order_lines = []
         if not isinstance(order_rows, list):
@@ -46,19 +47,7 @@ class sale_order(prestashop_osv):
             if order_row.get('id'):
                 order_lines.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
                                                                         external_session, order_row['id'], context=context)[0])
-        result[0]['order_rows'] = order_lines
-        history_ids = []
-        if result[0]['id']:
-            id_order = int(result[0]['id'])
-            if resource_filter is None:
-                resource_filter = {}
-            resource_filter.update({'filter[id_order]': [id_order]})
-            histories = self.pool.get('sale.order.history')._get_external_resource_ids(cr, uid, external_session,\
-                                                                    resource_filter=resource_filter, context=context)
-            for history in histories:
-                history_ids.append(self.pool.get('sale.order.history')._get_external_resources(cr, uid, \
-                                                                            external_session, history, context=context)[0])
-            result[0]['history_ids'] = history_ids
+        result[]
         return result
 
 class sale_order_line(prestashop_osv):
