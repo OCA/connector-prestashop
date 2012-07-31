@@ -1,7 +1,7 @@
 id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
-prestashop1500_delivery_carrier_name,prestashop_1500_carrier,10,in,direct,delivery.field_delivery_carrier_name,,unicode,,,,,,
-prestashop1500_delivery_carrier_active,prestashop_1500_carrier,10,in,direct,delivery.field_delivery_carrier_active,,bool,,,,,,
-prestashop1500_delivery_carrier_partner_id,prestashop_1500_carrier,10,in,function,delivery.field_delivery_carrier_partner_id,,unicode,,,"partner_id = self.pool.get('res.partner').search(cr, uid, [('name', '=', ifield)], context=context)
+prestashop1500_delivery_carrier_name,prestashop_1500_carrier,10,in,direct,delivery.field_delivery_carrier_name,name,unicode,,,,,,
+prestashop1500_delivery_carrier_active,prestashop_1500_carrier,10,in,direct,delivery.field_delivery_carrier_active,active,bool,,,,,,
+prestashop1500_delivery_carrier_partner_id,prestashop_1500_carrier,10,in,function,delivery.field_delivery_carrier_partner_id,name,unicode,,,"partner_id = self.pool.get('res.partner').search(cr, uid, [('name', '=', ifield)], context=context)
 if partner_id:    
     result=[('partner_id',partner_id[0])]
 else:
