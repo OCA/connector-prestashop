@@ -9,7 +9,7 @@
     <data noupdate="1">
         <record forcecreate="True" id="ir_no_client_answer_action" model="ir.cron">
             <field name="name">Prestashop referential customers import</field>
-            <field eval="True" name="active"/>
+            <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
