@@ -6,6 +6,7 @@
 #   Author :                                                                  #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
 #           Alexis de Lattre <alexis.delattre@akretion.com>                   #
+#           Benoît GUILLOT <benoit.guillot@akretion.com>                      #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -30,6 +31,13 @@ from prestashop_osv import prestashop_osv
 
 class external_referential(prestashop_osv):
     _inherit = "external.referential"
+
+    _columns = {
+        'last_product_attributes_export_date' : fields.datetime('Last Product Attributes Export Time'),
+        'active_language_ids': fields.many2many('res.lang', 'active_presta_lang', 'referential_id', 'lang_id', 'Active Languages'),
+    }
+
+    _lang_support = 'fields_with_no_lang'
     
     @only_for_referential('prestashop')
     def external_connection(self, cr, uid, id, debug=False, logger=False, context=None):
@@ -170,6 +178,39 @@ class external_referential(prestashop_osv):
             oe_field='name', oe_readable_field='name',
             compare_function=self._compare_currencies, context=context)
         return {}
+
+    def export_product_attributes(self, cr, uid, ids, context=None):
+        self.export_resources(cr, uid, ids, 'product.attribute', context=context)
+        return True
+
+    def _prepare_mapping_vals(self, cr, uid, referential_id, mapping_vals, context=None):
+        res = super(external_referential, self)._prepare_mapping_vals(cr, uid, referential_id, mapping_vals, context=context)
+        res['prestashop_primary_key'] = mapping_vals['prestashop_primary_key']
+        return res
+
+    def _prepare_mapping_fieldnames(self, cr, uid, context=None):
+        res = super(external_referential, self)._prepare_mapping_fieldnames(cr, uid, context=context)
+        res.append('prestashop_primary_key')
+        return res
+
+    def _prepare_mapping_template_vals(self, cr, uid, mapping, context=None):
+        res = super(external_referential, self)._prepare_mapping_template_vals(cr, uid, mapping, context=context)
+        res['prestashop_primary_key'] = mapping.prestashop_primary_key or ''
+        return res
+
+class external_mapping(osv.osv):
+    _inherit = 'external.mapping'
+
+    _columns = {
+        'prestashop_primary_key': fields.char('Prestashop primary key', size=128),
+    }
+
+class external_mapping_template(osv.osv):
+    _inherit = 'external.mapping.template'
+
+    _columns = {
+        'prestashop_primary_key': fields.char('Prestashop primary key', size=128),
+    }
 
 class res_lang(prestashop_osv):
     _inherit='res.lang'

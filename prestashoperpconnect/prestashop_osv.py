@@ -6,6 +6,7 @@
 #   Authors :                                                                 #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
 #           Mathieu VATEL <mathieu@julius.fr>                                 #
+#           Benoît GUILLOT <benoit.guillot@akretion.com>                      #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -24,7 +25,49 @@
 
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.external_osv import override, extend
 from collections import defaultdict
+
+@extend(osv.osv)
+@only_for_referential('prestashop')
+def get_resources_with_lang(self, cr, uid, external_session, resources, primary_key, context=None):
+    new_resources = {}
+    for resource_id, resource in resources.items():
+        new_resource = {}
+        for lang, fields in resource.items():
+            if lang == 'no_lang':
+                new_resource.update(resource['no_lang'])
+            else:
+                lang_id = self.pool.get('res.lang').search(cr, uid, [('code', '=', lang)], context=context)
+                presta_id = self.pool.get('res.lang').get_extid(cr, uid, lang_id, external_session.referential_id.id, context=context)
+                for field, value in fields.items():
+                    lang_and_value = {'attrs': {'id': '%s' %presta_id}, 'value': value}
+                    if not new_resource.get(field):
+                        new_resource[field] = {'language' : [lang_and_value]}
+                    else:
+                        new_resource[field]['language'].append(lang_and_value)
+        new_resources[resource_id] = {primary_key : new_resource}
+    return new_resources
+
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+    res = {}
+    mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
+    primary_key = mapping[mapping_id]['prestashop_primary_key']
+    presta_resources = self.get_resources_with_lang(cr, uid, external_session, resources, primary_key, context=context)
+    import pdb;pdb.set_trace()
+    for resource_id, resource in presta_resources.items():
+        res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_create_method'])(mapping[mapping_id]['external_resource_name'], resource)
+    return res
+
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def get_lang_to_export(self, cr, uid, external_session, context=None):
+    res = []
+    for lang in external_session.referential_id.active_language_ids:
+        res.append(lang.code)
+    return res
 
 class prestashop_osv(osv.osv):
     _register = False
@@ -111,84 +154,5 @@ class prestashop_osv(osv.osv):
                 context['lang'] = lang['code']
         return super(prestashop_osv, self)._record_one_external_resource(cr, uid, external_session, \
                         resource, defaults=defaults, mapping=mapping, context=context)
-
-    def transform_one_resource_to_prestashop_vals(self, cr, uid, external_session, resource, external_data, method='add', context=None):
-        if context == None:
-            context = {}
-        lang_obj = self.pool.get('res.lang')
-        resource_data = {}
-        key = external_data.keys()[0]
-        resource_data[key] = {}
-        if method == 'edit':
-            external_id = external_data[key]['id']
-        for data_value in external_data[key]:
-            if isinstance(external_data[key][data_value],dict):
-                if 'language' in external_data[key][data_value]:
-                    resource_data[key][data_value] = {}
-                    resource_data[key][data_value]['language'] = external_data[key][data_value]['language']
-                    lang_vals = resource_data[key][data_value]['language']
-                    new_lang_vals = []
-                    for vals in lang_vals:
-                        if 'value' in vals:
-                            vals['value'] = ''
-                        if 'attrs' in vals:
-                            if 'id' in vals['attrs']:
-                                ext_lang_id = vals['attrs'].get('id',False)
-                                oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, \
-                                            ext_lang_id, context=context)
-                                if oe_lang_id:
-                                    lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
-                                    if lang['code'] in resource:
-                                        vals['value'] = resource[lang['code']].get(data_value,False) or ''
-                                    if not vals['value'] and 'en_US' in resource and data_value in resource['en_US']:
-                                        vals['value'] = resource['en_US'].get(data_value,False) or ''
-                        new_lang_vals.append(vals)
-                    resource_data[key][data_value]['language'] = new_lang_vals
-            else:
-                if data_value in resource['en_US']:
-                    resource_data[key][data_value] = str(resource['en_US'][data_value])
-                else:
-                    resource_data[key][data_value] = ''
-        if method == 'edit':
-            resource_data[key]['id'] = external_id
-        return resource_data
-
-    @only_for_referential('prestashop')
-    def ext_create(self, cr, uid, external_session, resources, context=None):
-        search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
-        mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals, context=context)
-        mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
-        ext_ids = external_session.connection.search(ext_resource, options={'limit': [0,1]})
-        external_data = external_session.connection.get(ext_resource, resource_id=ext_ids[0])
-        external_ids = {}
-        for existing_rec_id in resources.keys():
-            resource = resources[existing_rec_id]
-            resource_data = self.transform_one_resource_to_prestashop_vals(cr, uid, external_session, resource,\
-                                    external_data, method='add', context=context)
-#            associations = {'categories':{},'images':{},'combinations':{},'product_option_values':{},'product_features':{}}
-#            resource_data.update({'associations':associations})
-            result = external_session.connection.add(ext_resource, resource_data)
-            external_id = result.get('prestashop',False) and \
-                        result['prestashop'].get('product',False) and \
-                        result['prestashop']['product'].get('id',False)
-            if external_id:
-                external_ids.update({existing_rec_id : external_id})
-        return external_ids
-
-    @only_for_referential('prestashop')
-    def ext_update(self, cr, uid, external_session, resources, context=None):
-        search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
-        mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals, context=context)
-        mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
-        for existing_rec_id in resources.keys():
-            ext_id = self.oeid_to_existing_extid(cr, uid, external_session.referential_id.id, existing_rec_id, context=context)
-            external_data = external_session.connection.get(ext_resource, resource_id=ext_id)
-            resource = resources[existing_rec_id]
-            resource_data = self.transform_one_resource_to_prestashop_vals(cr, uid, external_session, resource, \
-                                    external_data, method='edit', context=context)
-            result = external_session.connection.edit(ext_resource, ext_id, resource_data)
-        return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

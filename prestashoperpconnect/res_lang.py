@@ -2,10 +2,9 @@
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
-#   Copyright (C) 2012 Camptocamp                                             #
 #   Copyright (C) 2012 Akretion                                               #
 #   Author :                                                                  #
-#           Sébastien BEAU <sebastien.beau@akretion.com>                      #
+#           Benoît Guillot <benoit.guillot@akretion.com>                      #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -22,16 +21,11 @@
 #                                                                             #
 ###############################################################################
 
-import external_referential
-import product_category
-import product_template
-import product
-import res_partner
-import res_partner_address
-import sale
-import product_attribute
-import res_lang
+from osv import osv, fields
+from prestashop_osv import prestashop_osv
 
+class res_lang(osv.osv):
+    _inherit='res.lang'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+    _columns = {
+    }
