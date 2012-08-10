@@ -27,6 +27,7 @@ from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import override, extend
 from collections import defaultdict
+from tools.translate import _
 
 @extend(osv.osv)
 @only_for_referential('prestashop')
@@ -38,7 +39,7 @@ def get_resources_with_lang(self, cr, uid, external_session, resources, primary_
             if lang == 'no_lang':
                 new_resource.update(resource['no_lang'])
             else:
-                lang_id = self.pool.get('res.lang').search(cr, uid, [('code', '=', lang)], context=context)
+                lang_id = self.pool.get('res.lang').search(cr, uid, [('code', '=', lang)], context=context)[0]
                 presta_id = self.pool.get('res.lang').get_extid(cr, uid, lang_id, external_session.referential_id.id, context=context)
                 for field, value in fields.items():
                     lang_and_value = {'attrs': {'id': '%s' %presta_id}, 'value': value}
@@ -56,7 +57,6 @@ def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
     primary_key = mapping[mapping_id]['prestashop_primary_key']
     presta_resources = self.get_resources_with_lang(cr, uid, external_session, resources, primary_key, context=context)
-    import pdb;pdb.set_trace()
     for resource_id, resource in presta_resources.items():
         res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_create_method'])(mapping[mapping_id]['external_resource_name'], resource)
     return res
@@ -67,6 +67,8 @@ def get_lang_to_export(self, cr, uid, external_session, context=None):
     res = []
     for lang in external_session.referential_id.active_language_ids:
         res.append(lang.code)
+    if not res:
+        raise osv.except_osv(_("Configuration Error"), _("You need to define on the external referential prestashop the different languages of prestashop (page : Configuration)!"))
     return res
 
 class prestashop_osv(osv.osv):

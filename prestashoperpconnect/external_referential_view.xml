@@ -29,6 +29,8 @@
                         <page string="Configuration">
                             <separator string="Active languages" colspan="4" />
                             <field name="active_language_ids" nolabel="1"/>
+                            <separator string="Product Attributes" colspan="4" />
+                            <field name="product_attribute_ids" nolabel="1" />
                         </page>
                     </xpath>
                     <xpath expr="/form/field/form/group/field[@name='external_resource_name']" position="after">

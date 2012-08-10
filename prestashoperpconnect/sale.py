@@ -97,6 +97,9 @@ class sale_shop(prestashop_osv):
                     }
         res.update(prestashop_fields)
         return res
+    def generate_shop_attributes(self, cr, uid, ids, context=None):
+        context['dont_add_referentials'] = True
+        return super(sale_shop, self).generate_shop_attributes(cr, uid, ids, context=context)
 
 #    @only_for_referential('prestashop')
 #    def update_orders(self, cr, uid, ids, context=None):

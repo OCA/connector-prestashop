@@ -35,6 +35,7 @@ class external_referential(prestashop_osv):
     _columns = {
         'last_product_attributes_export_date' : fields.datetime('Last Product Attributes Export Time'),
         'active_language_ids': fields.many2many('res.lang', 'active_presta_lang', 'referential_id', 'lang_id', 'Active Languages'),
+        'product_attribute_ids': fields.many2many('product.attribute', 'ext_product_attributes', 'referential_id', 'attribute_id', 'Product Attributes'),
     }
 
     _lang_support = 'fields_with_no_lang'

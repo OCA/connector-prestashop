@@ -23,6 +23,10 @@
                             <separator string="Prestashop Fields" colspan="4" />
                             <field name="presta_position" colspan="2"/>
                         </group>
+                        <group name="external_ref" colspan="4" col="4" >
+                            <separator string="External Referentials" colspan="4" />
+                            <field name="external_referential_ids" nolabel="1" colspan="4"/>
+                        </group>
                     </field>
                 </data>
             </field>
