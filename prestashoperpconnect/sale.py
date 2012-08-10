@@ -85,6 +85,19 @@ class sale_shop(prestashop_osv):
         #take care about concurent write with diferent cursor
         return True
 
+    def _prepare_attribute_shop_fields(self, cr, uid, context=None):
+        res = super(sale_shop, self)._prepare_attribute_shop_fields(cr, uid, context=context)
+        prestashop_fields = {
+                    'meta_title': 'char',
+                    'meta_description': 'char',
+                    'meta_keywords': 'char',
+                    'friendly_url': 'char',
+                    'tags': 'char',
+                    'short_description': 'text'
+                    }
+        res.update(prestashop_fields)
+        return res
+
 #    @only_for_referential('prestashop')
 #    def update_orders(self, cr, uid, ids, context=None):
 #        if context is None:
