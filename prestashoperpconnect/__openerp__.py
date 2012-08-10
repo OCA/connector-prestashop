@@ -30,6 +30,7 @@
 #                 "product_m2mcategories",
                  "base_sale_multichannels",
 #                 "product_images_olbs",
+                 "product_custom_attributes_shop",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """This module connects OpenERP and Prestashop.
@@ -80,6 +81,8 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'settings/1.5.0.0/sale.shop/external.mappinglines.template.csv',
         'settings/1.5.0.0/sale.order.line/external.mappinglines.template.csv',
         'settings/1.5.0.0/delivery.carrier/external.mappinglines.template.csv',
+        'settings/1.5.0.0/product.attribute/external.mappinglines.template.csv',
+        'settings/1.5.0.0/attribute.option/external.mappinglines.template.csv',
         'settings/1.4.0.0/external.referential.version.csv',
         'settings/1.4.0.0/external.mapping.template.csv',
         'settings/1.4.0.0/res.partner.address/external.mappinglines.template.csv',

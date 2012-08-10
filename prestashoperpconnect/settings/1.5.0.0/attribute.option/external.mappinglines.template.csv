@@ -1,0 +1,5 @@
+id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
+prestashop1500_attribute_option_value,prestashop1500_attribute_option,0,in_out,direct,product_custom_attributes.field_attribute_option_name,value,unicode,,,,,,False
+prestashop1500_attribute_option_id_feature,prestashop1500_attribute_option,0,in_out,function,product_custom_attributes.field_attribute_option_attribute_id,id_feature,unicode,,id_feature,,"if resource.get('attribute_id'):
+    ext_id = self.pool.get('product.attribute').get_extid(cr, uid, resource['attribute_id'][0], external_session.referential_id.id, context=context)
+    result=[('id_feature', '%s' %ext_id)]",,False
