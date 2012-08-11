@@ -180,10 +180,6 @@ class external_referential(prestashop_osv):
             compare_function=self._compare_currencies, context=context)
         return {}
 
-    def export_product_attributes(self, cr, uid, ids, context=None):
-        self.export_resources(cr, uid, ids, 'product.attribute', context=context)
-        return True
-
     def _prepare_mapping_vals(self, cr, uid, referential_id, mapping_vals, context=None):
         res = super(external_referential, self)._prepare_mapping_vals(cr, uid, referential_id, mapping_vals, context=context)
         res['prestashop_primary_key'] = mapping_vals['prestashop_primary_key']
