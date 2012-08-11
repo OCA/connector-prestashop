@@ -22,9 +22,20 @@
 ###############################################################################
 
 from osv import osv, fields
+from base_external_referentials.decorator import only_for_referential, catch_error_in_report, open_report
 
 class product_product(osv.osv):
     _inherit='product.product'
+
+    @only_for_referential('prestashop')
+    @open_report
+    def _import_resources(self, *args, **kwargs):
+        return super(product_product, self)._import_resources(*args, **kwargs)
+
+    @only_for_referential('prestashop')
+    @catch_error_in_report
+    def _record_one_external_resource(self, *args, **kwargs):
+        return super(product_product, self)._record_one_external_resource(*args, **kwargs)
 
     def export_inventory(self, cr, uid, external_session, product_ids, context=None):
         """
