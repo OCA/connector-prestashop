@@ -7,57 +7,116 @@
 
 <openerp>
     <data>
-    
-        <!-- INHERITED VIEW FOR THE OBJECT : external.referential -->
+        <!-- As I don't know if we will inherit the base_external_view
+            or creating an new object 'prestashop_referential' with inherits
+            that will have his own view_form.
+            I decide to temporary rewrite a new view for prestashop here
+            Soon it will be refactored
+        -->
 
-        <record id="presta_external_referential_view_form" model="ir.ui.view">
-            <field name="name">prestashoperpconnect.external.referential.view.form</field>
+
+        <!-- VIEW FOR THE OBJECT : external_referential -->
+        <record id="external_referential_view_form" model="ir.ui.view">
+            <field name="name">prestashop.external_referential.view_form</field>
             <field name="model">external.referential</field>
-            <field name="inherit_id" ref="base_external_referentials.external_referential_form_view" />
-            <field eval="20" name="priority"/>
+            <field eval="24" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="/form/group/notebook/page/group/group[@name='left']/.." position="after">
-                        <group name="export" colspan="4" col="4" >
-                            <separator string="Exports" colspan="4" />
-                            <button name="export_product_attributes" string="1 - Export Product Attributes" colspan="2" type="object" />
-                            <field name="last_product_attributes_export_date" colspan="2"/>
-                        </group>
-                    </xpath>
-                    <xpath expr="/form/group/notebook/page[@string='CSV file generation']" position="after">
-                        <page string="Configuration">
-                            <separator string="Active languages" colspan="4" />
-                            <field name="active_language_ids" nolabel="1"/>
-                            <separator string="Product Attributes" colspan="4" />
-                            <field name="product_attribute_ids" nolabel="1" />
-                        </page>
-                    </xpath>
-                    <xpath expr="/form/field/form/group/field[@name='external_resource_name']" position="after">
-                        <field name="prestashop_primary_key"/>
-                    </xpath>
-                </data>
+                <form string="external_referential">
+                    <group name="info" colspan="4" col="4">
+                        <separator string="Prestashop Information" colspan="4"/>
+                        <field name="name" />
+                        <field name="version_id"/>
+                        <field name="location"/>
+                        <field name="apipass" string="Webservice Key" required="1"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <separator string="Core Components" colspan="4" />
+                        <notebook colspan="4">
+                            <page string="Referential Actions">
+                                <separator string="Compulsory" colspan="4" />
+                                <button name="refresh_mapping" string="1 - Reload Referential Mapping Templates" colspan="2" type="object" />
+                                <button name="import_referentials" string="2 - Synchronize Referential Settings" colspan="2" type="object" attrs="{'readonly':[('mapping_ids','=',[])]}"/>
+                                <group name='import' colspan="4">
+                                    <separator string="Import" colspan="4" />
+                                    <group name='left' colspan="2" col="2">
+                                        <button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+                                        <button name="import_customers" string="2 - Import Customer" colspan="2" type="object" />
+                                    </group>
+                                    <group name="right" colspan="2" col="2">
+                                        <button name="import_product_categories" string="3 - Import Product Categories" colspan="2" type="object" />
+                                        <button name="import_products" string="4 - Import Products" colspan="2" type="object"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Configuration">
+                                <separator string="Active languages" colspan="4" />
+                                <field name="active_language_ids" nolabel="1"/>
+                            </page>
+                            <page string="Mapping">
+                                <field name="mapping_ids" widget="one2many_list" nolabel="1">
+                                    <tree string="Object Mappings">
+                                        <field name="model_id" />
+                                        <field name="extra_name" />
+                                    </tree>
+                                    <form string="Object Mappings">
+                                        <field name="model_id" on_change="model_id_change(model_id)" />
+                                        <field name="extra_name" />
+                                        <field name="related_model_ids" invisible="1" />
+                                        <group col="4" colspan="4">
+                                            <field name="external_list_method" />
+                                            <field name="external_search_method" />
+                                            <field name="external_get_method" />
+                                            <field name="external_update_method" />
+                                            <field name="external_create_method" />
+                                            <field name="external_delete_method" />
+                                            <field name="external_done_method" />
+                                            <field name="key_for_external_id" />
+                                            <field name="external_resource_name" />
+                                            <field name="prestashop_primary_key"/>
+                                        </group>
+                                        <button name="add_all_fields" string="Add all object fields" colspan="2" type="object" />
+                                        <button name="create_mapping_file" string="Export mapping file" colspan="2" type="object" groups="base_external_referentials.group_export_mapping"/>
+                                        <field colspan="4" name="mapping_ids" widget="one2many_list" nolabel="1" context="{'model_id':model_id}" />
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="CSV file generation" groups="base_external_referentials.group_export_mapping" >
+                                <button name="build_external_ref_categ" string="1- Export category" colspan="1" type="object" />
+                                <button name="build_external_ref_type" string="2- Export type" colspan="1" type="object" />
+                                <button name="build_external_ref_version" string="3- Export version" colspan="1" type="object" />
+                                <button name="build_external_ref" string="4- Export referential" colspan="1" type="object" />
+                                <button name="build_external_mapping_template" string="5- Export mapping template" colspan="1" type="object" />
+                                <button name="build_external_mapping_lines" string="6- Export mapping lines" colspan="1" type="object" />
+                            </page>
+                        </notebook>
+                    </group>
+                </form>
             </field>
         </record>
 
+        <record id="action_external_referential" model="ir.actions.act_window">
+            <field name="name">Prestashop Referential</field>
+            <field name="res_model">external.referential</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="base_external_referentials.external_referential_tree_view" />
+        </record>
 
-<!--        <record id="external.referential_view_tree" model="ir.ui.view">-->
-<!--            <field name="name">prestashoperpconnect.external.referential.view_tree</field>-->
-<!--            <field name="model">external.referential</field>-->
-<!--            <field name="inherit_id" ref="module_name_to_inherit.view_id" />-->
-<!--            <field eval="16" name="priority"/>-->
-<!--            <field name="type">tree</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <data>-->
-<!--                    <field name="field_reference" position="after">-->
-<!--                        <field name="email_method" />-->
-<!--                    </field>-->
-<!--                </data>-->
-<!--            </field>-->
-<!--        </record>-->
-<!--    -->
+        <record id="action_external_referential_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base_external_referentials.external_referential_tree_view"/>
+            <field name="act_window_id" ref="action_external_referential"/>
 
-
+        </record>
+        <record id="action_external_referential_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="external_referential_view_form"/>
+            <field name="act_window_id" ref="action_external_referential"/>
+        </record>
 
 
 

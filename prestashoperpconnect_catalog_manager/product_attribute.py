@@ -25,7 +25,7 @@
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential
 
-class product_attribute(prestashop_osv):
+class product_attribute(osv.osv):
     _inherit = 'product.attribute'
 
     _columns = {

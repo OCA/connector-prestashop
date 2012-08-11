@@ -23,14 +23,10 @@
 ###############################################################################
 
 from osv import osv, fields
-from prestashop_osv import prestashop_osv
 from base_external_referentials.decorator import only_for_referential
 import time
 
-class external_shop_group(prestashop_osv):
-    _inherit='external.shop.group'
-
-class sale_order(prestashop_osv):
+class sale_order(osv.osv):
     _inherit='sale.order'
 
     @only_for_referential('prestashop')
@@ -59,10 +55,7 @@ class sale_order(prestashop_osv):
         vals['amount'] = float(resource['total_paid_real'])
         return vals
 
-class sale_order_line(prestashop_osv):
-    _inherit='sale.order.line'
-
-class sale_shop(prestashop_osv):
+class sale_shop(osv.osv):
     _inherit = 'sale.shop'
 
     _columns = {

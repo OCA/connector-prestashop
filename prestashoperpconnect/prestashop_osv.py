@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+    # -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -71,90 +71,91 @@ def get_lang_to_export(self, cr, uid, external_session, context=None):
         raise osv.except_osv(_("Configuration Error"), _("You need to define on the external referential prestashop the different languages of prestashop (page : Configuration)!"))
     return res
 
-class prestashop_osv(osv.osv):
-    _register = False
 
-    @only_for_referential('prestashop')
-    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
-        """
-        Used to limit the query in external library
-        :param ExternalSession external_session : External_session that contain all params of connection
-        :param int step: Step the of the import, 100 meant you will import data per 100
-        :param dict previous_filter: the previous filter
-        :return: dictionary with a filter
-        :rtype: dict
-        """
-        if not previous_filter:
-            start = 0
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+    """
+    Used to limit the query in external library
+    :param ExternalSession external_session : External_session that contain all params of connection
+    :param int step: Step the of the import, 100 meant you will import data per 100
+    :param dict previous_filter: the previous filter
+    :return: dictionary with a filter
+    :rtype: dict
+    """
+    if not previous_filter:
+        start = 0
+    else:
+        start = sum([int(x) for x in previous_filter['limit'].split(',')])
+    resource_filter = {
+        'limit': "%s,%s"%(start,step),
+    }
+    return resource_filter
+
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
+    search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
+    mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals)
+    if mapping is None:
+        mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+    ext_resource = mapping[mapping_ids[0]]['external_resource_name']
+    return external_session.connection.search(ext_resource, options = resource_filter)
+
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
+    #TODO begin refactor with _get_external_resource_ids()
+    search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
+    mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals)
+    if mapping is None:
+        mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
+    # end refactor
+    lang_resource = {}
+    main_data = {}
+    ext_resource = mapping[mapping_ids[0]]['external_resource_name']
+    resource = external_session.connection.get(ext_resource, external_id)
+    resource = resource[resource.keys()[0]]
+    for key in resource:
+        if key == 'associations':
+            key_one = resource[key].keys()[0]
+            key_two = resource[key][key_one].keys()[0]
+            main_data[key_one] = resource[key][key_one][key_two]
+        elif isinstance(resource[key], dict) and resource[key].get('language'):
+            lang_vals = resource[key]['language']
+            if not isinstance(lang_vals, list):
+                lang_vals = [lang_vals]
+            for lang_val in lang_vals:
+                lang_id = lang_val['attrs']['id']
+                if not lang_resource.get(str(lang_id)):
+                    lang_resource[str(lang_id)] = {'ext_lang_id': lang_id, 'id': resource['id']}
+                lang_resource[str(lang_id)][key] = lang_val['value']
+        elif isinstance(resource[key], dict) and resource[key].get('attrs'):
+            main_data[key] = resource[key]['value']
         else:
-            start = sum([int(x) for x in previous_filter['limit'].split(',')])
-        resource_filter = {
-            'limit': "%s,%s"%(start,step),
-        }
-        return resource_filter
+            main_data[key] = resource[key]
+    #TODO Improve when the lang will be mapped
+    lang_ids = lang_resource.keys()
+    if lang_ids:
+        main_lang_id = lang_ids.pop()
+        main_data.update(lang_resource[main_lang_id])
+        main_data.update({'ext_lang_id': main_lang_id})
+    result = [main_data]
+    for lang_id in lang_ids:
+        result.append(lang_resource[lang_id])
+    return result
 
-
-    @only_for_referential('prestashop')
-    def _get_external_resource_ids(self, cr, uid, external_session, resource_filter=None, mapping=None, context=None):
-        search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
-        mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals)
-        if mapping is None:
-            mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
-        return external_session.connection.search(ext_resource, options = resource_filter)
-
-    @only_for_referential('prestashop')
-    def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
-        #TODO begin refactor with _get_external_resource_ids()
-        search_vals = [('model', '=', self._name), ('referential_id', '=', external_session.referential_id.id)]
-        mapping_ids = self.pool.get('external.mapping').search(cr, uid, search_vals)
-        if mapping is None:
-            mapping = {mapping_ids[0] : self._get_mapping(cr, uid, external_session.referential_id.id, context=context)}
-        # end refactor
-        lang_resource = {}
-        main_data = {}
-        ext_resource = mapping[mapping_ids[0]]['external_resource_name']
-        resource = external_session.connection.get(ext_resource, external_id)
-        resource = resource[resource.keys()[0]]
-        for key in resource:
-            if key == 'associations':
-                key_one = resource[key].keys()[0]
-                key_two = resource[key][key_one].keys()[0]
-                main_data[key_one] = resource[key][key_one][key_two]
-            elif isinstance(resource[key], dict) and resource[key].get('language'):
-                lang_vals = resource[key]['language']
-                if not isinstance(lang_vals, list):
-                    lang_vals = [lang_vals]
-                for lang_val in lang_vals:
-                    lang_id = lang_val['attrs']['id']
-                    if not lang_resource.get(str(lang_id)):
-                        lang_resource[str(lang_id)] = {'ext_lang_id': lang_id, 'id': resource['id']}
-                    lang_resource[str(lang_id)][key] = lang_val['value']
-            elif isinstance(resource[key], dict) and resource[key].get('attrs'):
-                main_data[key] = resource[key]['value']
-            else:
-                main_data[key] = resource[key]
-        #TODO Improve when the lang will be mapped
-        lang_ids = lang_resource.keys()
-        if lang_ids:
-            main_lang_id = lang_ids.pop()
-            main_data.update(lang_resource[main_lang_id])
-            main_data.update({'ext_lang_id': main_lang_id})
-        result = [main_data]
-        for lang_id in lang_ids:
-            result.append(lang_resource[lang_id])
-        return result
-
-    @only_for_referential('prestashop')
-    def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
-        lang_obj = self.pool.get('res.lang')
-        ext_lang_id = resource.get('ext_lang_id', False)
-        if ext_lang_id:
-            oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, ext_lang_id, context=context)
-            if oe_lang_id:
-                lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
-                context['lang'] = lang['code']
-        return super(prestashop_osv, self)._record_one_external_resource(cr, uid, external_session, \
-                        resource, defaults=defaults, mapping=mapping, context=context)
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def _record_one_external_resource(self, cr, uid, external_session, resource, defaults=None, mapping=None, mapping_id=None, context=None):
+    lang_obj = self.pool.get('res.lang')
+    ext_lang_id = resource.get('ext_lang_id', False)
+    if ext_lang_id:
+        oe_lang_id = lang_obj.extid_to_existing_oeid(cr, uid, external_session.referential_id.id, ext_lang_id, context=context)
+        if oe_lang_id:
+            lang = lang_obj.read(cr, uid, oe_lang_id, ['code'], context=context)
+            context['lang'] = lang['code']
+    return self.prestashop__record_one_external_resource(cr, uid, external_session, \
+                    resource, defaults=defaults, mapping=mapping, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

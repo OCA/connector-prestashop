@@ -48,6 +48,9 @@ TODO :
     "init_xml" : [],
     "demo_xml" : [],
     'update_xml': [
+        'sale_view.xml',
+        'external_referential_view.xml',
+        'settings/1.5.0.0/external.mapping.template.csv',
         'settings/1.5.0.0/product.attribute/external.mappinglines.template.csv',
         'settings/1.5.0.0/attribute.option/external.mappinglines.template.csv',
         'product_attribute_view.xml',
@@ -56,4 +59,3 @@ TODO :
     "installable": True,
     "application": True,
 }
-

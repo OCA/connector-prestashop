@@ -1,0 +1,3 @@
+id,version_id:id,model_id:id,extra_name,external_resource_name,key_for_external_id,external_list_method,external_search_method,external_get_method,external_update_method,external_create_method,external_delete_method,external_done_method,prestashop_primary_key
+prestashop1500_product_attribute,prestashoperpconnect.prestashop1500,prestashoperpconnect_catalog_manager.model_product_attribute,,product_features,,,,,,add,,,product_feature
+prestashop1500_attribute_option,prestashoperpconnect.prestashop1500,product_custom_attributes.model_attribute_option,,product_feature_values,,,,,,add,,,product_feature_value

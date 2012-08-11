@@ -9,9 +9,8 @@
     <data>
 
         <menuitem id="menu_shoperp" name="PrestashopERPconnect" icon="terp-sale" sequence="0" parent="base.menu_administration"/>
-		<menuitem id="menu_shoperp_core" name="Core Settings" parent="menu_shoperp" />
-		<menuitem id="menu_shoperp_core_instances" name="Prestashop Instances" parent="menu_shoperp_core" action="act_shoperp_instances_form" />
-		<menuitem id="menu_shoperp_core_shops" name="Prestashop Shops" parent="menu_shoperp_core" action="act_shoperp_shop_form" />
-        <menuitem id="menu_shoperp_core_shop_groups" parent="menu_shoperp_core" action="base_sale_multichannels.act_base_sale_external_shop_group"/>
+        <menuitem id="menu_shoperp_core_instances" name="Prestashop Instances" parent="menu_shoperp" action="action_external_referential" />
+        <menuitem id="menu_shoperp_core_shops" name="Prestashop Shops" parent="menu_shoperp" action="act_shoperp_shop_form" />
+        <menuitem id="menu_shoperp_core_shop_groups" parent="menu_shoperp" action="base_sale_multichannels.act_base_sale_external_shop_group"/>
     </data>
 </openerp>

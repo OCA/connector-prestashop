@@ -22,9 +22,8 @@
 ###############################################################################
 
 from osv import osv, fields
-from prestashop_osv import prestashop_osv
 
-class product_product(prestashop_osv):
+class product_product(osv.osv):
     _inherit='product.product'
 
     def export_inventory(self, cr, uid, external_session, product_ids, context=None):

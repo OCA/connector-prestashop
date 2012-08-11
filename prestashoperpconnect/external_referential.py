@@ -27,15 +27,13 @@ from osv import osv, fields
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
 from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
-from prestashop_osv import prestashop_osv
 
-class external_referential(prestashop_osv):
+class external_referential(osv.osv):
     _inherit = "external.referential"
 
     _columns = {
         'last_product_attributes_export_date' : fields.datetime('Last Product Attributes Export Time'),
         'active_language_ids': fields.many2many('res.lang', 'active_presta_lang', 'referential_id', 'lang_id', 'Active Languages'),
-        'product_attribute_ids': fields.many2many('product.attribute', 'ext_product_attributes', 'referential_id', 'attribute_id', 'Product Attributes'),
     }
 
     _lang_support = 'fields_with_no_lang'
@@ -208,15 +206,3 @@ class external_mapping_template(osv.osv):
     _columns = {
         'prestashop_primary_key': fields.char('Prestashop primary key', size=128),
     }
-
-class res_lang(prestashop_osv):
-    _inherit='res.lang'
-
-class res_country(prestashop_osv):
-    _inherit='res.country'
-
-class res_currency(prestashop_osv):
-    _inherit='res.currency'
-
-class delivery_carrier(prestashop_osv):
-    _inherit='delivery.carrier'

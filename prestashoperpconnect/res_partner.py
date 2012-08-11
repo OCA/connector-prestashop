@@ -22,11 +22,10 @@
 ###############################################################################
 
 from osv import osv, fields
-from prestashop_osv import prestashop_osv
 from base_external_referentials.decorator import only_for_referential
 from datetime import datetime
 
-class res_partner(prestashop_osv):
+class res_partner(osv.osv):
     _inherit='res.partner'
 
     @only_for_referential('prestashop')
