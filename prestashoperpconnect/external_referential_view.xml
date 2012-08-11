@@ -29,6 +29,7 @@
                         <field name="version_id"/>
                         <field name="location"/>
                         <field name="apipass" string="Webservice Key" required="1"/>
+                        <field name="debug"/>
                     </group>
                     <group col="4" colspan="4">
                         <separator string="Core Components" colspan="4" />
