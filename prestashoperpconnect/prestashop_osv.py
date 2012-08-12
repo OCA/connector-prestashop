@@ -118,9 +118,12 @@ def _get_external_resources(self, cr, uid, external_session, external_id=None, r
     resource = resource[resource.keys()[0]]
     for key in resource:
         if key == 'associations':
-            key_one = resource[key].keys()[0]
-            key_two = resource[key][key_one].keys()[0]
-            main_data[key_one] = resource[key][key_one][key_two]
+            for key_one in resource[key].keys():
+                key_two = [key_two for key_two in resource[key][key_one].keys() if key_two != 'attrs'][0]
+                vals = resource[key][key_one][key_two]
+                if isinstance(vals, dict):
+                    vals = [vals]
+                main_data[key_one] = [int(val['id']) for val in vals]
         elif isinstance(resource[key], dict) and resource[key].get('language'):
             lang_vals = resource[key]['language']
             if not isinstance(lang_vals, list):

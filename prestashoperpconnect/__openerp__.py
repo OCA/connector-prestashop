@@ -27,7 +27,7 @@
     "license": "AGPL-3",
     "depends" : [
                  "product",
-#                 "product_m2mcategories",
+                 "product_m2mcategories",
                  "base_sale_multichannels",
 #                 "product_images_olbs",
                 ],

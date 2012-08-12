@@ -5,3 +5,23 @@ prestashop1500_erp_wholesale_price,prestashop_1500_product,10,in_out,direct,prod
 prestashop1500_erp_weight,prestashop_1500_product,10,in_out,direct,product.field_product_template_weight,weight,float,,,,,,
 prestashop1500_erp_price,prestashop_1500_product,10,in_out,direct,product.field_product_template_list_price,price,float,,,,,,
 prestashop1500_erp_name,prestashop_1500_product,10,in_out,direct,product.field_product_template_name,name,unicode,,,,,,
+prestashop1500_product_product_ean13,prestashop_1500_product,10,in_out,direct,product.field_product_product_ean13,ean13,unicode,,,,,,
+prestashop1500_product_product_price_in,prestashop_1500_product,10,in,direct,product.field_product_template_list_price,price,float,,,,,,
+prestashop1500_product_product_price_out,prestashop_1500_product,10,out,direct,product.field_product_product_lst_price,price,float,,,,,,
+prestashop1500_product_product_reference,prestashop_1500_product,10,in_out,direct,product.field_product_product_default_code,reference,unicode,,,,,,
+prestashop1500_product_template_description,prestashop_1500_product,10,in_out,direct,product.field_product_template_description,description,unicode,,,,,,
+prestashop1500_product_product_category,prestashop_1500_product,10,in_out,direct,product.field_product_template_categ_id,id_category_default,int,,,,,,
+prestashop1500_product_product_categories,prestashop_1500_product,10,in_out,function,product_m2mcategories.field_product_template_categ_ids,categories,list,,,"if 'categories' in resource:
+    categ_ids = []
+    for ext_categ_id in resource['categories']:
+        if int(ext_categ_id) != int(resource['id_category_default']):
+            categ_ids.append(self.pool.get('product.category').get_or_create_oeid(cr, uid, external_session, ext_categ_id, context=context))
+
+    result = [('categ_ids', [(6, 0, categ_ids)])]","if 'categ_ids' in resource:
+    ext_categ_ids = []
+    categ_ids = resource['categ_ids'] + resource['categ_id']
+    for categ_id in categ_ids:
+        ext_categ_ids.append(self.pool.get('product.category').get_or_create_extid(cr, uid, external_session, categ_id, context=context))
+
+    result = [('categ_ids', ext_categ_ids)]
+",,
