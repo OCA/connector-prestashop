@@ -51,3 +51,18 @@ class product_product(osv.osv):
         print 'level_stock', level_stock
 
         return True
+        
+
+class product_category(osv.osv):
+    _inherit='product.category'
+        
+    @only_for_referential('prestashop')
+    @open_report
+    def _export_resources(self, *args, **kwargs):
+        return super(product_category, self)._import_resources(*args, **kwargs)
+
+    @only_for_referential('prestashop')
+    @catch_error_in_report
+    def _transform_and_send_one_resource(self, *args, **kwargs):
+        return super(product_category, self)._transform_and_send_one_resource(*args, **kwargs)
+
