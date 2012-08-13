@@ -48,4 +48,26 @@ class product_product(osv.osv):
                     vals[attribute.external_name] = int(resource[attribute.name])
                 else:
                     vals[attribute.external_name] = resource[attribute.name]
+        product = self.browse(cr, uid, resource['id'], context=context)
+        product_feature = []
+        for group in product.attribute_set_id.attribute_group_ids:
+            for attribute in group.attribute_ids:
+                feature_value = getattr(product, attribute.name)
+                feature_dict = {'id': self.pool.get('product.attribute').get_or_create_extid(cr, uid, external_session, attribute.attribute_id.id, context=context)}
+                if attribute.ttype == 'many2one':
+                    if not context.get('no_lang'):
+                        print 'no lang'
+                        continue
+                    if feature_value:
+                        feature_dict['id_feature_value'] = self.pool.get('attribute.option').get_or_create_extid(cr, uid, external_session, feature_value.id, context=context)
+                    product_feature.append(feature_dict)
+                    if not vals.get('associations'): vals['associations'] = {}
+                    vals['associations']['product_features'] = {'product_feature': product_feature}
+                #else:
+                #    feature_dict.update({
+                #        'id_feature': 0,
+                #        'custom_feature_value': feature_value,
+                #        })
+                #product_feature.append(feature_dict)
+                    
         return vals
