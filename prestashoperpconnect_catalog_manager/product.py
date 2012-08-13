@@ -39,7 +39,6 @@ class product_product(osv.osv):
 
     @only_for_referential('prestashop')
     def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, **kwargs):
-        context = kwargs.get('context', {})
         vals = super(product_product,self)._transform_one_resource(cr, uid, external_session, convertion_type, resource, **kwargs)
         shop = external_session.sync_from_object
         for attribute in shop.shop_attribute_ids:
@@ -48,26 +47,40 @@ class product_product(osv.osv):
                     vals[attribute.external_name] = int(resource[attribute.name])
                 else:
                     vals[attribute.external_name] = resource[attribute.name]
-        product = self.browse(cr, uid, resource['id'], context=context)
-        product_feature = []
-        for group in product.attribute_set_id.attribute_group_ids:
-            for attribute in group.attribute_ids:
-                feature_value = getattr(product, attribute.name)
-                feature_dict = {'id': self.pool.get('product.attribute').get_or_create_extid(cr, uid, external_session, attribute.attribute_id.id, context=context)}
-                if attribute.ttype == 'many2one':
-                    if not context.get('no_lang'):
-                        print 'no lang'
-                        continue
-                    if feature_value:
-                        feature_dict['id_feature_value'] = self.pool.get('attribute.option').get_or_create_extid(cr, uid, external_session, feature_value.id, context=context)
-                    product_feature.append(feature_dict)
-                    if not vals.get('associations'): vals['associations'] = {}
-                    vals['associations']['product_features'] = {'product_feature': product_feature}
-                #else:
-                #    feature_dict.update({
-                #        'id_feature': 0,
-                #        'custom_feature_value': feature_value,
-                #        })
-                #product_feature.append(feature_dict)
-                    
         return vals
+        
+    def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
+        langs = self.get_lang_to_export(cr, uid, external_session, context=context)
+        langs_to_ext_id = {}
+        for lang in langs:
+            lang_id = self.pool.get('res.lang').search(cr, uid, [('code', '=', lang)], context=context)[0]
+            langs_to_ext_id[lang] = self.pool.get('res.lang').get_extid(cr, uid, lang_id, external_session.referential_id.id, context=context)
+        for resource_id, resource in resources.items():
+            product_lang = {}
+            for lang in langs:
+                ctx = context.copy()
+                ctx['lang'] = lang
+                product_lang[lang] = self.browse(cr, uid, resource_id, context=ctx)
+            product_feature = []
+            for group in product_lang[langs[0]].attribute_set_id.attribute_group_ids:
+                for attribute in group.attribute_ids:
+                    feature_dict = {'id': self.pool.get('product.attribute').get_or_create_extid(cr, uid, external_session, attribute.attribute_id.id, context=context)}
+                    if attribute.ttype == 'many2one':
+                        feature_value = getattr(product_lang[langs[0]], attribute.name)
+                        if feature_value:
+                            feature_dict['id_feature_value'] = self.pool.get('attribute.option').get_or_create_extid(cr, uid, external_session, feature_value.id, context=context)
+                            product_feature.append(feature_dict)#do not forget to remove this line when uncomment the next line
+                    #Uncomment this code when prestshop will be able to support export in multilang of custom option
+                    #else:
+                    #    feature_langs = []
+                    #    for lang in langs:
+                    #        feature_langs.append({'attrs': {'id': '%s'%langs_to_ext_id[lang]}, 'value': getattr(product_lang[lang], attribute.name)})
+                    #    feature_dict.update({
+                    #        'id_feature': 0,
+                    #        'custom_feature_value': {'language': feature_langs},
+                    #        })
+                    #product_feature.append(feature_dict)
+            if not resource['no_lang'].get('associations'): resource['no_lang']['associations'] = {}
+            resource['no_lang']['associations']['product_features'] = {'product_feature': product_feature}
+        return super(product_product, self).send_to_external(cr, uid, external_session, resources,\
+                                        mapping, mapping_id, update_date=update_date, context=context)
