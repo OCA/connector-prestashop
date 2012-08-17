@@ -69,17 +69,17 @@ class product_product(osv.osv):
                         feature_value = getattr(product_lang[langs[0]], attribute.name)
                         if feature_value:
                             feature_dict['id_feature_value'] = self.pool.get('attribute.option').get_or_create_extid(cr, uid, external_session, feature_value.id, context=context)
-                            product_feature.append(feature_dict)#do not forget to remove this line when uncomment the next line
+                            #product_feature.append(feature_dict)#do not forget to remove this line when uncomment the next line
                     #Uncomment this code when prestshop will be able to support export in multilang of custom option
-                    #else:
-                    #    feature_langs = []
-                    #    for lang in langs:
-                    #        feature_langs.append({'attrs': {'id': '%s'%langs_to_ext_id[lang]}, 'value': getattr(product_lang[lang], attribute.name)})
-                    #    feature_dict.update({
-                    #        'id_feature': 0,
-                    #        'custom_feature_value': {'language': feature_langs},
-                    #        })
-                    #product_feature.append(feature_dict)
+                    else:
+                        feature_langs = []
+                        for lang in langs:
+                            feature_langs.append({'attrs': {'id': '%s'%langs_to_ext_id[lang]}, 'value': getattr(product_lang[lang], attribute.name)})
+                        feature_dict.update({
+                            'id_feature_value': 0,
+                            'custom_feature_value': {'language': feature_langs},
+                            })
+                    product_feature.append(feature_dict)
             if not resource['no_lang'].get('associations'): resource['no_lang']['associations'] = {}
             resource['no_lang']['associations']['product_features'] = {'product_feature': product_feature}
         return super(product_product, self).send_to_external(cr, uid, external_session, resources,\
