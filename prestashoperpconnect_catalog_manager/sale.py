@@ -32,7 +32,7 @@ class sale_shop(osv.osv):
         lang_code = []
         shop_data = self.browse(cr, uid, ids)
         for shop in shop_data:
-            lang_code = [x.code for x in shop.exportable_lang_ids]
+            lang_code = [x.code for x in shop.referential_id.exportable_lang_ids]
         return lang_code
 
     def export_catalog_prestashop(self, cr, uid, ids, context=None):
