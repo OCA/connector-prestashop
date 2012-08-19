@@ -12,5 +12,6 @@
         <menuitem id="menu_shoperp_core_instances" name="Prestashop Instances" parent="menu_shoperp" action="action_external_referential" />
         <menuitem id="menu_shoperp_core_shops" name="Prestashop Shops" parent="menu_shoperp" action="act_shoperp_shop_form" />
         <menuitem id="menu_shoperp_core_shop_groups" parent="menu_shoperp" action="base_sale_multichannels.act_base_sale_external_shop_group"/>
+        <menuitem id="menu_report_line" name="Report Lines" parent="menu_shoperp" action="base_external_referentials.ir_actions_act_window_external_report_line" />
     </data>
 </openerp>

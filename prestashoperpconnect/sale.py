@@ -23,8 +23,19 @@
 ###############################################################################
 
 from osv import osv, fields
-from base_external_referentials.decorator import only_for_referential
-import time
+from base_external_referentials.decorator import only_for_referential, catch_action
+from base_external_referentials.external_osv import ExternalSession
+
+
+
+#TODO improve me, this should be not hardcoded. Need to syncronize prestashop state in OpenERP
+PRESTASHOP_MAP_STATE = {
+    'progress': 3,
+    'manual': 3,
+    'done': 5,
+
+}
+
 
 class sale_order(osv.osv):
     _inherit='sale.order'
@@ -53,6 +64,27 @@ class sale_order(osv.osv):
         vals['paid'] = bool(float(resource['total_paid_real']))
         vals['amount'] = float(resource['total_paid_real'])
         return vals
+
+    @catch_action
+    def _update_state_in_prestashop(self, cr, uid, sale_id, state, context=None):
+        sale = self.browse(cr, uid, sale_id, context=context)
+        external_session = ExternalSession(sale.shop_id.referential_id)
+        ext_id = self.get_extid(cr, uid, sale_id, external_session.referential_id.id, context=context)
+        if PRESTASHOP_MAP_STATE.get(state):
+            external_session.connection.add('order_histories', {'order_history':{
+                'id_order': ext_id,
+                'id_order_state' : PRESTASHOP_MAP_STATE[state]
+                }})
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(sale_order, self).write(cr, uid, ids, vals.copy(), context=context)
+        if 'state' in vals:
+            for sale in self.browse(cr, uid, ids, context=context):
+                if sale.shop_id.referential_id.type_id.name.lower() == 'prestashop':
+                    self._update_state_in_prestashop(cr, uid, sale.id, vals['state'], context=context)
+        return res
+
 
 class sale_shop(osv.osv):
     _inherit = 'sale.shop'
