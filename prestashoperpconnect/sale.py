@@ -35,14 +35,13 @@ class sale_order(osv.osv):
                                             external_id=external_id, resource_filter=resource_filter, \
                                             mapping=mapping, fields=fields, context=context)
         for order in result:
-            order_rows = order['order_rows']
+            order_rows_ids = order['order_rows']
             order_rows_details = []
-            if not isinstance(order_rows, list):
-                order_rows = [order_rows]
-            for order_row in order_rows:
-                if order_row.get('id'):
-                    order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
-                                                                            external_session, order_row['id'], context=context)[0])
+            if not isinstance(order_rows_ids, list):
+                order_rows_ids = [order_rows_ids]
+            for order_row_id in order_rows_ids:
+                order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
+                                                                            external_session, order_row_id, context=context)[0])
             order['order_rows'] = order_rows_details
         return result
 
