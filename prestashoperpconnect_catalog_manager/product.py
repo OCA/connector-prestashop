@@ -41,12 +41,13 @@ class product_product(osv.osv):
     def _transform_one_resource(self, cr, uid, external_session, convertion_type, resource, **kwargs):
         vals = super(product_product,self)._transform_one_resource(cr, uid, external_session, convertion_type, resource, **kwargs)
         shop = external_session.sync_from_object
-        for attribute in shop.shop_attribute_ids:
-            if attribute.name in resource:
-                if attribute.ttype == 'boolean':
-                    vals[attribute.external_name] = int(resource[attribute.name])
-                else:
-                    vals[attribute.external_name] = resource[attribute.name]
+        if convertion_type == 'from_openerp_to_external':
+            for attribute in shop.shop_attribute_ids:
+                if attribute.name in resource:
+                    if attribute.ttype == 'boolean':
+                        vals[attribute.external_name] = int(resource[attribute.name])
+                    else:
+                        vals[attribute.external_name] = resource[attribute.name]
         return vals
         
     def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
