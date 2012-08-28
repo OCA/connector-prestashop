@@ -49,7 +49,7 @@ class product_product(osv.osv):
                     else:
                         vals[attribute.external_name] = resource[attribute.name]
         return vals
-        
+
     def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
         langs = self.get_lang_to_export(cr, uid, external_session, context=context)
         langs_to_ext_id = {}
@@ -71,8 +71,8 @@ class product_product(osv.osv):
                             feature_value = getattr(product_lang[langs[0]], attribute.name)
                             if feature_value:
                                 feature_dict['id_feature_value'] = self.pool.get('attribute.option').get_or_create_extid(cr, uid, external_session, feature_value.id, context=context)
-                                #product_feature.append(feature_dict)#do not forget to remove this line when uncomment the next line
-                        #Uncomment this code when prestshop will be able to support export in multilang of custom option
+                            else:
+                                continue
                         else:
                             feature_langs = []
                             for lang in langs:
