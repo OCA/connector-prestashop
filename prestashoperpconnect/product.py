@@ -40,10 +40,9 @@ class product_product(osv.osv):
 
     def export_inventory(self, cr, uid, external_session, product_ids, context=None):
         """
-
         :param list product_ids: list of product
-        :rtype: __
-        :return: __
+        :rtype: boolean
+        :return: boolean
         """
         for product in self.browse(cr, uid, product_ids, context=context):
             ext_id = product.get_extid(external_session.referential_id.id, context=context)
@@ -60,11 +59,11 @@ class product_product(osv.osv):
             external_session.connection.edit('stock_availables', {'stock_available':params})
 
         return True
-        
+
 
 class product_category(osv.osv):
     _inherit='product.category'
-        
+
     @only_for_referential('prestashop')
     @open_report
     def _export_resources(self, *args, **kwargs):
