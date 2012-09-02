@@ -23,8 +23,19 @@
 ###############################################################################
 
 from osv import osv, fields
-from base_external_referentials.decorator import only_for_referential
-import time
+from base_external_referentials.decorator import only_for_referential, catch_action
+from base_external_referentials.external_osv import ExternalSession
+
+
+
+#TODO improve me, this should be not hardcoded. Need to syncronize prestashop state in OpenERP
+PRESTASHOP_MAP_STATE = {
+    'progress': 3,
+    'manual': 3,
+    'done': 5,
+
+}
+
 
 class sale_order(osv.osv):
     _inherit='sale.order'
@@ -35,14 +46,13 @@ class sale_order(osv.osv):
                                             external_id=external_id, resource_filter=resource_filter, \
                                             mapping=mapping, fields=fields, context=context)
         for order in result:
-            order_rows = order['order_rows']
+            order_rows_ids = order['order_rows']
             order_rows_details = []
-            if not isinstance(order_rows, list):
-                order_rows = [order_rows]
-            for order_row in order_rows:
-                if order_row.get('id'):
-                    order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
-                                                                            external_session, order_row['id'], context=context)[0])
+            if not isinstance(order_rows_ids, list):
+                order_rows_ids = [order_rows_ids]
+            for order_row_id in order_rows_ids:
+                order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
+                                                                            external_session, order_row_id, context=context)[0])
             order['order_rows'] = order_rows_details
         return result
 
@@ -55,52 +65,24 @@ class sale_order(osv.osv):
         vals['amount'] = float(resource['total_paid_real'])
         return vals
 
-class sale_shop(osv.osv):
-    _inherit = 'sale.shop'
+    @catch_action
+    def _update_state_in_prestashop(self, cr, uid, sale_id, state, context=None):
+        sale = self.browse(cr, uid, sale_id, context=context)
+        external_session = ExternalSession(sale.shop_id.referential_id)
+        ext_id = self.get_extid(cr, uid, sale_id, external_session.referential_id.id, context=context)
+        if PRESTASHOP_MAP_STATE.get(state):
+            external_session.connection.add('order_histories', {'order_history':{
+                'id_order': ext_id,
+                'id_order_state' : PRESTASHOP_MAP_STATE[state]
+                }})
+        return True
 
-    _columns = {
-        'exportable_lang_ids': fields.many2many('res.lang', 'shop_lang_rel', 'lang_id', 'shop_id', 'Exportable Languages'),
-    }
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(sale_order, self).write(cr, uid, ids, vals.copy(), context=context)
+        if 'state' in vals:
+            for sale in self.browse(cr, uid, ids, context=context):
+                if sale.shop_id.referential_id.type_id.name.lower() == 'prestashop':
+                    self._update_state_in_prestashop(cr, uid, sale.id, vals['state'], context=context)
+        return res
 
-#    @only_for_referential('prestashop')
-#    def update_orders(self, cr, uid, ids, context=None):
-#        if context is None:
-#            context = {}
-#        for shop in self.browse(cr, uid, ids):
-#            #get all orders, which the state is not draft and the date of modification is superior to the last update, to exports
-#            req = "select ir_model_data.res_id, ir_model_data.name from sale_order inner join ir_model_data on sale_order.id = ir_model_data.res_id where ir_model_data.model='sale.order' and sale_order.shop_id=%s and ir_model_data.referential_id IS NOT NULL "
-#            param = (shop.id,)
-#
-#            if shop.last_update_order_export_date:
-#                req += "and sale_order.write_date > %s"
-#                param = (shop.id, shop.last_update_order_export_date)
-#
-#            cr.execute(req, param)
-#            results = cr.fetchall()
-#
-#            for result in results:
-#                ids = self.pool.get('sale.order').search(cr, uid, [('id', '=', result[0])])
-#                if ids:
-#                    id = ids[0]
-#                    order = self.pool.get('sale.order').browse(cr, uid, id, context)
-#                    order_ext_id = result[1].split('sale_order/')[1]
-#                    self.update_shop_orders(cr, uid, order, order_ext_id, context)
-#                    logging.getLogger('external_synchro').info("Successfully updated order with OpenERP id %s and ext id %s in external sale system" % (id, order_ext_id))
-#            self.pool.get('sale.shop').write(cr, uid, shop.id, {'last_update_order_export_date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-#        return False
-
-#    @only_for_referential('prestashop')
-#    def update_shop_orders(self, cr, uid, order, ext_id, context=None):
-#        if context is None: context = {}
-#        result = {}
-#        date = '2012-04-15 10:46:57'
-#        history_obj = self.pool.get('sale.order.history')
-#        history_ids = history_obj.search(cr, uid, [('order_id', '=', order.id),('date_add', '>=', date)])
-#        if history_ids:
-#            self.export_history(cr, uid, [2], history_ids, context=context)
-#        return result
-#
-#    def export_history(self, cr, uid, ids, history_ids, context=None):
-#        self.export_resources(cr, uid, ids, history_ids, 'sale.order.history', context=context)
-#        return True
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

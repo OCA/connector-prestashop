@@ -32,27 +32,32 @@ class sale_shop(osv.osv):
         lang_code = []
         shop_data = self.browse(cr, uid, ids)
         for shop in shop_data:
-            lang_code = [x.code for x in shop.exportable_lang_ids]
+            lang_code = [x.code for x in shop.referential_id.exportable_lang_ids]
         return lang_code
 
-    def export_prestashop_catalog(self, cr, uid, ids, context=None):
+    def export_catalog_prestashop(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
         context['lang_to_export'] = self.get_shop_lang_to_export(cr, uid, ids, context=context)
-        self.export_resources(cr, uid, ids, 'product.category', context=context)
+        #self.export_resources(cr, uid, ids, 'product.category', context=context)
         self.export_resources(cr, uid, ids, 'product.product', context=context)
         #TODO update the last date
         return True
 
     def _prepare_attribute_shop_fields(self, cr, uid, context=None):
         res = super(sale_shop, self)._prepare_attribute_shop_fields(cr, uid, context=context)
+        #TODO improve this code, maybe the best will be to pass more information (all attribut information)
+        #so we can create more custom field, like selection, and we can customise the name
         prestashop_fields = {
                     'meta_title': 'char',
                     'meta_description': 'char',
                     'meta_keywords': 'char',
-                    'friendly_url': 'char',
+                    'link_rewrite': 'char',
                     'tags': 'char',
-                    'short_description': 'text'
+                    'short_description': 'text',
+                    'available_for_order': 'boolean',
+                    'show_price': 'boolean',
+                    'online_only': 'boolean',
                     }
         res.update(prestashop_fields)
         return res

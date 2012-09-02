@@ -43,7 +43,7 @@ class external_referential(osv.osv):
         if isinstance(id, list):
             id = id[0]
         referential = self.browse(cr, uid, id, context=context)
-        prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass)
+        prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass, debug=referential.debug)
         try:
             prestashop.head('')
         except Exception, e:

@@ -5,3 +5,4 @@ prestashop1500_erp_phone_mobile,prestashop_1500_partner_address,10,in_out,direct
 prestashop1500_erp_postcode,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_zip,postcode,unicode,,,,,,
 prestashop1500_erp_firstname,prestashop_1500_partner_address,10,in_out,function,base.field_res_partner_address_name,firstname,unicode,,,"result = [('name', ifield + ' ' + data['lastname'])]","add_id = self.browse(cr, uid, record['id'])",,
 prestashop1500_erp_city,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_city,city,unicode,,,,,,
+prestashop1500_res_partner_address_id_customer,prestashoperpconnect.prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_partner_id,id_customer,int,,,,,,False

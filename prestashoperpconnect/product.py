@@ -23,6 +23,7 @@
 
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential, catch_error_in_report, open_report
+import json
 
 class product_product(osv.osv):
     _inherit='product.product'
@@ -44,10 +45,33 @@ class product_product(osv.osv):
         :rtype: __
         :return: __
         """
-        level_stock = {}
         for product in self.browse(cr, uid, product_ids, context=context):
-            level_stock[product.id] = product.qty_available
-
-        print 'level_stock', level_stock
+            ext_id = product.get_extid(external_session.referential_id.id, context=context)
+            params = {
+                'id': json.dumps({"id_product":ext_id, "id_product_attribute":0}),
+                'quantity': int(product.qty_available),
+                'id_product':ext_id,
+                'id_product_attribute':0,
+                'depends_on_stock': 1,
+                'out_of_stock': product.qty_available > 0 and 1 or 0,
+                'id_shop': external_session.sync_from_object.get_extid(external_session.referential_id.id),
+                #'id_shop_group':0, TODO fix me
+            }
+            external_session.connection.edit('stock_availables', {'stock_available':params})
 
         return True
+        
+
+class product_category(osv.osv):
+    _inherit='product.category'
+        
+    @only_for_referential('prestashop')
+    @open_report
+    def _export_resources(self, *args, **kwargs):
+        return super(product_category, self)._import_resources(*args, **kwargs)
+
+    @only_for_referential('prestashop')
+    @catch_error_in_report
+    def _transform_and_send_one_resource(self, *args, **kwargs):
+        return super(product_category, self)._transform_and_send_one_resource(*args, **kwargs)
+
