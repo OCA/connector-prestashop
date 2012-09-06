@@ -13,3 +13,4 @@ prestashoperpconnect.prestashop_1500_country,prestashoperpconnect.prestashop1500
 prestashoperpconnect.prestashop_1500_currency,prestashoperpconnect.prestashop1500,account.model_res_currency,,currencies,,,,,,,,,currencie
 prestashoperpconnect.prestashop_1500_carrier,prestashoperpconnect.prestashop1500,base_sale_multichannels.model_delivery_carrier,,carriers,,,,,,,,,carrier
 prestashoperpconnect.prestashop_1500_tax,prestashoperpconnect.prestashop1500,account.model_account_tax,,taxes,,,,,,,,,tax
+prestashoperpconnect.prestashop_1500_tax_group,prestashoperpconnect.prestashop1500,base_sale_multichannels.model_account_tax_group,,tax_rule_groups,,,,,,,,,tax_rule_group

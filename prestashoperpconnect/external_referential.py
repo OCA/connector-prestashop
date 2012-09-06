@@ -169,6 +169,7 @@ class external_referential(osv.osv):
             if group_id:
                 context.update({'default_shop_group_id':group_id})
         self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
+        self.import_resources(cr, uid, [referential_id], 'account.tax.group', context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='LANG',
             oe_obj=self.pool.get('res.lang'),

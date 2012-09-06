@@ -25,3 +25,4 @@ prestashop1500_product_product_categories,prestashop_1500_product,10,in_out,func
 
     result = [('associations',  {'categories' : {'category': ext_categ_ids}})]
 ",,
+prestashop1500_product_product_id_tax_rules_group,prestashop_1500_product,10,out,direct,base_sale_multichannels.field_product_template_tax_group_id,id_tax_rules_group,int,,,,,,False
