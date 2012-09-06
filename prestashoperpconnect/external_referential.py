@@ -78,6 +78,13 @@ class external_referential(osv.osv):
         else:
             return False
 
+    def _compare_taxes(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
+        if oe_dict['type_tax_use'] == 'sale'\
+                    and abs(oe_dict[oe_field]*100 - float(ps_dict[0][ps_field]))<0.01:
+            return True
+        else:
+            return False
+
     def _bidirectional_synchro(self, cr, uid, external_session, obj_readable_name, oe_obj, ps_field, ps_readable_field, oe_field, oe_readable_field, compare_function, context=None):
         external_session.logger.info(_("[%s] Starting synchro between OERP and PS") %obj_readable_name)
         referential_id = external_session.referential_id.id
@@ -180,6 +187,14 @@ class external_referential(osv.osv):
             ps_field='iso_code', ps_readable_field='name',
             oe_field='name', oe_readable_field='name',
             compare_function=self._compare_currencies, context=context)
+
+        self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='TAXES',
+            oe_obj=self.pool.get('account.tax'),
+            ps_field='rate', ps_readable_field='name',
+            oe_field='amount',
+            oe_readable_field='type_tax_use',
+            compare_function=self._compare_taxes, context=context)
+
         return {}
 
     def _prepare_mapping_vals(self, cr, uid, referential_id, mapping_vals, context=None):
