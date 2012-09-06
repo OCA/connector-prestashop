@@ -50,8 +50,7 @@ class res_partner(osv.osv):
         new_filter = super(res_partner, self)._get_filter(cr, uid, external_session, step,
             previous_filter=previous_filter, context=context)
         if last_export:
-            new_filter['filter[date_upd]'] = '>['+last_export+']'
-            new_filter['date']= '1'
+            new_filter.update(self.add_date_filter2prestashop(last_export))
         return new_filter
 
     def _get_last_exported_date(self, cr, uid, external_session, context=None):

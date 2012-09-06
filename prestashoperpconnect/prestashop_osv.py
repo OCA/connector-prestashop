@@ -76,6 +76,20 @@ def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping
         res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_update_method'] or 'edit')(mapping[mapping_id]['external_resource_name'], resource)
     return res
 
+@extend(osv.osv)
+def add_date_filter2prestashop(self, field_date_value, direction='>', field_name='date_upd'):
+    """
+    Unified prestashop method to specify filtered date
+    :param str field_date_value: date in Y-m-d format
+    :param str direction: > or <
+    :param str field_name: name of the field used in filter
+    :rtype: dict
+    :return: date filter parameters needed to build http query
+    """
+    presta_filter = {}
+    presta_filter['filter['+field_name+']'] = direction + '['+field_date_value+']'
+    presta_filter['date']= '1'
+    return presta_filter
 
 
 @override(osv.osv, 'prestashop_')

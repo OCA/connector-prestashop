@@ -25,6 +25,7 @@
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential, catch_action
 from base_external_referentials.external_osv import ExternalSession
+from datetime import datetime
 
 
 
@@ -52,9 +53,33 @@ class sale_order(osv.osv):
                 order_rows_ids = [order_rows_ids]
             for order_row_id in order_rows_ids:
                 order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
-                                                                            external_session, order_row_id, context=context)[0])
+                                                                            external_session,
+                                                                            order_row_id, context=context)[0])
             order['order_rows'] = order_rows_details
         return result
+
+    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
+        """ see docstring in prestashop_osv """
+        last_export = self._get_last_exported_date(cr, uid, external_session, context=context)
+        self._set_last_exported_date(cr, uid, external_session, date='default', context=context)
+        new_filter = super(sale_order, self)._get_filter(cr, uid, external_session, step,
+            previous_filter=previous_filter, context=context)
+        if last_export:
+            new_filter.update(self.add_date_filter2prestashop(last_export))
+        return new_filter
+
+    def _get_last_exported_date(self, cr, uid, external_session, context=None):
+        sale_shop_browse = self.pool.get('sale.shop').browse(cr,
+                                    uid, [external_session.referential_id.id], context=context)[0]
+        return sale_shop_browse.import_orders_from_date
+
+    def _set_last_exported_date(self, cr, uid, external_session, date='default', context=None):
+        new_date = date
+        if date == 'default':
+            new_date = datetime.today().strftime("%Y-%m-%d")
+        self.pool.get('sale.shop').write(cr, uid,
+            [external_session.referential_id.id], {'import_orders_from_date': new_date }, context=context)
+        return True
 
     def _get_payment_information(self, cr, uid, external_session, order_id, resource, context=None):
         """
