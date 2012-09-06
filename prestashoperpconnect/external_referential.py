@@ -28,6 +28,10 @@ from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
 from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
 
+from base_external_referentials.external_referentials import REF_VISIBLE_FIELDS
+REF_VISIBLE_FIELDS['Prestashop'] = ['location', 'apipass']
+
+
 class external_referential(osv.osv):
     _inherit = "external.referential"
 
@@ -37,7 +41,7 @@ class external_referential(osv.osv):
     }
 
     _lang_support = 'fields_with_no_lang'
-    
+
     @only_for_referential('prestashop')
     def external_connection(self, cr, uid, id, debug=False, logger=False, context=None):
         if isinstance(id, list):
