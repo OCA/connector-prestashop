@@ -28,9 +28,12 @@
                         attrs="{'invisible': [['type_name', '!=','Prestashop']]}">
                         <group name='import' colspan="4">
                             <separator string="Import" colspan="4" />
-                            <group name='left' colspan="2" col="2">
-                                <button name="import_customer_groups" string="1 - Import Customer Groups (Partner Categories)" colspan="2" type="object" />
+                            <group name='left' colspan="2" col="4">
+                                <button name="import_customer_groups" 
+                                    string="1 - Import Customer Groups (Partner Categories)"
+                                    colspan="4" type="object" />
                                 <button name="import_customers" string="2 - Import Customer" colspan="2" type="object" />
+                                <field name="last_customer_import_date"/>
                             </group>
                             <group name="right" colspan="2" col="2">
                                 <button name="import_product_categories" string="3 - Import Product Categories" colspan="2" type="object" />

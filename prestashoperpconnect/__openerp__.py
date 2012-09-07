@@ -67,6 +67,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'prestashoperpconnect_menu.xml',
         'board_prestashoperpconnect_view.xml',
         'res_partner_data.xml',
+        'res_partner_view.xml',
         'settings/external.referential.type.csv',
         'settings/1.5.0.0/external.referential.version.csv',
         'settings/1.5.0.0/external.mapping.template.csv',

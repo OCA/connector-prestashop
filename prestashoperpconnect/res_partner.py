@@ -21,13 +21,18 @@
 #                                                                             #
 ###############################################################################
 
-from osv import osv, fields
+from openerp.osv.orm import Model
+from openerp.osv import fields
 from base_external_referentials.decorator import only_for_referential
 from datetime import datetime
 
-class res_partner(osv.osv):
+class res_partner(Model):
     _inherit='res.partner'
 
+    _columns = {
+        'prestashop_email': fields.char('Prestashop Email', size=64,
+                                help='This is the customer email in prestashop'),
+    }
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
         result = super(res_partner, self)._get_external_resources(cr, uid, external_session, external_id=external_id, resource_filter=resource_filter, mapping=mapping, fields=fields, context=context)
@@ -86,9 +91,39 @@ class res_partner(osv.osv):
 
         return True
 
-class external_referential(osv.osv):
-    _inherit = 'external.referential'
+class res_partner_address(Model):
+    _inherit = 'res.partner.address'
+
+    def _get_email(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for address in self.browse(cr, uid, ids, context=context):
+            if address.use_prestashop_email:
+                res[address.id] = address.partner_id.prestashop_email
+            else:
+                res[address.id] = address.custom_email
+        return res
+
+    def _set_email(self, cr, uid, id, name, value, arg, context=None):
+        return cr.execute(
+            """
+            UPDATE res_partner_address
+                SET custom_email = %s
+                WHERE id = %s
+            """, (value, id))
 
     _columns = {
-        'last_customer_import_date': fields.date('Last cust. imp.', help="Last customer import date"),
+        'email': fields.function(_get_email,
+                            fnct_inv = _set_email,
+                            string='Email',
+                            type='char',
+                            help='E-Mail'),
+        'custom_email': fields.char('Custom Email', size=64),
+        'use_prestashop_email': fields.boolean('Use Prestashop Email',
+                                                help=("if it's check it will use the email"
+                                                "from prestashop on the partner form")),
+
+    }
+
+    _defaults = {
+        'use_prestashop_email': True,
     }

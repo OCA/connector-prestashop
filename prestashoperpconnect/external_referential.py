@@ -36,6 +36,7 @@ class external_referential(osv.osv):
     _inherit = "external.referential"
 
     _columns = {
+        'last_customer_import_date': fields.date('Last cust. imp.', help="Last customer import date"),
         'last_product_attributes_export_date' : fields.datetime('Last Product Attributes Export Time'),
         'active_language_ids': fields.many2many('res.lang', 'active_presta_lang', 'referential_id', 'lang_id', 'Active Languages'),
     }
@@ -212,6 +213,13 @@ class external_referential(osv.osv):
         res = super(external_referential, self)._prepare_mapping_template_vals(cr, uid, mapping, context=context)
         res['prestashop_primary_key'] = mapping.prestashop_primary_key or ''
         return res
+
+    def import_customers(self, cr, uid, ids, context=None):
+        super(external_referential, self).import_customers(cr, uid, ids, context=context)
+        self.import_resources(cr, uid, ids, 'res.partner.address', context=context)
+        return True
+
+
 
 class external_mapping(osv.osv):
     _inherit = 'external.mapping'

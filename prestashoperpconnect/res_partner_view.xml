@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  prestashoperpconnect for OpenERP
+  Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data>
+        <!-- VIEW FOR THE OBJECT : external_referential -->
+        <record id="res_partner_view_form" model="ir.ui.view">
+            <field name="name">prestashop.res_partner_view_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field eval="24" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="lang" position="after">
+                    <field name="prestashop_email"/>
+                </field>
+                <field name="email" position="replace">
+                    <group name='email' col="4" colspan="2">
+                        <field name="email"
+                            attrs="{'readonly': [('use_prestashop_email', '=', True)]}"/>
+                        <field name="use_prestashop_email"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+
