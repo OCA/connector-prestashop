@@ -36,7 +36,9 @@ class external_referential(osv.osv):
     _inherit = "external.referential"
 
     _columns = {
-        'last_customer_import_date': fields.date('Last cust. imp.', help="Last customer import date"),
+        'last_customer_import_date': fields.datetime('Last Cust Imp', help="Last customer import date"),
+        'last_customer_address_import_date': fields.datetime('Last Address Imp',
+                                                        help="Last customer address import date"),
         'last_product_attributes_export_date' : fields.datetime('Last Product Attributes Export Time'),
         'active_language_ids': fields.many2many('res.lang', 'active_presta_lang', 'referential_id', 'lang_id', 'Active Languages'),
     }

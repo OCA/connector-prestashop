@@ -28,6 +28,8 @@ from base_external_referentials.decorator import only_for_referential
 from base_external_referentials.external_osv import override, extend
 from collections import defaultdict
 from tools.translate import _
+from datetime import datetime
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 @extend(osv.osv)
 @only_for_referential('prestashop')
@@ -76,22 +78,6 @@ def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping
         res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_update_method'] or 'edit')(mapping[mapping_id]['external_resource_name'], resource)
     return res
 
-@extend(osv.osv)
-def add_date_filter2prestashop(self, field_date_value, direction='>', field_name='date_upd'):
-    """
-    Unified prestashop method to specify filtered date
-    :param str field_date_value: date in Y-m-d format
-    :param str direction: > or <
-    :param str field_name: name of the field used in filter
-    :rtype: dict
-    :return: date filter parameters needed to build http query
-    """
-    presta_filter = {}
-    presta_filter['filter['+field_name+']'] = direction + '['+field_date_value+']'
-    presta_filter['date']= '1'
-    return presta_filter
-
-
 @override(osv.osv, 'prestashop_')
 @only_for_referential('prestashop')
 def get_lang_to_export(self, cr, uid, external_session, context=None):
@@ -102,6 +88,27 @@ def get_lang_to_export(self, cr, uid, external_session, context=None):
         raise osv.except_osv(_("Configuration Error"), _("You need to define on the external referential prestashop the different languages of prestashop (page : Configuration)!"))
     return res
 
+
+
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def _import_resources(self, cr, uid, external_session, defaults=None, method="search_then_read", context=None):
+    return self.prestashop__import_resources(cr, uid, external_session,
+                                             defaults=defaults,
+                                             method='search_then_read_no_loop',
+                                             context=context)
+
+
+@extend(osv.osv)
+@only_for_referential('prestashop')
+def _get_last_imported_date(self, cr, uid, external_session, context=None):
+    return False
+
+
+@extend(osv.osv)
+@only_for_referential('prestashop')
+def _set_last_imported_date(self, cr, uid, external_session, date, context=None):
+    return True
 
 @override(osv.osv, 'prestashop_')
 @only_for_referential('prestashop')
@@ -121,6 +128,11 @@ def _get_filter(self, cr, uid, external_session, step, previous_filter=None, con
     resource_filter = {
         'limit': "%s,%s"%(start,step),
     }
+    last_export = self._get_last_imported_date(cr, uid, external_session, context=context)
+    self._set_last_imported_date(cr, uid, external_session, date='default', context=context)
+    if last_export:
+        date = datetime.strptime(last_export,  DEFAULT_SERVER_DATETIME_FORMAT)
+        resource_filter['date_filter'] = [['date_upd', '>', date]]
     return resource_filter
 
 @override(osv.osv, 'prestashop_')

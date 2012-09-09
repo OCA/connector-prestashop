@@ -25,6 +25,7 @@ from openerp.osv.orm import Model
 from openerp.osv import fields
 from base_external_referentials.decorator import only_for_referential
 from datetime import datetime
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class res_partner(Model):
     _inherit='res.partner'
@@ -48,27 +49,18 @@ class res_partner(Model):
             result[0]['main_contact'] = [main_contact]
         return result
 
-    def _get_filter(self, cr, uid, external_session, step, previous_filter=None, context=None):
-        """ see docstring in prestashop_osv """
-        last_export = self._get_last_exported_date(cr, uid, external_session, context=context)
-        self._set_last_exported_date(cr, uid, external_session, date='default', context=context)
-        new_filter = super(res_partner, self)._get_filter(cr, uid, external_session, step,
-            previous_filter=previous_filter, context=context)
-        if last_export:
-            new_filter.update(self.add_date_filter2prestashop(last_export))
-        return new_filter
-
-    def _get_last_exported_date(self, cr, uid, external_session, context=None):
+    def _get_last_imported_date(self, cr, uid, external_session, context=None):
         ext_ref_browse = self.pool.get('external.referential').browse(cr,
                                     uid, [external_session.referential_id.id], context=context)[0]
         return ext_ref_browse.last_customer_import_date
 
-    def _set_last_exported_date(self, cr, uid, external_session, date='default', context=None):
+    def _set_last_imported_date(self, cr, uid, external_session, date, context=None):
         new_date = date
         if date == 'default':
-            new_date = datetime.today().strftime("%Y-%m-%d")
-        self.pool.get('external.referential').write(cr, uid,
-            [external_session.referential_id.id], {'last_customer_import_date': new_date }, context=context)
+            new_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        self.pool.get('external.referential').write(cr, uid,[external_session.referential_id.id],
+                                                    {'last_customer_import_date': new_date },
+                                                    context=context)
         return True
 
     def run_scheduled_import_customers(self, cr, uid, context=None):
@@ -127,3 +119,20 @@ class res_partner_address(Model):
     _defaults = {
         'use_prestashop_email': True,
     }
+
+
+    def _get_last_imported_date(self, cr, uid, external_session, context=None):
+        ext_ref_browse = self.pool.get('external.referential').browse(cr,
+                                    uid, [external_session.referential_id.id], context=context)[0]
+        return ext_ref_browse.last_customer_address_import_date
+
+    def _set_last_imported_date(self, cr, uid, external_session, date, context=None):
+        new_date = date
+        if date == 'default':
+            new_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        self.pool.get('external.referential').write(cr, uid,[external_session.referential_id.id],
+                                                    {'last_customer_address_import_date': new_date },
+                                                    context=context)
+        return True
+
+

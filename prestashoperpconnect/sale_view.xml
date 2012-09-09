@@ -34,9 +34,8 @@
             <field eval="1" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            
-            <page string="Actions" position="replace">
-                <page string="Actions">
+            <page string="External Shop Settings" position="before">
+                <page string="Prestashop Actions">
                     <group col="6" colspan="4">
                         <group col="3" colspan="3">
                         <separator string="Catalog" colspan="3"/>
@@ -50,19 +49,12 @@
                     <group col="3" colspan="3">
                         <separator string="Orders" colspan="3"/>
                         <group col="4" colspan="3">
-                            <button name="import_orders" string="Import Orders" colspan="1" type="object"/>
-                            <button name="check_need_to_update" string="Check Payments from Channel" colspan="1" type="object"/>
-                            <!-- TODO <field name="import_orders_from_date" colspan="2"/>-->
+                            <button name="import_orders" string="Import Orders" colspan="2" type="object"/>
+                            <field name="import_orders_from_date" colspan="2"/>
                         </group>
                         <button name="update_orders" string="Update Orders State on Channel" colspan="1" type="object"/>
                         <field name="last_update_order_export_date" colspan="2"/>
-                        <button name="export_invoices" string="Export Invoices" colspan="1" type="object"/>
-                        <button name="export_shipping" string="Export Shippings" colspan="1" type="object"/>
                         </group>
-                        <separator string="Partners" colspan="3"/>
-                        <newline/>
-                        <button name="export_shop_partners" string="Export Partners" colspan="1" type="object"/>
-                        <newline/>
                     </group>
                 </page>
             </page>
