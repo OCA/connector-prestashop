@@ -36,9 +36,11 @@
             <field name="arch" type="xml">
                 <button name="export_inventory" position="after">
                     <button name="export_catalog_prestashop" string="Export Catalog" colspan="1" type="object"/>
+                    <button name="export_images" string="Export Product Images" colspan="1" type="object"/>
                 </button>
                 <field name="last_inventory_export_date" position="after">
                     <field name="last_products_export_date" colspan="2"/>
+                    <field name="last_images_export_date" colspan="2"/>
                 </field>
             </field>
         </record>

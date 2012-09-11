@@ -41,6 +41,7 @@
                             <group name="right" colspan="2" col="2">
                                 <button name="import_product_categories" string="3 - Import Product Categories" colspan="2" type="object" />
                                 <button name="import_products" string="4 - Import Products" colspan="2" type="object"/>
+                                <button name="import_product_images" string="5 - Import Product Images" colspan="2" type="object"/>
                             </group>
                         </group>
                     </group>

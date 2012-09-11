@@ -28,6 +28,7 @@
     "depends" : [
                  "prestashoperpconnect",
                  "product_custom_attributes_shop",
+                 "product_images_sync",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """This module is an extention for PrestashopERPconnect.

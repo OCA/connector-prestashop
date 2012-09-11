@@ -1,4 +1,4 @@
-    # -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -29,7 +29,7 @@
                  "product",
                  "product_m2mcategories",
                  "base_sale_multichannels",
-#                 "product_images_olbs",
+                 "product_images",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """This module connects OpenERP and Prestashop.
