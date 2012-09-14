@@ -27,6 +27,7 @@ from osv import osv, fields
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
 from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
+from openerp.tools.config import config
 
 from base_external_referentials.external_referentials import REF_VISIBLE_FIELDS
 REF_VISIBLE_FIELDS['Prestashop'] = ['location', 'apipass']
@@ -54,6 +55,7 @@ class external_referential(osv.osv):
         try:
             prestashop.head('')
         except Exception, e:
+            if config['debug_mode']: raise
             raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck url & password.\n %s"%e))
         return prestashop
 
