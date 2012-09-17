@@ -88,6 +88,7 @@ def get_lang_to_export(self, cr, uid, external_session, context=None):
         raise osv.except_osv(_("Configuration Error"), _("You need to define on the external referential prestashop the different languages of prestashop (page : Configuration)!"))
     return res
 
+@extend(osv.osv)
 @only_for_referential('prestashop')
 def _get_last_imported_date(self, cr, uid, external_session, context=None):
     return False
