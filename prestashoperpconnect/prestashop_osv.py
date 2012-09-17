@@ -24,7 +24,7 @@
 ###############################################################################
 
 from osv import osv, fields
-from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.decorator import only_for_referential, commit_now
 from base_external_referentials.external_osv import override, extend
 from collections import defaultdict
 from tools.translate import _
@@ -88,22 +88,9 @@ def get_lang_to_export(self, cr, uid, external_session, context=None):
         raise osv.except_osv(_("Configuration Error"), _("You need to define on the external referential prestashop the different languages of prestashop (page : Configuration)!"))
     return res
 
-
-
-@override(osv.osv, 'prestashop_')
-@only_for_referential('prestashop')
-def _import_resources(self, cr, uid, external_session, defaults=None, method="search_then_read", context=None):
-    return self.prestashop__import_resources(cr, uid, external_session,
-                                             defaults=defaults,
-                                             method='search_then_read_no_loop',
-                                             context=context)
-
-
-@extend(osv.osv)
 @only_for_referential('prestashop')
 def _get_last_imported_date(self, cr, uid, external_session, context=None):
     return False
-
 
 @extend(osv.osv)
 @only_for_referential('prestashop')

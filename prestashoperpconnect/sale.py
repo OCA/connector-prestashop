@@ -23,7 +23,7 @@
 ###############################################################################
 
 from osv import osv, fields
-from base_external_referentials.decorator import only_for_referential, catch_action
+from base_external_referentials.decorator import only_for_referential, catch_action, commit_now
 from base_external_referentials.external_osv import ExternalSession
 from datetime import datetime
 
@@ -58,11 +58,13 @@ class sale_order(osv.osv):
             order['order_rows'] = order_rows_details
         return result
 
+    @commit_now
     def _get_last_imported_date(self, cr, uid, external_session, context=None):
         sale_shop_browse = self.pool.get('sale.shop').browse(cr,
                                     uid, [external_session.sync_from_object.id], context=context)[0]
         return sale_shop_browse.import_orders_from_date
 
+    @commit_now
     def _set_last_imported_date(self, cr, uid, external_session, date='default', context=None):
         new_date = date
         if date == 'default':
