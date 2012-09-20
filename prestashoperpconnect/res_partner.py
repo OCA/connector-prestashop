@@ -28,7 +28,7 @@ from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class res_partner(Model):
-    _inherit='res.partner'
+    _inherit = 'res.partner'
 
     _columns = {
         'prestashop_email': fields.char('Prestashop Email', size=64,

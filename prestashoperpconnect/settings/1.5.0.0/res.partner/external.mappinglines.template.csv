@@ -1,8 +1,7 @@
 id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
-prestashop1500_res_partner_active_deleted,prestashop_1500_partner,10,in_out,function,base.field_res_partner_active,deleted,unicode,,,"if ifield == ""1"":
-    result = [('active', False)]
-else:
-    result = [('active', True)]",,,
-prestashop1500_res_partner_website_website,prestashop_1500_partner,10,in_out,direct,base.field_res_partner_website,website,unicode,,,,,,
-prestashop1500_res_partner_email_email,prestashop_1500_partner,10,in_out,direct,prestashoperpconnect.field_res_partner_prestashop_email,email,unicode,,,,,,
-prestashop1500_res_partner_subname_firstname,prestashop_1500_partner,10,in_out,function,base.field_res_partner_subname,firstname,unicode,,,"result = [('name', '%s %s'%(resource['lastname'], resource['firstname']))]","add_id = self.browse(cr, uid, record['id'])",,
+prestashop1500_res_partner_active,prestashop_1500_partner,10,in_out,function,base.field_res_partner_active,deleted,unicode,,Partner Active,"result = [('active'), not bool(int(resource['deleted']))]","result = [('deleted', str(int(not resource['active'])))]",,
+prestashop1500_res_partner_website,prestashop_1500_partner,10,in_out,direct,base.field_res_partner_website,website,unicode,,Partner Website,,,,
+prestashop1500_res_partner_email,prestashop_1500_partner,10,in_out,direct,prestashoperpconnect.field_res_partner_prestashop_email,email,unicode,,Partner Email,,,,
+prestashop1500_res_partner_name,prestashop_1500_partner,10,in_out,function,base.field_res_partner_subname,firstname,unicode,,Partner Name,"result = [('name', '%s %s'%(resource['lastname'], resource['firstname']))]","partner = self.browse(cr, uid, resource['id'])
+result = [('firstname', '-'), ('lastname', partner.name)]
+",,
