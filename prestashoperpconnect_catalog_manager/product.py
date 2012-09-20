@@ -30,7 +30,7 @@ class product_product(osv.osv):
     @only_for_referential('prestashop')
     @open_report
     def _export_resources(self, *args, **kwargs):
-        return super(product_product, self)._import_resources(*args, **kwargs)
+        return super(product_product, self)._export_resources(*args, **kwargs)
 
     @only_for_referential('prestashop')
     @catch_error_in_report
