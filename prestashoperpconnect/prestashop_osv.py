@@ -1,4 +1,4 @@
-    # -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -30,6 +30,11 @@ from collections import defaultdict
 from tools.translate import _
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from prestapyt import PrestaShopWebServiceError
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 @extend(osv.osv)
 @only_for_referential('prestashop')
@@ -64,7 +69,11 @@ def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping
     primary_key = mapping[mapping_id]['prestashop_primary_key']
     presta_resources = self.get_resources_with_lang(cr, uid, external_session, resources, primary_key, context=context)
     for resource_id, resource in presta_resources.items():
-        res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_create_method'] or 'add')(mapping[mapping_id]['external_resource_name'], resource)
+        try:
+            res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_create_method'] or 'add')(mapping[mapping_id]['external_resource_name'], resource)
+        except PrestaShopWebServiceError, e:
+            _logger.warning("PrestaShop webservice answered an error. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
+            raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
     return res
 
 @override(osv.osv, 'prestashop_')
@@ -75,7 +84,11 @@ def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping
     primary_key = mapping[mapping_id]['prestashop_primary_key']
     presta_resources = self.get_resources_with_lang(cr, uid, external_session, resources, primary_key, context=context)
     for resource_id, resource in presta_resources.items():
-        res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_update_method'] or 'edit')(mapping[mapping_id]['external_resource_name'], resource)
+        try:
+            res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_update_method'] or 'edit')(mapping[mapping_id]['external_resource_name'], resource)
+        except PrestaShopWebServiceError, e:
+            _logger.warning("PrestaShop webservice answered an error. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
+            raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
     return res
 
 @override(osv.osv, 'prestashop_')

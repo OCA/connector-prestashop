@@ -5,19 +5,23 @@ prestashop1500_res_partner_address_phone,prestashop_1500_partner_address,10,in_o
 prestashop1500_res_partner_address_mobile,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_mobile,phone_mobile,unicode,,Address mobile,,,,
 prestashop1500_res_partner_address_postcode,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_zip,postcode,unicode,,Address zip,,,,
 prestashop1500_res_partner_address_name,prestashop_1500_partner_address,10,in_out,function,base.field_res_partner_address_name,,unicode,,Address name,"result = [('name', resource['firstname'] + ' ' + resource['lastname'])]","addr = self.browse(cr, uid, resource['id'])
-addr_split = addr.name.split(' ')
-if len(addr_split) >= 2:
-    firstname = addr_split[0]
-    lastname = addr.name.replace(firstname, '').strip()
+if addr.name:
+    addr_split = addr.name.split(' ')
+    if len(addr_split) >= 2:
+        firstname = addr_split[0]
+        lastname = addr.name.replace(firstname, '').strip()
+    else:
+        firstname = '-'
+        lastname = addr.name
 else:
-    firstname = '-'
-    lastname = addr.name
+    firstname = ''
+    lastname = ''
 result = [('firstname', firstname), ('lastname', lastname)]",,
 prestashop1500_res_partner_address_city,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_city,city,unicode,,Address city,,,,
 prestashop1500_res_partner_address_country,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_country_id,id_country,int,,Address country,,,,
 prestashop1500_res_partner_address_id_customer,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_partner_id,id_customer,int,,,,,,False
 prestashop1500_res_partner_address_alias,prestashop_1500_partner_address,10,out,function,,alias,unicode,,Address alias,,"addr = self.browse(cr, uid, resource['id'])
-alias = addr.name
+alias = addr.name or 'Unnamed'
 if addr.city:
     alias += '-' + addr.city
 for addr_type in self.fields_get(cr, uid, ['type'])['type']['selection']:

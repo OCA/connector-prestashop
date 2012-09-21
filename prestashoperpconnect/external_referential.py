@@ -26,7 +26,7 @@
 from osv import osv, fields
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
-from prestapyt import PrestaShopWebServiceError, PrestaShopWebService, PrestaShopWebServiceDict
+from prestapyt import PrestaShopWebServiceError, PrestaShopAuthenticationError, PrestaShopWebService, PrestaShopWebServiceDict
 from openerp.tools.config import config
 
 from base_external_referentials.external_referentials import REF_VISIBLE_FIELDS
@@ -54,9 +54,9 @@ class external_referential(osv.osv):
         prestashop = PrestaShopWebServiceDict('%s/api'%referential.location, referential.apipass, debug=referential.debug)
         try:
             prestashop.head('')
-        except Exception, e:
+        except PrestaShopAuthenticationError, e:
             if config['debug_mode']: raise
-            raise osv.except_osv(_("Connection Error"), _("Could not connect to server\nCheck url & password.\n %s"%e))
+            raise osv.except_osv(_("Connection Error"), _("Could not connect to the PrestaShop webservice\nCheck the webservice URL and password\nHTTP error code: %s"%e.error_code))
         return prestashop
 
     def _compare_languages(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
