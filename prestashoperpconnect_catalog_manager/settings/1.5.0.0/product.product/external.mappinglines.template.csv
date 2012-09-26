@@ -1,0 +1,8 @@
+id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
+prestashop1500_product_product_product_links,prestashoperpconnect.prestashop_1500_product,10,out,function,product_links.field_product_product_product_link_ids,accessories,unicode,,product_links,,"if resource.get('product_link_ids'):
+    linked_products = []
+    links = self.pool.get('product.link').read(cr, uid, resource.get('product_link_ids'), ['type', 'linked_product_id'], context=context)
+    for link in links:
+        if link['type'] == 'cross_sell':
+            linked_products.append({'accessory': {'id': self.pool.get('product.product').get_or_create_extid(cr, uid, external_session, link['linked_product_id'][0], context=context)}})
+    result = [('accessories',  linked_products)]",,False

@@ -29,6 +29,7 @@
                  "prestashoperpconnect",
                  "product_custom_attributes_shop",
                  "product_images_sync",
+                 "product_links",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """This module is an extention for PrestashopERPconnect.
@@ -54,6 +55,7 @@ TODO :
         'settings/1.5.0.0/external.mapping.template.csv',
         'settings/1.5.0.0/product.attribute/external.mappinglines.template.csv',
         'settings/1.5.0.0/attribute.option/external.mappinglines.template.csv',
+        'settings/1.5.0.0/product.product/external.mappinglines.template.csv',
         'product_attribute_view.xml',
     ],
     "active": False,

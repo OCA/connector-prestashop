@@ -49,22 +49,10 @@ class product_product(osv.osv):
                     else:
                         vals[attribute.external_name] = resource[attribute.name]
         return vals
-
-    def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
-        langs = self.get_lang_to_export(cr, uid, external_session, context=context)
-        langs_to_ext_id = {}
-        for lang in langs:
-            lang_id = self.pool.get('res.lang').search(cr, uid, [('code', '=', lang)], context=context)[0]
-            langs_to_ext_id[lang] = self.pool.get('res.lang').get_extid(cr, uid, lang_id, external_session.referential_id.id, context=context)
-        for resource_id, resource in resources.items():
-            product_lang = {}
-            for lang in langs:
-                ctx = context.copy()
-                ctx['lang'] = lang
-                product_lang[lang] = self.browse(cr, uid, resource_id, context=ctx)
-            product_feature = []
-            if product_lang[langs[0]].attribute_set_id:
-                for group in product_lang[langs[0]].attribute_set_id.attribute_group_ids:
+    
+    def _get_product_feature(self, cr, uid, external_session, product_lang, langs, langs_to_ext_id, context=None):
+        product_feature = []
+        for group in product_lang[langs[0]].attribute_set_id.attribute_group_ids:
                     for attribute in group.attribute_ids:
                         feature_dict = {'id': self.pool.get('product.attribute').get_or_create_extid(cr, uid, external_session, attribute.attribute_id.id, context=context)}
                         if attribute.ttype == 'many2one':
@@ -82,7 +70,26 @@ class product_product(osv.osv):
                                 'custom_feature_value': {'language': feature_langs},
                                 })
                         product_feature.append(feature_dict)
+        return product_feature
+
+    def send_to_external(self, cr, uid, external_session, resources, mapping, mapping_id, update_date=None, context=None):
+        langs = self.get_lang_to_export(cr, uid, external_session, context=context)
+        langs_to_ext_id = {}
+        for lang in langs:
+            lang_id = self.pool.get('res.lang').search(cr, uid, [('code', '=', lang)], context=context)[0]
+            langs_to_ext_id[lang] = self.pool.get('res.lang').get_extid(cr, uid, lang_id, external_session.referential_id.id, context=context)
+        for resource_id, resource in resources.items():
+            product_lang = {}
+            for lang in langs:
+                ctx = context.copy()
+                ctx['lang'] = lang
+                product_lang[lang] = self.browse(cr, uid, resource_id, context=ctx)
+            product_feature = []
+            if product_lang[langs[0]].attribute_set_id:
+                product_feature = self._get_product_feature(cr, uid, external_session, product_lang, langs,langs_to_ext_id, context=context)
             if not resource['no_lang'].get('associations'): resource['no_lang']['associations'] = {}
             resource['no_lang']['associations']['product_features'] = {'product_feature': product_feature}
+            if resource['no_lang'].get('accessories'):
+                resource['no_lang']['associations']['accessories'] = resource['no_lang'].pop('accessories')
         return super(product_product, self).send_to_external(cr, uid, external_session, resources,\
                                         mapping, mapping_id, update_date=update_date, context=context)
