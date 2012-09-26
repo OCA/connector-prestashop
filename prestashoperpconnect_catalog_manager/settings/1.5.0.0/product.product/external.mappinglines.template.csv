@@ -4,5 +4,5 @@ prestashop1500_product_product_product_links,prestashoperpconnect.prestashop_150
     links = self.pool.get('product.link').read(cr, uid, resource.get('product_link_ids'), ['type', 'linked_product_id'], context=context)
     for link in links:
         if link['type'] == 'cross_sell':
-            linked_products.append({'accessory': {'id': self.pool.get('product.product').get_or_create_extid(cr, uid, external_session, link['linked_product_id'][0], context=context)}})
-    result = [('accessories',  linked_products)]",,False
+            linked_products.append({'id': self.pool.get('product.product').get_or_create_extid(cr, uid, external_session, link['linked_product_id'][0], context=context)})
+    result = [('accessories', {'accessory': linked_products})]",,False
