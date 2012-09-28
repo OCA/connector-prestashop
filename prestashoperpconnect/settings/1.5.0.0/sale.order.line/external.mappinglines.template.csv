@@ -6,4 +6,4 @@ result = [('tax_rate', float(resource['total_price_tax_incl']) / float(resource[
 "prestashop1500_sale_order_line_price_unit",10,"in","function","original_product_price","sale.field_sale_order_line_price_unit","float","False","prestashop_1500_order_line","product_price","result = [('price_unit', float(resource['product_price'])/(1-float(resource['reduction_percent'])/100))]",,,
 "prestashop1500_sale_order_line_quantity",10,"in","direct","product_quantity","sale.field_sale_order_line_product_uom_qty","float","False","prestashop_1500_order_line",,,,,
 "prestashop1500_sale_order_line_product_id",10,"in","direct","product_id","sale.field_sale_order_line_product_id","int","False","prestashop_1500_order_line",,,,,
-"prestashop1500_sale_order_liine_ext_ref_line",10,"in_out","direct","id","base_sale_multichannels.field_sale_order_line_ext_ref_line","int","False","prestashop_1500_order_line",,,,,
+"prestashop1500_sale_order_line_ext_ref_line",10,"in_out","direct","id","base_sale_multichannels.field_sale_order_line_ext_ref_line","int","False","prestashop_1500_order_line",,,,,

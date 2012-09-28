@@ -5,10 +5,8 @@ prestashop1500_erp_wholesale_price,prestashop_1500_product,10,in_out,direct,prod
 prestashop1500_erp_weight,prestashop_1500_product,10,in_out,direct,product.field_product_template_weight,weight,float,,,,,,
 prestashop1500_erp_price,prestashop_1500_product,10,in_out,direct,product.field_product_template_list_price,price,float,,,,,,
 prestashop1500_erp_name,prestashop_1500_product,10,in_out,direct,product.field_product_template_name,name,unicode,,,,,,
-prestashop1500_product_product_ean13,prestashop_1500_product,10,in_out,function,product.field_product_product_ean13,ean13,unicode,,,"if int(ifield) == 0:
-    result = False
-else:
-    result = [('ean13',ifield)]","result = ifield",,
+prestashop1500_product_product_ean13,prestashop_1500_product,10,in_out,function,product.field_product_product_ean13,ean13,unicode,,,"if resource.get('ean13'):
+    result = [('ean13', resource['ean13'])]",,
 prestashop1500_product_product_price_in,prestashop_1500_product,10,in,direct,product.field_product_template_list_price,price,float,,,,,,
 prestashop1500_product_product_price_out,prestashop_1500_product,10,out,direct,product.field_product_product_lst_price,price,float,,,,,,
 prestashop1500_product_product_reference,prestashop_1500_product,10,in_out,direct,product.field_product_product_default_code,reference,unicode,,,,,,
