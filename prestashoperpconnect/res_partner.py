@@ -86,6 +86,24 @@ class res_partner(Model):
 class res_partner_address(Model):
     _inherit = 'res.partner.address'
 
+    def _auto_init(self, cr, context=None):
+        # email field will be replace by a function field
+        # in order to not loss all customer email
+        # we move them in custom email
+        # Also for existing record we use custom email
+        first_install=False
+        cr.execute("SELECT column_name FROM information_schema.columns "
+                   "WHERE table_name = 'res_partner_address' "
+                   "AND column_name = 'custom_email'")
+        if not cr.fetchone():
+            first_install = True
+            cr.execute("ALTER TABLE res_partner_address "
+                       "RENAME COLUMN email TO custom_email")
+        res = super(res_partner_address, self)._auto_init(cr, context=context)
+        if first_install:
+            cr.execute("UPDATE res_partner_address SET use_prestashop_email=False")
+        return res
+
     def _get_email(self, cr, uid, ids, field_name, args, context=None):
         res = {}
         for address in self.browse(cr, uid, ids, context=context):
