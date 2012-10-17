@@ -111,8 +111,7 @@ class res_partner_address(Model):
                             help='E-Mail'),
         'custom_email': fields.char('Custom Email', size=64),
         'use_prestashop_email': fields.boolean('Use Prestashop Email',
-                                                help=("if it's check it will use the email"
-                                                "from prestashop on the partner form")),
+            help="If checked, OpenERP will use the PrestaShop email of the partner form."),
 
     }
 
