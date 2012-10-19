@@ -24,6 +24,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <button name="import_referentials" position="after">
+                    <button name="import_base_objects" string="3 - Sync PrestaShop base objects" colspan="2" type="object" attrs="{'invisible': [['type_name', '!=','Prestashop']]}"/>
                     <group name='prestashop_action' colspan = "4"
                         attrs="{'invisible': [['type_name', '!=','Prestashop']]}">
                         <group name="import" colspan="4">

@@ -26,6 +26,7 @@
 from osv import osv, fields
 from tools.translate import _
 from base_external_referentials.decorator import only_for_referential
+from base_external_referentials.external_osv import ExternalSession
 from prestapyt import PrestaShopWebServiceError, PrestaShopAuthenticationError, PrestaShopWebService, PrestaShopWebServiceDict
 from openerp.tools.config import config
 
@@ -156,7 +157,7 @@ class external_referential(osv.osv):
     def _import_resources(self, cr, uid, external_session, defaults=None, context=None, method="search_then_read"):
         referential_id = external_session.referential_id.id
         """TODO Make this more clean because I think this "version" field is not the best way to handle this
-        (The 1.4.3 version of Prestashop don't have external shop group)
+        (The 1.4.3 version of Prestashop doesn't have external shop groups)
         """
         if external_session.referential_id.version_id.code >= 'prestashop1500' or not external_session.referential_id.version_id.code:
             self.import_resources(cr, uid, [referential_id], 'external.shop.group', context=context)
@@ -174,7 +175,15 @@ class external_referential(osv.osv):
             if group_id:
                 context.update({'default_shop_group_id':group_id})
         self.import_resources(cr, uid, [referential_id], 'sale.shop', context=context)
-        self.import_resources(cr, uid, [referential_id], 'account.tax.group', context=context)
+        return {}
+
+
+    @only_for_referential('prestashop')
+    def import_base_objects(self, cr, uid, ids, context=None):
+        cur_referential = self.browse(cr, uid, ids[0], context=context)
+        external_session = ExternalSession(cur_referential, cur_referential)
+
+        self.import_resources(cr, uid, ids, 'account.tax.group', context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='LANG',
             oe_obj=self.pool.get('res.lang'),
@@ -201,7 +210,7 @@ class external_referential(osv.osv):
             oe_readable_field='type_tax_use',
             compare_function=self._compare_taxes, context=context)
 
-        return {}
+        return True
 
     def _prepare_mapping_vals(self, cr, uid, referential_id, mapping_vals, context=None):
         res = super(external_referential, self)._prepare_mapping_vals(cr, uid, referential_id, mapping_vals, context=context)
