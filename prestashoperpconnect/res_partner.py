@@ -121,10 +121,15 @@ class res_partner_address(Model):
                 WHERE id = %s
             """, (value, id))
 
+    def _get_partner_addr_from_partner(self, cr, uid, ids, context=None):
+        return self.pool.get('res.partner.address').search(cr, uid, [('partner_id', 'in', ids)], context=context)
+
     _columns = {
-        'email': fields.function(_get_email,
-                            fnct_inv = _set_email,
-                            string='E-Mail', type='char', size=240),
+        'email': fields.function(_get_email, fnct_inv=_set_email,
+            string='E-Mail', type='char', size=240, store={
+                'res.partner.address': (lambda self, cr, uid, ids, c={}: ids, ['custom_email', 'use_prestashop_email', 'partner_id'], 10),
+                'res.partner': (_get_partner_addr_from_partner, ['prestashop_email'], 20),
+            }),
         'custom_email': fields.char('Custom E-mail', size=240),
         'use_prestashop_email': fields.boolean('Use PrestaShop Email',
             help="If checked, OpenERP will use the PrestaShop email of the partner form."),
@@ -145,9 +150,9 @@ class res_partner_address(Model):
         new_date = date
         if date == 'default':
             new_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-        self.pool.get('external.referential').write(cr, uid,[external_session.referential_id.id],
-                                                    {'last_customer_address_import_date': new_date },
-                                                    context=context)
+        self.pool.get('external.referential').write(cr, uid,
+            [external_session.referential_id.id],
+            {'last_customer_address_import_date': new_date}, context=context)
         return True
 
 

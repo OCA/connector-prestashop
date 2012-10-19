@@ -15,7 +15,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="lang" position="after">
-                    <field name="prestashop_email"/>
+                    <field name="prestashop_email" colspan="4"/>
                 </field>
                 <field name="email" position="attributes">
                     <attribute name="attrs">{'readonly': [('use_prestashop_email', '=', True)]}</attribute>
