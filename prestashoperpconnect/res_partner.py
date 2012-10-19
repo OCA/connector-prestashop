@@ -31,8 +31,8 @@ class res_partner(Model):
     _inherit = 'res.partner'
 
     _columns = {
-        'prestashop_email': fields.char('Prestashop Email', size=64,
-                                help='This is the customer email in prestashop'),
+        'prestashop_email': fields.char('PrestaShop E-mail', size=64,
+                                help='This is the customer e-mail in PrestaShop'),
     }
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
@@ -124,11 +124,9 @@ class res_partner_address(Model):
     _columns = {
         'email': fields.function(_get_email,
                             fnct_inv = _set_email,
-                            string='Email',
-                            type='char',
-                            help='E-Mail'),
-        'custom_email': fields.char('Custom Email', size=64),
-        'use_prestashop_email': fields.boolean('Use Prestashop Email',
+                            string='E-Mail', type='char', size=240),
+        'custom_email': fields.char('Custom E-mail', size=240),
+        'use_prestashop_email': fields.boolean('Use PrestaShop Email',
             help="If checked, OpenERP will use the PrestaShop email of the partner form."),
 
     }

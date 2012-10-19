@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <data>
                     <button name="cancel" position="after">
-                        <button name="edit_prestashop_order" states="draft" type="object" string="Edit Prestashop Order" icon="gtk-execute"/>
+                        <button name="edit_prestashop_order" states="draft" type="object" string="Edit PrestaShop Order" icon="gtk-execute"/>
                     </button>
                 </data>
             </field>
