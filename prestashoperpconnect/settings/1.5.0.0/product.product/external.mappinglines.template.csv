@@ -18,12 +18,5 @@ prestashop1500_product_product_categories,prestashop_1500_product,10,in_out,func
         if int(ext_categ_id) != int(resource['id_category_default']):
             categ_ids.append(self.pool.get('product.category').get_or_create_oeid(cr, uid, external_session, ext_categ_id, context=context))
 
-    result = [('categ_ids', [(6, 0, categ_ids)])]","if 'categ_ids' in resource:
-    ext_categ_ids = []
-    categ_ids = resource['categ_ids'] + [resource['categ_id'][0]]
-    for categ_id in set(categ_ids):
-        ext_categ_ids.append({'id': self.pool.get('product.category').get_or_create_extid(cr, uid, external_session, categ_id, context=context)})
-
-    result = [('associations',  {'categories' : {'category': ext_categ_ids}})]
-",,
+    result = [('categ_ids', [(6, 0, categ_ids)])]","result = self._get_or_create_ext_category_ids_for_shop(cr, uid, external_session, resource['id'], context=context)",,
 prestashop1500_product_product_id_tax_rules_group,prestashop_1500_product,10,out,direct,base_sale_multichannels.field_product_template_tax_group_id,id_tax_rules_group,int,,,,,,False
