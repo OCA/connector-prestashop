@@ -98,7 +98,7 @@ class sale_order(osv.osv):
         res = super(sale_order, self).write(cr, uid, ids, vals.copy(), context=context)
         if 'state' in vals:
             for sale in self.browse(cr, uid, ids, context=context):
-                if sale.shop_id.referential_id.type_id.name.lower() == 'prestashop':
+                if sale.shop_id.type_name and sale.shop_id.type_name.lower() == 'prestashop':
                     self._update_state_in_prestashop(cr, uid, sale.id, vals['state'], context=context)
         return res
 
