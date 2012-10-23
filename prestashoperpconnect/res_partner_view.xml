@@ -14,17 +14,17 @@
             <field eval="24" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="lang" position="after">
-                    <field name="prestashop_email" colspan="4"/>
-                </field>
+                <page string="Sales &amp; Purchases" position="after">
+                    <page string="PrestaShop" name="prestashop">
+                        <field name="prestashop_email" />
+                        <field name="prestashop_default_category" />
+                    </page>
+                </page>
                 <field name="email" position="attributes">
                     <attribute name="attrs">{'readonly': [('use_prestashop_email', '=', True)]}</attribute>
                 </field>
                 <field name="email" position="after">
                     <field name="use_prestashop_email"/>
-                </field>
-                <field name="property_product_pricelist" position="after">
-                    <field name="prestashop_default_category" />
                 </field>
             </field>
         </record>

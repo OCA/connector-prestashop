@@ -32,8 +32,10 @@ class res_partner(Model):
 
     _columns = {
         'prestashop_email': fields.char('PrestaShop E-mail', size=64,
-                                help='This is the customer e-mail in PrestaShop'),
-        'prestashop_default_category': fields.many2one('res.partner.category', 'PrestaShop default category', help="This field is synchronized with the field 'Default customer group' in PrestaShop."),
+            help='This is the customer e-mail in PrestaShop'),
+        'prestashop_default_category': fields.many2one('res.partner.category',
+            'PrestaShop default category',
+            help="This field is synchronized with the field 'Default customer group' in PrestaShop."),
     }
 
     @only_for_referential('prestashop')
