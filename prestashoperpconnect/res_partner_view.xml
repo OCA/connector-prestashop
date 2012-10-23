@@ -23,6 +23,9 @@
                 <field name="email" position="after">
                     <field name="use_prestashop_email"/>
                 </field>
+                <field name="property_product_pricelist" position="after">
+                    <field name="prestashop_default_category" />
+                </field>
             </field>
         </record>
 

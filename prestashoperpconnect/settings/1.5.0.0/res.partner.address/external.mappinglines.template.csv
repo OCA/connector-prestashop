@@ -29,5 +29,5 @@ for addr_type in self.fields_get(cr, uid, ['type'])['type']['selection']:
         alias += '-' + addr_type[1]
         break
 result = [('alias', alias)]",,
-prestashop1500_res_partner_address_vat,prestashop_1500_partner_address,10,in_out,function,,vat_number,unicode,,VAT,,"addr = self.browse(cr, uid, resource['id'])
+prestashop1500_res_partner_address_vat,prestashop_1500_partner_address,10,out,function,,vat_number,unicode,,VAT,,"addr = self.browse(cr, uid, resource['id'])
 result = [('vat_number'), addr.partner_id.vat]",,

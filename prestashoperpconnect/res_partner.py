@@ -33,7 +33,9 @@ class res_partner(Model):
     _columns = {
         'prestashop_email': fields.char('PrestaShop E-mail', size=64,
                                 help='This is the customer e-mail in PrestaShop'),
+        'prestashop_default_category': fields.many2one('res.partner.category', 'PrestaShop default category', help="This field is synchronized with the field 'Default customer group' in PrestaShop."),
     }
+
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
         result = super(res_partner, self)._get_external_resources(cr, uid, external_session, external_id=external_id, resource_filter=resource_filter, mapping=mapping, fields=fields, context=context)

@@ -5,3 +5,10 @@ prestashop1500_res_partner_email,prestashop_1500_partner,10,in_out,direct,presta
 prestashop1500_res_partner_name,prestashop_1500_partner,10,in_out,function,base.field_res_partner_subname,firstname,unicode,,Partner Name,"result = [('name', '%s %s'%(resource['lastname'], resource['firstname']))]","partner = self.browse(cr, uid, resource['id'])
 result = [('firstname', '-'), ('lastname', partner.name)]
 ",,
+prestashop1500_res_partner_categm2m,prestashop_1500_partner,10,in,function,base.field_res_partner_category_id,groups,list,,Partner Categories,"if 'groups' in resource:
+    groups_ids = []
+    for ext_group_id in resource['groups']:
+            groups_ids.append(self.pool.get('res.partner.category').get_or_create_oeid(cr, uid, external_session, ext_group_id, context=context))
+
+    result = [('category_id', [(6, 0, groups_ids)])]",,,
+prestashop1500_res_partner_default_categ,prestashop_1500_partner,10,in_out,direct,field_res_partner_prestashop_default_category,id_default_group,int,,Default partner category,,,,
