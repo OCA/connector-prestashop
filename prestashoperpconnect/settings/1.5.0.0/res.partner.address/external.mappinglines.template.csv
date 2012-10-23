@@ -2,9 +2,11 @@ id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,extern
 prestashop1500_res_partner_address_address1,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_street,address1,unicode,,Address line 1,,,,
 prestashop1500_res_partner_address_address2,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_street2,address2,unicode,,Address line 2,,,,
 prestashop1500_res_partner_address_phone,prestashop_1500_partner_address,10,in_out,function,base.field_res_partner_address_phone,phone,unicode,,Address phone,"result = [('phone', resource['phone'])]","import re
-result = [('phone', re.sub('[^0-9+]', '', resource.get('phone', '')))]",,
+if resource.get('phone'):
+    result = [('phone', re.sub('[^0-9+]', '', resource.get('phone', '')))]",,
 prestashop1500_res_partner_address_mobile,prestashop_1500_partner_address,10,in_out,function,base.field_res_partner_address_mobile,phone_mobile,unicode,,Address mobile,"result = [('mobile', resource['phone_mobile'])]","import re
-result = [('phone_mobile', re.sub('[^0-9+]', '', resource.get('mobile', '')))]",,
+if resource.get('mobile'):
+    result = [('phone_mobile', re.sub('[^0-9+]', '', resource.get('mobile', '')))]",,
 prestashop1500_res_partner_address_postcode,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_zip,postcode,unicode,,Address zip,,,,
 prestashop1500_res_partner_address_name,prestashop_1500_partner_address,10,in_out,function,base.field_res_partner_address_name,,unicode,,Address name,"result = [('name', resource['firstname'] + ' ' + resource['lastname'])]","addr = self.browse(cr, uid, resource['id'])
 if addr.name:
