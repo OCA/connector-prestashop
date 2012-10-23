@@ -118,12 +118,8 @@ class res_partner_address(Model):
         return res
 
     def _set_email(self, cr, uid, id, name, value, arg, context=None):
-        return cr.execute(
-            """
-            UPDATE res_partner_address
-                SET custom_email = %s
-                WHERE id = %s
-            """, (value, id))
+        self.write(cr, uid, id, {'custom_email': value}, context=context)
+        return True
 
     def _get_partner_addr_from_partner(self, cr, uid, ids, context=None):
         return self.pool.get('res.partner.address').search(cr, uid, [('partner_id', 'in', ids)], context=context)
@@ -131,7 +127,7 @@ class res_partner_address(Model):
     _columns = {
         'email': fields.function(_get_email, fnct_inv=_set_email,
             string='E-Mail', type='char', size=240, store={
-                'res.partner.address': (lambda self, cr, uid, ids, c={}: ids, ['custom_email', 'email', 'use_prestashop_email', 'partner_id'], 10),
+                'res.partner.address': (lambda self, cr, uid, ids, c={}: ids, ['custom_email', 'use_prestashop_email', 'partner_id'], 10),
                 'res.partner': (_get_partner_addr_from_partner, ['prestashop_email'], 20),
             }),
         'custom_email': fields.char('Custom E-mail', size=240),
