@@ -13,10 +13,10 @@
 <record id="add_prestashop_passwd_partner_form" model="ir.ui.view">
     <field name="name">add_prestashop_passwd.partner.form</field>
     <field name="model">res.partner</field>
-    <field name="inherit_id" ref="base.view_partner_form" />
+    <field name="inherit_id" ref="prestashoperpconnect.res_partner_view_form" />
     <field name="arch" type="xml">
-        <field name="active" position="after">
-            <group colspan="2" col="3">
+        <field name="prestashop_default_category" position="after">
+            <group colspan="2" col="3" name="prestashop_passwd">
                 <field name="prestashop_passwd" />
                 <button name="generate_passwd" string="Generate" icon="gtk-execute" type="object" colspan="1"/>
             </group>
