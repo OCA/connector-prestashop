@@ -131,7 +131,7 @@ class res_partner_address(Model):
     _columns = {
         'email': fields.function(_get_email, fnct_inv=_set_email,
             string='E-Mail', type='char', size=240, store={
-                'res.partner.address': (lambda self, cr, uid, ids, c={}: ids, ['custom_email', 'use_prestashop_email', 'partner_id'], 10),
+                'res.partner.address': (lambda self, cr, uid, ids, c={}: ids, ['custom_email', 'email', 'use_prestashop_email', 'partner_id'], 10),
                 'res.partner': (_get_partner_addr_from_partner, ['prestashop_email'], 20),
             }),
         'custom_email': fields.char('Custom E-mail', size=240),
