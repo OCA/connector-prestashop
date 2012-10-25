@@ -5,6 +5,7 @@
 #   Copyright (C) 2012 Akretion                                               #
 #   Author :                                                                  #
 #           Sébastien BEAU <sebastien.beau@akretion.com>                      #
+#           Alexis de Lattre <alexis.delattre@akretion.com>                   #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
@@ -24,8 +25,21 @@
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential, catch_error_in_report, open_report
 
+class product_category(osv.osv):
+    _inherit = 'product.category'
+
+    _columns = {
+        'is_active': fields.boolean('Active in PrestaShop'),
+        'description': fields.text('Description', translate=True),
+        'url_key': fields.char('Link rewrite', size=128, translate=True),
+        'meta_title': fields.char('Meta title', size=128, translate=True),
+        'meta_keywords': fields.text('Meta keyworks', translate=True),
+        'meta_description': fields.char('Meta description', size=256, translate=True),
+        }
+# TODO : check sizes in PrestaShop
+
 class product_product(osv.osv):
-    _inherit='product.product'
+    _inherit = 'product.product'
 
     @only_for_referential('prestashop')
     @open_report
@@ -87,9 +101,15 @@ class product_product(osv.osv):
             product_feature = []
             if product_lang[langs[0]].attribute_set_id:
                 product_feature = self._get_product_feature(cr, uid, external_session, product_lang, langs,langs_to_ext_id, context=context)
-            if not resource['no_lang'].get('associations'): resource['no_lang']['associations'] = {}
+            if not resource['no_lang'].get('associations'):
+                resource['no_lang']['associations'] = {}
             resource['no_lang']['associations']['product_features'] = {'product_feature': product_feature}
             if resource['no_lang'].get('accessories'):
                 resource['no_lang']['associations']['accessories'] = resource['no_lang'].pop('accessories')
+            # TODO : HACK that we need to solve cleanly
+            #if resource['fr_FR'].get('categories'):
+            #    resource['fr_FR'].pop('categories')
+            if resource['no_lang'].get('categories'):
+                resource['no_lang']['associations']['categories'] = resource['no_lang'].pop('categories')
         return super(product_product, self).send_to_external(cr, uid, external_session, resources,\
                                         mapping, mapping_id, update_date=update_date, context=context)

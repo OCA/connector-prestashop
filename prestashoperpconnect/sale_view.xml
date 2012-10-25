@@ -38,22 +38,16 @@
                 <page string="Prestashop Actions">
                     <group col="6" colspan="4">
                         <group col="3" colspan="3">
-                        <separator string="Catalog" colspan="3"/>
-                        <group col="1" colspan="1">
-                            <button name="export_inventory" string="Export Stock Levels Only" colspan="1" type="object"/>
+                            <separator string="Catalog" colspan="3"/>
+                                <button name="export_inventory" string="Export Stock Levels Only" colspan="1" type="object"/>
+                                <field name="last_inventory_export_date" />
                         </group>
-                        <group col="2" colspan="2">
-                            <field name="last_inventory_export_date" colspan="2"/>
-                        </group>
-                    </group>
-                    <group col="3" colspan="3">
-                        <separator string="Orders" colspan="3"/>
-                        <group col="4" colspan="3">
-                            <button name="import_orders" string="Import Orders" colspan="2" type="object"/>
-                            <field name="import_orders_from_date" colspan="2"/>
-                        </group>
-                        <button name="update_orders" string="Update Orders State on Channel" colspan="1" type="object"/>
-                        <field name="last_update_order_export_date" colspan="2"/>
+                        <group col="3" colspan="3">
+                            <separator string="Orders" colspan="3"/>
+                            <button name="import_orders" string="Import Orders" type="object"/>
+                            <field name="import_orders_from_date"/>
+                            <button name="update_orders" string="Update Orders State on Channel" type="object"/>
+                            <field name="last_update_order_export_date"/>
                         </group>
                     </group>
                 </page>

@@ -40,6 +40,7 @@ class sale_shop(osv.osv):
             context = {}
         context['lang_to_export'] = self.get_shop_lang_to_export(cr, uid, ids, context=context)
         self.export_resources(cr, uid, ids, 'product.category', context=context)
+        context['export_product'] = 'simple'
         self.export_resources(cr, uid, ids, 'product.product', context=context)
         #TODO update the last date
         return True

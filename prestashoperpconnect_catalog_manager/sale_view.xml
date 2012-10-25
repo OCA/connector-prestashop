@@ -30,17 +30,17 @@
         <record id="view_shop_form_specific_export_catalog" model="ir.ui.view">
             <field name="name">prestashoperpconnect.sale.shop.view_form</field>
             <field name="model">sale.shop</field>
-            <field name="inherit_id" ref="base_sale_multichannels.base_sale_multichannels_view_shop_form" />
-            <field eval="32" name="priority"/>
+            <field name="inherit_id" ref="prestashoperpconnect.view_shop_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <button name="export_inventory" position="after">
-                    <button name="export_catalog_prestashop" string="Export Catalog" colspan="1" type="object"/>
-                    <button name="export_images" string="Export Product Images" colspan="1" type="object"/>
-                </button>
                 <field name="last_inventory_export_date" position="after">
-                    <field name="last_products_export_date" colspan="2"/>
-                    <field name="last_images_export_date" colspan="2"/>
+                    <button name="export_catalog_prestashop" string="Export Catalog" type="object"/>
+                    <group col="2" colspan="2" name="export_product_dates">
+                        <field name="last_products_export_date" />
+                        <field name="last_category_export_date" />
+                    </group>
+                    <button name="export_images" string="Export Product Images" type="object"/>
+                    <field name="last_images_export_date" />
                 </field>
             </field>
         </record>
