@@ -31,10 +31,10 @@ class product_category(osv.osv):
     _columns = {
         'is_active': fields.boolean('Active in PrestaShop'),
         'description': fields.text('Description', translate=True),
-        'url_key': fields.char('Link rewrite', size=128, translate=True),
+        'url_key': fields.char('Link rewrite', size=64, translate=True),
         'meta_title': fields.char('Meta title', size=128, translate=True),
         'meta_keywords': fields.text('Meta keyworks', translate=True),
-        'meta_description': fields.char('Meta description', size=256, translate=True),
+        'meta_description': fields.char('Meta description', size=255, translate=True),
         }
 # TODO : check sizes in PrestaShop
 
