@@ -36,7 +36,6 @@ class product_category(osv.osv):
         'meta_keywords': fields.text('Meta keyworks', translate=True),
         'meta_description': fields.char('Meta description', size=255, translate=True),
         }
-# TODO : check sizes in PrestaShop
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -106,9 +105,6 @@ class product_product(osv.osv):
             resource['no_lang']['associations']['product_features'] = {'product_feature': product_feature}
             if resource['no_lang'].get('accessories'):
                 resource['no_lang']['associations']['accessories'] = resource['no_lang'].pop('accessories')
-            # TODO : HACK that we need to solve cleanly
-            #if resource['fr_FR'].get('categories'):
-            #    resource['fr_FR'].pop('categories')
             if resource['no_lang'].get('categories'):
                 resource['no_lang']['associations']['categories'] = resource['no_lang'].pop('categories')
         return super(product_product, self).send_to_external(cr, uid, external_session, resources,\
