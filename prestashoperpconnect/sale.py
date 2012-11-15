@@ -96,6 +96,8 @@ class sale_order(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals.copy(), context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'state' in vals:
             for sale in self.browse(cr, uid, ids, context=context):
                 if sale.shop_id.type_name and sale.shop_id.type_name.lower() == 'prestashop':
