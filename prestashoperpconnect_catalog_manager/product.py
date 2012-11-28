@@ -24,6 +24,11 @@
 
 from osv import osv, fields
 from base_external_referentials.decorator import only_for_referential, catch_error_in_report, open_report
+from prestapyt import PrestaShopWebServiceError
+from tools.translate import _
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class product_category(osv.osv):
     _inherit = 'product.category'
@@ -36,6 +41,31 @@ class product_category(osv.osv):
         'meta_keywords': fields.text('Meta keyworks', translate=True),
         'meta_description': fields.char('Meta description', size=255, translate=True),
         }
+
+
+    def call_prestashop_method(self, cr, uid, external_session, resource_id, resource, method, mapping=None, mapping_id=None, context=None):
+        # Remove the fields for image in resource dict
+        image_binary = resource['category'].pop('image_binary')
+        image_filename = resource['category'].pop('image_filename')
+        _logger.info('Product category: sync regular data first')
+        res = super(product_category, self).call_prestashop_method(cr, uid, external_session, resource, method, mapping=mapping, mapping_id=mapping_id, context=context)
+        # take care of IMAGE now
+        # If the method is edit, I always delete and re-create the image
+        if method == 'edit':
+            ps_categ_ids_with_images = external_session.connection.search('images/' + mapping[mapping_id]['external_resource_name'])
+            if ps_categ_ids_with_images and resource['category'].get('id') in ps_categ_ids_with_images:
+                # Delete the image
+                external_session.connection.delete('images/' + mapping[mapping_id]['external_resource_name'], resource['category'].get('id'))
+        if image_binary:
+            _logger.info('Product category: sync image %s' % image_filename)
+            try:
+                # Create the image
+                res = getattr(external_session.connection, mapping[mapping_id]['external_create_method'] or 'add')('images/' + mapping[mapping_id]['external_resource_name'] + '/' + str(resource['category'].get('id')), image_binary, img_filename=image_filename)
+            except PrestaShopWebServiceError, e:
+                _logger.warning("PrestaShop webservice answered an error on upload of image category. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
+                raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
+        return res
+
 
 class product_product(osv.osv):
     _inherit = 'product.product'

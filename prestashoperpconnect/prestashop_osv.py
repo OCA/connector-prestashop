@@ -61,35 +61,47 @@ def get_resources_with_lang(self, cr, uid, external_session, resources, primary_
         new_resources[resource_id] = {primary_key : new_resource}
     return new_resources
 
-@override(osv.osv, 'prestashop_')
-@only_for_referential('prestashop')
-def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+
+@extend(osv.osv)
+def call_prestashop_method(self, cr, uid, external_session, resource_id, resource, method, mapping=None, mapping_id=None, context=None):
+    res = None
+    if method == 'add':
+        ps_method = mapping[mapping_id]['external_create_method'] or method
+    elif method == 'edit':
+        ps_method = mapping[mapping_id]['external_update_method'] or method
+    else:
+        raise
+    try:
+        res = getattr(external_session.connection, ps_method)(mapping[mapping_id]['external_resource_name'], resource)
+    except PrestaShopWebServiceError, e:
+        _logger.warning("PrestaShop webservice answered an error. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
+        raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
+    return res
+
+
+@extend(osv.osv)
+def ext_create_or_update(self, cr, uid, external_session, resources, method, mapping=None, mapping_id=None, context=None):
+    """Contains common code for ext_create() and ext_update()"""
     res = {}
     mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
     primary_key = mapping[mapping_id]['prestashop_primary_key']
     presta_resources = self.get_resources_with_lang(cr, uid, external_session, resources, primary_key, context=context)
     for resource_id, resource in presta_resources.items():
-        try:
-            res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_create_method'] or 'add')(mapping[mapping_id]['external_resource_name'], resource)
-        except PrestaShopWebServiceError, e:
-            _logger.warning("PrestaShop webservice answered an error. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
-            raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
+        res[resource_id] = self.call_prestashop_method(cr, uid, external_session, resource_id, resource, method, mapping=mapping, mapping_id=mapping_id, context=context)
     return res
+
+
+@override(osv.osv, 'prestashop_')
+@only_for_referential('prestashop')
+def ext_create(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
+    return self.ext_create_or_update(cr, uid, external_session, resources, 'add', mapping=mapping, mapping_id=mapping_id, context=context)
+
 
 @override(osv.osv, 'prestashop_')
 @only_for_referential('prestashop')
 def ext_update(self, cr, uid, external_session, resources, mapping=None, mapping_id=None, context=None):
-    res = {}
-    mapping, mapping_id = self._init_mapping(cr, uid, external_session.referential_id.id, mapping=mapping, mapping_id=mapping_id, context=context)
-    primary_key = mapping[mapping_id]['prestashop_primary_key']
-    presta_resources = self.get_resources_with_lang(cr, uid, external_session, resources, primary_key, context=context)
-    for resource_id, resource in presta_resources.items():
-        try:
-            res[resource_id] = getattr(external_session.connection, mapping[mapping_id]['external_update_method'] or 'edit')(mapping[mapping_id]['external_resource_name'], resource)
-        except PrestaShopWebServiceError, e:
-            _logger.warning("PrestaShop webservice answered an error. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
-            raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
-    return res
+    return self.ext_create_or_update(cr, uid, external_session, resources, 'edit', mapping=mapping, mapping_id=mapping_id, context=context)
+
 
 @override(osv.osv, 'prestashop_')
 @only_for_referential('prestashop')

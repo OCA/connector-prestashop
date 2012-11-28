@@ -76,6 +76,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'settings/1.5.0.0/res.partner.category/external.mappinglines.template.csv',
         'settings/1.5.0.0/product.category/external.mappinglines.template.csv',
         'settings/1.5.0.0/product.product/external.mappinglines.template.csv',
+        'settings/1.5.0.0/product.images/external.mappinglines.template.csv',
         'settings/1.5.0.0/sale.order/external.mappinglines.template.csv',
         'settings/1.5.0.0/external.shop.group/external.mappinglines.template.csv',
         'settings/1.5.0.0/sale.shop/external.mappinglines.template.csv',

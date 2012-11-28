@@ -27,7 +27,6 @@ import product
 import res_partner
 import sale
 import prestashop_osv
+import product_images
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
