@@ -37,9 +37,19 @@ PRESTASHOP_MAP_STATE = {
 
 }
 
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+
+    def _get_so_line_details(self, cr, uid, external_session, ps_order_row_id, context=None):
+        """This function is designed to be inherited !"""
+
+        return self._get_external_resources(cr, uid, external_session, ps_order_row_id, context=context)
+
+
 
 class sale_order(osv.osv):
-    _inherit='sale.order'
+    _inherit = 'sale.order'
+
 
     @only_for_referential('prestashop')
     def _get_external_resources(self, cr, uid, external_session, external_id=None, resource_filter=None, mapping=None, fields=None, context=None):
@@ -52,9 +62,7 @@ class sale_order(osv.osv):
             if not isinstance(order_rows_ids, list):
                 order_rows_ids = [order_rows_ids]
             for order_row_id in order_rows_ids:
-                order_rows_details.append(self.pool.get('sale.order.line')._get_external_resources(cr, uid, \
-                                                                            external_session,
-                                                                            order_row_id, context=context)[0])
+                order_rows_details += self.pool.get('sale.order.line')._get_so_line_details(cr, uid, external_session, order_row_id, context=context)
             order['order_rows'] = order_rows_details
         return result
 
