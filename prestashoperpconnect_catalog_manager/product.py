@@ -48,7 +48,7 @@ class product_category(osv.osv):
         image_binary = resource['category'].pop('image_binary')
         image_filename = resource['category'].pop('image_filename')
         _logger.info('Product category: sync regular data first')
-        res = super(product_category, self).call_prestashop_method(cr, uid, external_session, resource, method, mapping=mapping, mapping_id=mapping_id, context=context)
+        res = super(product_category, self).call_prestashop_method(cr, uid, external_session, resource_id, resource, method, mapping=mapping, mapping_id=mapping_id, context=context)
         # take care of IMAGE now
         # If the method is edit, I always delete and re-create the image
         if method == 'edit':
