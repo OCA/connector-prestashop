@@ -35,6 +35,15 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+@override(osv.osv, '_prestashop')
+@only_for_referential('prestashop')
+def _transform_field(self, cr, uid, external_session, convertion_type, field_value, mapping_line, context=None):
+    if mapping_line['internal_type'] == 'many2one'\
+            and mapping_line['evaluation_type'] == 'direct'\
+            and convertion_type == 'from_external_to_openerp':
+        if field_value == '0':
+            field_value = None
+    return self._prestashop_transform_field(cr, uid, external_session, convertion_type, field_value, mapping_line, context=context)
 
 @extend(osv.osv)
 @only_for_referential('prestashop')
