@@ -53,14 +53,24 @@ class product_category(osv.osv):
         # If the method is edit, I always delete and re-create the image
         if method == 'edit':
             ps_categ_ids_with_images = external_session.connection.search('images/' + mapping[mapping_id]['external_resource_name'])
+            # Check that you have the fix for this PS bug :
+            # http://forge.prestashop.com/browse/PSCFV-6559
             if ps_categ_ids_with_images and resource['category'].get('id') in ps_categ_ids_with_images:
                 # Delete the image
+                _logger.info('Deleting image of product category PS ID %d' % resource['category'].get('id'))
                 external_session.connection.delete('images/' + mapping[mapping_id]['external_resource_name'], resource['category'].get('id'))
         if image_binary:
-            _logger.info('Product category: sync image %s' % image_filename)
+            if method == 'add':
+                ps_categ_id = int(res)
+            elif method == 'edit':
+                ps_categ_id = resource['category'].get('id')
+            _logger.info('Product category: sync image %s for PS product category ID %d' % (image_filename, ps_categ_id))
             try:
                 # Create the image
-                res = getattr(external_session.connection, mapping[mapping_id]['external_create_method'] or 'add')('images/' + mapping[mapping_id]['external_resource_name'] + '/' + str(resource['category'].get('id')), image_binary, img_filename=image_filename)
+# When we do an ADD str(resource['category'].get('id') = None =>
+#                POST //api/images/categories/None
+# -> PS WS answers 400
+                getattr(external_session.connection, mapping[mapping_id]['external_create_method'] or 'add')('images/' + mapping[mapping_id]['external_resource_name'] + '/' + str(ps_categ_id), image_binary, img_filename=image_filename)
             except PrestaShopWebServiceError, e:
                 _logger.warning("PrestaShop webservice answered an error on upload of image category. HTTP error code: %s, PrestaShop error code: %s, PrestaShop error message: %s" % (e.error_code, e.ps_error_code, e.ps_error_msg))
                 raise osv.except_osv(_('PrestaShop Webservice Error:'), e.ps_error_msg)
