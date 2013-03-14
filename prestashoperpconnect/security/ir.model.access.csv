@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prestashop_backend_full,Full access on prestashop.backend,model_prestashop_backend,connector.group_connector_manager,1,1,1,1
+access_prestashop_binding_full,Full access on prestashop.binding,model_prestashop_binding,connector.group_connector_manager,1,1,1,1
+access_prestashop_shop_group_full,Full access on prestashop.shop.group,model_prestashop_shop_group,connector.group_connector_manager,1,1,1,1
+access_prestashop_shop_full,Full access on prestashop.shop,model_prestashop_shop,connector.group_connector_manager,1,1,1,1
