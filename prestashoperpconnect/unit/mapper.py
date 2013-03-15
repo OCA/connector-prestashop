@@ -5,6 +5,7 @@
 #    Copyright (C) 2013 Akretion (http://www.akretion.com/)
 #    Copyright 2013 Camptocamp SA
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
 #    @author: Guewen Baconnier
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -60,7 +61,7 @@ class ShopImportMapper(ImportMapper):
     @mapping
     def shop_group_id(self, record):
         binder = self.get_binder_for_model('prestashop.shop.group')
-        openerp_id = binder.to_openerp(record['shop_group_id'])
+        openerp_id = binder.to_openerp(record['id_shop_group'])
         return {'shop_group_id': openerp_id}
 
 

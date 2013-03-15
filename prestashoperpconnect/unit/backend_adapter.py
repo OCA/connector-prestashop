@@ -6,6 +6,7 @@
 #    Copyright (C) 2013 Akretion (http://www.akretion.com/)
 #    @author: Guewen Baconnier
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,8 +24,7 @@
 ##############################################################################
 
 import logging
-
-import prestapyt
+from prestapyt import PrestaShopWebServiceDict
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import prestashop
 
@@ -36,6 +36,7 @@ class PrestaShopLocation(object):
     def __init__(self, location, password):
         self.location = location
         self.password = password
+        self.api_url = '%s/api'%location
 
 
 class PrestaShopCRUDAdapter(CRUDAdapter):
@@ -89,20 +90,22 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: list
         """
-        with prestapyt.search(self.magento.location,
-                            self.magento.password) as api:
-            return api.call('%s.search' % self._prestashop_model,
-                            [filters] if filters else [{}])
+        api = PrestaShopWebServiceDict(self.prestashop.api_url,
+                self.prestashop.password)
+        return api.search(self._prestashop_model, filters)
         return []
 
-    def read(self, id, attributes=None):
+    def read(self, id, attributes=None): 
         """ Returns the information of a record
 
         :rtype: dict
         """
-        with prestapyt.get(self.magento.location,
-                            self.magento.password) as api:
-            return api.call('%s.info' % self._prestashop_model, [id, attributes])
+        #TODO rename attributes in something better
+        api = PrestaShopWebServiceDict(self.prestashop.api_url,
+                self.prestashop.password)
+        res = api.get(self._prestashop_model, id, options=attributes)
+        first_key = res.keys()[0]
+        return res[first_key]
         return {}
 
     def create(self, data):

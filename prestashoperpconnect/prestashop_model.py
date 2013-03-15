@@ -5,6 +5,7 @@
 #    Copyright (C) 2013 Akretion (http://www.akretion.com/)
 #    Copyright (C) 2013 Camptocamp SA
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
 #    @author: Guewen Baconnier
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -32,7 +33,7 @@ from openerp.osv import fields, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
-#from .unit.import_synchronizer import import_batch, import_partners_since
+from .unit.import_synchronizer import import_batch, import_partners_since
 
 _logger = logging.getLogger(__name__)
 
@@ -68,13 +69,14 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-#        for backend_id in ids:
-#            for model in ('prestashop.shop.group',
-#                          'prestashop.shop'):
+        for backend_id in ids:
+            for model in ('prestashop.shop.group',
+                          'prestashop.shop'):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
-#                import_batch(session, model, backend_id)
+                print 'lala'
+                import_batch(session, model, backend_id)
 
         return True
 
@@ -113,6 +115,7 @@ class prestashop_backend(orm.Model):
 #                               backend_id)
         return True
 
+ 
 
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'
@@ -186,16 +189,16 @@ class prestashop_shop(orm.Model):
             'Default Product Category',
             help="The category set on products when?? TODO."
             "\nOpenERP requires a main category on products for accounting."),
-        'backend_id': fields.related(
-            'shop_group_id', 'backend_id',
-            type='many2one',
-            relation='prestashop.backend',
-            string='PrestaShop Backend',
-            store={
-                'prestashop.shop': (lambda self, cr, uid, ids, c={}: ids, ['shop_group_id'], 10),
-                'prestashop.shop.group': (_get_shop_from_shopgroup, ['backend_id'], 20),
-                  },
-            readonly=True),
+#        'backend_id': fields.related(
+#            'shop_group_id', 'backend_id',
+#            type='many2one',
+#            relation='prestashop.backend',
+#            string='PrestaShop Backend',
+#            store={
+#                'prestashop.shop': (lambda self, cr, uid, ids, c={}: ids, ['shop_group_id'], 10),
+#                'prestashop.shop.group': (_get_shop_from_shopgroup, ['backend_id'], 20),
+#                  },
+#            readonly=True),
     }
 
     _sql_constraints = [
