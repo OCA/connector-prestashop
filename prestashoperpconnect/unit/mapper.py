@@ -64,4 +64,6 @@ class ShopImportMapper(ImportMapper):
         openerp_id = binder.to_openerp(record['id_shop_group'])
         return {'shop_group_id': openerp_id}
 
-
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
