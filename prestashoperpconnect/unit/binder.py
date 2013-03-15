@@ -38,6 +38,10 @@ class PrestashopModelBinder(PrestashopBinder):
     _model_name = [
             'prestashop.shop.group',
             'prestashop.shop',
+            'prestashop.res.lang',
+            'prestashop.res.country',
+            'prestashop.res.currency',
+            'prestashop.account.tax',
             ]
 
 

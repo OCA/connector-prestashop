@@ -146,19 +146,25 @@ class ShopAdapter(GenericAdapter):
     _prestashop_model = 'shops'
 
 @prestashop
-class CurrencyAdapter(GenericAdapter):
-    _model_name = 'res.currency'
-    _prestashop_model = 'currencies'
+class ResLangAdapter(GenericAdapter):
+    _model_name = 'prestashop.res.lang'
+    _prestashop_model = 'languages'
 
 @prestashop
-class CountryAdapter(GenericAdapter):
-    _model_name = 'res.country'
+class ResCountryAdapter(GenericAdapter):
+    _model_name = 'prestashop.res.country'
     _prestashop_model = 'countries'
 
 @prestashop
-class LangAdapter(GenericAdapter):
-    _model_name = 'res.lang'
-    _prestashop_model = 'languages'
+class ResCurrencyAdapter(GenericAdapter):
+    _model_name = 'prestashop.res.currency'
+    _prestashop_model = 'currencies'
+
+@prestashop
+class AccountTaxAdapter(GenericAdapter):
+    _model_name = 'prestashop.account.tax'
+    _prestashop_model = 'taxes'
+
 
 #@prestashop
 #class PartnerAdapter(GenericAdapter):

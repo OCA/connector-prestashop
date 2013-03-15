@@ -18,6 +18,10 @@
                         type="object"
                         class="oe_highlight"
                         string="Synchronize Metadata"/>
+                <button name="synchronize_basedata"
+                        type="object"
+                        class="oe_highlight"
+                        string="Synchronize Base Data"/>
             </header>
             <sheet>
                 <h1>

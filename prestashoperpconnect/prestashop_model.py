@@ -34,6 +34,8 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
 from .unit.import_synchronizer import import_batch, import_partners_since
+from .unit.direct_binder import DirectBinder
+from .connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
@@ -75,9 +77,23 @@ class prestashop_backend(orm.Model):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
-                print 'lala'
                 import_batch(session, model, backend_id)
+        return True
 
+    def synchronize_basedata(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        for backend_id in ids:
+            for model_name in [
+                    'prestashop.res.lang',
+                    'prestashop.res.country',
+                    'prestashop.res.currency',
+                    'prestashop.account.tax',
+                    ]:
+                env = get_environment(session, model_name, backend_id)
+                directBinder = env.get_connector_unit(DirectBinder)
+                directBinder.run()
         return True
 
     def import_partners_since(self, cr, uid, ids, context=None):
@@ -217,4 +233,124 @@ class sale_shop(orm.Model):
             readonly=True),
     }
 
+
+class prestashop_res_lang(orm.Model):
+    _name = 'prestashop.res.lang'
+    _inherit = 'prestashop.binding'
+    _inherits = {'res.lang': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one('res.lang',
+                                       string='Lang',
+                                       required=True,
+                                       ondelete='cascade'),
+    }
+
+    _sql_constraints = [
+        ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
+         'A Lang with same ID on Prestashop already exists.'),
+    ]
+
+
+class res_lang(orm.Model):
+    _inherit = 'res.lang'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.res.lang',
+            'openerp_id',
+            string='prestashop Bindings',
+            readonly=True),
+    }
+
+class prestashop_res_country(orm.Model):
+    _name = 'prestashop.res.country'
+    _inherit = 'prestashop.binding'
+    _inherits = {'res.country': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one('res.country',
+                                       string='Country',
+                                       required=True,
+                                       ondelete='cascade'),
+        
+    }
+
+    _sql_constraints = [
+        ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
+         'A Country with same ID on prestashop already exists.'),
+    ]
+
+
+class res_country(orm.Model):
+    _inherit = 'res.country'
+
+    _columns = {
+            'prestashop_bind_ids': fields.one2many(
+            'prestashop.res.country',
+            'openerp_id',
+            string='prestashop Bindings',
+            readonly=True),
+    }
+
+
+class prestashop_res_currency(orm.Model):
+    _name = 'prestashop.res.currency'
+    _inherit = 'prestashop.binding'
+    _inherits = {'res.currency': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one('res.currency',
+                                       string='Currency',
+                                       required=True,
+                                       ondelete='cascade'),
+        
+    }
+
+    _sql_constraints = [
+        ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
+         'A Currency with same ID on prestashop already exists.'),
+    ]
+
+
+class res_currency(orm.Model):
+    _inherit = 'res.currency'
+
+    _columns = {
+            'prestashop_bind_ids': fields.one2many(
+            'prestashop.res.currency',
+            'openerp_id',
+            string='prestashop Bindings',
+            readonly=True),
+    }
+
+class prestashop_account_tax(orm.Model):
+    _name = 'prestashop.account.tax'
+    _inherit = 'prestashop.binding'
+    _inherits = {'account.tax': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one('account.tax',
+                                       string='Tax',
+                                       required=True,
+                                       ondelete='cascade'),
+        
+    }
+
+    _sql_constraints = [
+        ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
+         'A Tax with same ID on prestashop already exists.'),
+    ]
+
+
+class account_tax(orm.Model):
+    _inherit = 'account.tax'
+
+    _columns = {
+            'prestashop_bind_ids': fields.one2many(
+            'prestashop.account.tax',
+            'openerp_id',
+            string='prestashop Bindings',
+            readonly=True),
+    }
 
