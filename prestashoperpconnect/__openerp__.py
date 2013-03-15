@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -68,10 +68,9 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'prestashoperpconnect_menu.xml',
 #        'board_prestashoperpconnect_view.xml',
 #        'res_partner_data.xml',
-#        'res_partner_view.xml',
+        'partner_view.xml',
     ],
     "active": False,
     "installable": True,
     "application": True,
 }
-

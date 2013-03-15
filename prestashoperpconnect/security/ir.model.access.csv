@@ -3,3 +3,9 @@ access_prestashop_backend_full,Full access on prestashop.backend,model_prestasho
 access_prestashop_binding_full,Full access on prestashop.binding,model_prestashop_binding,connector.group_connector_manager,1,1,1,1
 access_prestashop_shop_group_full,Full access on prestashop.shop.group,model_prestashop_shop_group,connector.group_connector_manager,1,1,1,1
 access_prestashop_shop_full,Full access on prestashop.shop,model_prestashop_shop,connector.group_connector_manager,1,1,1,1
+access_prestashop_prestashop_res_partner_full,Full access on prestashop.res.partner,model_prestashop_res_partner,base.group_partner_manager,1,1,1,1
+access_prestashop_prestashop_address_full,Full access on prestashop.address,model_prestashop_address,base.group_partner_manager,1,1,1,1
+access_prestashop_prestashop_res_partner_category_full,User access on prestashop.res.partner.category,model_prestashop_res_partner_category,base.group_partner_manager,1,1,1,1
+access_prestashop_prestashop_res_partner_user,User access on prestashop.res.partner,model_prestashop_res_partner,base.group_user,1,0,0,0
+access_prestashop_prestashop_address_user,User access on prestashop.address,model_prestashop_address,base.group_user,1,0,0,0
+access_prestashop_prestashop_res_partner_category_user,User access on prestashop.res.partner.category,model_prestashop_res_partner_category,base.group_user,1,0,0,0

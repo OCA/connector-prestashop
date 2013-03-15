@@ -26,5 +26,4 @@ import backend
 import connector
 import consumer
 import prestashop_model
-
-
+import partner
