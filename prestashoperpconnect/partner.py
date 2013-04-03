@@ -189,8 +189,9 @@ class prestashop_res_partner_category(orm.Model):
                                       readonly=True),
         'date_upd': fields.datetime('Updated At (on Prestashop)',
                                       readonly=True),
-        #TODO add prestashop shop when the field will be available in the api.
-        #we have reported the bug for it
+        # TODO add prestashop shop when the field will be available in the api.
+        # we have reported the bug for it
+        # see http://forge.prestashop.com/browse/PSCFV-8284
     }
 
     _sql_constraints = [
