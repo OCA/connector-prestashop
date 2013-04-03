@@ -12,7 +12,8 @@
         parent="connector.menu_connector_root"
         name="Prestashop"
         sequence="10"
-        groups="connector.group_connector_manager"/> <!-- TODO group: Prestashop Manager -->
+        groups="connector.group_connector_manager"/>
+    <!-- TODO group: Prestashop Manager -->
 
     <menuitem id="menu_prestashop_backend"
         name="Backends"

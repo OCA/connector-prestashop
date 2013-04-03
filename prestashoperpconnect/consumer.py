@@ -33,7 +33,7 @@ from openerp.addons.connector.event import (
     )
 from openerp.addons.connector.connector import Environment
 
-from openerp.addons.connector_ecommerce.event import on_picking_done
+#from openerp.addons.connector_ecommerce.event import on_picking_done
 #from .unit.export_synchronizer import export_record, export_picking_done
 #from .unit.delete_synchronizer import export_delete_record
 

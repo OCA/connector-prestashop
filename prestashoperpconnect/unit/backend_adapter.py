@@ -106,33 +106,15 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         res = api.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
         return res[first_key]
-        return {}
 
-    def create(self, data):
-        """ Create a record on the external system """
-#        with magentolib.API(self.magento.location,
-#                            self.magento.username,
-#                            self.magento.password) as api:
-#            _logger.debug("api.call(%s.create', [%s])", self._magento_model, data)
-#            return api.call('%s.create' % self._magento_model, [data])
+    #def create(self, data):
+    #    """ Create a record on the external system """
 
-    def write(self, id, data):
-        """ Update records on the external system """
-#        with magentolib.API(self.magento.location,
-#                            self.magento.username,
-#                            self.magento.password) as api:
-#            _logger.debug("api.call(%s.update', [%s, %s])",
-#                    self._magento_model, id, data)
-#            return api.call('%s.update' % self._magento_model, [id, data])
+    #def write(self, id, data):
+    #    """ Update records on the external system """
 
-    def delete(self, id):
-        """ Delete a record on the external system """
-#        with magentolib.API(self.magento.location,
-#                            self.magento.username,
-#                            self.magento.password) as api:
-#            _logger.debug("api.call(%s.delete', [%s])",
-#                    self._magento_model, id)
-#            return api.call('%s.delete' % self._magento_model, [id])
+    #def delete(self, id):
+    #    """ Delete a record on the external system """
 
 
 @prestashop

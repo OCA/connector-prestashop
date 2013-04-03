@@ -175,22 +175,6 @@ class DirectBatchImport(BatchImportSynchronizer):
 
 
 @prestashop
-class DelayedBatchImport(BatchImportSynchronizer):
-    """ Delay import of the records """
-    _model_name = [
-            'res.currency',
-            'res.country',
-            'res.lang',
-            ]
-
-    def _import_record(self, record):
-        """ Delay the import of the records"""
-        import_record.delay(self.session,
-                            self.model._name,
-                            self.backend_record.id,
-                            record)
-
-@prestashop
 class SimpleRecordImport(PrestashopImportSynchronizer):
     """ Import one Prestashop Website """
     _model_name = [
@@ -237,4 +221,4 @@ def import_partners_since(session, model_name, backend_id, since_date=None):
             {'import_partners_since': now_fmt},
             context=session.context)
 
-
+                                                                               
