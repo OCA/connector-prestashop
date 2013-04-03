@@ -67,6 +67,11 @@
                             </div>
                         </group>
                     </page>
+                    <page string="Configuration">
+                        <group string="Active languages">
+                            <field name="active_language_ids" nolabel="1"/>
+                        </group>
+                    </page>
                 </notebook>
             </sheet>
         </form>
