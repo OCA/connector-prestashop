@@ -286,8 +286,5 @@ def import_partners_since(session, model_name, backend_id, since_date=None):
             backend_id,
             {'import_partners_since': now_fmt},
             context=session.context)
-<<<<<<< TREE
 
-                                                                               
-=======
->>>>>>> MERGE-SOURCE
+
