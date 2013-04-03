@@ -1,11 +1,11 @@
 ## -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   PrestashopERPconnect for OpenERP 
+#   PrestashopERPconnect for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
-#   @author Guewen Baconnier <guewen.baconnier@camptocamp.com> 
+#   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
@@ -38,6 +38,9 @@ class PrestashopModelBinder(PrestashopBinder):
     _model_name = [
             'prestashop.shop.group',
             'prestashop.shop',
+            'prestashop.res.partner',
+            'prestashop.address',
+            'prestashop.res.partner.category',
             'prestashop.res.lang',
             'prestashop.res.country',
             'prestashop.res.currency',

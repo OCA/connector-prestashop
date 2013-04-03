@@ -65,6 +65,11 @@ class prestashop_backend(orm.Model):
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
+        'active_language_ids': fields.many2many('res.lang',
+                                                'active_presta_lang',
+                                                'referential_id',
+                                                'lang_id',
+                                                'Active Languages'),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -116,9 +121,9 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-#        for backend_id in ids:
-#            import_batch.delay(session, 'prestashop.res.partner.category',
-#                               backend_id)
+        for backend_id in ids:
+            import_batch.delay(session, 'prestashop.res.partner.category',
+                               backend_id)
 
         return True
 
@@ -131,7 +136,7 @@ class prestashop_backend(orm.Model):
 #                               backend_id)
         return True
 
- 
+
 
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'
@@ -158,6 +163,7 @@ class prestashop_binding(orm.AbstractModel):
 class prestashop_shop_group(orm.Model):
     _name = 'prestashop.shop.group'
     _inherit = 'prestashop.binding'
+    _description = 'PrestaShop Shop Group'
 
     _columns = {
         'name': fields.char('Name', required=True),
@@ -248,7 +254,7 @@ class prestashop_res_lang(orm.Model):
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
-         'A Lang with same ID on Prestashop already exists.'),
+         'A Lang with the same ID on Prestashop already exists.'),
     ]
 
 
@@ -273,12 +279,12 @@ class prestashop_res_country(orm.Model):
                                        string='Country',
                                        required=True,
                                        ondelete='cascade'),
-        
+
     }
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
-         'A Country with same ID on prestashop already exists.'),
+         'A Country with the same ID on prestashop already exists.'),
     ]
 
 
@@ -304,12 +310,11 @@ class prestashop_res_currency(orm.Model):
                                        string='Currency',
                                        required=True,
                                        ondelete='cascade'),
-        
     }
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
-         'A Currency with same ID on prestashop already exists.'),
+         'A Currency with the same ID on prestashop already exists.'),
     ]
 
 
@@ -334,12 +339,11 @@ class prestashop_account_tax(orm.Model):
                                        string='Tax',
                                        required=True,
                                        ondelete='cascade'),
-        
     }
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
-         'A Tax with same ID on prestashop already exists.'),
+         'A Tax with the same ID on prestashop already exists.'),
     ]
 
 
@@ -353,4 +357,3 @@ class account_tax(orm.Model):
             string='prestashop Bindings',
             readonly=True),
     }
-

@@ -175,13 +175,79 @@ class DirectBatchImport(BatchImportSynchronizer):
 
 
 @prestashop
+class DelayedBatchImport(BatchImportSynchronizer):
+    """ Delay import of the records """
+    _model_name = [
+            'res.currency',
+            'res.country',
+            'res.lang',
+            'prestashop.res.partner.category'
+            ]
+
+    def _import_record(self, record):
+        """ Delay the import of the records"""
+        import_record.delay(self.session,
+                            self.model._name,
+                            self.backend_record.id,
+                            record)
+
+@prestashop
 class SimpleRecordImport(PrestashopImportSynchronizer):
-    """ Import one Prestashop Website """
+    """ Import one simple record """
     _model_name = [
             'prestashop.shop.group',
             'prestashop.shop',
         ]
 
+@prestashop
+class TranslatableRecordImport(PrestashopImportSynchronizer):
+    """ Import one translatable record """
+    _model_name = [
+            'prestashop.res.partner.category'
+        ]
+
+    def _split_per_language(self):
+        import pdb; pdb.set_trace()
+        return splited_record
+
+    def _map_data(self, record_to_map):
+        return self.mapper.convert(record_to_map)
+
+    def run(self, prestashop_id):
+        """ Run the synchronization
+
+        :param prestashop_id: identifier of the record on Prestashop
+        """
+        self.prestashop_id = prestashop_id
+        self.prestashop_record = self._get_prestashop_data()
+
+        skip = self._has_to_skip()
+        if skip:
+            return skip
+
+        # import the missing linked resources
+        self._import_dependencies()
+
+        #split prestashop data for every lang
+        splited_record = self._split_per_language()
+
+        default_lang_record = splited_record[0]
+
+        record = self._map_data(default_lang_record)
+
+        # special check on data before import
+        self._validate_data(record)
+
+        openerp_id = self._get_openerp_id()
+
+        if openerp_id:
+            self._update(openerp_id, record)
+        else:
+            openerp_id = self._create(record)
+
+        self.binder.bind(self.prestashop_id, openerp_id)
+
+        self._after_import(openerp_id)
 
 @job
 def import_batch(session, model_name, backend_id, filters=None):
@@ -220,5 +286,8 @@ def import_partners_since(session, model_name, backend_id, since_date=None):
             backend_id,
             {'import_partners_since': now_fmt},
             context=session.context)
+<<<<<<< TREE
 
                                                                                
+=======
+>>>>>>> MERGE-SOURCE

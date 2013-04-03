@@ -91,18 +91,17 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         :rtype: list
         """
         api = PrestaShopWebServiceDict(self.prestashop.api_url,
-                self.prestashop.password)
+                                       self.prestashop.password)
         return api.search(self._prestashop_model, filters)
-        return []
 
-    def read(self, id, attributes=None): 
+    def read(self, id, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
         #TODO rename attributes in something better
         api = PrestaShopWebServiceDict(self.prestashop.api_url,
-                self.prestashop.password)
+                                       self.prestashop.password)
         res = api.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
         return res[first_key]
@@ -148,8 +147,17 @@ class AccountTaxAdapter(GenericAdapter):
     _prestashop_model = 'taxes'
 
 
-#@prestashop
-#class PartnerAdapter(GenericAdapter):
-#    _model_name = 'prestashop.res.partner'
-#    _prestashop_model = 'customers'
+@prestashop
+class PartnerCategoryAdapter(GenericAdapter):
+    _model_name = 'prestashop.res.partner.category'
+    _prestashop_model = 'groups'
 
+@prestashop
+class PartnerAdapter(GenericAdapter):
+    _model_name = 'prestashop.res.partner'
+    _prestashop_model = 'customers'
+
+@prestashop
+class PartnerAdapter(GenericAdapter):
+    _model_name = 'prestashop.address'
+    _prestashop_model = 'addresses'
