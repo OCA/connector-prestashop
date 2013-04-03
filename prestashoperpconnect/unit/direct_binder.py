@@ -35,6 +35,7 @@ class DirectBinder(ConnectorUnit):
     _model_name = None
     _oe_field = None
     _ps_field = None
+    _copy_fields = []
 
     def _compare_function(ps_val, oe_val, ps_dict, oe_dict):
         raise NotImplementedError
@@ -82,10 +83,13 @@ class DirectBinder(ConnectorUnit):
                     ps_val = ps_dict[self._ps_field]
                     if self._compare_function(ps_val, oe_val, ps_dict, oe_dict):
                         # it matches, so I write the external ID
-                        ps_oe_id = sess.create(self._model_name, {
-                                        'openerp_id': oe_dict['id'],
-                                        'backend_id': self.backend_record.id
-                                        })
+                        data = {
+                           'openerp_id': oe_dict['id'],
+                           'backend_id': self.backend_record.id,
+                        }
+                        for oe_field, ps_field in self._copy_fields:
+                            data[oe_field] = oe_dict[ps_field]
+                        ps_oe_id = sess.create(self._model_name, data)
                         binder.bind(ps_id, ps_oe_id)
                         _logger.debug(
                             "[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)"
@@ -123,7 +127,9 @@ class LangDirectBinder(DirectBinder):
     _model_name = 'prestashop.res.lang'
     _oe_field = 'code'
     _ps_field = 'language_code'
-
+    _copy_fields = [
+        ('active','active'),
+    ]
 
     def _compare_function(self, ps_val, oe_val, ps_dict, oe_dict):
         if len(oe_val) >= 2 and len(ps_val) >= 2 and \

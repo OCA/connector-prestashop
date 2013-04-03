@@ -67,10 +67,14 @@
                             </div>
                         </group>
                     </page>
-                    <page string="Configuration">
-                        <group string="Active languages">
-                            <field name="active_language_ids" nolabel="1"/>
-                        </group>
+                    <page string="Languages">
+                        <field name="language_ids" nolabel="1">
+                            <tree>
+                                <field name="active"/>
+                                <field name="code"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
                     </page>
                 </notebook>
             </sheet>

@@ -65,11 +65,9 @@ class prestashop_backend(orm.Model):
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
-        'active_language_ids': fields.many2many('res.lang',
-                                                'active_presta_lang',
-                                                'referential_id',
-                                                'lang_id',
-                                                'Active Languages'),
+        'language_ids': fields.one2many('prestashop.res.lang',
+                                                'backend_id',
+                                                'Languages'),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -250,6 +248,11 @@ class prestashop_res_lang(orm.Model):
                                        string='Lang',
                                        required=True,
                                        ondelete='cascade'),
+        'active': fields.boolean('Active in prestashop'),
+    }
+
+    _defaults = {
+        'active': lambda *a: False,
     }
 
     _sql_constraints = [
