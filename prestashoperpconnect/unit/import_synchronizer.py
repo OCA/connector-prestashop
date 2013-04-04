@@ -80,23 +80,27 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
 
-    def _create(self, data):
+    def _create(self, data, context=None):
         """ Create the OpenERP record """
+        if context is None:
+            context = self._context()
         openerp_id = self.model.create(self.session.cr,
                                        self.session.uid,
                                        data,
-                                       context=self._context())
+                                       context=context)
         _logger.debug('%s %d created from prestashop %s',
                       self.model._name, openerp_id, self.prestashop_id)
         return openerp_id
 
-    def _update(self, openerp_id, data):
+    def _update(self, openerp_id, data, context=None):
         """ Update an OpenERP record """
+        if context is None :
+            context = self._context()
         self.model.write(self.session.cr,
                          self.session.uid,
                          openerp_id,
                          data,
-                         context=self._context())
+                         context=context)
         _logger.debug('%s %d updated from prestashop %s',
                       self.model._name, openerp_id, self.prestashop_id)
         return
@@ -178,11 +182,8 @@ class DirectBatchImport(BatchImportSynchronizer):
 class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
     _model_name = [
-            'res.currency',
-            'res.country',
-            'res.lang',
-            'prestashop.res.partner.category'
-            ]
+        'prestashop.res.partner.category'
+    ]
 
     def _import_record(self, record):
         """ Delay the import of the records"""
@@ -197,6 +198,7 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
     _model_name = [
             'prestashop.shop.group',
             'prestashop.shop',
+#            'prestashop.res.partner.category',
         ]
 
 @prestashop
@@ -206,9 +208,26 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
             'prestashop.res.partner.category'
         ]
 
-    def _split_per_language(self):
-        import pdb; pdb.set_trace()
-        return splited_record
+    _default_language = 'en_US'
+
+    def _get_oerp_language(self, prestashop_id):
+        language_binder = self.get_binder_for_model('prestashop.res.lang')
+        oerp_language_id = language_binder.to_openerp(prestashop_id)
+        model = self.environment.session.pool.get('prestashop.res.lang')
+        oerp_lang = model.read(
+            self.session.cr,
+            self.session.uid,
+            oerp_language_id,
+        )
+        return oerp_lang
+
+    def _split_per_language(self, record):
+        splitted_record = {}
+        for language in record['name']['language']:
+            oerp_lang = self._get_oerp_language(language['attrs']['id'])
+            splitted_record[oerp_lang['code']] = record.copy()
+            splitted_record[oerp_lang['code']]['name']=language['value']
+        return splitted_record
 
     def _map_data(self, record_to_map):
         return self.mapper.convert(record_to_map)
@@ -219,7 +238,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         :param prestashop_id: identifier of the record on Prestashop
         """
         self.prestashop_id = prestashop_id
-        self.prestashop_record = self._get_prestashop_data()
+        prestashop_record = self._get_prestashop_data()
 
         skip = self._has_to_skip()
         if skip:
@@ -229,25 +248,46 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         self._import_dependencies()
 
         #split prestashop data for every lang
-        splited_record = self._split_per_language()
+        splitted_record = self._split_per_language(prestashop_record)
 
-        default_lang_record = splited_record[0]
+        openerp_id = None
 
-        record = self._map_data(default_lang_record)
+        if self._default_language in splitted_record:
+            openerp_id = self._run_record(
+                splitted_record[self._default_language],
+                self._default_language
+            )
+            del splitted_record[self._default_language]
 
-        # special check on data before import
-        self._validate_data(record)
-
-        openerp_id = self._get_openerp_id()
-
-        if openerp_id:
-            self._update(openerp_id, record)
-        else:
-            openerp_id = self._create(record)
+        for lang_code, prestashop_record in splitted_record.items():
+            openerp_id = self._run_record(
+                prestashop_record, 
+                lang_code, 
+                openerp_id
+            )
 
         self.binder.bind(self.prestashop_id, openerp_id)
 
         self._after_import(openerp_id)
+
+    def _run_record(self, prestashop_record, lang_code, openerp_id = None):
+        record = self._map_data(prestashop_record)
+
+        # special check on data before import
+        self._validate_data(record)
+
+        if openerp_id is None:
+            openerp_id = self._get_openerp_id()
+
+        context = self._context()
+        context['lang'] = lang_code
+        if openerp_id:
+            self._update(openerp_id, record, context)
+        else:
+            openerp_id = self._create(record, context)
+
+        return openerp_id
+
 
 @job
 def import_batch(session, model_name, backend_id, filters=None):
