@@ -182,7 +182,8 @@ class DirectBatchImport(BatchImportSynchronizer):
 class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
     _model_name = [
-        'prestashop.res.partner.category'
+        'prestashop.res.partner.category',
+        'prestashop.res.partner',
     ]
 
     def _import_record(self, record):
@@ -198,7 +199,7 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
     _model_name = [
             'prestashop.shop.group',
             'prestashop.shop',
-#            'prestashop.res.partner.category',
+            'prestashop.res.partner',
         ]
 
 @prestashop
@@ -307,10 +308,6 @@ def import_record(session, model_name, backend_id, prestashop_id):
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
-    # FIXME: this may run a long time after the user has clicked the
-    # import button -> the use of datetime.now() should be done in the
-    # method called by the button, and not in the async. processing
-    # see what is done by the import_sale_orders
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -320,11 +317,13 @@ def import_partners_since(session, model_name, backend_id, since_date=None):
         # updated_at include the created records
         filters['updated_at'] = {'from': since_fmt}
     importer.run(filters=filters)
+    
     session.pool.get('prestashop.backend').write(
-            session.cr,
-            session.uid,
-            backend_id,
-            {'import_partners_since': now_fmt},
-            context=session.context)
+        session.cr,
+        session.uid,
+        backend_id,
+        {'import_partners_since': now_fmt},
+        context=session.context
+    )
 
 

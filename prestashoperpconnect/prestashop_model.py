@@ -107,11 +107,15 @@ class prestashop_backend(orm.Model):
             since_date = None
             if backend_record.import_partners_since:
                 since_date = datetime.strptime(
-                        backend_record.import_partners_since,
-                        DEFAULT_SERVER_DATETIME_FORMAT)
-#            import_partners_since.delay(session, 'prestashop.res.partner',
-#                                        backend_record.id,
-#                                        since_date=since_date)
+                    backend_record.import_partners_since,
+                	DEFAULT_SERVER_DATETIME_FORMAT
+				)
+            import_partners_since.delay(
+                session, 
+                'prestashop.res.partner',
+                backend_record.id,
+                since_date
+            )
 
         return True
 
@@ -295,11 +299,12 @@ class res_country(orm.Model):
     _inherit = 'res.country'
 
     _columns = {
-            'prestashop_bind_ids': fields.one2many(
+        'prestashop_bind_ids': fields.one2many(
             'prestashop.res.country',
             'openerp_id',
             string='prestashop Bindings',
-            readonly=True),
+            readonly=True
+        ),
     }
 
 
@@ -325,11 +330,12 @@ class res_currency(orm.Model):
     _inherit = 'res.currency'
 
     _columns = {
-            'prestashop_bind_ids': fields.one2many(
+        'prestashop_bind_ids': fields.one2many(
             'prestashop.res.currency',
             'openerp_id',
             string='prestashop Bindings',
-            readonly=True),
+            readonly=True
+        ),
     }
 
 class prestashop_account_tax(orm.Model):
@@ -354,9 +360,10 @@ class account_tax(orm.Model):
     _inherit = 'account.tax'
 
     _columns = {
-            'prestashop_bind_ids': fields.one2many(
+        'prestashop_bind_ids': fields.one2many(
             'prestashop.account.tax',
             'openerp_id',
             string='prestashop Bindings',
-            readonly=True),
+            readonly=True
+        ),
     }

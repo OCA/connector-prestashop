@@ -33,11 +33,6 @@ class res_partner(orm.Model):
         'prestashop_bind_ids': fields.one2many(
             'prestashop.res.partner', 'openerp_id',
             string="PrestaShop Bindings"),
-        'birthday': fields.date('Birthday'),
-        'prestashop_address_bind_ids': fields.one2many(
-            'prestashop.address', 'openerp_id',
-            string="PrestaShop Address Bindings"),
-        'company': fields.char('Company'),
     }
 
 
@@ -47,49 +42,47 @@ class prestashop_res_partner(orm.Model):
     _inherits = {'res.partner': 'openerp_id'}
 
     _rec_name = 'shop_group_id'
-
-    def _get_prest_partner_from_website(self, cr, uid, ids, context=None):
-        prest_partner_obj = self.pool['prestashop.res.partner']
-        return prest_partner_obj.search(cr, uid,
-                                [('shop_group_id', 'in', ids)],
-                                context=context)
-
     _columns = {
-        'openerp_id': fields.many2one('res.partner',
-                                      string='Partner',
-                                      required=True,
-                                      ondelete='cascade'),
-        'backend_id': fields.related('shop_group_id', 'backend_id',
-                                     type='many2one',
-                                     relation='prestashop.backend',
-                                     string='Prestashop Backend',
-                                     store={
-                                        'prestashop.res.partner':
-                                        (lambda self, cr, uid, ids, c=None: ids,
-                                         ['shop_group_id'],
-                                         10),
-                                        'prestashop.website':
-                                        (_get_prest_partner_from_website,
-                                         ['backend_id'],
-                                         20),
-                                        },
-                                     readonly=True),
-        'shop_group_id': fields.many2one('prestashop.shop.group',
-                                      string='PrestaShop Shop Group',
-                                      required=True,
-                                      ondelete='restrict'),
-        'group_id': fields.many2one('prestashop.res.partner.category',
-                                    string='PrestaShop Group (Category)'),
-        'date_add': fields.datetime('Created At (on PrestaShop)',
-                                      readonly=True),
-        'date_upd': fields.datetime('Updated At (on PrestaShop)',
-                                      readonly=True),
-        'emailid': fields.char('E-mail address'),
+        'openerp_id': fields.many2one(
+            'res.partner',
+            string='Partner',
+            required=True,
+            ondelete='cascade'
+        ),        
+        'shop_group_id': fields.many2one(
+            'prestashop.shop.group',
+            string='PrestaShop Shop Group',
+            required=True,
+            ondelete='restrict'
+        ),
+        'group_ids': fields.many2many(
+            'prestashop.res.partner.category',
+            'prestashop_category_partner',
+            'partner_id',
+            'category_id',
+            string='PrestaShop Groups'
+        ),
+        'date_add': fields.datetime(
+            'Created At (on PrestaShop)',
+            readonly=True
+        ),
+        'date_upd': fields.datetime(
+            'Updated At (on PrestaShop)',
+            readonly=True
+        ),
         'newsletter': fields.boolean('Newsletter'),
-        'prestashop_default_category': fields.many2one('res.partner.category',
+        'default_category_id': fields.many2one(
+            'prestashop.res.partner.category',
             'PrestaShop default category',
             help="This field is synchronized with the field "
-            "'Default customer group' in PrestaShop."),
+            "'Default customer group' in PrestaShop."
+        ),
+        'birthday': fields.date('Birthday'),
+        'company': fields.char('Company'),
+        'prestashop_address_bind_ids': fields.one2many(
+            'prestashop.address', 'openerp_id',
+            string="PrestaShop Address Bindings"
+        ),
     }
 
     _sql_constraints = [
@@ -97,6 +90,11 @@ class prestashop_res_partner(orm.Model):
          'A partner with the same ID on PrestaShop already exists for this website.'),
     ]
 
+    def _get_prest_partner_from_website(self, cr, uid, ids, context=None):
+        prest_partner_obj = self.pool['prestashop.res.partner']
+        return prest_partner_obj.search(cr, uid,
+                                [('shop_group_id', 'in', ids)],
+                                context=context)
 
 class prestashop_address(orm.Model):
     _name = 'prestashop.address'
