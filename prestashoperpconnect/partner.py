@@ -55,6 +55,10 @@ class prestashop_res_partner(orm.Model):
             required=True,
             ondelete='restrict'
         ),
+        'shop_id': fields.many2one(
+            'prestashop.shop',
+            string='PrestaShop Shop'
+        ),
         'group_ids': fields.many2many(
             'prestashop.res.partner.category',
             'prestashop_category_partner',

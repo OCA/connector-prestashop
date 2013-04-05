@@ -127,6 +127,7 @@ class PartnerImportMapper(PrestashopImportMapper):
     _fk_mapping = [
        ('prestashop.shop.group', 'id_shop_group', 'shop_group_id'),
        ('prestashop.res.partner.category','id_default_group','default_category_id'),
+       ('prestashop.shop','id_shop', 'shop_id'),
     ]
 
     @mapping
@@ -153,7 +154,7 @@ class PartnerImportMapper(PrestashopImportMapper):
             )
             partner_categories.append(category_id)
 
-        return {'group_ids':partner_categories}
+        return {'group_ids':[(6,0,partner_categories)]}
 
     @mapping
     def backend_id(self, record):
