@@ -188,10 +188,12 @@ class DelayedBatchImport(BatchImportSynchronizer):
 
     def _import_record(self, record):
         """ Delay the import of the records"""
-        import_record.delay(self.session,
-                            self.model._name,
-                            self.backend_record.id,
-                            record)
+        import_record.delay(
+            self.session,
+            self.model._name,
+            self.backend_record.id,
+            record
+        )
 
 @prestashop
 class SimpleRecordImport(PrestashopImportSynchronizer):
@@ -304,19 +306,15 @@ def import_record(session, model_name, backend_id, prestashop_id):
     importer = env.get_connector_unit(PrestashopImportSynchronizer)
     importer.run(prestashop_id)
 
-
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    filters = {}
-    if since_date:
-        since_fmt = since_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        # updated_at include the created records
-        filters['updated_at'] = {'from': since_fmt}
-    importer.run(filters=filters)
+    # TODO : do something with since_date, but prestashop does not allow to filter
+    # on date_upd field...
+    importer.run()
     
     session.pool.get('prestashop.backend').write(
         session.cr,
@@ -325,5 +323,4 @@ def import_partners_since(session, model_name, backend_id, since_date=None):
         {'import_partners_since': now_fmt},
         context=session.context
     )
-
 
