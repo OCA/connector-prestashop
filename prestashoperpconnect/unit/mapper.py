@@ -145,7 +145,7 @@ class PartnerImportMapper(PrestashopImportMapper):
     @mapping
     def groups(self, record):
         groups = record['associations']['groups']['group']
-        if isinstance(groups, list):
+        if not isinstance(groups, list):
             groups = [groups]
         partner_categories = []
         for group in groups:
