@@ -58,10 +58,6 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         """ Import the dependencies for the record"""
         return
 
-    def _map_data(self):
-        """ Return the external record converted to OpenERP """
-        return self.mapper.convert(self.prestashop_record)
-
     def _validate_data(self, data):
         """ Check if the values to import are correct
 
@@ -123,12 +119,15 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        record = self._map_data()
+        openerp_id = self._get_openerp_id()
+        self.mapper.convert(self.prestashop_record)
+        if openerp_id:
+            record = self.mapper.data
+        else:
+            record = self.mapper.data_for_create
 
         # special check on data before import
         self._validate_data(record)
-
-        openerp_id = self._get_openerp_id()
 
         if openerp_id:
             self._update(openerp_id, record)
@@ -235,9 +234,6 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
             splitted_record[oerp_lang['code']]['name'] = language['value']
         return splitted_record
 
-    def _map_data(self, record_to_map):
-        return self.mapper.convert(record_to_map)
-
     def run(self, prestashop_id):
         """ Run the synchronization
 
@@ -277,13 +273,18 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         self._after_import(openerp_id)
 
     def _run_record(self, prestashop_record, lang_code, openerp_id=None):
-        record = self._map_data(prestashop_record)
-
-        # special check on data before import
-        self._validate_data(record)
+        self.mapper.convert(prestashop_record)
 
         if openerp_id is None:
             openerp_id = self._get_openerp_id()
+        
+        if openerp_id:
+            record = self.mapper.data
+        else:
+            record = self.mapper.data_for_create
+        
+        # special check on data before import
+        self._validate_data(record)
 
         context = self._context()
         context['lang'] = lang_code
