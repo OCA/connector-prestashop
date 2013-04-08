@@ -22,17 +22,18 @@
 #                                                                             #
 ###############################################################################
 {
-    "name" : "Prestashop-OpenERP connector New Generation",
-    "version" : "0.2", # 0.1 codenamed "In tartiflette we trust"
-                       # 0.2 codenamed "In La Sambuy we ski"
+    "name": "Prestashop-OpenERP connector New Generation",
+    # 0.1 codenamed "In tartiflette we trust"
+    # 0.2 codenamed "In La Sambuy we ski"
+    "version": "0.2",
     "license": "AGPL-3",
-    "depends" : [
-                 "product",
-                 "product_m2mcategories",
-                 "connector_ecommerce",
-                 "product_images",
-                ],
-    "author" : "PrestashopERPconnect Core Editors",
+    "depends": [
+        "product",
+        "product_m2mcategories",
+        "connector_ecommerce",
+        "product_images",
+    ],
+    "author": "PrestashopERPconnect Core Editors",
     "description": """This module connects OpenERP and Prestashop.
 
 Prestashop (http://www.prestashop.com/) is a popular e-commerce plateform written in PHP/MySQL and published under the Open Software licence v3.0.
@@ -55,11 +56,11 @@ This connector is built on a very solid basis, but still requires deep knowledge
 """,
     'images': [
     ],
-    "website" : "https://launchpad.net/prestashoperpconnect",
-    "category" : "Connector",
-    "complexity" : "expert",
-    "init_xml" : [],
-    "demo_xml" : [],
+    "website": "https://launchpad.net/prestashoperpconnect",
+    "category": "Connector",
+    "complexity": "expert",
+    "init_xml": [],
+    "demo_xml": [],
     'update_xml': [
         'prestashop_model_view.xml',
         'security/ir.model.access.csv',

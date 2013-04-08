@@ -24,21 +24,17 @@
 ##############################################################################
 
 from openerp.tools.translate import _
-import openerp.addons.connector as connector
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  changed_by,
-                                                  ImportMapper,
-                                                  ExportMapper)
+                                                  ImportMapper)
 from ..backend import prestashop
 
-import types
 
 class PrestashopImportMapper(ImportMapper):
 
     _fk_mapping = [
-    #    (model_name, record_key, return_key)
+        # (model_name, record_key, return_key)
     ]
-    
+
     @mapping
     def _get_fk_mapping(self, record):
         mapping_values = {}
@@ -51,8 +47,8 @@ class PrestashopImportMapper(ImportMapper):
         '''
         Returns an openerp_id from a model name and a prestashop_id.
 
-        This function is a helper that permits to only write one line for mapping a
-        foreign key.
+        This function is a helper that permits to only write one line for
+        mapping a foreign key.
         '''
         binder = self.get_binder_for_model(model)
         return binder.to_openerp(prestashop_id)
@@ -83,7 +79,7 @@ class ShopImportMapper(PrestashopImportMapper):
     direct = [('name', 'name')]
 
     _fk_mapping = [
-       ('prestashop.shop.group', 'id_shop_group', 'shop_group_id') 
+        ('prestashop.shop.group', 'id_shop_group', 'shop_group_id')
     ]
 
     @mapping
@@ -96,10 +92,10 @@ class PartnerCategoryImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.res.partner.category'
 
     direct = [
-            ('name', 'name'),
-            ('date_add', 'date_add'),
-            ('date_upd', 'date_upd'),
-            ]
+        ('name', 'name'),
+        ('date_add', 'date_add'),
+        ('date_upd', 'date_upd'),
+    ]
 
     @mapping
     def prestashop_id(self, record):
@@ -109,25 +105,30 @@ class PartnerCategoryImportMapper(PrestashopImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+
 @prestashop
 class PartnerImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.res.partner'
 
     direct = [
-        ('date_add','date_add'),
-        ('date_upd','date_upd'),
-        ('email','email'),
-        ('newsletter','newsletter'),
-        ('birthday','birthday'),
-        ('company','company'),
-        ('active', 'active'),
-        ('note', 'comment'),
+        ('date_add', 'date_add'),
+        ('date_upd', 'date_upd'),
+        ('email', 'email'),
+        ('newsletter', 'newsletter'),
+        ('birthday', 'birthday'),
+        ('company', 'company'),
+        ('active',  'active'),
+        ('note',  'comment'),
     ]
-    
+
     _fk_mapping = [
-       ('prestashop.shop.group', 'id_shop_group', 'shop_group_id'),
-       ('prestashop.res.partner.category','id_default_group','default_category_id'),
-       ('prestashop.shop','id_shop', 'shop_id'),
+        ('prestashop.shop.group', 'id_shop_group', 'shop_group_id'),
+        ('prestashop.shop', 'id_shop', 'shop_id'),
+        (
+            'prestashop.res.partner.category',
+            'id_default_group',
+            'default_category_id'
+        ),
     ]
 
     @mapping
@@ -139,12 +140,12 @@ class PartnerImportMapper(PrestashopImportMapper):
             if len(name) != 0:
                 name += " "
             name += record['lastname']
-        return {'name':name}
+        return {'name': name}
 
     @mapping
     def groups(self, record):
         groups = record['associations']['groups']['group']
-        if type(groups) is not types.ListType:
+        if isinstance(groups, list):
             groups = [groups]
         partner_categories = []
         for group in groups:
@@ -154,7 +155,7 @@ class PartnerImportMapper(PrestashopImportMapper):
             )
             partner_categories.append(category_id)
 
-        return {'group_ids':[(6,0,partner_categories)]}
+        return {'group_ids': [(6, 0, partner_categories)]}
 
     @mapping
     def backend_id(self, record):
@@ -170,19 +171,20 @@ class PartnerImportMapper(PrestashopImportMapper):
             self.session.uid,
             oerp_lang_id,
         )
-        return {'lang':oerp_lang['code']}
+        return {'lang': oerp_lang['code']}
 
     @mapping
     def customer(self, record):
-        return {'customer':True}
+        return {'customer': True}
 
     @mapping
     def is_company(self, record):
-        # This is sad because we _have_ to have a company partner if we want to store
-        # multiple adresses... but... well... we have customers who want to be billed
-        # at home and be delivered at work... (...)...
-        return {'is_company':True}
-    
+        # This is sad because we _have_ to have a company partner if we want to
+        # store multiple adresses... but... well... we have customers who want
+        # to be billed at home and be delivered at work... (...)...
+        return {'is_company': True}
+
+
 @prestashop
 class AddressImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.address'
@@ -190,16 +192,16 @@ class AddressImportMapper(PrestashopImportMapper):
     direct = [
         ('address1', 'street'),
         ('address2', 'street2'),
-        ('city','city'),
-        ('other','comment'),
-        ('phone','phone'),
-        ('phone_mobile','mobile'),
-        ('postcode','zip'),
-        ('date_add','date_add'),
-        ('date_upd','date_upd'),
-        ('vat_number','vat_number'),
+        ('city', 'city'),
+        ('other', 'comment'),
+        ('phone', 'phone'),
+        ('phone_mobile', 'mobile'),
+        ('postcode', 'zip'),
+        ('date_add', 'date_add'),
+        ('date_upd', 'date_upd'),
+        ('vat_number', 'vat_number'),
     ]
-    
+
     _fk_mapping = [
         ('prestashop.res.partner', 'id_customer', 'prestashop_partner_id'),
     ]
@@ -213,11 +215,10 @@ class AddressImportMapper(PrestashopImportMapper):
         model = self.session.pool.get('prestashop.res.partner')
         prestashop_partner = model.read(
             self.session.cr,
-            self.session.uid, 
+            self.session.uid,
             prestashop_partner_id
         )
-        return {'parent_id':prestashop_partner['openerp_id'][0]}
-
+        return {'parent_id': prestashop_partner['openerp_id'][0]}
 
     @mapping
     def name(self, record):
@@ -232,9 +233,8 @@ class AddressImportMapper(PrestashopImportMapper):
             if name:
                 name += " "
             name += '('+record['alias']+')'
-        return {'name':name}
+        return {'name': name}
 
     @mapping
     def customer(self, record):
-        return {'customer':True}
-
+        return {'customer': True}

@@ -23,7 +23,6 @@
 ###############################################################################
 
 from openerp.osv import fields, orm
-from openerp.addons.connector.decorator import only_for_referential
 
 
 class res_partner(orm.Model):
@@ -51,12 +50,11 @@ class prestashop_res_partner(orm.Model):
     def _get_prest_partner_from_website(self, cr, uid, ids, context=None):
         prest_partner_obj = self.pool['prestashop.res.partner']
         return prest_partner_obj.search(
-            cr, 
+            cr,
             uid,
             [('shop_group_id', 'in', ids)],
             context=context
         )
-
 
     _columns = {
         'openerp_id': fields.many2one(
@@ -66,18 +64,18 @@ class prestashop_res_partner(orm.Model):
             ondelete='cascade'
         ),
         'backend_id': fields.related(
-            'shop_group_id', 
+            'shop_group_id',
             'backend_id',
             type='many2one',
             relation='prestashop.backend',
             string='Prestashop Backend',
             store={
-                'prestashop.res.partner':(
+                'prestashop.res.partner': (
                     lambda self, cr, uid, ids, c=None: ids,
                     ['shop_group_id'],
                     10
                 ),
-                'prestashop.website':(
+                'prestashop.website': (
                     _get_prest_partner_from_website,
                     ['backend_id'],
                     20
@@ -127,7 +125,8 @@ class prestashop_res_partner(orm.Model):
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(shop_group_id, prestashop_id)',
-         'A partner with the same ID on PrestaShop already exists for this website.'),
+         'A partner with the same ID on PrestaShop already exists for this '
+         'website.'),
     ]
 
 
@@ -142,7 +141,7 @@ class prestashop_address(orm.Model):
         prest_address_obj = self.pool['prestashop.address']
         return prest_address_obj.search(
             cr,
-			uid,
+            uid,
             [('prestashop_partner_id', 'in', ids)],
             context=context
         )
@@ -169,18 +168,18 @@ class prestashop_address(orm.Model):
             ondelete='cascade'
         ),
         'backend_id': fields.related(
-            'prestashop_partner_id', 
+            'prestashop_partner_id',
             'backend_id',
             type='many2one',
             relation='prestashop.backend',
             string='Prestashop Backend',
             store={
-                'prestashop.address':(
+                'prestashop.address': (
                     lambda self, cr, uid, ids, c=None: ids,
                     ['prestashop_partner_id'],
                     10
                 ),
-                'prestashop.res.partner':(
+                'prestashop.res.partner': (
                     _get_prest_address_from_partner,
                     ['backend_id', 'shop_group_id'],
                     20
@@ -189,18 +188,18 @@ class prestashop_address(orm.Model):
             readonly=True
         ),
         'shop_group_id': fields.related(
-            'prestashop_partner_id', 
+            'prestashop_partner_id',
             'shop_group_id',
             type='many2one',
             relation='prestashop.shop.group',
             string='PrestaShop Shop Group',
             store={
-                'prestashop.address':(
+                'prestashop.address': (
                     lambda self, cr, uid, ids, c=None: ids,
                     ['prestashop_partner_id'],
                     10
                 ),
-                'prestashop.res.partner':(
+                'prestashop.res.partner': (
                     _get_prest_address_from_partner,
                     ['shop_group_id'],
                     20
@@ -216,7 +215,7 @@ class prestashop_address(orm.Model):
          'A partner address with the same ID on PrestaShop already exists.'),
     ]
 
- 
+
 class res_partner_category(orm.Model):
     _inherit = 'res.partner.category'
 
@@ -235,14 +234,20 @@ class prestashop_res_partner_category(orm.Model):
     _inherits = {'res.partner.category': 'openerp_id'}
 
     _columns = {
-        'openerp_id': fields.many2one('res.partner.category',
-                                       string='Partner Category',
-                                       required=True,
-                                       ondelete='cascade'),
-        'date_add': fields.datetime('Created At (on Prestashop)',
-                                      readonly=True),
-        'date_upd': fields.datetime('Updated At (on Prestashop)',
-                                      readonly=True),
+        'openerp_id': fields.many2one(
+            'res.partner.category',
+            string='Partner Category',
+            required=True,
+            ondelete='cascade'
+        ),
+        'date_add': fields.datetime(
+            'Created At (on Prestashop)',
+            readonly=True
+        ),
+        'date_upd': fields.datetime(
+            'Updated At (on Prestashop)',
+            readonly=True
+        ),
         # TODO add prestashop shop when the field will be available in the api.
         # we have reported the bug for it
         # see http://forge.prestashop.com/browse/PSCFV-8284
@@ -252,6 +257,3 @@ class prestashop_res_partner_category(orm.Model):
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
          'A partner group with the same ID on PrestaShop already exists.'),
     ]
-
-
-

@@ -24,14 +24,11 @@
 
 from functools import wraps
 
-import openerp.addons.connector as connector
-
-from openerp.addons.connector.event import (
-    on_record_write,
-    on_record_create,
-    on_record_unlink
-    )
-from openerp.addons.connector.connector import Environment
+#from openerp.addons.connector.event import (
+#    on_record_write,
+#    on_record_create,
+#    on_record_unlink
+#    )
 
 #from openerp.addons.connector_ecommerce.event import on_picking_done
 #from .unit.export_synchronizer import export_record, export_picking_done
@@ -44,8 +41,8 @@ _BIND_MODEL_NAMES = ('prestashop.res.partner',)
 def prestashop_consumer(func):
     """ Use this decorator on all the consumers of prestashoperpconnect.
 
-    It will prevent the consumers from being fired when the prestashoperpconnect
-    addon is not installed.
+    It will prevent the consumers from being fired when the
+    prestashoperpconnect addon is not installed.
     """
     @wraps(func)
     def wrapped(*args, **kwargs):
@@ -90,5 +87,3 @@ def prestashop_consumer(func):
 #    if prestashop_id:
 #        export_delete_record.delay(session, model_name,
 #                                   record.backend_id.id, prestashop_id)
-
-

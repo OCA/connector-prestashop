@@ -36,7 +36,7 @@ class PrestaShopLocation(object):
     def __init__(self, location, password):
         self.location = location
         self.password = password
-        self.api_url = '%s/api'%location
+        self.api_url = '%s/api' % location
 
 
 class PrestaShopCRUDAdapter(CRUDAdapter):
@@ -49,8 +49,10 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
         :type environment: :py:class:`connector.connector.Environment`
         """
         super(PrestaShopCRUDAdapter, self).__init__(environment)
-        self.prestashop = PrestaShopLocation(self.backend_record.location,
-                                       self.backend_record.password)
+        self.prestashop = PrestaShopLocation(
+            self.backend_record.location,
+            self.backend_record.password
+        )
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -121,25 +123,30 @@ class ShopGroupAdapter(GenericAdapter):
     _model_name = 'prestashop.shop.group'
     _prestashop_model = 'shop_groups'
 
+
 @prestashop
 class ShopAdapter(GenericAdapter):
     _model_name = 'prestashop.shop'
     _prestashop_model = 'shops'
+
 
 @prestashop
 class ResLangAdapter(GenericAdapter):
     _model_name = 'prestashop.res.lang'
     _prestashop_model = 'languages'
 
+
 @prestashop
 class ResCountryAdapter(GenericAdapter):
     _model_name = 'prestashop.res.country'
     _prestashop_model = 'countries'
 
+
 @prestashop
 class ResCurrencyAdapter(GenericAdapter):
     _model_name = 'prestashop.res.currency'
     _prestashop_model = 'currencies'
+
 
 @prestashop
 class AccountTaxAdapter(GenericAdapter):
@@ -152,12 +159,14 @@ class PartnerCategoryAdapter(GenericAdapter):
     _model_name = 'prestashop.res.partner.category'
     _prestashop_model = 'groups'
 
+
 @prestashop
 class PartnerAdapter(GenericAdapter):
     _model_name = 'prestashop.res.partner'
     _prestashop_model = 'customers'
 
+
 @prestashop
-class PartnerAdapter(GenericAdapter):
+class PartnerAddressAdapter(GenericAdapter):
     _model_name = 'prestashop.address'
     _prestashop_model = 'addresses'

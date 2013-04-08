@@ -27,13 +27,12 @@ import logging
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.connector import Environment
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
-from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from ..backend import prestashop
 from ..connector import get_environment
 
 _logger = logging.getLogger(__name__)
+
 
 class PrestashopImportSynchronizer(ImportSynchronizer):
     """ Base importer for Prestashop """
@@ -94,7 +93,7 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
 
     def _update(self, openerp_id, data, context=None):
         """ Update an OpenERP record """
-        if context is None :
+        if context is None:
             context = self._context()
         self.model.write(self.session.cr,
                          self.session.uid,
@@ -166,9 +165,9 @@ class DirectBatchImport(BatchImportSynchronizer):
     performed from the UI.
     """
     _model_name = [
-            'prestashop.shop.group',
-            'prestashop.shop',
-            ]
+        'prestashop.shop.group',
+        'prestashop.shop',
+    ]
 
     def _import_record(self, record):
         """ Import the record directly """
@@ -196,22 +195,24 @@ class DelayedBatchImport(BatchImportSynchronizer):
             record
         )
 
+
 @prestashop
 class SimpleRecordImport(PrestashopImportSynchronizer):
     """ Import one simple record """
     _model_name = [
-            'prestashop.shop.group',
-            'prestashop.shop',
-            'prestashop.res.partner',
-            'prestashop.address',
-        ]
+        'prestashop.shop.group',
+        'prestashop.shop',
+        'prestashop.res.partner',
+        'prestashop.address',
+    ]
+
 
 @prestashop
 class TranslatableRecordImport(PrestashopImportSynchronizer):
     """ Import one translatable record """
     _model_name = [
-            'prestashop.res.partner.category'
-        ]
+        'prestashop.res.partner.category'
+    ]
 
     _default_language = 'en_US'
 
@@ -231,7 +232,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         for language in record['name']['language']:
             oerp_lang = self._get_oerp_language(language['attrs']['id'])
             splitted_record[oerp_lang['code']] = record.copy()
-            splitted_record[oerp_lang['code']]['name']=language['value']
+            splitted_record[oerp_lang['code']]['name'] = language['value']
         return splitted_record
 
     def _map_data(self, record_to_map):
@@ -266,8 +267,8 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
         for lang_code, prestashop_record in splitted_record.items():
             openerp_id = self._run_record(
-                prestashop_record, 
-                lang_code, 
+                prestashop_record,
+                lang_code,
                 openerp_id
             )
 
@@ -275,7 +276,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
         self._after_import(openerp_id)
 
-    def _run_record(self, prestashop_record, lang_code, openerp_id = None):
+    def _run_record(self, prestashop_record, lang_code, openerp_id=None):
         record = self._map_data(prestashop_record)
 
         # special check on data before import
@@ -301,6 +302,7 @@ def import_batch(session, model_name, backend_id, filters=None):
     importer = env.get_connector_unit(BatchImportSynchronizer)
     importer.run(filters=filters)
 
+
 @job
 def import_record(session, model_name, backend_id, prestashop_id):
     """ Import a record from Prestashop """
@@ -308,16 +310,17 @@ def import_record(session, model_name, backend_id, prestashop_id):
     importer = env.get_connector_unit(PrestashopImportSynchronizer)
     importer.run(prestashop_id)
 
+
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    # TODO : do something with since_date, but prestashop does not allow to filter
-    # on date_upd field...
+    # TODO : do something with since_date, but prestashop does not allow to
+    # filter on date_upd field...
     importer.run()
-    
+
     session.pool.get('prestashop.backend').write(
         session.cr,
         session.uid,
@@ -325,4 +328,3 @@ def import_partners_since(session, model_name, backend_id, since_date=None):
         {'import_partners_since': now_fmt},
         context=session.context
     )
-

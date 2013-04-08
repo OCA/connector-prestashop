@@ -31,7 +31,6 @@ from openerp.osv import fields, orm
 
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.connector as connector
 from openerp.addons.connector.session import ConnectorSession
 from .unit.import_synchronizer import import_batch, import_partners_since
 from .unit.direct_binder import DirectBinder
@@ -60,14 +59,18 @@ class prestashop_backend(orm.Model):
             string='Version',
             required=True),
         'location': fields.char('Location'),
-        'password': fields.char('Password',
-            help='Enter the key of the PrestaShop Webservice'),
+        'password': fields.char(
+            'Password',
+            help='Enter the key of the PrestaShop Webservice'
+        ),
 
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
-        'language_ids': fields.one2many('prestashop.res.lang',
-                                                'backend_id',
-                                                'Languages'),
+        'language_ids': fields.one2many(
+            'prestashop.res.lang',
+            'backend_id',
+            'Languages'
+        ),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -89,11 +92,11 @@ class prestashop_backend(orm.Model):
         session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
             for model_name in [
-                    'prestashop.res.lang',
-                    'prestashop.res.country',
-                    'prestashop.res.currency',
-                    'prestashop.account.tax',
-                    ]:
+                'prestashop.res.lang',
+                'prestashop.res.country',
+                'prestashop.res.currency',
+                'prestashop.account.tax',
+            ]:
                 env = get_environment(session, model_name, backend_id)
                 directBinder = env.get_connector_unit(DirectBinder)
                 directBinder.run()
@@ -108,10 +111,10 @@ class prestashop_backend(orm.Model):
             if backend_record.import_partners_since:
                 since_date = datetime.strptime(
                     backend_record.import_partners_since,
-                	DEFAULT_SERVER_DATETIME_FORMAT
-				)
+                    DEFAULT_SERVER_DATETIME_FORMAT
+                )
             import_partners_since.delay(
-                session, 
+                session,
                 'prestashop.res.partner',
                 backend_record.id,
                 since_date
@@ -128,10 +131,11 @@ class prestashop_backend(orm.Model):
                 session,
                 'prestashop.address',
                 backend_record.id,
-                # we are looking for customers addresses, ie addresses whose 
+                # we are looking for customers addresses, ie addresses whose
                 # id_customer is between 1 and 9999999999
-                # see http://doc.prestashop.com/display/PS15/Cheat-sheet+-+Concepts+outlined+in+this+tutorial
-                {'filter[id_customer]':'[1|9999999999]'}
+                # see http://doc.prestashop.com/display/PS15/Cheat-sheet+-+
+                # Concepts+outlined+in+this+tutorial
+                {'filter[id_customer]': '[1|9999999999]'}
             )
         return True
 
@@ -155,7 +159,6 @@ class prestashop_backend(orm.Model):
         return True
 
 
-
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'
     _inherit = 'external.binding'
@@ -174,7 +177,6 @@ class prestashop_binding(orm.AbstractModel):
 
     # the _sql_contraints cannot be there due to this bug:
     # https://bugs.launchpad.net/openobject-server/+bug/1151703
-
 
 
 # TODO remove external.shop.group from connector_ecommerce
@@ -206,10 +208,13 @@ class prestashop_shop(orm.Model):
 
     _inherits = {'sale.shop': 'openerp_id'}
 
-
     def _get_shop_from_shopgroup(self, cr, uid, ids, context=None):
-        return self.pool.get('prestashop.shop').search(cr, uid, [('shop_group_id', 'in', ids)], context=context)
-
+        return self.pool.get('prestashop.shop').search(
+            cr,
+            uid,
+            [('shop_group_id', 'in', ids)],
+            context=context
+        )
 
     _columns = {
         'shop_group_id': fields.many2one(
@@ -233,20 +238,20 @@ class prestashop_shop(orm.Model):
             "\nOpenERP requires a main category on products for accounting."
         ),
         'backend_id': fields.related(
-            'shop_group_id', 
+            'shop_group_id',
             'backend_id',
             type='many2one',
             relation='prestashop.backend',
             string='PrestaShop Backend',
             store={
                 'prestashop.shop': (
-                    lambda self, cr, uid, ids, c={}: ids, 
-                    ['shop_group_id'], 
+                    lambda self, cr, uid, ids, c={}: ids,
+                    ['shop_group_id'],
                     10
                 ),
                 'prestashop.shop.group': (
-                    _get_shop_from_shopgroup, 
-                    ['backend_id'], 
+                    _get_shop_from_shopgroup,
+                    ['backend_id'],
                     20
                 ),
             },
@@ -277,10 +282,12 @@ class prestashop_res_lang(orm.Model):
     _inherits = {'res.lang': 'openerp_id'}
 
     _columns = {
-        'openerp_id': fields.many2one('res.lang',
-                                       string='Lang',
-                                       required=True,
-                                       ondelete='cascade'),
+        'openerp_id': fields.many2one(
+            'res.lang',
+            string='Lang',
+            required=True,
+            ondelete='cascade'
+        ),
         'active': fields.boolean('Active in prestashop'),
     }
 
@@ -305,17 +312,19 @@ class res_lang(orm.Model):
             readonly=True),
     }
 
+
 class prestashop_res_country(orm.Model):
     _name = 'prestashop.res.country'
     _inherit = 'prestashop.binding'
     _inherits = {'res.country': 'openerp_id'}
 
     _columns = {
-        'openerp_id': fields.many2one('res.country',
-                                       string='Country',
-                                       required=True,
-                                       ondelete='cascade'),
-
+        'openerp_id': fields.many2one(
+            'res.country',
+            string='Country',
+            required=True,
+            ondelete='cascade'
+        ),
     }
 
     _sql_constraints = [
@@ -343,10 +352,12 @@ class prestashop_res_currency(orm.Model):
     _inherits = {'res.currency': 'openerp_id'}
 
     _columns = {
-        'openerp_id': fields.many2one('res.currency',
-                                       string='Currency',
-                                       required=True,
-                                       ondelete='cascade'),
+        'openerp_id': fields.many2one(
+            'res.currency',
+            string='Currency',
+            required=True,
+            ondelete='cascade'
+        ),
     }
 
     _sql_constraints = [
@@ -367,16 +378,19 @@ class res_currency(orm.Model):
         ),
     }
 
+
 class prestashop_account_tax(orm.Model):
     _name = 'prestashop.account.tax'
     _inherit = 'prestashop.binding'
     _inherits = {'account.tax': 'openerp_id'}
 
     _columns = {
-        'openerp_id': fields.many2one('account.tax',
-                                       string='Tax',
-                                       required=True,
-                                       ondelete='cascade'),
+        'openerp_id': fields.many2one(
+            'account.tax',
+            string='Tax',
+            required=True,
+            ondelete='cascade'
+        ),
     }
 
     _sql_constraints = [

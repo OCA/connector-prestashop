@@ -29,8 +29,6 @@ from ..backend import prestashop
 _logger = logging.getLogger(__name__)
 
 
-
-
 class DirectBinder(ConnectorUnit):
     _model_name = None
     _oe_field = None
@@ -40,10 +38,11 @@ class DirectBinder(ConnectorUnit):
     def _compare_function(ps_val, oe_val, ps_dict, oe_dict):
         raise NotImplementedError
 
-
     def run(self):
-        _logger.debug("[%s] Starting synchro between OERP and PS" 
-                      %self.model._description)
+        _logger.debug(
+            "[%s] Starting synchro between OERP and PS"
+            % self.model._description
+        )
         nr_ps_already_mapped = 0
         nr_ps_mapped = 0
         nr_ps_not_mapped = 0
@@ -57,9 +56,11 @@ class DirectBinder(ConnectorUnit):
         # Get the IDS from PS
         ps_ids = adapter.search()
         if not ps_ids:
-            raise osv.except_osv(_('Error :'),
-                        _('Failed to query %s via PS webservice')
-                        %adapter.prestashop_model)
+            raise osv.except_osv(
+                _('Error :'),
+                _('Failed to query %s via PS webservice')
+                % adapter.prestashop_model
+            )
 
         binder = self.get_binder_for_model()
         # Loop on all PS IDs
@@ -68,12 +69,14 @@ class DirectBinder(ConnectorUnit):
             oe_id = binder.to_openerp(ps_id)
             if oe_id:
                 # Do nothing for the PS IDs that are already mapped
-                _logger.debug("[%s] PS ID %s is already mapped to OERP ID %s"
-                        %(self.model._description, ps_id, oe_id))
+                _logger.debug(
+                    "[%s] PS ID %s is already mapped to OERP ID %s"
+                    % (self.model._description, ps_id, oe_id)
+                )
                 nr_ps_already_mapped += 1
             else:
-                # PS IDs not mapped => I try to match between the PS ID and the OE ID
-                # I read field in PS
+                # PS IDs not mapped => I try to match between the PS ID and
+                # the OE ID. First, I read field in PS
                 ps_dict = adapter.read(ps_id)
                 mapping_found = False
                 # Loop on OE IDs
@@ -81,11 +84,15 @@ class DirectBinder(ConnectorUnit):
                     # Search for a match
                     oe_val = oe_dict[self._oe_field]
                     ps_val = ps_dict[self._ps_field]
-                    if self._compare_function(ps_val, oe_val, ps_dict, oe_dict):
+                    if self._compare_function(
+                            ps_val,
+                            oe_val,
+                            ps_dict,
+                            oe_dict):
                         # it matches, so I write the external ID
                         data = {
-                           'openerp_id': oe_dict['id'],
-                           'backend_id': self.backend_record.id,
+                            'openerp_id': oe_dict['id'],
+                            'backend_id': self.backend_record.id,
                         }
                         for oe_field, ps_field in self._copy_fields:
                             data[oe_field] = oe_dict[ps_field]
@@ -94,7 +101,7 @@ class DirectBinder(ConnectorUnit):
                         _logger.debug(
                             "[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)"
                             % (self.model._description,
-                               ps_dict['name'], #not hardcode if needed
+                               ps_dict['name'],  # not hardcode if needed
                                ps_dict[self._ps_field],
                                oe_dict[oe_rec_name],
                                oe_dict[self._oe_field]))
@@ -111,16 +118,25 @@ class DirectBinder(ConnectorUnit):
 
                     nr_ps_not_mapped += 1
 
-        _logger.info("[%s] Synchro between OERP and PS successfull"
-            %self.model._description)
-        _logger.info("[%s] Number of PS entries already mapped = %s"
-            % (self.model._description, nr_ps_already_mapped))
-        _logger.info("[%s] Number of PS entries mapped = %s"
-            % (self.model._description, nr_ps_mapped))
-        _logger.info("[%s] Number of PS entries not mapped = %s"
-            % (self.model._description, nr_ps_not_mapped))
+        _logger.info(
+            "[%s] Synchro between OERP and PS successfull"
+            % self.model._description
+        )
+        _logger.info(
+            "[%s] Number of PS entries already mapped = %s"
+            % (self.model._description, nr_ps_already_mapped)
+        )
+        _logger.info(
+            "[%s] Number of PS entries mapped = %s"
+            % (self.model._description, nr_ps_mapped)
+        )
+        _logger.info(
+            "[%s] Number of PS entries not mapped = %s"
+            % (self.model._description, nr_ps_not_mapped)
+        )
 
         return True
+
 
 @prestashop
 class LangDirectBinder(DirectBinder):
@@ -128,12 +144,12 @@ class LangDirectBinder(DirectBinder):
     _oe_field = 'code'
     _ps_field = 'language_code'
     _copy_fields = [
-        ('active','active'),
+        ('active', 'active'),
     ]
 
     def _compare_function(self, ps_val, oe_val, ps_dict, oe_dict):
         if len(oe_val) >= 2 and len(ps_val) >= 2 and \
-                    oe_val[0:2].lower() == ps_val[0:2].lower():
+                oe_val[0:2].lower() == ps_val[0:2].lower():
             return True
         return False
 
@@ -146,7 +162,7 @@ class CountryDirectBinder(DirectBinder):
 
     def _compare_function(self, ps_val, oe_val, ps_dict, oe_dict):
         if len(oe_val) >= 2 and len(ps_val) >= 2 and \
-                    oe_val[0:2].lower() == ps_val[0:2].lower():
+                oe_val[0:2].lower() == ps_val[0:2].lower():
             return True
         return False
 
@@ -159,9 +175,10 @@ class ResCurrencyDirectBinder(DirectBinder):
 
     def _compare_function(self, ps_val, oe_val, ps_dict, oe_dict):
         if len(oe_val) == 3 and len(ps_val) == 3 and \
-                    oe_val[0:3].lower() == ps_val[0:3].lower():
+                oe_val[0:3].lower() == ps_val[0:3].lower():
             return True
         return False
+
 
 @prestashop
 class AccountTaxDirectBinder(DirectBinder):
@@ -169,8 +186,7 @@ class AccountTaxDirectBinder(DirectBinder):
     _oe_field = 'amount'
     _ps_field = 'rate'
 
-
     def _compare_function(self, ps_val, oe_val, ps_dict, oe_dict):
         if oe_dict['type_tax_use'] == 'sale' and \
-                abs(oe_val*100 - float(ps_val))<0.01:
+                abs(oe_val*100 - float(ps_val)) < 0.01:
             return True
