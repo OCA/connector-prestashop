@@ -47,13 +47,44 @@ class prestashop_res_partner(orm.Model):
     _inherits = {'res.partner': 'openerp_id'}
 
     _rec_name = 'shop_group_id'
+
+    def _get_prest_partner_from_website(self, cr, uid, ids, context=None):
+        prest_partner_obj = self.pool['prestashop.res.partner']
+        return prest_partner_obj.search(
+            cr, 
+            uid,
+            [('shop_group_id', 'in', ids)],
+            context=context
+        )
+
+
     _columns = {
         'openerp_id': fields.many2one(
             'res.partner',
             string='Partner',
             required=True,
             ondelete='cascade'
-        ),        
+        ),
+        'backend_id': fields.related(
+            'shop_group_id', 
+            'backend_id',
+            type='many2one',
+            relation='prestashop.backend',
+            string='Prestashop Backend',
+            store={
+                'prestashop.res.partner':(
+                    lambda self, cr, uid, ids, c=None: ids,
+                    ['shop_group_id'],
+                    10
+                ),
+                'prestashop.website':(
+                    _get_prest_partner_from_website,
+                    ['backend_id'],
+                    20
+                ),
+            },
+            readonly=True
+        ),
         'shop_group_id': fields.many2one(
             'prestashop.shop.group',
             string='PrestaShop Shop Group',
@@ -99,11 +130,6 @@ class prestashop_res_partner(orm.Model):
          'A partner with the same ID on PrestaShop already exists for this website.'),
     ]
 
-    def _get_prest_partner_from_website(self, cr, uid, ids, context=None):
-        prest_partner_obj = self.pool['prestashop.res.partner']
-        return prest_partner_obj.search(cr, uid,
-                                [('shop_group_id', 'in', ids)],
-                                context=context)
 
 class prestashop_address(orm.Model):
     _name = 'prestashop.address'

@@ -216,29 +216,42 @@ class prestashop_shop(orm.Model):
             'prestashop.shop.group',
             'PrestaShop Shop Group',
             required=True,
-            ondelete='cascade'),
+            ondelete='cascade'
+        ),
         'openerp_id': fields.many2one(
             'sale.shop',
             string='Sale Shop',
             required=True,
             readonly=True,
-            ondelete='cascade'),
+            ondelete='cascade'
+        ),
         # what is the exact purpose of this field?
         'default_category_id': fields.many2one(
             'product.category',
             'Default Product Category',
             help="The category set on products when?? TODO."
-            "\nOpenERP requires a main category on products for accounting."),
-#        'backend_id': fields.related(
-#            'shop_group_id', 'backend_id',
-#            type='many2one',
-#            relation='prestashop.backend',
-#            string='PrestaShop Backend',
-#            store={
-#                'prestashop.shop': (lambda self, cr, uid, ids, c={}: ids, ['shop_group_id'], 10),
-#                'prestashop.shop.group': (_get_shop_from_shopgroup, ['backend_id'], 20),
-#                  },
-#            readonly=True),
+            "\nOpenERP requires a main category on products for accounting."
+        ),
+        'backend_id': fields.related(
+            'shop_group_id', 
+            'backend_id',
+            type='many2one',
+            relation='prestashop.backend',
+            string='PrestaShop Backend',
+            store={
+                'prestashop.shop': (
+                    lambda self, cr, uid, ids, c={}: ids, 
+                    ['shop_group_id'], 
+                    10
+                ),
+                'prestashop.shop.group': (
+                    _get_shop_from_shopgroup, 
+                    ['backend_id'], 
+                    20
+                ),
+            },
+            readonly=True
+        ),
     }
 
     _sql_constraints = [
