@@ -1,2 +1,0 @@
-id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
-prestashop1500_res_partner_category_customer_groups_name,prestashop_1500_partner_categ,10,in_out,direct,base.field_res_partner_category_name,name,unicode,,Partner category name,,,,

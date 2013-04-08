@@ -1,5 +1,0 @@
-"id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","alternative_key","in_function","out_function"
-"prestashoperpconnect.prestashop1400_sale_order_line_name","prestashoperpconnect.prestashop_1400_order_line","product_name","sale.field_sale_order_line_name","in","direct","unicode",,"False",,
-"prestashoperpconnect.prestashop1400_sale_order_line_price_unit","prestashoperpconnect.prestashop_1400_order_line","product_price","sale.field_sale_order_line_price_unit","in","direct","float",,"False",,
-"prestashoperpconnect.prestashop1400_sale_order_line_quantity","prestashoperpconnect.prestashop_1400_order_line","product_quantity","sale.field_sale_order_line_product_uom_qty","in","direct","float",,"False",,
-"prestashoperpconnect.prestashop1400_sale_order_line_product_id","prestashoperpconnect.prestashop_1400_order_line","product_attribute_id","sale.field_sale_order_line_product_id","in","direct","int",,"False",,

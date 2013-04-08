@@ -1,7 +1,0 @@
-"id","mapping_id:id","external_field","field_id:id","type","evaluation_type","external_type","child_mapping_id:id","alternative_key","in_function","out_function"
-"prestashoperpconnect.prestashop_1400_product_category_position","prestashoperpconnect.prestashop_1400_product_categ","position","product.field_product_category_sequence","in_out","direct","int",,"False",,
-"prestashoperpconnect.prestashop_1400_product_category_name","prestashoperpconnect.prestashop_1400_product_categ","name","product.field_product_category_name","in_out","function","unicode",,"False","if ifield:
-    result = [('name', ifield)]
-else:
-    result = [('name', 'No name')]",
-"prestashoperpconnect.prestashop_1400_product_category_parent_id","prestashoperpconnect.prestashop_1400_product_categ","parent_id","product.field_product_category_parent_id","in_out","direct","int",,"False",,
