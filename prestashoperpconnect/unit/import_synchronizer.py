@@ -184,6 +184,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
     _model_name = [
         'prestashop.res.partner.category',
         'prestashop.res.partner',
+        'prestashop.address',
     ]
 
     def _import_record(self, record):
@@ -202,6 +203,7 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
             'prestashop.shop.group',
             'prestashop.shop',
             'prestashop.res.partner',
+            'prestashop.address',
         ]
 
 @prestashop

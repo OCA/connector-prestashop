@@ -32,7 +32,12 @@ class res_partner(orm.Model):
     _columns = {
         'prestashop_bind_ids': fields.one2many(
             'prestashop.res.partner', 'openerp_id',
-            string="PrestaShop Bindings"),
+            string="PrestaShop Bindings"
+        ),
+        'prestashop_address_bind_ids': fields.one2many(
+            'prestashop.address', 'openerp_id',
+            string="PrestaShop Address Bindings"
+        ),
     }
 
 
@@ -109,53 +114,74 @@ class prestashop_address(orm.Model):
 
     def _get_prest_address_from_partner(self, cr, uid, ids, context=None):
         prest_address_obj = self.pool['prestashop.address']
-        return prest_address_obj.search(cr, uid,
-                                [('prestashop_partner_id', 'in', ids)],
-                                context=context)
+        return prest_address_obj.search(
+            cr,
+			uid,
+            [('prestashop_partner_id', 'in', ids)],
+            context=context
+        )
 
     _columns = {
-        'openerp_id': fields.many2one('res.partner',
-                                      string='Partner',
-                                      required=True,
-                                      ondelete='cascade'),
-        'date_add': fields.datetime('Created At (on Prestashop)',
-                                      readonly=True),
-        'date_upd': fields.datetime('Updated At (on Prestashop)',
-                                      readonly=True),
-        'prestashop_partner_id': fields.many2one('prestashop.res.partner',
-                                              string='Prestashop Partner',
-                                              required=True,
-                                              ondelete='cascade'),
-        'backend_id': fields.related('prestashop_partner_id', 'backend_id',
-                                     type='many2one',
-                                     relation='prestashop.backend',
-                                     string='Prestashop Backend',
-                                     store={
-                                        'prestashop.address':
-                                        (lambda self, cr, uid, ids, c=None: ids,
-                                         ['prestashop_partner_id'],
-                                         10),
-                                        'prestashop.res.partner':
-                                        (_get_prest_address_from_partner,
-                                         ['backend_id', 'shop_group_id'],
-                                         20),
-                                        },
-                                     readonly=True),
-        'shop_group_id': fields.related('prestashop_partner_id', 'shop_group_id',
-                                     type='many2one',
-                                     relation='prestashop.shop.group',
-                                     string='PrestaShop Shop Group',
-                                     store={
-                                        'prestashop.address':
-                                        (lambda self, cr, uid, ids, c=None: ids,
-                                         ['prestashop_partner_id'],
-                                         10),
-                                        'prestashop.res.partner':
-                                        (_get_prest_address_from_partner,
-                                         ['shop_group_id'],
-                                         20),
-                                        },
-                                     readonly=True),
+        'openerp_id': fields.many2one(
+            'res.partner',
+            string='Partner',
+            required=True,
+            ondelete='cascade'
+        ),
+        'date_add': fields.datetime(
+            'Created At (on Prestashop)',
+            readonly=True
+        ),
+        'date_upd': fields.datetime(
+            'Updated At (on Prestashop)',
+            readonly=True
+        ),
+        'prestashop_partner_id': fields.many2one(
+            'prestashop.res.partner',
+            string='Prestashop Partner',
+            required=True,
+            ondelete='cascade'
+        ),
+        'backend_id': fields.related(
+            'prestashop_partner_id', 
+            'backend_id',
+            type='many2one',
+            relation='prestashop.backend',
+            string='Prestashop Backend',
+            store={
+                'prestashop.address':(
+                    lambda self, cr, uid, ids, c=None: ids,
+                    ['prestashop_partner_id'],
+                    10
+                ),
+                'prestashop.res.partner':(
+                    _get_prest_address_from_partner,
+                    ['backend_id', 'shop_group_id'],
+                    20
+                ),
+            },
+            readonly=True
+        ),
+        'shop_group_id': fields.related(
+            'prestashop_partner_id', 
+            'shop_group_id',
+            type='many2one',
+            relation='prestashop.shop.group',
+            string='PrestaShop Shop Group',
+            store={
+                'prestashop.address':(
+                    lambda self, cr, uid, ids, c=None: ids,
+                    ['prestashop_partner_id'],
+                    10
+                ),
+                'prestashop.res.partner':(
+                    _get_prest_address_from_partner,
+                    ['shop_group_id'],
+                    20
+                ),
+            },
+            readonly=True
+        ),
         'vat_number': fields.char('PrestaShop VAT'),
     }
 
@@ -164,7 +190,7 @@ class prestashop_address(orm.Model):
          'A partner address with the same ID on PrestaShop already exists.'),
     ]
 
-
+ 
 class res_partner_category(orm.Model):
     _inherit = 'res.partner.category'
 

@@ -119,6 +119,22 @@ class prestashop_backend(orm.Model):
 
         return True
 
+    def import_partner_addresses(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            import_batch.delay(
+                session,
+                'prestashop.address',
+                backend_record.id,
+                # we are looking for customers addresses, ie addresses whose 
+                # id_customer is between 1 and 9999999999
+                # see http://doc.prestashop.com/display/PS15/Cheat-sheet+-+Concepts+outlined+in+this+tutorial
+                {'filter[id_customer]':'[1|9999999999]'}
+            )
+        return True
+
     def import_customer_groups(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]

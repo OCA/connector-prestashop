@@ -171,3 +171,70 @@ class PartnerImportMapper(PrestashopImportMapper):
             oerp_lang_id,
         )
         return {'lang':oerp_lang['code']}
+
+    @mapping
+    def customer(self, record):
+        return {'customer':True}
+
+    @mapping
+    def is_company(self, record):
+        # This is sad because we _have_ to have a company partner if we want to store
+        # multiple adresses... but... well... we have customers who want to be billed
+        # at home and be delivered at work... (...)...
+        return {'is_company':True}
+    
+@prestashop
+class AddressImportMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.address'
+
+    direct = [
+        ('address1', 'street'),
+        ('address2', 'street2'),
+        ('city','city'),
+        ('other','comment'),
+        ('phone','phone'),
+        ('phone_mobile','mobile'),
+        ('postcode','zip'),
+        ('date_add','date_add'),
+        ('date_upd','date_upd'),
+        ('vat_number','vat_number'),
+    ]
+    
+    _fk_mapping = [
+        ('prestashop.res.partner', 'id_customer', 'prestashop_partner_id'),
+    ]
+
+    @mapping
+    def parent_id(self, record):
+        prestashop_partner_id = self.get_fk_id(
+            'prestashop.res.partner',
+            record['id_customer']
+        )
+        model = self.session.pool.get('prestashop.res.partner')
+        prestashop_partner = model.read(
+            self.session.cr,
+            self.session.uid, 
+            prestashop_partner_id
+        )
+        return {'parent_id':prestashop_partner['openerp_id'][0]}
+
+
+    @mapping
+    def name(self, record):
+        name = ""
+        if record['firstname']:
+            name += record['firstname']
+        if record['lastname']:
+            if name:
+                name += " "
+            name += record['lastname']
+        if record['alias']:
+            if name:
+                name += " "
+            name += '('+record['alias']+')'
+        return {'name':name}
+
+    @mapping
+    def customer(self, record):
+        return {'customer':True}
+
