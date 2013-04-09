@@ -183,6 +183,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.res.partner.category',
         'prestashop.res.partner',
         'prestashop.address',
+        'prestashop.product.category',
     ]
 
     def _import_record(self, record):
@@ -210,7 +211,8 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
 class TranslatableRecordImport(PrestashopImportSynchronizer):
     """ Import one translatable record """
     _model_name = [
-        'prestashop.res.partner.category'
+        'prestashop.res.partner.category',
+        'prestashop.product.category',
     ]
 
     _default_language = 'en_US'
@@ -277,12 +279,12 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
         if openerp_id is None:
             openerp_id = self._get_openerp_id()
-        
+
         if openerp_id:
             record = self.mapper.data
         else:
             record = self.mapper.data_for_create
-        
+
         # special check on data before import
         self._validate_data(record)
 

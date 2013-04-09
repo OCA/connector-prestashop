@@ -238,3 +238,37 @@ class AddressImportMapper(PrestashopImportMapper):
     @mapping
     def customer(self, record):
         return {'customer': True}
+
+
+@prestashop
+class ProductCategoryMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.product.category'
+
+    _fk_mapping = [
+        #('prestashop.product.category', 'id_parent', 'parent_id'),
+    ]
+
+    direct = [
+        ('name', 'name'),
+        ('position', 'sequence'),
+    ]
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def parent_id(self, record):
+        if record['id_parent'] == '0':
+            return {}
+        prestashop_category_id = self.get_fk_id(
+            'prestashop.product.category',
+            record['id_parent']
+        )
+        model = self.session.pool.get('prestashop.product.category')
+        prestashop_category = model.read(
+            self.session.cr,
+            self.session.uid,
+            prestashop_category_id
+        )
+        return {'parent_id': prestashop_category['openerp_id'][0]}

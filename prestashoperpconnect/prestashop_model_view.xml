@@ -66,7 +66,7 @@
                                     string="Import in background"/>
                             </div>
                         </group>
-                        <!--<group>
+                        <group>
                             <label string="Import all product categories" class="oe_inline"/>
                             <div>
                                 <button name="import_product_categories"
@@ -74,7 +74,7 @@
                                         class="oe_highlight"
                                         string="Import in background"/>
                             </div>
-                        </group>-->
+                        </group>
                     </page>
                     <page string="Languages">
                         <field name="language_ids" nolabel="1">

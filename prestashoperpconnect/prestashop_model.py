@@ -153,9 +153,12 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-#        for backend_id in ids:
-#            import_batch.delay(session, 'prestashop.product.category',
-#                               backend_id)
+        for backend_id in ids:
+            import_batch.delay(
+                session,
+                'prestashop.product.category',
+                backend_id
+            )
         return True
 
 
