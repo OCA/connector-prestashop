@@ -166,14 +166,17 @@ class DirectBatchImport(BatchImportSynchronizer):
     _model_name = [
         'prestashop.shop.group',
         'prestashop.shop',
+        'prestashop.product.category',
     ]
 
     def _import_record(self, record):
         """ Import the record directly """
-        import_record(self.session,
-                      self.model._name,
-                      self.backend_record.id,
-                      record)
+        import_record(
+            self.session,
+            self.model._name,
+            self.backend_record.id,
+            record
+        )
 
 
 @prestashop
@@ -183,7 +186,6 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.res.partner.category',
         'prestashop.res.partner',
         'prestashop.address',
-        'prestashop.product.category',
     ]
 
     def _import_record(self, record):
@@ -215,6 +217,18 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         'prestashop.product.category',
     ]
 
+    _translatable_fields = {
+        'prestashop.res.partner.category': ['name'],
+        'prestashop.product.category': [
+            'name',
+            'description',
+            'link_rewrite',
+            'meta_description',
+            'meta_keywords',
+            'meta_title'
+        ]
+    }
+
     _default_language = 'en_US'
 
     def _get_oerp_language(self, prestashop_id):
@@ -228,12 +242,29 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         )
         return oerp_lang
 
+    def find_each_language(self, record):
+        languages = {}
+        for field in self._translatable_fields[self.environment.model_name]:
+            for language in record[field]['language']:
+                if language['attrs']['id'] in languages:
+                    continue
+                oerp_lang = self._get_oerp_language(language['attrs']['id'])
+                languages[language['attrs']['id']] = oerp_lang['code']
+        return languages
+
     def _split_per_language(self, record):
         splitted_record = {}
-        for language in record['name']['language']:
-            oerp_lang = self._get_oerp_language(language['attrs']['id'])
-            splitted_record[oerp_lang['code']] = record.copy()
-            splitted_record[oerp_lang['code']]['name'] = language['value']
+        languages = self.find_each_language(record)
+        model_name = self.environment.model_name
+        for language_id, language_code in languages.items():
+            splitted_record[language_code] = record.copy()
+            for field in self._translatable_fields[model_name]:
+                for language in record[field]['language']:
+                    current_id = language['attrs']['id']
+                    current_value = language['value']
+                    if current_id == language_id:
+                        splitted_record[language_code][field] = current_value
+                        break
         return splitted_record
 
     def run(self, prestashop_id):

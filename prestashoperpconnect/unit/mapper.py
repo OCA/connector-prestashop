@@ -245,12 +245,19 @@ class ProductCategoryMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.category'
 
     _fk_mapping = [
-        #('prestashop.product.category', 'id_parent', 'parent_id'),
+        ('prestashop.shop', 'id_shop_default', 'default_shop_id'),
     ]
 
     direct = [
         ('name', 'name'),
         ('position', 'sequence'),
+        ('date_add', 'date_add'),
+        ('date_upd', 'date_upd'),
+        ('description', 'description'),
+        ('link_rewrite', 'link_rewrite'),
+        ('meta_description', 'meta_description'),
+        ('meta_keywords', 'meta_keywords'),
+        ('meta_title', 'meta_title'),
     ]
 
     @mapping

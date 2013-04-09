@@ -46,4 +46,18 @@ class prestashop_product_category(orm.Model):
             required=True,
             ondelete='cascade'
         ),
+        'default_shop_id': fields.many2one('prestashop.shop'),
+        'date_add': fields.datetime(
+            'Created At (on PrestaShop)',
+            readonly=True
+        ),
+        'date_upd': fields.datetime(
+            'Updated At (on PrestaShop)',
+            readonly=True
+        ),
+        'description': fields.char('Description', translate=True),
+        'link_rewrite': fields.char('Friendly URL', translate=True),
+        'meta_description': fields.char('Meta description', translate=True),
+        'meta_keywords': fields.char('Meta keywords', translate=True),
+        'meta_title': fields.char('Meta title', translate=True),
     }
