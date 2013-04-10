@@ -45,13 +45,29 @@ class PrestashopImportMapper(ImportMapper):
 
     def get_fk_id(self, model, prestashop_id):
         '''
-        Returns an openerp_id from a model name and a prestashop_id.
+        Returns a prestashop.* id from a model name and a prestashop_id.
 
         This function is a helper that permits to only write one line for
         mapping a foreign key.
         '''
         binder = self.get_binder_for_model(model)
         return binder.to_openerp(prestashop_id)
+
+    def get_openerp_id(self, model, prestashop_id):
+        '''
+        Returns an openerp id from a model name and a prestashop_id.
+
+        This permits to find the openerp id through the prestahop model in
+        openerp.
+        '''
+        oerp_ps_id = self.get_fk_id(model, prestashop_id)
+        model = self.session.pool.get(model)
+        oerp_ps_object = model.read(
+            self.session.cr,
+            self.session.uid,
+            oerp_ps_id
+        )
+        return oerp_ps_object['openerp_id'][0]
 
 
 @prestashop
@@ -208,17 +224,10 @@ class AddressImportMapper(PrestashopImportMapper):
 
     @mapping
     def parent_id(self, record):
-        prestashop_partner_id = self.get_fk_id(
+        return {'parent_id': self.get_openerp_id(
             'prestashop.res.partner',
             record['id_customer']
-        )
-        model = self.session.pool.get('prestashop.res.partner')
-        prestashop_partner = model.read(
-            self.session.cr,
-            self.session.uid,
-            prestashop_partner_id
-        )
-        return {'parent_id': prestashop_partner['openerp_id'][0]}
+        )}
 
     @mapping
     def name(self, record):
@@ -268,14 +277,45 @@ class ProductCategoryMapper(PrestashopImportMapper):
     def parent_id(self, record):
         if record['id_parent'] == '0':
             return {}
-        prestashop_category_id = self.get_fk_id(
+        return {'parent_id': self.get_openerp_id(
             'prestashop.product.category',
             record['id_parent']
-        )
-        model = self.session.pool.get('prestashop.product.category')
-        prestashop_category = model.read(
-            self.session.cr,
-            self.session.uid,
-            prestashop_category_id
-        )
-        return {'parent_id': prestashop_category['openerp_id'][0]}
+        )}
+
+
+@prestashop
+class ProductMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.product'
+
+    direct = [
+        ('name', 'name'),
+        ('description', 'description'),
+        ('weight', 'weight'),
+        ('price', 'list_price')
+    ]
+
+    @mapping
+    def categ_id(self, record):
+        return {'categ_id': self.get_openerp_id(
+            'prestashop.product.category',
+            record['id_category_default']
+        )}
+
+    @mapping
+    def categ_ids(self, record):
+        categories = record['associations']['categories']['category']
+        if not isinstance(categories, list):
+            categories = [categories]
+        product_categories = []
+        for category in categories:
+            category_id = self.get_openerp_id(
+                'prestashop.product.category',
+                category['id']
+            )
+            product_categories.append(category_id)
+
+        return {'categ_ids': [(6, 0, product_categories)]}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}

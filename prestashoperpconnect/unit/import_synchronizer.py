@@ -186,6 +186,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.res.partner.category',
         'prestashop.res.partner',
         'prestashop.address',
+        'prestashop.product',
     ]
 
     def _import_record(self, record):
@@ -215,6 +216,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
     _model_name = [
         'prestashop.res.partner.category',
         'prestashop.product.category',
+        'prestashop.product',
     ]
 
     _translatable_fields = {
@@ -226,7 +228,11 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
             'meta_description',
             'meta_keywords',
             'meta_title'
-        ]
+        ],
+        'prestashop.product': [
+            'name',
+            'description',
+        ],
     }
 
     _default_language = 'en_US'

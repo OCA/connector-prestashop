@@ -46,6 +46,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.res.currency',
         'prestashop.account.tax',
         'prestashop.product.category',
+        'prestashop.product',
     ]
 
     def to_openerp(self, external_id, unwrap=False):

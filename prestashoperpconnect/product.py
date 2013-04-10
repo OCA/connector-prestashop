@@ -61,3 +61,30 @@ class prestashop_product_category(orm.Model):
         'meta_keywords': fields.char('Meta keywords', translate=True),
         'meta_title': fields.char('Meta title', translate=True),
     }
+
+
+class product_product(orm.Model):
+    _inherit = 'product.product'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.product',
+            'openerp_id',
+            string='PrestaShop Bindings'
+        ),
+    }
+
+
+class prestashop_product(orm.Model):
+    _name = 'prestashop.product'
+    _inherit = 'prestashop.binding'
+    _inherits = {'product.product': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'product.product',
+            string='Product',
+            required=True,
+            ondelete='cascade'
+        ),
+    }

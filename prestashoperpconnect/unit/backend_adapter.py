@@ -176,3 +176,9 @@ class PartnerAddressAdapter(GenericAdapter):
 class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'prestashop.product.category'
     _prestashop_model = 'categories'
+
+
+@prestashop
+class ProductAdapter(GenericAdapter):
+    _model_name = 'prestashop.product'
+    _prestashop_model = 'products'
