@@ -291,7 +291,12 @@ class ProductMapper(PrestashopImportMapper):
         ('name', 'name'),
         ('description', 'description'),
         ('weight', 'weight'),
-        ('price', 'list_price')
+        ('price', 'list_price'),
+        ('active', 'active'),
+        ('available_for_sale', 'sale_ok'),
+        ('wholesale_price', 'standard_price'),
+        ('price', 'lst_price'),
+        ('reference', 'default_code'),
     ]
 
     @mapping
@@ -319,3 +324,9 @@ class ProductMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def ean13(self, record):
+        if record['ean13'] == '0':
+            return {}
+        return {'ean13': record['ean13']}
