@@ -88,3 +88,30 @@ class prestashop_product(orm.Model):
             ondelete='cascade'
         ),
     }
+
+
+class product_image(orm.Model):
+    _inherit = 'product.images'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.product.image',
+            'openerp_id',
+            string='PrestaShop Bindings'
+        ),
+    }
+
+
+class prestashop_product_image(orm.Model):
+    _name = 'prestashop.product.image'
+    _inherit = 'prestashop.binding'
+    _inherits = {'product.images': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'product.images',
+            string='Product image',
+            required=True,
+            ondelete='cascade'
+        )
+    }

@@ -216,7 +216,6 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
     _model_name = [
         'prestashop.res.partner.category',
         'prestashop.product.category',
-        'prestashop.product',
     ]
 
     _translatable_fields = {
@@ -228,10 +227,6 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
             'meta_description',
             'meta_keywords',
             'meta_title'
-        ],
-        'prestashop.product': [
-            'name',
-            'description',
         ],
     }
 
@@ -335,6 +330,54 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         return openerp_id
 
 
+@prestashop
+class ProductRecordImport(TranslatableRecordImport):
+    """ Import one translatable record """
+    _model_name = [
+        'prestashop.product',
+    ]
+
+    _translatable_fields = {
+        'prestashop.product': [
+            'name',
+            'description',
+        ],
+    }
+
+    def run(self, prestashop_id):
+        super(ProductRecordImport, self).run(prestashop_id)
+
+        prestashop_record = self._get_prestashop_data()
+        images = prestashop_record['associations']['images']['image']
+        if not isinstance(images, list):
+            images = [images]
+        for image in images:
+            import_product_image(
+                self.session,
+                'prestashop.product.image',
+                self.backend_record.id,
+                prestashop_record['id'],
+                image['id']
+            )
+
+
+@prestashop
+class ProductImageImport(PrestashopImportSynchronizer):
+    _model_name = [
+        'prestashop.product.image',
+    ]
+
+    def _get_prestashop_data(self):
+        """ Return the raw Magento data for ``self.prestashop_id`` """
+        return self.backend_adapter.read(self.product_id, self.image_id)
+
+    def run(self, product_id, image_id):
+        self.product_id = product_id
+        self.image_id = image_id
+
+        super(ProductImageImport, self).run(image_id)
+
+
 @job
 def import_batch(session, model_name, backend_id, filters=None):
     """ Prepare a batch import of records from Prestashop """
@@ -349,6 +392,15 @@ def import_record(session, model_name, backend_id, prestashop_id):
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(PrestashopImportSynchronizer)
     importer.run(prestashop_id)
+
+
+@job
+def import_product_image(session, model_name, backend_id, product_id,
+                         image_id):
+    """Import a product image"""
+    env = get_environment(session, model_name, backend_id)
+    importer = env.get_connector_unit(PrestashopImportSynchronizer)
+    importer.run(product_id, image_id)
 
 
 @job

@@ -31,6 +31,27 @@ from ..backend import prestashop
 _logger = logging.getLogger(__name__)
 
 
+class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
+
+    def get_image(self, resource, resource_id=None, image_id=None,
+                  options=None):
+        full_url = self._api_url + 'images/' + resource
+        if resource_id is not None:
+            full_url += "/%s" % (resource_id,)
+            if image_id is not None:
+                full_url += "/%s" % (image_id)
+        if options is not None:
+            self._validate_query_options(options)
+            full_url += "?%s" % (self._options_to_querystring(options),)
+        code, headers, content = self._execute(full_url, 'GET')
+        return {
+            'type': headers['content-type'],
+            'content': content,
+            'id_' + resource[:-1]: resource_id,
+            'id_image': image_id
+        }
+
+
 class PrestaShopLocation(object):
 
     def __init__(self, location, password):
@@ -182,3 +203,19 @@ class ProductCategoryAdapter(GenericAdapter):
 class ProductAdapter(GenericAdapter):
     _model_name = 'prestashop.product'
     _prestashop_model = 'products'
+
+
+@prestashop
+class ProductImageAdapter(PrestaShopCRUDAdapter):
+    _model_name = 'prestashop.product.image'
+    _prestashop_image_model = 'products'
+
+    def read(self, product_id, image_id, options=None):
+        api = PrestaShopWebServiceImage(self.prestashop.api_url,
+                                        self.prestashop.password)
+        return api.get_image(
+            self._prestashop_image_model,
+            product_id,
+            image_id,
+            options=options
+        )

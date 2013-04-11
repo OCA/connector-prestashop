@@ -46,6 +46,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.res.currency',
         'prestashop.account.tax',
         'prestashop.product.category',
+        'prestashop.product.image',
         'prestashop.product',
     ]
 

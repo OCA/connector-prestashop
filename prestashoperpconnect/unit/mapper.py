@@ -23,6 +23,8 @@
 #
 ##############################################################################
 
+import mimetypes
+
 from openerp.tools.translate import _
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
@@ -330,3 +332,31 @@ class ProductMapper(PrestashopImportMapper):
         if record['ean13'] == '0':
             return {}
         return {'ean13': record['ean13']}
+
+
+@prestashop
+class ProductImageMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.product.image'
+
+    direct = [
+        ('content', 'file_db_store'),
+    ]
+
+    @mapping
+    def product_id(self, record):
+        return {'product_id': self.get_openerp_id(
+            'prestashop.product',
+            record['id_product']
+        )}
+
+    @mapping
+    def name(self, record):
+        return {'name': record['id_product']+'_'+record['id_image']}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def extension(self, record):
+        return {"extension": mimetypes.guess_extension(record['type'])}
