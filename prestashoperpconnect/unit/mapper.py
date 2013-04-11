@@ -295,11 +295,14 @@ class ProductMapper(PrestashopImportMapper):
         ('weight', 'weight'),
         ('price', 'list_price'),
         ('active', 'active'),
-        ('available_for_sale', 'sale_ok'),
         ('wholesale_price', 'standard_price'),
         ('price', 'lst_price'),
         ('reference', 'default_code'),
     ]
+
+    @mapping
+    def sale_ok(self, record):
+        return {'sale_ok': record['available_for_order'] == '1'}
 
     @mapping
     def categ_id(self, record):
