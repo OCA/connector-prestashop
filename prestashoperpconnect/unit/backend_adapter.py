@@ -219,3 +219,9 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
             image_id,
             options=options
         )
+
+
+@prestashop
+class SaleOrderAdapter(GenericAdapter):
+    _model_name = 'prestashop.sale.order'
+    _prestashop_model = 'orders'

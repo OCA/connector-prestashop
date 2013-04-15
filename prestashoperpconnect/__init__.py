@@ -28,3 +28,4 @@ import consumer
 import prestashop_model
 import partner
 import product
+import sale

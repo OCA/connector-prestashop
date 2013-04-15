@@ -84,6 +84,16 @@
                                         string="Import in background"/>
                             </div>
                         </group>
+                        <group>
+                            <label string="Import sale orders" class="oe_inline"/>
+                            <div>
+                                <button name="import_sale_orders"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                            </div>
+                        </group>
+
                     </page>
                     <page string="Languages">
                         <field name="language_ids" nolabel="1">

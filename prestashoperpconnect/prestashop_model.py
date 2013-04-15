@@ -172,6 +172,15 @@ class prestashop_backend(orm.Model):
             context
         )
 
+    def import_sale_orders(self, cr, uid, ids, context=None):
+        return self.import_batch_delayed(
+            cr,
+            uid,
+            ids,
+            'prestashop.sale.order',
+            context
+        )
+
 
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'

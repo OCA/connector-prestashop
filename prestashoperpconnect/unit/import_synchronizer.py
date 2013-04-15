@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-/
 ##############################################################################
 #
 #    Prestashoperpconnect : OpenERP-PrestaShop connector
@@ -187,6 +187,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.res.partner',
         'prestashop.address',
         'prestashop.product',
+        'prestashop.sale.order',
     ]
 
     def _import_record(self, record):
@@ -376,6 +377,69 @@ class ProductImageImport(PrestashopImportSynchronizer):
         self.image_id = image_id
 
         super(ProductImageImport, self).run(image_id)
+
+
+@prestashop
+class SaleOrderRecordImport(PrestashopImportSynchronizer):
+    """ Import one simple record """
+    _model_name = [
+        'prestashop.sale.order',
+    ]
+
+    def _after_import(self, openerp_id):
+        record = self.prestashop_record
+        ps_order_lines = record['associations']['order_rows']['order_row']
+        if not isinstance(ps_order_lines, list):
+            ps_order_lines = [ps_order_lines]
+        for ps_order_line in ps_order_lines:
+            env = get_environment(
+                self.session,
+                'prestashop.sale.order.line',
+                self.backend_record.id
+            )
+            importer = env.get_connector_unit(PrestashopImportSynchronizer)
+            importer.run(ps_order_line, openerp_id)
+
+
+@prestashop
+class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
+    _model_name = [
+        'prestashop.sale.order.line',
+    ]
+
+    def run(self, prestashop_record, order_id):
+        """ Run the synchronization
+
+        :param prestashop_record: record from Prestashop sale order
+        """
+        self.prestashop_record = prestashop_record
+
+        skip = self._has_to_skip()
+        if skip:
+            return skip
+
+        # import the missing linked resources
+        self._import_dependencies()
+
+        #openerp_id = self._get_openerp_id()
+        self.mapper.convert(self.prestashop_record)
+        #if openerp_id:
+        record = self.mapper.data
+        record['order_id'] = order_id
+        #else:
+        #    record = self.mapper.data_for_create
+
+        # special check on data before import
+        self._validate_data(record)
+
+        #if openerp_id:
+        #    self._update(openerp_id, record)
+        #else:
+        openerp_id = self._create(record)
+
+        #self.binder.bind(self.prestashop_id, openerp_id)
+
+        self._after_import(openerp_id)
 
 
 @job

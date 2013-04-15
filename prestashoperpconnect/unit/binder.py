@@ -48,6 +48,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.product.category',
         'prestashop.product.image',
         'prestashop.product',
+        'prestashop.sale.order',
     ]
 
     def to_openerp(self, external_id, unwrap=False):

@@ -363,3 +363,70 @@ class ProductImageMapper(PrestashopImportMapper):
     @mapping
     def extension(self, record):
         return {"extension": mimetypes.guess_extension(record['type'])}
+
+
+@prestashop
+class SaleOrderMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.sale.order'
+
+    direct = [
+        ('reference', 'name'),
+    ]
+
+    @mapping
+    def shop_id(self, record):
+        return {'shop_id': self.get_openerp_id(
+            'prestashop.shop',
+            record['id_shop']
+        )}
+
+    @mapping
+    def partner_id(self, record):
+        return {'partner_id': self.get_openerp_id(
+            'prestashop.res.partner',
+            record['id_customer']
+        )}
+
+    @mapping
+    def partner_invoice_id(self, record):
+        return {'partner_invoice_id': self.get_openerp_id(
+            'prestashop.address',
+            record['id_address_invoice']
+        )}
+
+    @mapping
+    def partner_shipping_id(self, record):
+        return {'partner_shipping_id': self.get_openerp_id(
+            'prestashop.address',
+            record['id_address_delivery']
+        )}
+
+    @mapping
+    def pricelist_id(self, record):
+        return {'pricelist_id': 1}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@prestashop
+class SaleOrderLineMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.sale.order.line'
+    direct = [
+        ('product_name', 'name'),
+        ('id', 'sequence'),
+        ('product_price', 'price_unit'),
+        ('product_quantity', 'product_uom_qty'),
+    ]
+
+    @mapping
+    def product_id(self, record):
+        return {'product_id': self.get_openerp_id(
+            'prestashop.product',
+            record['product_id']
+        )}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
