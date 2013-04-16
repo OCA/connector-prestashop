@@ -100,6 +100,8 @@ class prestashop_backend(orm.Model):
                 env = get_environment(session, model_name, backend_id)
                 directBinder = env.get_connector_unit(DirectBinder)
                 directBinder.run()
+
+            import_batch(session, 'prestashop.account.tax.group', backend_id)
         return True
 
     def import_partners_since(self, cr, uid, ids, context=None):
@@ -430,6 +432,39 @@ class account_tax(orm.Model):
             'prestashop.account.tax',
             'openerp_id',
             string='prestashop Bindings',
+            readonly=True
+        ),
+    }
+
+
+class prestashop_account_tax_group(orm.Model):
+    _name = 'prestashop.account.tax.group'
+    _inherit = 'prestashop.binding'
+    _inherits = {'account.tax.group': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'account.tax.group',
+            string='Tax Group',
+            required=True,
+            ondelete='cascade'
+        ),
+    }
+
+    _sql_constraints = [
+        ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
+         'A Tax Group with the same ID on prestashop already exists.'),
+    ]
+
+
+class account_tax_group(orm.Model):
+    _inherit = 'account.tax.group'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.account.tax.group',
+            'openerp_id',
+            string='Prestashop Bindings',
             readonly=True
         ),
     }

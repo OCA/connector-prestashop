@@ -225,3 +225,9 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
 class SaleOrderAdapter(GenericAdapter):
     _model_name = 'prestashop.sale.order'
     _prestashop_model = 'orders'
+
+
+@prestashop
+class TaxGroupAdapter(GenericAdapter):
+    _model_name = 'prestashop.account.tax.group'
+    _prestashop_model = 'tax_rule_groups'

@@ -167,6 +167,7 @@ class DirectBatchImport(BatchImportSynchronizer):
         'prestashop.shop.group',
         'prestashop.shop',
         'prestashop.product.category',
+        'prestashop.account.tax.group',
     ]
 
     def _import_record(self, record):
@@ -208,6 +209,7 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
         'prestashop.shop',
         'prestashop.res.partner',
         'prestashop.address',
+        'prestashop.account.tax.group',
     ]
 
 

@@ -430,3 +430,16 @@ class SaleOrderLineMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@prestashop
+class TaxGroupMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.account.tax.group'
+
+    direct = [
+        ('name', 'name'),
+    ]
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
