@@ -210,6 +210,7 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
         'prestashop.res.partner',
         'prestashop.address',
         'prestashop.account.tax.group',
+        'prestashop.sale.order',
     ]
 
 
@@ -379,28 +380,6 @@ class ProductImageImport(PrestashopImportSynchronizer):
         self.image_id = image_id
 
         super(ProductImageImport, self).run(image_id)
-
-
-@prestashop
-class SaleOrderRecordImport(PrestashopImportSynchronizer):
-    """ Import one simple record """
-    _model_name = [
-        'prestashop.sale.order',
-    ]
-
-    def _after_import(self, openerp_id):
-        record = self.prestashop_record
-        ps_order_lines = record['associations']['order_rows']['order_row']
-        if not isinstance(ps_order_lines, list):
-            ps_order_lines = [ps_order_lines]
-        for ps_order_line in ps_order_lines:
-            env = get_environment(
-                self.session,
-                'prestashop.sale.order.line',
-                self.backend_record.id
-            )
-            importer = env.get_connector_unit(PrestashopImportSynchronizer)
-            importer.run(ps_order_line, openerp_id)
 
 
 @prestashop

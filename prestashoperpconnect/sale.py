@@ -20,6 +20,9 @@
 ###############################################################################
 
 from openerp.osv import fields, orm
+from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
+    SaleOrderOnChange)
+from backend import prestashop
 
 
 class sale_order(orm.Model):
@@ -46,7 +49,17 @@ class prestashop_sale_order(orm.Model):
             required=True,
             ondelete='cascade'
         ),
+        'prestashop_order_line_ids': fields.one2many(
+            'prestashop.sale.order.line',
+            'prestashop_order_id',
+            'Prestashop Order Lines'
+        ),
     }
+
+
+@prestashop
+class PrestaShopSaleOrderOnChange(SaleOrderOnChange):
+    _model_name = 'prestashop.sale.order'
 
 
 class sale_order_line(orm.Model):
@@ -73,4 +86,29 @@ class prestashop_sale_order_line(orm.Model):
             required=True,
             ondelete='cascade'
         ),
+        'prestashop_order_id': fields.many2one(
+            'prestashop.sale.order',
+            'Prestashop Sale Order',
+            required=True,
+            ondelete='cascade',
+            select=True
+        ),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        prestashop_order_id = vals['prestashop_order_id']
+        info = self.pool['prestashop.sale.order'].read(
+            cr,
+            uid,
+            [prestashop_order_id],
+            ['openerp_id'],
+            context=context
+        )
+        order_id = info[0]['openerp_id']
+        vals['order_id'] = order_id[0]
+        return super(prestashop_sale_order_line, self).create(
+            cr,
+            uid,
+            vals,
+            context=context
+        )

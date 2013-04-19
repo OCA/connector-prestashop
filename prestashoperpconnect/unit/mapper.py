@@ -30,6 +30,9 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
 from ..backend import prestashop
 
+from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
+    SaleOrderOnChange)
+
 
 class PrestashopImportMapper(ImportMapper):
 
@@ -336,6 +339,23 @@ class ProductMapper(PrestashopImportMapper):
             return {}
         return {'ean13': record['ean13']}
 
+    @mapping
+    def taxes_id(self, record):
+        if record['id_tax_rules_group'] == '0':
+            return {}
+        tax_group_id = self.get_openerp_id(
+            'prestashop.account.tax.group',
+            record['id_tax_rules_group']
+        )
+        tax_group_model = self.session.pool.get('account.tax.group')
+        tax_ids = tax_group_model.read(
+            self.session.cr,
+            self.session.uid,
+            tax_group_id,
+            ['tax_ids']
+        )
+        return {"taxes_id": [(6, 0, tax_ids['tax_ids'])]}
+
 
 @prestashop
 class ProductImageMapper(PrestashopImportMapper):
@@ -373,6 +393,30 @@ class SaleOrderMapper(PrestashopImportMapper):
         ('reference', 'name'),
     ]
 
+    def _get_sale_order_lines(self, record):
+        return record['associations']['order_rows']['order_row']
+
+    children = [
+        (
+            _get_sale_order_lines,
+            'prestashop_order_line_ids',
+            'prestashop.sale.order.line'
+        ),
+    ]
+
+    def _map_child(self, record, from_attr, to_attr, model_name):
+        # TODO patch ImportMapper in connector to support callable
+        if callable(from_attr):
+            child_records = from_attr(self, record)
+        else:
+            child_records = record[from_attr]
+        
+        self._data_children[to_attr] = []
+        for child_record in child_records:
+            mapper = self._init_child_mapper(model_name)
+            mapper.convert_child(child_record, parent_values=record)
+            self._data_children[to_attr].append(mapper)
+
     @mapping
     def shop_id(self, record):
         return {'shop_id': self.get_openerp_id(
@@ -408,6 +452,31 @@ class SaleOrderMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def payment(self, record):
+        if record['payment']:
+            model = self.session.pool.get('payment.method')
+            payment_method_id = model.get_or_create_payment_method(
+                self.session.cr,
+                self.session.uid,
+                record['payment'],
+                self.session.context
+            )
+            return {'payment_method_id': payment_method_id}
+        return {}
+
+    def _after_mapping(self, result):
+        sess = self.session
+        result = sess.pool['sale.order']._convert_special_fields(
+            sess.cr,
+            sess.uid,
+            result,
+            result['prestashop_order_line_ids'],
+            sess.context
+        )
+        onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
+        return onchange.play(result, result['prestashop_order_line_ids'])
 
 
 @prestashop
