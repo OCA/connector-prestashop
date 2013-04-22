@@ -1,0 +1,2 @@
+-e git://github.com/akretion/prestapyt.git#egg=prestapyt
+requests==0.14.2

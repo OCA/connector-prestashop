@@ -465,13 +465,10 @@ def import_product_image(session, model_name, backend_id, product_id,
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
-    env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(BatchImportSynchronizer)
-    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    # TODO : do something with since_date, but prestashop does not allow to
-    # filter on date_upd field...
-    importer.run()
+    filters = {'date_filter': [['date_upd', '>', since_date]]}
+    import_batch(session,model_name, backend_id, filters)
 
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
         session.cr,
         session.uid,
