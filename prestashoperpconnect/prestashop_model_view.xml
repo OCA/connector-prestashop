@@ -58,15 +58,6 @@
                                     string="Import in background"/>
                         </group>
                         <group>
-                            <label string="Import partner addresses" class="oe_inline"/>
-                            <div>
-                                <button name="import_partner_addresses"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import in background"/>
-                            </div>
-                        </group>
-                        <group>
                             <label string="Import all product categories" class="oe_inline"/>
                             <div>
                                 <button name="import_product_categories"

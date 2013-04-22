@@ -124,20 +124,6 @@ class prestashop_backend(orm.Model):
 
         return True
 
-    def import_partner_addresses(self, cr, uid, ids, context=None):
-        return self.import_batch_delayed(
-            cr,
-            uid,
-            ids,
-            'prestashop.address',
-            context,
-            # we are looking for customers addresses, ie addresses whose
-            # id_customer is between 1 and 9999999999
-            # see http://doc.prestashop.com/display/PS15/Cheat-sheet+-+
-            # Concepts+outlined+in+this+tutorial
-            {'filter[id_customer]': '[1|9999999999]'}
-
-        )
 
     def import_batch_delayed(self, cr, uid, ids, model, context, filters=None):
         if not hasattr(ids, '__iter__'):
