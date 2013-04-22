@@ -36,28 +36,6 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 
 class PrestashopImportMapper(ImportMapper):
 
-    _fk_mapping = [
-        # (model_name, record_key, return_key)
-    ]
-
-    @mapping
-    def _get_fk_mapping(self, record):
-        mapping_values = {}
-        for model_name, record_key, return_key in self._fk_mapping:
-            fk_id = self.get_fk_id(model_name, record[record_key])
-            mapping_values[return_key] = fk_id
-        return mapping_values
-
-    def get_fk_id(self, model, prestashop_id):
-        '''
-        Returns a prestashop.* id from a model name and a prestashop_id.
-
-        This function is a helper that permits to only write one line for
-        mapping a foreign key.
-        '''
-        binder = self.get_binder_for_model(model)
-        return binder.to_openerp(prestashop_id)
-
     def get_openerp_id(self, model, prestashop_id):
         '''
         Returns an openerp id from a model name and a prestashop_id.
@@ -65,7 +43,9 @@ class PrestashopImportMapper(ImportMapper):
         This permits to find the openerp id through the prestahop model in
         openerp.
         '''
-        oerp_ps_id = self.get_fk_id(model, prestashop_id)
+        binder = self.get_binder_for_model(model)
+        oerp_ps_id = binder.to_openerp(prestashop_id)
+
         model = self.session.pool.get(model)
         oerp_ps_object = model.read(
             self.session.cr,
@@ -97,10 +77,9 @@ class ShopGroupImportMapper(PrestashopImportMapper):
 class ShopImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.shop'
 
-    direct = [('name', 'name')]
-
-    _fk_mapping = [
-        ('prestashop.shop.group', 'id_shop_group', 'shop_group_id')
+    direct = [
+        ('name', 'name'),
+        ('id_shop_group', 'shop_group_id'),
     ]
 
     @mapping
@@ -140,16 +119,9 @@ class PartnerImportMapper(PrestashopImportMapper):
         ('company', 'company'),
         ('active',  'active'),
         ('note',  'comment'),
-    ]
-
-    _fk_mapping = [
-        ('prestashop.shop.group', 'id_shop_group', 'shop_group_id'),
-        ('prestashop.shop', 'id_shop', 'shop_id'),
-        (
-            'prestashop.res.partner.category',
-            'id_default_group',
-            'default_category_id'
-        ),
+        ('id_shop_group', 'shop_group_id'),
+        ('id_shop', 'shop_id'),
+        ('id_default_group', 'default_category_id'),
     ]
 
     @mapping
@@ -184,7 +156,10 @@ class PartnerImportMapper(PrestashopImportMapper):
 
     @mapping
     def lang(self, record):
-        oerp_lang_id = self.get_fk_id('prestashop.res.lang', record['id_lang'])
+        oerp_lang_id = self.get_fk_id(
+            'prestashop.res.lang',
+            record['id_lang']
+        )
 
         model = self.environment.session.pool.get('prestashop.res.lang')
         oerp_lang = model.read(
@@ -221,10 +196,7 @@ class AddressImportMapper(PrestashopImportMapper):
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
         ('vat_number', 'vat_number'),
-    ]
-
-    _fk_mapping = [
-        ('prestashop.res.partner', 'id_customer', 'prestashop_partner_id'),
+        ('id_customer', 'prestashop_partner_id'),
     ]
 
     @mapping
@@ -258,10 +230,6 @@ class AddressImportMapper(PrestashopImportMapper):
 class ProductCategoryMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.category'
 
-    _fk_mapping = [
-        ('prestashop.shop', 'id_shop_default', 'default_shop_id'),
-    ]
-
     direct = [
         ('name', 'name'),
         ('position', 'sequence'),
@@ -272,6 +240,7 @@ class ProductCategoryMapper(PrestashopImportMapper):
         ('meta_description', 'meta_description'),
         ('meta_keywords', 'meta_keywords'),
         ('meta_title', 'meta_title'),
+        ('id_shop_default', 'default_shop_id'),
     ]
 
     @mapping
@@ -482,6 +451,7 @@ class SaleOrderMapper(PrestashopImportMapper):
 @prestashop
 class SaleOrderLineMapper(PrestashopImportMapper):
     _model_name = 'prestashop.sale.order.line'
+    
     direct = [
         ('product_name', 'name'),
         ('id', 'sequence'),
