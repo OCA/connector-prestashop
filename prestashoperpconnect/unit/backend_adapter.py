@@ -43,10 +43,10 @@ class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
         if options is not None:
             self._validate_query_options(options)
             full_url += "?%s" % (self._options_to_querystring(options),)
-        code, headers, content = self._execute(full_url, 'GET')
+        response = self._execute(full_url, 'GET')
         return {
-            'type': headers['content-type'],
-            'content': content,
+            'type': response.headers['content-type'],
+            'content': response.content,
             'id_' + resource[:-1]: resource_id,
             'id_image': image_id
         }
