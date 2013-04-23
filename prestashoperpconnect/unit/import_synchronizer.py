@@ -465,7 +465,10 @@ def import_product_image(session, model_name, backend_id, product_id,
 @job
 def import_partners_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
-    filters = {'date_filter': [['date_upd', '>', since_date]]}
+    filters = None
+    if since_date:
+        date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
+        filters = {'date':'1', 'filter[date_upd]': '>[%s]' % (date_str)}
     import_batch(session,model_name, backend_id, filters)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
