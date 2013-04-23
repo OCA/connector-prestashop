@@ -206,13 +206,13 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
     _model_name = 'prestashop.res.partner'
 
     def _after_import(self, openerp_id):
-        binder = self.get_binder_for_model(self.model_name)
-        oerp_ps_id = binder.to_backend(openerp_id)
+        binder = self.get_binder_for_model(self._model_name)
+        ps_id = binder.to_backend(openerp_id)
         import_batch.delay(
             self.session,
             'prestashop.address',
             self.backend_record.id,
-            filters={'filter[id_customer]': '[%d]' % (oerp_ps_id)}
+            filters={'filter[id_customer]': '[%d]' % (ps_id)}
         )
 
 

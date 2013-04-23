@@ -142,10 +142,8 @@ class PartnerImportMapper(PrestashopImportMapper):
             groups = [groups]
         partner_categories = []
         for group in groups:
-            category_id = self.get_fk_id(
-                'prestashop.res.partner.category',
-                group['id']
-            )
+            binder = self.get_binder_for_model('prestashop.res.partner.category')
+            category_id =  binder.to_openerp(group['id'])
             partner_categories.append(category_id)
 
         return {'group_ids': [(6, 0, partner_categories)]}
@@ -156,10 +154,8 @@ class PartnerImportMapper(PrestashopImportMapper):
 
     @mapping
     def lang(self, record):
-        oerp_lang_id = self.get_fk_id(
-            'prestashop.res.lang',
-            record['id_lang']
-        )
+        binder = self.get_binder_for_model('prestashop.res.lang')
+        oerp_lang_id = binder.to_openerp(record['id_lang'])
 
         model = self.environment.session.pool.get('prestashop.res.lang')
         oerp_lang = model.read(
