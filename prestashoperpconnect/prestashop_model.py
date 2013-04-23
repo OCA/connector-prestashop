@@ -142,8 +142,7 @@ class prestashop_backend(orm.Model):
             import_batch.delay(
                 session,
                 'prestashop.sale.order',
-                backend_id,
-                filters
+                backend_id
             )
         return True
 

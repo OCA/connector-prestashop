@@ -147,8 +147,10 @@ class PartnerImportMapper(PrestashopImportMapper):
             groups = [groups]
         partner_categories = []
         for group in groups:
-            binder = self.get_binder_for_model('prestashop.res.partner.category')
-            category_id =  binder.to_openerp(group['id'])
+            binder = self.get_binder_for_model(
+                'prestashop.res.partner.category'
+            )
+            category_id = binder.to_openerp(group['id'])
             partner_categories.append(category_id)
 
         return {'group_ids': [(6, 0, partner_categories)]}
@@ -380,7 +382,7 @@ class SaleOrderMapper(PrestashopImportMapper):
             child_records = from_attr(self, record)
         else:
             child_records = record[from_attr]
-        
+
         self._data_children[to_attr] = []
         for child_record in child_records:
             mapper = self._init_child_mapper(model_name)
@@ -452,7 +454,7 @@ class SaleOrderMapper(PrestashopImportMapper):
 @prestashop
 class SaleOrderLineMapper(PrestashopImportMapper):
     _model_name = 'prestashop.sale.order.line'
-    
+
     direct = [
         ('product_name', 'name'),
         ('id', 'sequence'),
