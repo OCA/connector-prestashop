@@ -37,22 +37,13 @@
                 <notebook>
                     <page name="import" string="Imports">
                         <group>
-                            <label string="Import all customer groups" class="oe_inline"/>
                             <div>
-                                <button name="import_customer_groups"
-                                        type="object"
-                                        class="oe_highlight"
-                                        string="Import in background"/>
-                            </div>
-                        </group>
-                        <group>
-                            <div>
-                                <label string="Import partners since" class="oe_inline"/>
+                                <label string="Import customer groups and customers since" class="oe_inline"/>
                                 <field name="import_partners_since"
                                        class="oe_inline"
                                        nolabel="1"/>
                             </div>
-                            <button name="import_partners_since"
+                            <button name="import_customers_since"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"/>

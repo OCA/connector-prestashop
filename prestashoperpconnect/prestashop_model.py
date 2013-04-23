@@ -32,7 +32,7 @@ from openerp.osv import fields, orm
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
-from .unit.import_synchronizer import import_batch, import_partners_since
+from .unit.import_synchronizer import import_batch, import_customers_since
 from .unit.direct_binder import DirectBinder
 from .connector import get_environment
 
@@ -104,7 +104,7 @@ class prestashop_backend(orm.Model):
             import_batch(session, 'prestashop.account.tax.group', backend_id)
         return True
 
-    def import_partners_since(self, cr, uid, ids, context=None):
+    def import_customers_since(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
@@ -115,9 +115,8 @@ class prestashop_backend(orm.Model):
                     backend_record.import_partners_since,
                     DEFAULT_SERVER_DATETIME_FORMAT
                 )
-            import_partners_since.delay(
+            import_customers_since.delay(
                 session,
-                'prestashop.res.partner',
                 backend_record.id,
                 since_date
             )
@@ -132,15 +131,6 @@ class prestashop_backend(orm.Model):
         for backend_id in ids:
             import_batch.delay(session, model, backend_id, filters)
         return True
-
-    def import_customer_groups(self, cr, uid, ids, context=None):
-        return self.import_batch_delayed(
-            cr,
-            uid,
-            ids,
-            'prestashop.res.partner.category',
-            context
-        )
 
     def import_product_categories(self, cr, uid, ids, context=None):
         return self.import_batch_delayed(

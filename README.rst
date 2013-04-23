@@ -40,12 +40,10 @@ Getting started
 - configure the tax groups
   - in Accounting -> Configuration -> Taxes -> Taxes
   - set a tax group for each sale vat
-- import groups
-  - click on 'import in background' in front of 'import all customers group"
-  - click on 'import in background' in front of 'import all product categories'
-- once these tasks are done (see it in Connectors -> Queue -> Jobs)
-  - click on 'import in background' in front of 'import partners since'
-  - click on 'import in background' in front of 'import all products'
+- import customers and products
+  - click on 'import in background' in front of 'Import customer groups and customers since"
+  - click on 'import in background' in front of 'import all product categories'. Once this task is done (see it in Connectors -> Queue -> Jobs) :
+    - click on 'import in background' in front of 'import all products'
 - once these tasks are done (see it in Connectors -> Queue -> Jobs)
   - click on 'import in background' in front of 'import sale orders'
 
