@@ -481,3 +481,9 @@ def import_customers_since(session, backend_id, since_date=None):
         {'import_partners_since': now_fmt},
         context=session.context
     )
+
+
+@job
+def import_products(session, backend_id):
+    import_batch(session, 'prestashop.product.category', backend_id)
+    import_batch(session, 'prestashop.product', backend_id)

@@ -42,8 +42,7 @@ Getting started
   - set a tax group for each sale vat
 - import customers and products
   - click on 'import in background' in front of 'Import customer groups and customers since"
-  - click on 'import in background' in front of 'import all product categories'. Once this task is done (see it in Connectors -> Queue -> Jobs) :
-    - click on 'import in background' in front of 'import all products'
+  - click on 'import in background' in front of 'Import product categories and products'
 - once these tasks are done (see it in Connectors -> Queue -> Jobs)
   - click on 'import in background' in front of 'import sale orders'
 

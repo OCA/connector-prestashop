@@ -32,7 +32,10 @@ from openerp.osv import fields, orm
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
-from .unit.import_synchronizer import import_batch, import_customers_since
+from .unit.import_synchronizer import (
+    import_batch,
+    import_customers_since,
+    import_products)
 from .unit.direct_binder import DirectBinder
 from .connector import get_environment
 
@@ -123,41 +126,26 @@ class prestashop_backend(orm.Model):
 
         return True
 
-
-    def import_batch_delayed(self, cr, uid, ids, model, context, filters=None):
+    def import_products(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            import_batch.delay(session, model, backend_id, filters)
+            import_products.delay(session, backend_id)
         return True
 
-    def import_product_categories(self, cr, uid, ids, context=None):
-        return self.import_batch_delayed(
-            cr,
-            uid,
-            ids,
-            'prestashop.product.category',
-            context
-        )
-
-    def import_products(self, cr, uid, ids, context=None):
-        return self.import_batch_delayed(
-            cr,
-            uid,
-            ids,
-            'prestashop.product',
-            context
-        )
-
     def import_sale_orders(self, cr, uid, ids, context=None):
-        return self.import_batch_delayed(
-            cr,
-            uid,
-            ids,
-            'prestashop.sale.order',
-            context
-        )
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        for backend_id in ids:
+            import_batch.delay(
+                session,
+                'prestashop.sale.order',
+                backend_id,
+                filters
+            )
+        return True
 
 
 class prestashop_binding(orm.AbstractModel):
