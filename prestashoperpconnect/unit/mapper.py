@@ -115,7 +115,6 @@ class PartnerImportMapper(PrestashopImportMapper):
         ('date_upd', 'date_upd'),
         ('email', 'email'),
         ('newsletter', 'newsletter'),
-        ('birthday', 'birthday'),
         ('company', 'company'),
         ('active',  'active'),
         ('note',  'comment'),
@@ -123,6 +122,12 @@ class PartnerImportMapper(PrestashopImportMapper):
         ('id_shop', 'shop_id'),
         ('id_default_group', 'default_category_id'),
     ]
+
+    @mapping
+    def birthday(self, record):
+        if record['birthday'] == '0000-00-00':
+            return {}
+        return {'birthday': record['birthday']}
 
     @mapping
     def name(self, record):
