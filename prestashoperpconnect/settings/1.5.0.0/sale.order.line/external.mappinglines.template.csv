@@ -5,7 +5,7 @@ if isinstance(resource['taxes'], list):
     for ps_tax_id in resource['taxes']:
         oe_tax_id = self.pool.get('account.tax').get_oeid(cr, uid, ps_tax_id, external_session.referential_id.id, context=context)
         if not oe_tax_id:
-            raise osv.except_osv(_('Error :'), _('PrestaShop tax ID %s not mapped to an OpenERP tax' % ps_tax_id))
+            raise osv.except_osv('Error :', 'PrestaShop tax ID %s not mapped to an OpenERP tax' % ps_tax_id)
         oe_tax_ids.append(oe_tax_id)
     result = [('tax_id', [(6, 0, oe_tax_ids)])]
 else:
