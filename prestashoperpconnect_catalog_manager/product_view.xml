@@ -25,6 +25,9 @@
                 <field name="description" colspan="4"/>
             </page>
         </notebook>
+        <field name="sequence" position="attributes">
+            <attribute name="invisible">False</attribute>
+        </field>
     </field>
 </record>
 
