@@ -12,3 +12,9 @@ prestashoperpconnect.prestashop1500_sale_order_shop_id,10,in,direct,id_shop,sale
 prestashoperpconnect.prestashop1500_sale_order_name,10,in,direct,reference,sale.field_sale_order_name,unicode,False,prestashoperpconnect.prestashop_1500_order,,,,,
 prestashoperpconnect.prestashop1500_delivery_carrier,10,in,direct,id_carrier,delivery.field_sale_order_carrier_id,int,False,prestashoperpconnect.prestashop_1500_order,,,,,
 prestashoperpconnect.prestashop1500_sale_order_line,10,in,sub-mapping,order_rows,sale.field_sale_order_order_line,int,False,prestashoperpconnect.prestashop_1500_order,,,,prestashoperpconnect.prestashop_1500_order_line,
+prestashoperpconnect.prestashop1500_currency,10,in,function,id_currency,,int,False,prestashoperpconnect.prestashop_1500_order,,"if resource.get('id_currency'): 
+    oe_currency_id = self.pool.get('res.currency').get_oeid(cr, uid, resource['id_currency'], external_session.referential_id.id, context=context)
+    sale_pricelists_same_currency_ids = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', oe_currency_id), ('type', '=', 'sale')], context=context)
+    if sale_pricelists_same_currency_ids:
+        oe_pricelist_id = sale_pricelists_same_currency_ids[0]
+        result = [('pricelist_id', oe_pricelist_id)]",,,
