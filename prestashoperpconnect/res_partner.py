@@ -36,6 +36,7 @@ class res_partner(Model):
         'prestashop_default_category': fields.many2one('res.partner.category',
             'PrestaShop default category',
             help="This field is synchronized with the field 'Default customer group' in PrestaShop."),
+        'prestashop_can_login': fields.boolean('Can log in', help="Can this customer log in the PrestaShop frontoffice ? This field is synchronized with the field 'Status' in PrestaShop."),
     }
 
     @only_for_referential('prestashop')

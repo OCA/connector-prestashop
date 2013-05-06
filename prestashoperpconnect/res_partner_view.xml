@@ -17,6 +17,7 @@
                 <page string="Sales &amp; Purchases" position="after">
                     <page string="PrestaShop" name="prestashop">
                         <field name="prestashop_email" />
+                        <field name="prestashop_can_login"/>
                         <field name="prestashop_default_category" />
                     </page>
                 </page>
