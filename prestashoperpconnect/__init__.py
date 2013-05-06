@@ -29,3 +29,5 @@ import prestashop_model
 import partner
 import product
 import sale
+import stock_picking
+import setting

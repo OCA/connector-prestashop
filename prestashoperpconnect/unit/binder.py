@@ -22,6 +22,8 @@
 #
 ###############################################################################
 
+from datetime import datetime
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.connector import Binder
 from ..backend import prestashop
 
@@ -48,7 +50,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.account.tax.group',
         'prestashop.product.category',
         'prestashop.product.image',
-        'prestashop.product',
+        'prestashop.product.product',
         'prestashop.sale.order',
     ]
 
@@ -106,10 +108,13 @@ class PrestashopModelBinder(PrestashopBinder):
         """
         # avoid to trigger the export when we modify the `prestashop_id`
         context = dict(self.session.context, connector_no_export=True)
+        now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.environment.model.write(
             self.session.cr,
             self.session.uid,
             openerp_id,
-            {'prestashop_id': external_id},
+            {'prestashop_id': str(external_id),
+             'sync_date': now_fmt},
+            #{'prestashop_id': external_id},
             context=context
         )

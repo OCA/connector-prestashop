@@ -47,7 +47,7 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         self.prestashop_record = None
 
     def _get_prestashop_data(self):
-        """ Return the raw Magento data for ``self.prestashop_id`` """
+        """ Return the raw prestashop data for ``self.prestashop_id`` """
         return self.backend_adapter.read(self.prestashop_id)
 
     def _has_to_skip(self):
@@ -76,31 +76,31 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         return dict(self.session.context, connector_no_export=True, **kwargs)
 
     def _create(self, data, context=None):
-        """ Create the OpenERP record """
+        """ Create the ERP record """
         if context is None:
             context = self._context()
-        openerp_id = self.model.create(self.session.cr,
+        erp_id = self.model.create(self.session.cr,
                                        self.session.uid,
                                        data,
                                        context=context)
         _logger.debug('%s %d created from prestashop %s',
-                      self.model._name, openerp_id, self.prestashop_id)
-        return openerp_id
+                      self.model._name, erp_id, self.prestashop_id)
+        return erp_id
 
-    def _update(self, openerp_id, data, context=None):
-        """ Update an OpenERP record """
+    def _update(self, erp_id, data, context=None):
+        """ Update an ERP record """
         if context is None:
             context = self._context()
         self.model.write(self.session.cr,
                          self.session.uid,
-                         openerp_id,
+                         erp_id,
                          data,
                          context=context)
         _logger.debug('%s %d updated from prestashop %s',
-                      self.model._name, openerp_id, self.prestashop_id)
+                      self.model._name, erp_id, self.prestashop_id)
         return
 
-    def _after_import(self, openerp_id):
+    def _after_import(self, erp_id):
         """ Hook called at the end of the import """
         return
 
@@ -119,9 +119,9 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        openerp_id = self._get_openerp_id()
+        erp_id = self._get_openerp_id()
         self.mapper.convert(self.prestashop_record)
-        if openerp_id:
+        if erp_id:
             record = self.mapper.data
         else:
             record = self.mapper.data_for_create
@@ -129,14 +129,14 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         # special check on data before import
         self._validate_data(record)
 
-        if openerp_id:
-            self._update(openerp_id, record)
+        if erp_id:
+            self._update(erp_id, record)
         else:
-            openerp_id = self._create(record)
+            erp_id = self._create(record)
 
-        self.binder.bind(self.prestashop_id, openerp_id)
+        self.binder.bind(self.prestashop_id, erp_id)
 
-        self._after_import(openerp_id)
+        self._after_import(erp_id)
 
 
 class BatchImportSynchronizer(ImportSynchronizer):
@@ -187,7 +187,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
     _model_name = [
         'prestashop.res.partner',
         'prestashop.address',
-        'prestashop.product',
+        'prestashop.product.product',
         'prestashop.sale.order',
     ]
 
@@ -205,9 +205,9 @@ class DelayedBatchImport(BatchImportSynchronizer):
 class ResPartnerRecordImport(PrestashopImportSynchronizer):
     _model_name = 'prestashop.res.partner'
 
-    def _after_import(self, openerp_id):
+    def _after_import(self, erp_id):
         binder = self.get_binder_for_model(self._model_name)
-        ps_id = binder.to_backend(openerp_id)
+        ps_id = binder.to_backend(erp_id)
         import_batch.delay(
             self.session,
             'prestashop.address',
@@ -252,23 +252,28 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
     def _get_oerp_language(self, prestashop_id):
         language_binder = self.get_binder_for_model('prestashop.res.lang')
-        oerp_language_id = language_binder.to_openerp(prestashop_id)
+        #TODO FIXME when erp_language_id is None
+        erp_language_id = language_binder.to_openerp(prestashop_id)
         model = self.environment.session.pool.get('prestashop.res.lang')
-        oerp_lang = model.read(
+        #import pdb;pdb.set_trace()
+        erp_lang = model.read(
             self.session.cr,
             self.session.uid,
-            oerp_language_id,
+            erp_language_id,
         )
-        return oerp_lang
+        return erp_lang
 
     def find_each_language(self, record):
         languages = {}
         for field in self._translatable_fields[self.environment.model_name]:
+            #TODO FIXME in prestapyt
+            if not isinstance(record[field]['language'], list):
+                record[field]['language'] = [record[field]['language']]
             for language in record[field]['language']:
-                if language['attrs']['id'] in languages:
+                if not language or language['attrs']['id'] in languages:
                     continue
-                oerp_lang = self._get_oerp_language(language['attrs']['id'])
-                languages[language['attrs']['id']] = oerp_lang['code']
+                erp_lang = self._get_oerp_language(language['attrs']['id'])
+                languages[language['attrs']['id']] = erp_lang['code']
         return languages
 
     def _split_per_language(self, record):
@@ -293,7 +298,6 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         """
         self.prestashop_id = prestashop_id
         prestashop_record = self._get_prestashop_data()
-
         skip = self._has_to_skip()
         if skip:
             return skip
@@ -304,33 +308,33 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         #split prestashop data for every lang
         splitted_record = self._split_per_language(prestashop_record)
 
-        openerp_id = None
+        erp_id = None
 
         if self._default_language in splitted_record:
-            openerp_id = self._run_record(
+            erp_id = self._run_record(
                 splitted_record[self._default_language],
                 self._default_language
             )
             del splitted_record[self._default_language]
 
         for lang_code, prestashop_record in splitted_record.items():
-            openerp_id = self._run_record(
+            erp_id = self._run_record(
                 prestashop_record,
                 lang_code,
-                openerp_id
+                erp_id
             )
 
-        self.binder.bind(self.prestashop_id, openerp_id)
+        self.binder.bind(self.prestashop_id, erp_id)
 
-        self._after_import(openerp_id)
+        self._after_import(erp_id)
 
-    def _run_record(self, prestashop_record, lang_code, openerp_id=None):
+    def _run_record(self, prestashop_record, lang_code, erp_id=None):
         self.mapper.convert(prestashop_record)
 
-        if openerp_id is None:
-            openerp_id = self._get_openerp_id()
+        if erp_id is None:
+            erp_id = self._get_openerp_id()
 
-        if openerp_id:
+        if erp_id:
             record = self.mapper.data
         else:
             record = self.mapper.data_for_create
@@ -340,23 +344,23 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
         context = self._context()
         context['lang'] = lang_code
-        if openerp_id:
-            self._update(openerp_id, record, context)
+        if erp_id:
+            self._update(erp_id, record, context)
         else:
-            openerp_id = self._create(record, context)
+            erp_id = self._create(record, context)
 
-        return openerp_id
+        return erp_id
 
 
 @prestashop
 class ProductRecordImport(TranslatableRecordImport):
     """ Import one translatable record """
     _model_name = [
-        'prestashop.product',
+        'prestashop.product.product',
     ]
 
     _translatable_fields = {
-        'prestashop.product': [
+        'prestashop.product.product': [
             'name',
             'description',
         ],
@@ -416,9 +420,9 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        #openerp_id = self._get_openerp_id()
+        #erp_id = self._get_openerp_id()
         self.mapper.convert(self.prestashop_record)
-        #if openerp_id:
+        #if erp_id:
         record = self.mapper.data
         record['order_id'] = order_id
         #else:
@@ -427,14 +431,14 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
         # special check on data before import
         self._validate_data(record)
 
-        #if openerp_id:
-        #    self._update(openerp_id, record)
+        #if erp_id:
+        #    self._update(erp_id, record)
         #else:
-        openerp_id = self._create(record)
+        erp_id = self._create(record)
 
-        #self.binder.bind(self.prestashop_id, openerp_id)
+        #self.binder.bind(self.prestashop_id, erp_id)
 
-        self._after_import(openerp_id)
+        self._after_import(erp_id)
 
 
 @job
@@ -486,4 +490,4 @@ def import_customers_since(session, backend_id, since_date=None):
 @job
 def import_products(session, backend_id):
     import_batch(session, 'prestashop.product.category', backend_id)
-    import_batch(session, 'prestashop.product', backend_id)
+    import_batch(session, 'prestashop.product.product', backend_id)

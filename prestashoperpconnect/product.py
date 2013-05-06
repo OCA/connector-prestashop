@@ -68,15 +68,15 @@ class product_product(orm.Model):
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
-            'prestashop.product',
+            'prestashop.product.product',
             'openerp_id',
             string='PrestaShop Bindings'
         ),
     }
 
 
-class prestashop_product(orm.Model):
-    _name = 'prestashop.product'
+class prestashop_product_product(orm.Model):
+    _name = 'prestashop.product.product'
     _inherit = 'prestashop.binding'
     _inherits = {'product.product': 'openerp_id'}
 
@@ -87,8 +87,33 @@ class prestashop_product(orm.Model):
             required=True,
             ondelete='cascade'
         ),
+        #TODO FIXME what name give to field present in prestashop_product_product and product_product
+        'active_conn': fields.boolean(
+            'Active',
+            help='if check, this object is always available'),
+        'sale_ok': fields.boolean(
+            'For sale',
+            help='see parent field'
+        ),
+        'description_html': fields.html(
+            'Description',
+            #type='html',
+            help="Description html from prestashop"
+        ),
+        'date_add': fields.datetime(
+            'Created At (on Presta)',
+            readonly=True
+        ),
+        'date_upd': fields.datetime(
+            'Updated At (on Presta)',
+            readonly=True
+        ),
     }
 
+    _sql_constraints = [
+        ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
+         "A product with the same ID on Prestashop already exists")
+    ]
 
 class product_image(orm.Model):
     _inherit = 'product.images'

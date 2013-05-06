@@ -40,19 +40,19 @@ class PrestashopImportMapper(ImportMapper):
         '''
         Returns an openerp id from a model name and a prestashop_id.
 
-        This permits to find the openerp id through the prestahop model in
-        openerp.
+        This permits to find the openerp id through the external application model in
+        Erp.
         '''
         binder = self.get_binder_for_model(model)
-        oerp_ps_id = binder.to_openerp(prestashop_id)
+        erp_ps_id = binder.to_openerp(prestashop_id)
 
         model = self.session.pool.get(model)
-        oerp_ps_object = model.read(
+        erp_ps_object = model.read(
             self.session.cr,
             self.session.uid,
-            oerp_ps_id
+            erp_ps_id
         )
-        return oerp_ps_object['openerp_id'][0]
+        return erp_ps_object['openerp_id'][0]
 
 
 @prestashop
@@ -162,15 +162,16 @@ class PartnerImportMapper(PrestashopImportMapper):
     @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('prestashop.res.lang')
-        oerp_lang_id = binder.to_openerp(record['id_lang'])
-
+        erp_lang_id = binder.to_openerp(record['id_lang'])
+        #hack
+        record['id_lang'] = 1
         model = self.environment.session.pool.get('prestashop.res.lang')
-        oerp_lang = model.read(
+        erp_lang = model.read(
             self.session.cr,
             self.session.uid,
-            oerp_lang_id,
+            erp_lang_id,
         )
-        return {'lang': oerp_lang['code']}
+        return {'lang': erp_lang['code']}
 
     @mapping
     def customer(self, record):
@@ -262,22 +263,28 @@ class ProductCategoryMapper(PrestashopImportMapper):
 
 @prestashop
 class ProductMapper(PrestashopImportMapper):
-    _model_name = 'prestashop.product'
+    _model_name = 'prestashop.product.product'
 
     direct = [
         ('name', 'name'),
-        ('description', 'description'),
+        ('description', 'description_html'),
         ('weight', 'weight'),
-        ('price', 'list_price'),
-        ('active', 'active'),
         ('wholesale_price', 'standard_price'),
         ('price', 'lst_price'),
         ('reference', 'default_code'),
+        ('date_add', 'date_add'),
+        ('date_upd', 'date_upd'),
     ]
+
+    @mapping
+    def active(self, record):
+        return {'active_conn': bool(int(record['active']))}
 
     @mapping
     def sale_ok(self, record):
         return {'sale_ok': record['available_for_order'] == '1'}
+        # TODO i would replace by this line
+        #return {'sale_ok': bool(int(record['avalaible_for_sale']))}
 
     @mapping
     def categ_id(self, record):
@@ -307,6 +314,7 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def ean13(self, record):
+        #TODO who is the reference data magento ean13 or prestatshop ean13 ?
         if record['ean13'] == '0':
             return {}
         return {'ean13': record['ean13']}
@@ -340,7 +348,7 @@ class ProductImageMapper(PrestashopImportMapper):
     @mapping
     def product_id(self, record):
         return {'product_id': self.get_openerp_id(
-            'prestashop.product',
+            'prestashop.product.product',
             record['id_product']
         )}
 
@@ -465,7 +473,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
     @mapping
     def product_id(self, record):
         return {'product_id': self.get_openerp_id(
-            'prestashop.product',
+            'prestashop.product.product',
             record['product_id']
         )}
 

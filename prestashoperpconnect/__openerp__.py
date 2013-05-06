@@ -63,6 +63,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
     "demo_xml": [],
     'update_xml': [
         'prestashop_model_view.xml',
+        'product_view.xml',
         'security/ir.model.access.csv',
 #        'external_referential_view.xml',
 #        'sale_view.xml',
@@ -70,6 +71,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
 #        'board_prestashoperpconnect_view.xml',
 #        'res_partner_data.xml',
         'partner_view.xml',
+        'setting_view.xml',
     ],
     "active": False,
     "installable": True,

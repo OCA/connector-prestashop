@@ -36,6 +36,24 @@
                 </group>
                 <notebook>
                     <page name="import" string="Imports">
+                                <p class="oe_grey oe_inline">
+                                    By clicking on the buttons,
+                                    you will initiate the synchronizations
+                                    with Prestashop.
+                                    Note that the import or exports
+                                    won't be done directly,
+                                    they will create 'Jobs'
+                                    executed as soon as possible.
+                                </p>
+                                <p class="oe_grey oe_inline">
+                                    Once imported,
+                                    some types of records,
+                                    like the products or categories,
+                                    need a manual review.
+                                    You will find the list
+                                    of the new records to review
+                                    in the menu 'Connectors > Checkpoint'.
+                                </p>
                         <group>
                             <div>
                                 <label string="Import customer groups and customers since" class="oe_inline"/>
@@ -60,13 +78,24 @@
                         <group>
                             <label string="Import sale orders" class="oe_inline"/>
                             <div>
-                                <button name="import_sale_orders"
+                                <button name="import_sale_order"
                                         type="object"
                                         class="oe_highlight"
                                         string="Import in background"/>
                             </div>
                         </group>
+                        <group>
+                            <label string="Update sale orders" class="oe_inline"/>
+                            <div>
+                                <button name="update_sale_order"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Update"/>
+                            </div>
+                        </group>
 
+                    </page>
+                    <page string="Update">
                     </page>
                     <page string="Languages">
                         <field name="language_ids" nolabel="1">

@@ -134,7 +134,7 @@ class prestashop_backend(orm.Model):
             import_products.delay(session, backend_id)
         return True
 
-    def import_sale_orders(self, cr, uid, ids, context=None):
+    def import_sale_order(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
@@ -146,6 +146,17 @@ class prestashop_backend(orm.Model):
             )
         return True
 
+    def update_sale_order(self, cr, uid, ids, context=None):
+        ""
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        ps_product_obj = self.pool['prestashop.product.product']
+        product_ids = ps_product_obj.search(cr, uid,
+                                             [('backend_id', 'in', ids)],
+                                             context=context)
+        ps_product_obj.recompute_magento_qty(cr, uid, product_ids,
+                                              context=context)
+        return True
 
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'
@@ -280,7 +291,8 @@ class prestashop_res_lang(orm.Model):
     }
 
     _defaults = {
-        'active': lambda *a: False,
+        #'active': lambda *a: False,
+        'active': False,
     }
 
     _sql_constraints = [

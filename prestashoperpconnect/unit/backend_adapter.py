@@ -107,6 +107,10 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     _model_name = None
     _prestashop_model = None
 
+    def connect(self):
+        return PrestaShopWebServiceDict(self.prestashop.api_url,
+                                       self.prestashop.password)
+
     def search(self, filters=None):
         """ Search records according to some criterias
         and returns a list of ids
@@ -129,11 +133,19 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         first_key = res.keys()[0]
         return res[first_key]
 
-    #def create(self, data):
-    #    """ Create a record on the external system """
+    def create(self, data):
+        """ Create a record on the external system """
+        api = connect()
+        res = api.add(self._prestashop_model, id, )
 
     #def write(self, id, data):
     #    """ Update records on the external system """
+    #    api = self.connect()
+    #    res = api.get(self._prestashop_model, id, options=attributes)
+    #    first_key = res.keys()[0]
+    #    return res[first_key]
+    #    return self._call('%s.update' % self._magento_model,
+    #                      [int(id), data])
 
     #def delete(self, id):
     #    """ Delete a record on the external system """
@@ -201,7 +213,7 @@ class ProductCategoryAdapter(GenericAdapter):
 
 @prestashop
 class ProductAdapter(GenericAdapter):
-    _model_name = 'prestashop.product'
+    _model_name = 'prestashop.product.product'
     _prestashop_model = 'products'
 
 
