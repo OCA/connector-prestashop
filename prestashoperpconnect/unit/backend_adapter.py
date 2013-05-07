@@ -117,8 +117,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: list
         """
-        api = PrestaShopWebServiceDict(self.prestashop.api_url,
-                                       self.prestashop.password)
+        api = self.connect()
         return api.search(self._prestashop_model, filters)
 
     def read(self, id, attributes=None):
@@ -127,16 +126,15 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         :rtype: dict
         """
         #TODO rename attributes in something better
-        api = PrestaShopWebServiceDict(self.prestashop.api_url,
-                                       self.prestashop.password)
+        api = self.connect()
         res = api.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
         return res[first_key]
 
-    def create(self, data):
+    def create(self, datas):
         """ Create a record on the external system """
-        api = connect()
-        res = api.add(self._prestashop_model, id, )
+        api = self.connect()
+        res = api.add(self._prestashop_model, datas)
 
     #def write(self, id, data):
     #    """ Update records on the external system """
@@ -231,12 +229,6 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
             image_id,
             options=options
         )
-
-
-@prestashop
-class SaleOrderAdapter(GenericAdapter):
-    _model_name = 'prestashop.sale.order'
-    _prestashop_model = 'orders'
 
 
 @prestashop
