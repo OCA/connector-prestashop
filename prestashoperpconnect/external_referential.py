@@ -60,38 +60,66 @@ class external_referential(osv.osv):
             raise osv.except_osv(_("Connection Error"), _("Could not connect to the PrestaShop webservice\nCheck the webservice URL and password\nHTTP error code: %s"%e.error_code))
         return prestashop
 
-    def _compare_languages(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
-        if len(oe_dict[oe_field]) >= 2 \
-            and len(ps_dict[0][ps_field]) >=2 \
-            and oe_dict[oe_field][0:2].lower() == ps_dict[0][ps_field][0:2].lower():
+    def _compare_languages(self, cr, uid, ps_dict, oe_dict, ps_readable_field, obj_readable_name, oe_obj, external_session, context=None):
+        if len(oe_dict['code']) >= 2 \
+            and len(ps_dict[0]['language_code']) >=2 \
+            and oe_dict['code'][0:2].lower() == ps_dict[0]['language_code'][0:2].lower():
+            external_session.logger.info(_("[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)")
+                % (obj_readable_name, ps_dict[0][ps_readable_field],
+                ps_dict[0]['language_code'], oe_dict['name'], oe_dict['code']))
             return True
         else:
             return False
 
-    def _compare_countries(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
-        if len(oe_dict[oe_field]) >= 2 \
-            and len(ps_dict[0][ps_field]) >=2 \
-            and oe_dict[oe_field][0:2].lower() == ps_dict[0][ps_field][0:2].lower():
+    def _compare_countries(self, cr, uid, ps_dict, oe_dict, ps_readable_field, obj_readable_name, oe_obj, external_session, context=None):
+        if len(oe_dict['code']) >= 2 \
+            and len(ps_dict[0]['iso_code']) >=2 \
+            and oe_dict['code'][0:2].lower() == ps_dict[0]['iso_code'][0:2].lower():
+            external_session.logger.info(_("[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)")
+                % (obj_readable_name, ps_dict[0][ps_readable_field],
+                ps_dict[0]['iso_code'], oe_dict['name'], oe_dict['code']))
             return True
         else:
             return False
 
-    def _compare_currencies(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
-        if len(oe_dict[oe_field]) == 3 \
-            and len(ps_dict[0][ps_field]) == 3 \
-            and oe_dict[oe_field][0:3].lower() == ps_dict[0][ps_field][0:3].lower():
+    def _compare_states(self, cr, uid, ps_dict, oe_dict, ps_readable_field, obj_readable_name, oe_obj, external_session, context=None):
+        if len(oe_dict['code']) >= 1 \
+            and len(ps_dict[0]['iso_code']) >=1 \
+            and oe_dict['code'].lower() == ps_dict[0]['iso_code'].lower():
+
+            ps_country_id = int(ps_dict[0]['id_country'])
+            oe_country_id = self.pool.get('res.country').extid_to_existing_oeid(cr, uid, external_id=ps_country_id, referential_id=external_session.referential_id.id, context=context)
+            if oe_country_id and oe_dict['country_id'][0] == oe_country_id:
+                external_session.logger.info(_("[%s] Mapping PS '%s' (%s) with PS country ID %s to OERP '%s' (%s) with country '%s' (ID %d)")
+                    % (obj_readable_name, ps_dict[0][ps_readable_field],
+                    ps_country_id, ps_dict[0]['iso_code'], oe_dict['name'],
+                    oe_dict['code'], oe_dict['country_id'][1],
+                    oe_dict['country_id'][0]))
+                return True
+        else:
+            return False
+
+    def _compare_currencies(self, cr, uid, ps_dict, oe_dict, ps_readable_field, obj_readable_name, oe_obj, external_session, context=None):
+        if len(oe_dict['name']) == 3 \
+            and len(ps_dict[0]['iso_code']) == 3 \
+            and oe_dict['name'][0:3].lower() == ps_dict[0]['iso_code'][0:3].lower():
+            external_session.logger.info(_("[%s] Mapping PS '%s' to OERP '%s'")
+                % (obj_readable_name, ps_dict[0]['iso_code'], oe_dict['name']))
             return True
         else:
             return False
 
-    def _compare_taxes(self, cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=None):
+    def _compare_taxes(self, cr, uid, ps_dict, oe_dict, ps_readable_field, obj_readable_name, oe_obj, external_session, context=None):
         if oe_dict['type_tax_use'] == 'sale'\
-                    and abs(oe_dict[oe_field]*100 - float(ps_dict[0][ps_field]))<0.01:
+                    and abs(oe_dict['amount']*100 - float(ps_dict[0]['rate']))<0.01:
+            external_session.logger.info(_("[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)")
+                % (obj_readable_name, ps_dict[0][ps_readable_field],
+                ps_dict[0]['rate'], oe_dict['name'], oe_dict['amount']*100))
             return True
         else:
             return False
 
-    def _bidirectional_synchro(self, cr, uid, external_session, obj_readable_name, oe_obj, ps_field, ps_readable_field, oe_field, oe_readable_field, compare_function, context=None):
+    def _bidirectional_synchro(self, cr, uid, external_session, obj_readable_name, oe_obj, ps_field, ps_readable_field, compare_function, context=None):
         external_session.logger.info(_("[%s] Starting synchro between OERP and PS") %obj_readable_name)
         referential_id = external_session.referential_id.id
         nr_ps_already_mapped = 0
@@ -99,10 +127,7 @@ class external_referential(osv.osv):
         nr_ps_not_mapped = 0
         # Get all OERP obj
         oe_ids = oe_obj.search(cr, uid, [], context=context)
-        fields_to_read = [oe_field]
-        if not oe_readable_field == oe_field:
-            fields_to_read.append(oe_readable_field)
-        oe_list_dict = oe_obj.read(cr, uid, oe_ids, fields_to_read, context=context)
+        oe_list_dict = oe_obj.read(cr, uid, oe_ids, context=context)
         #print "oe_list_dict=", oe_list_dict
         # Get the IDS from PS
         ps_ids = oe_obj._get_external_resource_ids(cr, uid, external_session, context=context)
@@ -127,12 +152,9 @@ class external_referential(osv.osv):
                 # Loop on OE IDs
                 for oe_dict in oe_list_dict:
                     # Search for a match
-                    if compare_function(cr, uid, ps_field, oe_field, ps_dict, oe_dict, context=context):
+                    if compare_function(cr, uid, ps_dict, oe_dict, ps_readable_field, obj_readable_name, oe_obj, external_session, context=context):
                         # it matches, so I write the external ID
                         oe_obj.create_external_id_vals(cr, uid, existing_rec_id=oe_dict['id'], external_id=ps_id, referential_id=referential_id, context=context)
-                        external_session.logger.info(
-                            _("[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)")
-                            % (obj_readable_name, ps_dict[0][ps_readable_field], ps_dict[0][ps_field], oe_dict[oe_readable_field], oe_dict[oe_field]))
                         nr_ps_mapped += 1
                         mapping_found = True
                         break
@@ -188,26 +210,26 @@ class external_referential(osv.osv):
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='LANG',
             oe_obj=self.pool.get('res.lang'),
             ps_field='language_code', ps_readable_field='name',
-            oe_field='code', oe_readable_field='name',
             compare_function=self._compare_languages, context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='COUNTRY',
             oe_obj=self.pool.get('res.country'),
             ps_field='iso_code', ps_readable_field='name',
-            oe_field='code', oe_readable_field='name',
             compare_function=self._compare_countries, context=context)
+
+        self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='STATES',
+            oe_obj=self.pool.get('res.country.state'),
+            ps_field='iso_code', ps_readable_field='name',
+            compare_function=self._compare_states, context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='CURRENCY',
             oe_obj=self.pool.get('res.currency'),
             ps_field='iso_code', ps_readable_field='name',
-            oe_field='name', oe_readable_field='name',
             compare_function=self._compare_currencies, context=context)
 
         self._bidirectional_synchro(cr, uid, external_session, obj_readable_name='TAXES',
             oe_obj=self.pool.get('account.tax'),
             ps_field='rate', ps_readable_field='name',
-            oe_field='amount',
-            oe_readable_field='type_tax_use',
             compare_function=self._compare_taxes, context=context)
 
         return True
