@@ -22,6 +22,7 @@ else:
     lastname = ''
 result = [('firstname', firstname), ('lastname', lastname)]",,
 prestashop1500_res_partner_address_city,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_city,city,unicode,,Address city,,,,
+prestashop1500_res_partner_address_state,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_state_id,id_state,int,,Address state,,,,
 prestashop1500_res_partner_address_country,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_country_id,id_country,int,,Address country,,,,
 prestashop1500_res_partner_address_id_customer,prestashop_1500_partner_address,10,in_out,direct,base.field_res_partner_address_partner_id,id_customer,int,,,,,,False
 prestashop1500_res_partner_address_alias,prestashop_1500_partner_address,10,out,function,,alias,unicode,,Address alias,,"addr = self.browse(cr, uid, resource['id'])
