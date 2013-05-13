@@ -106,8 +106,6 @@
                                 string="Update in background"/>
                         </group>
                     </page>
-                    <page string="Update">
-                    </page>
                     <page string="Languages">
                         <field name="language_ids" nolabel="1">
                             <tree>

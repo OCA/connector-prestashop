@@ -28,5 +28,6 @@ class prestashop_config_settings(orm.TransientModel):
     _columns = {
         'module_prestashoperpconnect_other_module': fields.boolean(
             "Example setting checkbox (experimental)",
-            help="This installs the module prestashoperpconnect_... (no real action now)"),
+            help="This installs the module prestashoperpconnect_... "
+                 "(no real action now)"),
     }

@@ -38,8 +38,8 @@ class PrestashopImportMapper(ImportMapper):
         '''
         Returns an openerp id from a model name and a prestashop_id.
 
-        This permits to find the openerp id through the external application model in
-        Erp.
+        This permits to find the openerp id through the external application
+        model in Erp.
         '''
         binder = self.get_binder_for_model(model)
         erp_ps_id = binder.to_openerp(prestashop_id)

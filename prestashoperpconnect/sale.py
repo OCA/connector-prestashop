@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -23,9 +23,6 @@ from openerp.osv import fields, orm
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
-from openerp.addons.connector.exception import (MappingError,
-                                                InvalidDataError,
-                                                IDMissingInBackend)
 from .unit.backend_adapter import GenericAdapter
 
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
@@ -140,35 +137,50 @@ class SaleStateExport(ExportSynchronizer):
     def run(self, binding_id, state):
         binder = self.get_binder_for_model()
         prestashop_id = binder.to_backend(binding_id)
-        datas =  {'order_history': {
-                    'id_order': prestashop_id,
-                    'id_order_state': state,
-                    }
-                }
+        datas = {
+            'order_history': {
+                'id_order': prestashop_id,
+                'id_order_state': state,
+            }
+        }
         self.backend_adapter.update_sale_state(prestashop_id, datas)
 
-#TODO improve me, this should be not hardcoded. Need to syncronize prestashop state in OpenERP
+
+# TODO improve me, this should be not hardcoded. Need to syncronize prestashop
+# state in OpenERP
 PRESTASHOP_MAP_STATE = {
     'progress': 3,
     'manual': 3,
     'done': 5,
 }
 
+
 @on_record_write(model_names='sale.order')
-def prestashop_sale_state_modified(session, model_name, record_id, fields=None):
+def prestashop_sale_state_modified(session, model_name, record_id,
+                                   fields=None):
     if 'state' in fields:
-        sale = session.pool[model_name].read(session.cr, session.uid, record_id, ['state'])
+        sale = session.pool[model_name].read(
+            session.cr,
+            session.uid,
+            record_id, ['state']
+        )
         if sale['state'] in PRESTASHOP_MAP_STATE:
-            export_sale_state.delay(session, model_name, record_id,
-                            PRESTASHOP_MAP_STATE[sale['state']], priority=20)
+            export_sale_state.delay(
+                session,
+                model_name,
+                record_id,
+                PRESTASHOP_MAP_STATE[sale['state']],
+                priority=20
+            )
     return True
+
 
 @job
 def export_sale_state(session, model_name, record_id, new_state):
     inherit_model = 'prestashop.' + model_name
-    sale = session.pool[inherit_model].browse(session.cr, session.uid, record_id)
+    object_pool = session.pool[inherit_model]
+    sale = object_pool.browse(session.cr, session.uid, record_id)
     backend_id = sale.backend_id.id
     env = get_environment(session, inherit_model, backend_id)
     sale_exporter = env.get_connector_unit(SaleStateExport)
     return sale_exporter.run(record_id, new_state)
-

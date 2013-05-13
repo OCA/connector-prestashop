@@ -25,11 +25,7 @@ from openerp.osv import fields, orm
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper)
-from openerp.addons.connector.exception import (MappingError,
-                                                InvalidDataError,
-                                                IDMissingInBackend)
+from openerp.addons.connector.unit.mapper import mapping
 
 from .unit.backend_adapter import GenericAdapter
 
@@ -111,8 +107,7 @@ class prestashop_product_category(orm.Model):
     }
 
 
-
-#######  product_image  #########
+# Product image connector parts
 @prestashop
 class ProductImageMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.image'
@@ -267,7 +262,8 @@ class prestashop_product_product(orm.Model):
             required=True,
             ondelete='cascade'
         ),
-        #TODO FIXME what name give to field present in prestashop_product_product and product_product
+        # TODO FIXME what name give to field present in
+        # prestashop_product_product and product_product
         'active_ext': fields.boolean(
             'Active',
             help='if check, this object is always available'),
@@ -365,7 +361,6 @@ class ProductInventoryExport(ExportSynchronizer):
         prestashop_id = binder.to_backend(product.id)
         attributes = {}
         attributes['stock_available'] = self._get_data(product, fields)
-        print attributes
         self.backend_adapter.update_inventory(prestashop_id, attributes)
 
 
@@ -382,8 +377,8 @@ def prestashop_product_modified(session, model_name, record_id, fields=None):
     inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
     if inventory_fields:
         export_inventory.delay(session, model_name,
-                                       record_id, fields=inventory_fields,
-                                       priority=20)
+                               record_id, fields=inventory_fields,
+                               priority=20)
 
 
 @job

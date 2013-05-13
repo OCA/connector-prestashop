@@ -44,6 +44,7 @@ In addition to its export job, an exporter has to:
 
 """
 
+
 class PrestashopBaseExporter(ExportSynchronizer):
     """ Base exporter for Prestashop """
 
@@ -192,7 +193,8 @@ class PrestashopExporter(PrestashopBaseExporter):
             # special check on data before export
             self._validate_data(record)
             self.prestashop_id = self._create(record)
-        return _('Record exported with ID %s on Prestashop.') % self.prestashop_id
+        message = _('Record exported with ID %s on Prestashop.')
+        return message % self.prestashop_id
 
 
 @job

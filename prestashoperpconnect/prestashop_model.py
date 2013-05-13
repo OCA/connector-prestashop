@@ -65,7 +65,8 @@ class prestashop_backend(orm.Model):
         'location': fields.char('Location'),
         'webservice_key': fields.char(
             'Webservice key',
-            help="You have to put it in 'username' of the PrestaShop Webservice api path invite"
+            help="You have to put it in 'username' of the PrestaShop "
+                 "Webservice api path invite"
         ),
         'warehouse_id': fields.many2one(
             'stock.warehouse',
@@ -152,22 +153,28 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         ps_product_obj = self.pool['prestashop.product.product']
-        product_ids = ps_product_obj.search(cr, uid,
-                                             [('backend_id', 'in', ids)],
-                                             context=context)
+        product_ids = ps_product_obj.search(
+            cr,
+            uid,
+            [('backend_id', 'in', ids)],
+            context=context
+        )
         ps_product_obj.recompute_prestashop_qty(cr, uid, product_ids,
-                                              context=context)
+                                                context=context)
         return True
 
-    def _prestashop_backend(self, cr, uid, callback, domain=None, context=None):
-        if domain is None: domain = []
+    def _prestashop_backend(self, cr, uid, callback, domain=None,
+                            context=None):
+        if domain is None:
+            domain = []
         ids = self.search(cr, uid, domain, context=context)
         if ids:
             callback(cr, uid, ids, context=context)
 
-    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):
+    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None,
+                                            context=None):
         self._prestashop_backend(cr, uid, self.update_product_stock_qty,
-                                                domain=domain, context=context)
+                                 domain=domain, context=context)
 
     def import_sale_orders(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
@@ -187,11 +194,12 @@ class prestashop_backend(orm.Model):
             ids = [ids]
         ps_product_obj = self.pool['prestashop.product.product']
         product_ids = ps_product_obj.search(cr, uid,
-                                             [('backend_id', 'in', ids)],
-                                             context=context)
+                                            [('backend_id', 'in', ids)],
+                                            context=context)
         ps_product_obj.recompute_magento_qty(cr, uid, product_ids,
-                                              context=context)
+                                             context=context)
         return True
+
 
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'

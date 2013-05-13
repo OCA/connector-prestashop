@@ -22,22 +22,13 @@
 
 import logging
 from openerp.osv import fields, orm
-from openerp.addons.connector.exception import (MappingError,
-                                                InvalidDataError,
-                                                IDMissingInBackend)
 from openerp.addons.connector.unit.mapper import (mapping,
-                                                  only_create,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import GenericAdapter
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        PrestashopImportSynchronizer,
-                                       #TranslationImporter,
-                                       #AddCheckpoint,
                                        )
-from .connector import get_environment
 from .backend import prestashop
 
 _logger = logging.getLogger(__name__)
@@ -58,7 +49,10 @@ class prestashop_delivery_carrier(orm.Model):
         ),
         'id_reference': fields.integer(
             'Id reference',
-            help="In Prestashop, carriers with the same 'id_reference' are some copies from the first one id_reference (only the last one copied is taken account ; and the only one which synchronized with erp)"
+            help="In Prestashop, carriers with the same 'id_reference' are "
+                 "some copies from the first one id_reference (only the last "
+				 "one copied is taken account ; and the only one which "
+				 "synchronized with erp)"
         ),
         'name_ext': fields.char(
             'Name',
@@ -97,14 +91,18 @@ class DeliveryCarrierAdapter(GenericAdapter):
     _prestashop_model = 'carriers'
 
     def filter_carrier_infos(self, api, carriers):
-        """In Prestashop, carriers with the same 'id_reference' are some copies from the first one id_reference (only the last one copied is taken account.
+        """In Prestashop, carriers with the same 'id_reference' are some
+        copies from the first one id_reference (only the last one copied is
+        taken account.
         And the only one which synchronized with erp"""
         max_id = {}
         for carrier in carriers:
             attrs = api.get(self._prestashop_model, carrier)['carrier']
             if attrs['id_reference'] in max_id:
-                max_id[attrs['id_reference']] = \
-                                max(max_id[attrs['id_reference']], attrs['id'])
+                max_id[attrs['id_reference']] = max(
+                    max_id[attrs['id_reference']],
+                    attrs['id']
+                )
             else:
                 max_id[attrs['id_reference']] = attrs['id']
         return max_id.values()
@@ -137,10 +135,11 @@ class DeliveryCarrierImport(PrestashopImportSynchronizer):
 @prestashop
 class CarrierImportMapper(ImportMapper):
     _model_name = 'prestashop.delivery.carrier'
-    direct = [('name', 'name_ext'),
-              ('name', 'name'),
-              ('id_reference', 'id_reference'),
-              ]
+    direct = [
+        ('name', 'name_ext'),
+        ('name', 'name'),
+        ('id_reference', 'id_reference'),
+    ]
 
     @mapping
     def active(self, record):
@@ -148,20 +147,30 @@ class CarrierImportMapper(ImportMapper):
 
     @mapping
     def product_id(self, record):
-        prod_mod = self.pool['product.product']
-        default_ship_product = prod_mod.search(cr, uid,
-                                               [('default_code', '=', 'SHIP')],
-                                                                context=context)
+        prod_mod = self.session.pool['product.product']
+        default_ship_product = prod_mod.search(
+            self.session.cr,
+            self.session.uid,
+            [('default_code', '=', 'SHIP')],
+        )
         if default_ship_product:
             ship_product_id = default_ship_product[0]
-        else :
-            ship_product_id = prod_mod.search(cr, uid, [], context=context)[0]
+        else:
+            ship_product_id = prod_mod.search(
+                self.session.cr,
+                self.session.uid,
+                []
+            )[0]
         return {'product_id': ship_product_id}
 
     @mapping
     def partner_id(self, record):
-        default_partner = self.pool['res.partner'].search(cr, uid, [],
-                                                          context=context)[0]
+        partner_pool = self.session.pool['res.partner']
+        default_partner = partner_pool.search(
+            self.session.cr,
+            self.session.uid,
+            [],
+        )[0]
         return {'partner_id': default_partner}
 
     @mapping
