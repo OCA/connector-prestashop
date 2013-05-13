@@ -23,8 +23,6 @@
 #
 ##############################################################################
 
-import mimetypes
-
 from openerp.tools.translate import _
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
@@ -116,8 +114,8 @@ class PartnerImportMapper(PrestashopImportMapper):
         ('email', 'email'),
         ('newsletter', 'newsletter'),
         ('company', 'company'),
-        ('active',  'active'),
-        ('note',  'comment'),
+        ('active', 'active'),
+        ('note', 'comment'),
         ('id_shop_group', 'shop_group_id'),
         ('id_shop', 'shop_id'),
         ('id_default_group', 'default_category_id'),
@@ -228,141 +226,6 @@ class AddressImportMapper(PrestashopImportMapper):
     @mapping
     def customer(self, record):
         return {'customer': True}
-
-
-@prestashop
-class ProductCategoryMapper(PrestashopImportMapper):
-    _model_name = 'prestashop.product.category'
-
-    direct = [
-        ('name', 'name'),
-        ('position', 'sequence'),
-        ('date_add', 'date_add'),
-        ('date_upd', 'date_upd'),
-        ('description', 'description'),
-        ('link_rewrite', 'link_rewrite'),
-        ('meta_description', 'meta_description'),
-        ('meta_keywords', 'meta_keywords'),
-        ('meta_title', 'meta_title'),
-        ('id_shop_default', 'default_shop_id'),
-    ]
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def parent_id(self, record):
-        if record['id_parent'] == '0':
-            return {}
-        return {'parent_id': self.get_openerp_id(
-            'prestashop.product.category',
-            record['id_parent']
-        )}
-
-
-@prestashop
-class ProductMapper(PrestashopImportMapper):
-    _model_name = 'prestashop.product.product'
-
-    direct = [
-        ('name', 'name'),
-        ('description', 'description_html'),
-        ('weight', 'weight'),
-        ('wholesale_price', 'standard_price'),
-        ('price', 'lst_price'),
-        ('reference', 'default_code'),
-        ('date_add', 'date_add'),
-        ('date_upd', 'date_upd'),
-    ]
-
-    @mapping
-    def active(self, record):
-        return {'active_conn': bool(int(record['active']))}
-
-    @mapping
-    def sale_ok(self, record):
-        return {'sale_ok': record['available_for_order'] == '1'}
-        # TODO i would replace by this line
-        #return {'sale_ok': bool(int(record['avalaible_for_sale']))}
-
-    @mapping
-    def categ_id(self, record):
-        return {'categ_id': self.get_openerp_id(
-            'prestashop.product.category',
-            record['id_category_default']
-        )}
-
-    @mapping
-    def categ_ids(self, record):
-        categories = record['associations']['categories']['category']
-        if not isinstance(categories, list):
-            categories = [categories]
-        product_categories = []
-        for category in categories:
-            category_id = self.get_openerp_id(
-                'prestashop.product.category',
-                category['id']
-            )
-            product_categories.append(category_id)
-
-        return {'categ_ids': [(6, 0, product_categories)]}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def ean13(self, record):
-        #TODO who is the reference data magento ean13 or prestatshop ean13 ?
-        if record['ean13'] == '0':
-            return {}
-        return {'ean13': record['ean13']}
-
-    @mapping
-    def taxes_id(self, record):
-        if record['id_tax_rules_group'] == '0':
-            return {}
-        tax_group_id = self.get_openerp_id(
-            'prestashop.account.tax.group',
-            record['id_tax_rules_group']
-        )
-        tax_group_model = self.session.pool.get('account.tax.group')
-        tax_ids = tax_group_model.read(
-            self.session.cr,
-            self.session.uid,
-            tax_group_id,
-            ['tax_ids']
-        )
-        return {"taxes_id": [(6, 0, tax_ids['tax_ids'])]}
-
-
-@prestashop
-class ProductImageMapper(PrestashopImportMapper):
-    _model_name = 'prestashop.product.image'
-
-    direct = [
-        ('content', 'file_db_store'),
-    ]
-
-    @mapping
-    def product_id(self, record):
-        return {'product_id': self.get_openerp_id(
-            'prestashop.product.product',
-            record['id_product']
-        )}
-
-    @mapping
-    def name(self, record):
-        return {'name': record['id_product']+'_'+record['id_image']}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def extension(self, record):
-        return {"extension": mimetypes.guess_extension(record['type'])}
 
 
 @prestashop

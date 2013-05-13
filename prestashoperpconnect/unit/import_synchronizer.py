@@ -169,6 +169,7 @@ class DirectBatchImport(BatchImportSynchronizer):
         'prestashop.product.category',
         'prestashop.account.tax.group',
         'prestashop.res.partner.category',
+        #'prestashop.delivery.carrier',
     ]
 
     def _import_record(self, record):
@@ -491,3 +492,8 @@ def import_customers_since(session, backend_id, since_date=None):
 def import_products(session, backend_id):
     import_batch(session, 'prestashop.product.category', backend_id)
     import_batch(session, 'prestashop.product.product', backend_id)
+
+
+@job
+def import_carriers(session, backend_id):
+    import_batch(session, 'prestashop.delivery.carrier', backend_id)

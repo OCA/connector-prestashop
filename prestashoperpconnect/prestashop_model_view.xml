@@ -17,10 +17,12 @@
                 <button name="synchronize_metadata"
                         type="object"
                         class="oe_highlight"
+                        help="Synchonize shop and shop groups"
                         string="Synchronize Metadata"/>
                 <button name="synchronize_basedata"
                         type="object"
                         class="oe_highlight"
+                        help="Synchonize datas like language, country, currency, tax"
                         string="Synchronize Base Data"/>
             </header>
             <sheet>
@@ -32,7 +34,10 @@
                 </group>
                 <group col="4">
                     <field name="location" colspan="4"/>
-                    <field name="password" colspan="4"/>
+                    <field name="webservice_key" colspan="4"/>
+                </group>
+                <group name="main_configuration" string="Main Configuration">
+                    <field name="warehouse_id"/>
                 </group>
                 <notebook>
                     <page name="import" string="Imports">
@@ -78,22 +83,28 @@
                         <group>
                             <label string="Import sale orders" class="oe_inline"/>
                             <div>
-                                <button name="import_sale_order"
+                                <button name="import_sale_orders"
                                         type="object"
                                         class="oe_highlight"
                                         string="Import in background"/>
                             </div>
                         </group>
                         <group>
-                            <label string="Update sale orders" class="oe_inline"/>
+                            <label string="Import carriers" class="oe_inline"/>
                             <div>
-                                <button name="update_sale_order"
+                                <button name="import_carriers"
                                         type="object"
                                         class="oe_highlight"
-                                        string="Update"/>
+                                        string="Import in background"/>
                             </div>
                         </group>
-
+                        <group>
+                            <label string="Update all the products stock quantities" class="oe_inline"/>
+                            <button name="update_product_stock_qty"
+                                type="object"
+                                class="oe_highlight"
+                                string="Update in background"/>
+                        </group>
                     </page>
                     <page string="Update">
                     </page>

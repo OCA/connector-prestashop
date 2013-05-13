@@ -23,13 +23,14 @@
            <field name="arch" type="xml">
                 <form string="prestashop fields" version="7.0">
                     <group col="1">
-                        <field name="description_html"/>
+                        <field name="description_ext"/>
                     </group>
                     <group col="4" colspan="4">
                         <field name="date_add"/>
                         <field name="date_upd"/>
                         <field name="sale_ok"/>
-                        <field name="active_conn"/>
+                        <field name="quantity" string="qty"/>
+                        <field name="active_ext"/>
                     </group>
                 </form>
            </field>
@@ -42,8 +43,10 @@
                     <field name="backend_id" string="Backend"/>
                     <field name="date_add"/>
                     <field name="date_upd"/>
+                    <field name="quantity"/>
+                    <field name="prestashop_id"/>
                     <field name="sale_ok"/>
-                    <field name="active_conn"/>
+                    <field name="active_ext"/>
                 </tree>
             </field>
         </record>

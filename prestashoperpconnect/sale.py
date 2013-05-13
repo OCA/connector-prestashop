@@ -41,7 +41,7 @@ class sale_order(orm.Model):
         'prestashop_bind_ids': fields.one2many(
             'prestashop.res.partner',
             'openerp_id',
-            string="PrestaShop Bindings"
+            string="Prestashop Bindings"
         ),
     }
 
@@ -121,12 +121,6 @@ class prestashop_sale_order_line(orm.Model):
             vals,
             context=context
         )
-
-
-#@prestashop
-#class SaleOrderStateAdapter(GenericAdapter):
-#    _model_name = 'sale.order'
-#    _prestashop_model = 'order_histories'
 
 
 @prestashop

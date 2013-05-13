@@ -54,9 +54,9 @@ class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
 
 class PrestaShopLocation(object):
 
-    def __init__(self, location, password):
+    def __init__(self, location, webservice_key):
         self.location = location
-        self.password = password
+        self.webservice_key = webservice_key
         self.api_url = '%s/api' % location
 
 
@@ -72,7 +72,7 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
         super(PrestaShopCRUDAdapter, self).__init__(environment)
         self.prestashop = PrestaShopLocation(
             self.backend_record.location,
-            self.backend_record.password
+            self.backend_record.webservice_key
         )
 
     def search(self, filters=None):
@@ -109,7 +109,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
     def connect(self):
         return PrestaShopWebServiceDict(self.prestashop.api_url,
-                                       self.prestashop.password)
+                                       self.prestashop.webservice_key)
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -131,15 +131,15 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         first_key = res.keys()[0]
         return res[first_key]
 
-    def create(self, datas):
+    def create(self, attributes=None):
         """ Create a record on the external system """
         api = self.connect()
-        res = api.add(self._prestashop_model, datas)
+        res = api.add(self._prestashop_model, attributes)
 
-    #def write(self, id, data):
-    #    """ Update records on the external system """
-    #    api = self.connect()
-    #    res = api.get(self._prestashop_model, id, options=attributes)
+    def write(self, id, attributes=None):
+        """ Update records on the external system """
+        api = self.connect()
+        res = api.edit(self._prestashop_model, id, attributes)
     #    first_key = res.keys()[0]
     #    return res[first_key]
     #    return self._call('%s.update' % self._magento_model,
@@ -210,19 +210,13 @@ class ProductCategoryAdapter(GenericAdapter):
 
 
 @prestashop
-class ProductAdapter(GenericAdapter):
-    _model_name = 'prestashop.product.product'
-    _prestashop_model = 'products'
-
-
-@prestashop
 class ProductImageAdapter(PrestaShopCRUDAdapter):
     _model_name = 'prestashop.product.image'
     _prestashop_image_model = 'products'
 
     def read(self, product_id, image_id, options=None):
         api = PrestaShopWebServiceImage(self.prestashop.api_url,
-                                        self.prestashop.password)
+                                        self.prestashop.webservice_key)
         return api.get_image(
             self._prestashop_image_model,
             product_id,

@@ -35,7 +35,8 @@ from openerp.addons.connector.session import ConnectorSession
 from .unit.import_synchronizer import (
     import_batch,
     import_customers_since,
-    import_products)
+    import_products,
+    import_carriers)
 from .unit.direct_binder import DirectBinder
 from .connector import get_environment
 
@@ -62,11 +63,16 @@ class prestashop_backend(orm.Model):
             string='Version',
             required=True),
         'location': fields.char('Location'),
-        'password': fields.char(
-            'Password',
-            help='Enter the key of the PrestaShop Webservice'
+        'webservice_key': fields.char(
+            'Webservice key',
+            help="You have to put it in 'username' of the PrestaShop Webservice api path invite"
         ),
-
+        'warehouse_id': fields.many2one(
+            'stock.warehouse',
+            'Warehouse',
+            required=True,
+            help='Warehouse used to compute the stock quantities.'
+        ),
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
         'language_ids': fields.one2many(
@@ -134,7 +140,36 @@ class prestashop_backend(orm.Model):
             import_products.delay(session, backend_id)
         return True
 
-    def import_sale_order(self, cr, uid, ids, context=None):
+    def import_carriers(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        for backend_id in ids:
+            import_carriers.delay(session, backend_id)
+        return True
+
+    def update_product_stock_qty(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        ps_product_obj = self.pool['prestashop.product.product']
+        product_ids = ps_product_obj.search(cr, uid,
+                                             [('backend_id', 'in', ids)],
+                                             context=context)
+        ps_product_obj.recompute_prestashop_qty(cr, uid, product_ids,
+                                              context=context)
+        return True
+
+    def _prestashop_backend(self, cr, uid, callback, domain=None, context=None):
+        if domain is None: domain = []
+        ids = self.search(cr, uid, domain, context=context)
+        if ids:
+            callback(cr, uid, ids, context=context)
+
+    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None, context=None):
+        self._prestashop_backend(cr, uid, self.update_product_stock_qty,
+                                                domain=domain, context=context)
+
+    def import_sale_orders(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
