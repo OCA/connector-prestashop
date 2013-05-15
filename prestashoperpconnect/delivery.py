@@ -26,6 +26,7 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
 from .unit.backend_adapter import GenericAdapter
+from .unit.mapper import PrestashopImportMapper
 from .unit.import_synchronizer import (DelayedBatchImport,
                                        PrestashopImportSynchronizer,
                                        )
@@ -51,14 +52,14 @@ class prestashop_delivery_carrier(orm.Model):
             'Id reference',
             help="In Prestashop, carriers with the same 'id_reference' are "
                  "some copies from the first one id_reference (only the last "
-				 "one copied is taken account ; and the only one which "
-				 "synchronized with erp)"
+                 "one copied is taken account ; and the only one which "
+                 "synchronized with erp)"
         ),
         'name_ext': fields.char(
-            'Name',
+            'External name',
             size=64
         ),
-        'active_ext': fields.boolean('Active', help="... in prestashop"),
+        'active_ext': fields.boolean('External active', help="... in prestashop"),
         'export_tracking': fields.boolean(
             'Export tracking numbers',
             help=" ... in prestashop"
@@ -133,7 +134,7 @@ class DeliveryCarrierImport(PrestashopImportSynchronizer):
 
 
 @prestashop
-class CarrierImportMapper(ImportMapper):
+class CarrierImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.delivery.carrier'
     direct = [
         ('name', 'name_ext'),

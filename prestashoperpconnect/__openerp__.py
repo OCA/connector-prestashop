@@ -67,6 +67,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'security/ir.model.access.csv',
 #        'external_referential_view.xml',
 #        'sale_view.xml',
+        'delivery_view.xml',
         'prestashoperpconnect_menu.xml',
 #        'board_prestashoperpconnect_view.xml',
 #        'res_partner_data.xml',
