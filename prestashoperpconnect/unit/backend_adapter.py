@@ -139,14 +139,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     def write(self, id, attributes=None):
         """ Update records on the external system """
         api = self.connect()
-        api.edit(self._prestashop_model + '/' + str(id), attributes)
-    #    first_key = res.keys()[0]
-    #    return res[first_key]
-    #    return self._call('%s.update' % self._magento_model,
-    #                      [int(id), data])
-
-    #def delete(self, id):
-    #    """ Delete a record on the external system """
+        api.edit(self._prestashop_model, attributes)
 
 
 @prestashop

@@ -20,6 +20,7 @@
 ###############################################################################
 
 import mimetypes
+import json
 
 from openerp.osv import fields, orm
 from openerp.addons.connector.queue.job import job
@@ -340,27 +341,29 @@ class ProductInventoryExport(ExportSynchronizer):
     _model_name = ['prestashop.product.product']
 
     def _get_data(self, product, fields):
-        result = {}
         if 'quantity' in fields:
-            result.update({
+            return {
                 'quantity': int(product.quantity),
                 'id_product': product.prestashop_id,
                 'id_product_attribute': 0,
-                'depends_on_stock': 1,
+                'depends_on_stock': 0,
                 'out_of_stock': product.quantity > 0 and 1 or 0,
+                'id': json.dumps({
+                    "id_product": product.prestashop_id,
+                    "id_product_attribute": 0
+                }),
+                'id_shop': 1,
                 #TODO FIXME: what datas
-                #'id_shop': product,
                 #'id_shop_group': 0,
-            })
-        return result
+            }
+        return {}
 
     def run(self, binding_id, fields):
         """ Export the product inventory to Prestashop """
         product = self.session.browse(self.model._name, binding_id)
         binder = self.get_binder_for_model()
         prestashop_id = binder.to_backend(product.id)
-        attributes = {}
-        attributes['stock_available'] = self._get_data(product, fields)
+        attributes = {'stock_available': self._get_data(product, fields)}
         self.backend_adapter.update_inventory(prestashop_id, attributes)
 
 
