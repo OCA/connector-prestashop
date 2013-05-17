@@ -171,7 +171,7 @@ class ProductMapper(PrestashopImportMapper):
 
     direct = [
         ('name', 'name'),
-        ('description', 'description_ext'),
+        ('description', 'description_html'),
         ('weight', 'weight'),
         ('wholesale_price', 'standard_price'),
         ('price', 'lst_price'),
@@ -182,7 +182,7 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def active(self, record):
-        return {'active_ext': bool(int(record['active']))}
+        return {'always_available': bool(int(record['active']))}
 
     @mapping
     def sale_ok(self, record):
@@ -265,7 +265,7 @@ class prestashop_product_product(orm.Model):
         ),
         # TODO FIXME what name give to field present in
         # prestashop_product_product and product_product
-        'active_ext': fields.boolean(
+        'always_available': fields.boolean(
             'Active',
             help='if check, this object is always available'),
         'sale_ok': fields.boolean(
@@ -276,7 +276,7 @@ class prestashop_product_product(orm.Model):
             'Computed Quantity',
             help="Last computed quantity to send on Prestashop."
         ),
-        'description_ext': fields.html(
+        'description_html': fields.html(
             'Description',
             help="Description html from prestashop"
         ),
