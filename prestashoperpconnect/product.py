@@ -178,6 +178,7 @@ class ProductMapper(PrestashopImportMapper):
         ('reference', 'default_code'),
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
+        ('id_shop_default', 'default_shop_id'),
     ]
 
     @mapping
@@ -288,6 +289,11 @@ class prestashop_product_product(orm.Model):
             'Updated At (on Presta)',
             readonly=True
         ),
+        'default_shop_id': fields.many2one(
+            'prestashop.shop',
+            'Default shop',
+            required=True
+        ),
     }
 
     _sql_constraints = [
@@ -352,7 +358,7 @@ class ProductInventoryExport(ExportSynchronizer):
                     "id_product": product.prestashop_id,
                     "id_product_attribute": 0
                 }),
-                'id_shop': 1,
+                'id_shop': product.default_shop_id.prestashop_id,
                 #TODO FIXME: what datas
                 #'id_shop_group': 0,
             }
