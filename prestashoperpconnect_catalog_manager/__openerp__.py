@@ -27,8 +27,6 @@
     "license": "AGPL-3",
     "depends" : [
                  "prestashoperpconnect",
-                 "product_images_sync",
-                 "product_links",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """This module is an extention for PrestashopERPconnect.
@@ -48,8 +46,7 @@ TODO :
     "complexity" : "expert",
     "init_xml" : [],
     "demo_xml" : [],
-    'update_xml': [
-    ],
+    'update_xml': [],
     "active": False,
     "installable": True,
     "application": True,
