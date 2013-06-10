@@ -1,2 +1,0 @@
-id,mapping_id:id,sequence,type,evaluation_type,field_id:id,external_field,external_type,datetime_format,function_name,in_function,out_function,child_mapping_id:id,alternative_key
-prestashop1500_res_partner_passwd,prestashoperpconnect.prestashop_1500_partner,10,out,direct,field_res_partner_prestashop_passwd,passwd,unicode,,,,,,

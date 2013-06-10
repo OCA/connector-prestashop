@@ -23,11 +23,10 @@
 
 {
     "name" : "Prestashop-OpenERP connector",
-    "version" : "0.1", # 0.1 codenamed "In tartiflette we trust"
+    "version" : "0.2", # 0.1 codenamed "In tartiflette we trust"
     "license": "AGPL-3",
     "depends" : [
                  "prestashoperpconnect",
-                 "product_custom_attributes_shop",
                  "product_images_sync",
                  "product_links",
                 ],
@@ -50,15 +49,6 @@ TODO :
     "init_xml" : [],
     "demo_xml" : [],
     'update_xml': [
-        'sale_view.xml',
-        'external_referential_view.xml',
-        'settings/1.5.0.0/external.mapping.template.csv',
-        'settings/1.5.0.0/product.attribute/external.mappinglines.template.csv',
-        'settings/1.5.0.0/attribute.option/external.mappinglines.template.csv',
-        'settings/1.5.0.0/product.product/external.mappinglines.template.csv',
-        'settings/1.5.0.0/product.category/external.mappinglines.template.csv',
-        'product_attribute_view.xml',
-        'product_view.xml',
     ],
     "active": False,
     "installable": True,

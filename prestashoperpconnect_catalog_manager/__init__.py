@@ -21,8 +21,4 @@
 #
 ###############################################################################
 
-import external_referential
-import product
-import sale
-import product_attribute
 
