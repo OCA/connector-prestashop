@@ -134,7 +134,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     def create(self, attributes=None):
         """ Create a record on the external system """
         api = self.connect()
-        api.add(self._prestashop_model, attributes)
+        api.add(self._prestashop_model, {self._export_node_name: attributes})
 
     def write(self, id, attributes=None):
         """ Update records on the external system """

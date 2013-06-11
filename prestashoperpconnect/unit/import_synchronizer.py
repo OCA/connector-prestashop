@@ -258,7 +258,6 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         #TODO FIXME when erp_language_id is None
         erp_language_id = language_binder.to_openerp(prestashop_id)
         model = self.environment.session.pool.get('prestashop.res.lang')
-        #import pdb;pdb.set_trace()
         erp_lang = model.read(
             self.session.cr,
             self.session.uid,

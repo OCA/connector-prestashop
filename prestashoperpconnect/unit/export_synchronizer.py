@@ -25,9 +25,13 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
 from openerp.addons.connector.exception import IDMissingInBackend
 from .import_synchronizer import import_record
 from ..connector import get_environment
+
+from openerp.addons.prestashoperpconnect.backend import prestashop
+
 
 _logger = logging.getLogger(__name__)
 
@@ -82,13 +86,16 @@ class PrestashopBaseExporter(ExportSynchronizer):
         sync = self.binding_record.sync_date
         if not sync:
             return True
-        record = self.backend_adapter.read(self.prestashop_id,
-                                           attributes=['updated_at'])
+        
+        # TODO copied dumbly from magneto connector ; this does not work with prestashop
+        #record = self.backend_adapter.read(self.prestashop_id,
+        #                                   attributes=['updated_at'])
 
-        fmt = DEFAULT_SERVER_DATETIME_FORMAT
-        sync_date = datetime.strptime(sync, fmt)
-        prestashop_date = datetime.strptime(record['updated_at'], fmt)
-        return sync_date < prestashop_date
+        #fmt = DEFAULT_SERVER_DATETIME_FORMAT
+        #sync_date = datetime.strptime(sync, fmt)
+        #prestashop_date = datetime.strptime(record['updated_at'], fmt)
+        #return sync_date < prestashop_date
+        return True
 
     def _get_openerp_data(self):
         """ Return the raw OpenERP data for ``self.binding_id`` """
@@ -195,6 +202,36 @@ class PrestashopExporter(PrestashopBaseExporter):
             self.prestashop_id = self._create(record)
         message = _('Record exported with ID %s on Prestashop.')
         return message % self.prestashop_id
+
+
+class TranslationPrestashopExporter(PrestashopExporter):
+
+    @property
+    def mapper(self):
+        if self._mapper is None:
+            self._mapper = self.environment.get_connector_unit(TranslationPrestashopExportMapper)
+        return self._mapper
+
+    def _map_data(self, fields=None):
+        """ Convert the external record to OpenERP """
+        self.mapper.convert(self.get_record_by_lang(), fields=fields)
+
+    def get_record_by_lang(self):
+        # get the backend's languages 
+        languages = self.backend_record.language_ids
+        records = {}
+        # for each languages:
+        for language in languages:
+            # get the translated record
+            record = self.model.read(
+                self.session.cr,
+                self.session.uid,
+                self.binding_id,
+                context={'lang': language['code']}
+            )
+            # put it in the dict
+            records[language['prestashop_id']] = record
+        return records
 
 
 @job

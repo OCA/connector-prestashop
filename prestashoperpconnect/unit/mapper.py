@@ -24,8 +24,11 @@
 ##############################################################################
 
 from openerp.tools.translate import _
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper)
+from openerp.addons.connector.unit.mapper import (
+    mapping,
+    ImportMapper,
+    ExportMapper
+)
 from ..backend import prestashop
 
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
@@ -356,3 +359,21 @@ class TaxGroupMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+class TranslationPrestashopExportMapper(ExportMapper):
+    
+    def convert(self, records_by_language, fields=None):
+        first_key = records_by_language.keys()[0]
+        self._convert(records_by_language[first_key], fields=fields)
+        self.convert_languages(records_by_language)
+
+    def convert_languages(self, records):
+        for from_attr, to_attr in self.translatable_fields:
+            value = []
+            for language_id, record in records.items():
+                value.append({'language': {
+                    'attrs': {'id': language_id},
+                    'value': record[from_attr]
+                }})
+            self._data[to_attr] = str(value)
+

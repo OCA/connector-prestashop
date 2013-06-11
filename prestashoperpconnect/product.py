@@ -179,6 +179,7 @@ class ProductMapper(PrestashopImportMapper):
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
         ('id_shop_default', 'default_shop_id'),
+        ('link_rewrite', 'link_rewrite'),
     ]
 
     @mapping
@@ -294,6 +295,11 @@ class prestashop_product_product(orm.Model):
             'Default shop',
             required=True
         ),
+        'link_rewrite': fields.char(
+            'Friendly URL',
+            translate=True,
+            required=True,
+        ),
     }
 
     _sql_constraints = [
@@ -336,6 +342,7 @@ class prestashop_product_product(orm.Model):
 class ProductAdapter(GenericAdapter):
     _model_name = 'prestashop.product.product'
     _prestashop_model = 'products'
+    _export_node_name = 'product'
 
     def update_inventory(self, id, attributes):
         self._prestashop_model = 'stock_availables'

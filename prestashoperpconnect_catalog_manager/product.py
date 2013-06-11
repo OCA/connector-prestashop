@@ -21,47 +21,44 @@
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create
-from openerp.addons.connector.unit.mapper import ExportMapper
+from openerp.addons.connector.unit.mapper import ExportMapper, mapping
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
-    PrestashopExporter
+    TranslationPrestashopExporter,
+    export_record
 )
+
+from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
 from openerp.addons.prestashoperpconnect.connector import get_environment
 from openerp.addons.prestashoperpconnect.backend import prestashop
 
 @on_record_create(model_names='prestashop.product.product')
 def openerp_product_created(session, model_name, record_id):
-    export_product.delay(session, model_name, record_id)
-
-
-@job
-def export_product(session, model_name, record_id, fields=None):
-    """ Export a product. """
-    product = session.browse(model_name, record_id)
-    backend_id = product.backend_id.id
-    env = get_environment(session, model_name, backend_id)
-    product_exporter = env.get_connector_unit(PrestashopExporter)
-    return product_exporter.run(record_id, fields)
+    export_record.delay(session, model_name, record_id)
 
 
 @prestashop
-class ProductExport(PrestashopExporter):
+class ProductExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.product'
 
-
 @prestashop
-class ProductExportMapper(ExportMapper):
+class ProductExportMapper(TranslationPrestashopExportMapper):
     _model_name = 'prestashop.product.product'
 
     direct = [
-        ('name','name'),
-        ('description_html', 'description'),
-        ('weight', 'weight'),
-        ('standard_price', 'wholesale_price'),
         ('lst_price', 'price'),
-        ('default_code', 'reference'),
-        ('date_add', 'date_add'),
-        ('date_upd', 'date_upd'),
-        ('default_shop_id', 'id_shop_default'),
+
+#        ('description_html', 'description'),
+#        ('weight', 'weight'),
+#        ('standard_price', 'wholesale_price'),
+#        ('default_code', 'reference'),
+#        ('date_add', 'date_add'),
+#        ('date_upd', 'date_upd'),
+#        ('default_shop_id', 'id_shop_default'),
+#        ('prestashop_id', 'id'),
     ]
 
+    translatable_fields = [
+        ('name', 'name'),
+        ('link_rewrite', 'link_rewrite'),
+    ]
