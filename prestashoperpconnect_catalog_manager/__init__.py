@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   Prestashop_catalog_manager for OpenERP
@@ -23,3 +23,4 @@
 
 import connector
 import product
+import product_attribute

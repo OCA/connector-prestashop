@@ -27,6 +27,7 @@
     "license": "AGPL-3",
     "depends" : [
                  "prestashoperpconnect",
+                 "product_custom_attributes",
                 ],
     "author" : "PrestashopERPconnect Core Editors",
     "description": """This module is an extention for PrestashopERPconnect.
@@ -44,9 +45,10 @@ TODO :
     "website" : "https://launchpad.net/prestashoperpconnect",
     "category" : "Generic Modules",
     "complexity" : "expert",
-    "init_xml" : [],
-    "demo_xml" : [],
-    'update_xml': [],
+    "demo" : [],
+    "data" : [
+        'product_attribute_view.xml',
+        ],
     "active": False,
     "installable": True,
     "application": True,

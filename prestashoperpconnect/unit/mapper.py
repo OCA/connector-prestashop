@@ -51,7 +51,9 @@ class PrestashopImportMapper(ImportMapper):
         erp_ps_object = model.read(
             self.session.cr,
             self.session.uid,
-            erp_ps_id
+            erp_ps_id,
+            ['openerp_id'],
+            context=self.session.context
         )
         return erp_ps_object['openerp_id'][0]
 
