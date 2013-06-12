@@ -387,7 +387,7 @@ INVENTORY_FIELDS = ('quantity',
 
 
 @on_record_write(model_names='prestashop.product.product')
-def prestashop_product_modified(session, model_name, record_id, fields=None):
+def prestashop_product_stock_updated(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))

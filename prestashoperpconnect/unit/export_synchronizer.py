@@ -237,6 +237,10 @@ class TranslationPrestashopExporter(PrestashopExporter):
 @job
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Prestashop """
+    #TODO FIX PRESTASHOP
+    #prestashop do not support partial edit
+    fields = None
+
     record = session.browse(model_name, binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(PrestashopExporter)

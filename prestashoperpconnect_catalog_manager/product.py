@@ -20,7 +20,7 @@
 ###############################################################################
 
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.event import on_record_create
+from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import ExportMapper, mapping
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
@@ -31,11 +31,31 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
 from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
 from openerp.addons.prestashoperpconnect.connector import get_environment
 from openerp.addons.prestashoperpconnect.backend import prestashop
+from openerp.addons.prestashoperpconnect.product import INVENTORY_FIELDS
 
 @on_record_create(model_names='prestashop.product.product')
-def openerp_product_created(session, model_name, record_id):
+def prestashop_product_product_create(session, model_name, record_id):
+    if session.context.get('connector_no_export'):
+        return
     export_record.delay(session, model_name, record_id)
 
+@on_record_write(model_names='prestashop.product.product')
+def prestashop_product_product_write(session, model_name, record_id, fields):
+    if session.context.get('connector_no_export'):
+        return
+    fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
+    if fields:
+        export_record.delay(session, model_name, record_id, fields)
+
+@on_record_write(model_names='product.product')
+def product_product_write(session, model_name, record_id, fields):
+    if session.context.get('connector_no_export'):
+        return
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid,
+                           record_id, context=session.context)
+    for binding in record.prestashop_bind_ids:
+        export_record.delay(session, 'prestashop.product.product', binding.id, fields)
 
 @prestashop
 class ProductExport(TranslationPrestashopExporter):
