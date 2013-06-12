@@ -369,11 +369,11 @@ class TranslationPrestashopExportMapper(ExportMapper):
 
     def convert_languages(self, records):
         for from_attr, to_attr in self.translatable_fields:
-            value = []
+            value = {'language': []}
             for language_id, record in records.items():
-                value.append({'language': {
-                    'attrs': {'id': language_id},
+                value['language'].append({
+                    'attrs': {'id': str(language_id)},
                     'value': record[from_attr]
-                }})
-            self._data[to_attr] = str(value)
+                })
+            self._data[to_attr] = value
 
