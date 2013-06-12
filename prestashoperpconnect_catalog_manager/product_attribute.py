@@ -116,10 +116,9 @@ class prestashop_attribute_option(orm.Model):
         return True
 
 
-#
-#@on_record_create(model_names='prestashop.product.attribute')
-#def openerp_product_attribute_created(session, model_name, record_id):
-#    export_record.delay(session, model_name, record_id)
+@on_record_create(model_names='prestashop.product.attribute')
+def openerp_product_attribute_created(session, model_name, record_id):
+    export_record.delay(session, model_name, record_id)
 
 
 @on_record_create(model_names='prestashop.attribute.option')
