@@ -93,15 +93,15 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
     def associations(self, record):
         ext_categ_ids = []
         binder = self.get_binder_for_model('prestashop.product.category')
-        categ_ids = record['categ_ids'] + [record['categ_id'][0]]
-        for categ_id in categ_ids:
+        categories = record.categ_ids + [record.categ_id]
+        for category in categories:
             ext_categ_ids.append(
-                    {'id' : binder.to_backend(categ_id, unwrap=True)}
+                    {'id' : binder.to_backend(category.id, unwrap=True)}
                     )
         return {'associations': {'categories': {'category_id': ext_categ_ids}}}
 
     @mapping
     def categ_id(self, record):
         binder = self.get_binder_for_model('prestashop.product.category')
-        ext_categ_id = binder.to_backend(record['categ_id'][0], unwrap=True)
+        ext_categ_id = binder.to_backend(record.categ_id.id, unwrap=True)
         return {'id_category_default': ext_categ_id}

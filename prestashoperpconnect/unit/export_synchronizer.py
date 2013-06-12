@@ -179,7 +179,7 @@ class TranslationPrestashopExporter(PrestashopExporter):
         # for each languages:
         for language in languages:
             # get the translated record
-            record = self.model.read(
+            record = self.model.browse(
                 self.session.cr,
                 self.session.uid,
                 self.binding_id,
