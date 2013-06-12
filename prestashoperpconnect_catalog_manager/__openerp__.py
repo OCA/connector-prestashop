@@ -22,7 +22,7 @@
 ###############################################################################
 
 {
-    "name" : "Prestashop-OpenERP connector",
+    "name" : "Prestashop-OpenERP Catalog Manager",
     "version" : "0.2", # 0.1 codenamed "In tartiflette we trust"
     "license": "AGPL-3",
     "depends" : [
