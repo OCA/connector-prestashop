@@ -80,10 +80,10 @@ class PrestashopBaseExporter(ExportSynchronizer):
         if the former is more recent, schedule an import
         to not miss changes done in Prestashop.
         """
-        assert self.binding_record
+        assert self.erp_record
         if not self.prestashop_id:
             return False
-        sync = self.binding_record.sync_date
+        sync = self.erp_record.sync_date
         if not sync:
             return True
         
@@ -107,7 +107,7 @@ class PrestashopBaseExporter(ExportSynchronizer):
         :param binding_id: identifier of the binding record to export
         """
         self.binding_id = binding_id
-        self.binding_record = self._get_openerp_data()
+        self.erp_record = self._get_openerp_data()
 
         self.prestashop_id = self.binder.to_backend(self.binding_id)
         try:
@@ -137,7 +137,7 @@ class PrestashopExporter(PrestashopBaseExporter):
         :type environment: :py:class:`connector.connector.Environment`
         """
         super(PrestashopExporter, self).__init__(environment)
-        self.binding_record = None
+        self.erp_record = None
 
     def _has_to_skip(self):
         """ Return True if the export can be skipped """
@@ -149,7 +149,7 @@ class PrestashopExporter(PrestashopBaseExporter):
 
     def _map_data(self, fields=None):
         """ Convert the external record to OpenERP """
-        self.mapper.convert(self.binding_record, fields=fields)
+        self.mapper.convert(self.erp_record, fields=fields)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -173,7 +173,7 @@ class PrestashopExporter(PrestashopBaseExporter):
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""
         assert self.binding_id
-        assert self.binding_record
+        assert self.erp_record
 
         if not self.prestashop_id:
             fields = None  # should be created with all the fields
