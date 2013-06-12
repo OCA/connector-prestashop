@@ -61,42 +61,6 @@ class PrestashopBaseExporter(ExportSynchronizer):
         self.binding_id = None
         self.prestashop_id = None
 
-    def _delay_import(self):
-        """ Schedule an import of the record.
-
-        Adapt in the sub-classes when the model is not imported
-        using ``import_record``.
-        """
-        # force is True because the sync_date will be more recent
-        # so the import would be skipped
-        assert self.prestashop_id
-        import_record.delay(self.session, self.model._name,
-                            self.backend_record.id, self.prestashop_id,
-                            force=True)
-
-    def _should_import(self):
-        """ Before the export, compare the update date
-        in Prestashop and the last sync date in OpenERP,
-        if the former is more recent, schedule an import
-        to not miss changes done in Prestashop.
-        """
-        assert self.erp_record
-        if not self.prestashop_id:
-            return False
-        sync = self.erp_record.sync_date
-        if not sync:
-            return True
-        
-        # TODO copied dumbly from magneto connector ; this does not work with prestashop
-        #record = self.backend_adapter.read(self.prestashop_id,
-        #                                   attributes=['updated_at'])
-
-        #fmt = DEFAULT_SERVER_DATETIME_FORMAT
-        #sync_date = datetime.strptime(sync, fmt)
-        #prestashop_date = datetime.strptime(record['updated_at'], fmt)
-        #return sync_date < prestashop_date
-        return True
-
     def _get_openerp_data(self):
         """ Return the raw OpenERP data for ``self.binding_id`` """
         return self.session.browse(self.model._name, self.binding_id)
@@ -110,14 +74,6 @@ class PrestashopBaseExporter(ExportSynchronizer):
         self.erp_record = self._get_openerp_data()
 
         self.prestashop_id = self.binder.to_backend(self.binding_id)
-        try:
-            should_import = self._should_import()
-        except IDMissingInBackend:
-            self.prestashop_id = None
-            should_import = False
-        if should_import:
-            self._delay_import()
-
         result = self._run(*args, **kwargs)
 
         self.binder.bind(self.prestashop_id, self.binding_id)
