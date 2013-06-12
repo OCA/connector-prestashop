@@ -72,7 +72,7 @@ class product_category(orm.Model):
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
-            'prestashop.res.partner',
+            'prestashop.product.category',
             'openerp_id',
             string="PrestaShop Bindings"
         ),
@@ -300,7 +300,7 @@ class prestashop_product_product(orm.Model):
             translate=True,
             required=True,
         ),
-    }
+   }
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',

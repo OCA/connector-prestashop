@@ -61,6 +61,12 @@ def product_product_write(session, model_name, record_id, fields):
 class ProductExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.product'
 
+    def _export_dependencies(self):
+        """ Export the dependencies for the product"""
+        #TODO add export of category
+        return 
+
+
 @prestashop
 class ProductExportMapper(TranslationPrestashopExportMapper):
     _model_name = 'prestashop.product.product'
@@ -82,3 +88,20 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         ('name', 'name'),
         ('link_rewrite', 'link_rewrite'),
     ]
+
+    @mapping
+    def associations(self, record):
+        ext_categ_ids = []
+        binder = self.get_binder_for_model('prestashop.product.category')
+        categ_ids = record['categ_ids'] + [record['categ_id'][0]]
+        for categ_id in categ_ids:
+            ext_categ_ids.append(
+                    {'id' : binder.to_backend(categ_id, unwrap=True)}
+                    )
+        return {'associations': {'categories': {'category_id': ext_categ_ids}}}
+
+    @mapping
+    def categ_id(self, record):
+        binder = self.get_binder_for_model('prestashop.product.category')
+        ext_categ_id = binder.to_backend(record['categ_id'][0], unwrap=True)
+        return {'id_category_default': ext_categ_id}

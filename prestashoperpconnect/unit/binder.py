@@ -85,19 +85,31 @@ class PrestashopModelBinder(PrestashopBinder):
         else:
             return openerp_id
 
-    def to_backend(self, openerp_id):
+    def to_backend(self, local_id, unwrap=False):
         """ Give the external ID for an OpenERP ID
 
-        :param openerp_id: OpenERP ID for which we want the external id
+        :param local_id: Local ID for which we want the external id
+                         can be an erp_id or a erp_ps_id
+        :param unwrap: if True, the erp_id is the id of native openerp
+                       object and not a prestashop_xxxx. In this case
+                       we have first to found the prestashop_xxx object id
+                       (erp_ps_id) and then the external id for this record
         :return: backend identifier of the record
         """
-        prestashop_id = self.environment.model.read(
-            self.session.cr,
-            self.session.uid,
-            openerp_id,
-            ['prestashop_id'],
-            self.session.context
-        )['prestashop_id']
+        if unwrap:
+            erp_ps_id = self.session.search(self.model._name, [
+                                ['openerp_id','=', local_id],
+                                ['backend_id', '=', self.backend_record.id]
+                                ])
+            if erp_ps_id:
+                erp_ps_id = erp_ps_id[0]
+            else:
+                return None
+        else:
+            erp_ps_id = local_id
+
+        prestashop_id = self.session.read(self.model._name, erp_ps_id,
+                                ['prestashop_id'])['prestashop_id']
         return prestashop_id
 
     def bind(self, external_id, openerp_id):
