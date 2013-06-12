@@ -22,7 +22,7 @@
 ###############################################################################
 
 from openerp.osv import fields, orm
-from openerp.addons.connector.event import on_record_create
+from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     export_record,
     TranslationPrestashopExporter,
@@ -117,13 +117,49 @@ class prestashop_attribute_option(orm.Model):
 
 
 @on_record_create(model_names='prestashop.product.attribute')
-def openerp_product_attribute_created(session, model_name, record_id):
+def prestashop_product_attribute_created(session, model_name, record_id):
+    if session.context.get('connector_no_export'):
+        return
     export_record.delay(session, model_name, record_id)
 
 
 @on_record_create(model_names='prestashop.attribute.option')
-def openerp_attribute_option_created(session, model_name, record_id):
+def prestashop_attribute_option_created(session, model_name, record_id):
+    if session.context.get('connector_no_export'):
+        return
     export_record.delay(session, model_name, record_id)
+
+@on_record_write(model_names='prestashop.product.attribute')
+def prestashop_product_attribute_written(session, model_name, record_id, fields=None):
+    if session.context.get('connector_no_export'):
+        return
+    export_record.delay(session, model_name, record_id)
+
+@on_record_write(model_names='prestashop.attribute.option')
+def prestashop_attribute_option_written(session, model_name, record_id, fields=None):
+    if session.context.get('connector_no_export'):
+        return
+    export_record.delay(session, model_name, record_id)
+
+@on_record_write(model_names='product.attribute')
+def product_attribute_written(session, model_name, record_id, fields=None):
+    if session.context.get('connector_no_export'):
+        return
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid,
+                           record_id, context=session.context)
+    for binding in record.prestashop_bind_ids:
+        export_record.delay(session, 'prestashop.product.attribute', binding.id, fields)
+
+@on_record_write(model_names='attribute.option')
+def attribute_option_written(session, model_name, record_id, fields=None):
+    if session.context.get('connector_no_export'):
+        return
+    model = session.pool.get(model_name)
+    record = model.browse(session.cr, session.uid,
+                           record_id, context=session.context)
+    for binding in record.prestashop_bind_ids:
+        export_record.delay(session, 'prestashop.attribute.option', binding.id, fields)
 
 
 @prestashop
