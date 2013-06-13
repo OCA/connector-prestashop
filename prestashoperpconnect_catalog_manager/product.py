@@ -89,8 +89,34 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         ('link_rewrite', 'link_rewrite'),
     ]
 
-    @mapping
-    def associations(self, record):
+    def _get_product_feature(self, record):
+        product_feature = []
+        attribute_binder = self.get_binder_for_model('prestashop.product.attribute')
+        option_binder = self.get_binder_for_model('prestashop.attribute.option')
+        for group in record.attribute_group_ids:
+            for attribute in group.attribute_ids:
+                attribute_ext_id = attribute_binder.to_backend(attribute.id, unwrap=True)
+                if not attribute_ext_id:
+                    continue
+                feature_dict = {'id': attribute_ext_id}
+                if attribute.ttype == 'many2one':
+                    option = record[attribute.name]
+                    if option:
+                        feature_dict['id_feature_value'] = \
+                            option_binder.to_backend(option.id, unwrap=True)
+                    else:
+                        continue
+                else:
+                    feature_dict['id_feature_value'] = 0
+                    if attribute.translate:
+                        res = self.convert_languages([(attribute.name, 'custom_feature_value')])
+                    else:
+                        res = {'custom_feature_value': record[attribute.name]}
+                    feature_dict.update(res)
+                product_feature.append(feature_dict)
+        return product_feature
+
+    def _get_product_category(self, record):
         ext_categ_ids = []
         binder = self.get_binder_for_model('prestashop.product.category')
         categories = record.categ_ids + [record.categ_id]
@@ -98,7 +124,16 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
             ext_categ_ids.append(
                     {'id' : binder.to_backend(category.id, unwrap=True)}
                     )
-        return {'associations': {'categories': {'category_id': ext_categ_ids}}}
+        return ext_categ_ids
+
+    @mapping
+    def associations(self, record):
+        return {
+            'associations':{
+                'categories': {'category_id': self._get_product_category(record)},
+                'product_features': {'product_feature': self._get_product_feature(record)},
+                }
+            }
 
     @mapping
     def categ_id(self, record):

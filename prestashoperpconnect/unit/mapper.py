@@ -365,17 +365,19 @@ class TaxGroupMapper(PrestashopImportMapper):
 class TranslationPrestashopExportMapper(ExportMapper):
     
     def convert(self, records_by_language, fields=None):
+        self.records_by_language = records_by_language
         first_key = records_by_language.keys()[0]
         self._convert(records_by_language[first_key], fields=fields)
-        self.convert_languages(records_by_language)
+        self._data.update(self.convert_languages(self.translatable_fields))
 
-    def convert_languages(self, records):
-        for from_attr, to_attr in self.translatable_fields:
+    def convert_languages(self, translatable_fields):
+        res = {}
+        for from_attr, to_attr in translatable_fields:
             value = {'language': []}
-            for language_id, record in records.items():
+            for language_id, record in self.records_by_language.items():
                 value['language'].append({
                     'attrs': {'id': str(language_id)},
                     'value': record[from_attr]
                 })
-            self._data[to_attr] = value
-
+            res[to_attr] = value
+        return res
