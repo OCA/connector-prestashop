@@ -242,7 +242,10 @@ class SaleOrderMapper(PrestashopImportMapper):
     ]
 
     def _get_sale_order_lines(self, record):
-        return record['associations']['order_rows']['order_row']
+        orders = record['associations']['order_rows']['order_row']
+        if isinstance(orders, dict):
+            return [orders]
+        return orders
 
     children = [
         (
