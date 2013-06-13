@@ -37,7 +37,7 @@
 <record id="product_attribute_connector_presta_tree_view" model="ir.ui.view">
     <field name="model">prestashop.product.attribute</field>
     <field name="arch" type="xml">
-        <tree string="prestashop product attribute" version="7.0">
+        <tree string="prestashop product attribute" version="7.0" editable="top">
             <field name="backend_id" string="Backend"/>
             <field name="prestashop_position"/>
         </tree>
@@ -71,7 +71,7 @@
 <record id="attribute_option_connector_presta_tree_view" model="ir.ui.view">
     <field name="model">prestashop.attribute.option</field>
     <field name="arch" type="xml">
-        <tree string="prestashop product attribute" version="7.0">
+        <tree string="prestashop product attribute" version="7.0" editable="top">
             <field name="backend_id" string="Backend"/>
         </tree>
     </field>
