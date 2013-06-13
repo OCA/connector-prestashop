@@ -48,6 +48,7 @@ TODO :
     "demo" : [],
     "data" : [
         'product_attribute_view.xml',
+        'product_view.xml',
         ],
     "active": False,
     "installable": True,

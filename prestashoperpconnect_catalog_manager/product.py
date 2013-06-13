@@ -32,6 +32,7 @@ from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestasho
 from openerp.addons.prestashoperpconnect.connector import get_environment
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.product import INVENTORY_FIELDS
+from openerp.osv import fields, orm
 
 @on_record_create(model_names='prestashop.product.product')
 def prestashop_product_product_create(session, model_name, record_id):
@@ -57,6 +58,38 @@ def product_product_write(session, model_name, record_id, fields):
     for binding in record.prestashop_bind_ids:
         export_record.delay(session, 'prestashop.product.product', binding.id, fields)
 
+
+class prestashop_product_product(orm.Model):
+    _inherit = 'prestashop.product.product'
+
+    _columns = {
+        'meta_title': fields.char(
+            'Meta Title',
+            translate=True,
+        ),
+        'meta_description': fields.char(
+            'Meta Title',
+            translate=True,
+        ),
+        'meta_keywords' : fields.char(
+            'Meta Title',
+            translate=True,
+        ),
+        'tags': fields.char(
+            'Tags',
+            translate=True,
+        ),
+        'available_for_order': fields.boolean(
+            'Available For Order'
+        ),
+        'show_price': fields.boolean(
+            'Show Price'
+        ),
+        'online_only': fields.boolean(
+            'Online Only'
+        ),
+    }
+
 @prestashop
 class ProductExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.product'
@@ -73,21 +106,29 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
 
     direct = [
         ('lst_price', 'price'),
-
-#        ('description_html', 'description'),
-#        ('weight', 'weight'),
-#        ('standard_price', 'wholesale_price'),
-#        ('default_code', 'reference'),
+        ('available_for_order', 'available_for_order'),
+        ('show_price', 'show_price'),
+        ('online_only', 'online_only'),
+        ('weight', 'weight'),
+        ('standard_price', 'wholesale_price'),
+        ('default_code', 'reference'),
+        ('default_shop_id', 'id_shop_default'),
+        ('active', 'active'),
+        ('ean13', 'ean13'),
 #        ('date_add', 'date_add'),
 #        ('date_upd', 'date_upd'),
-#        ('default_shop_id', 'id_shop_default'),
-#        ('prestashop_id', 'id'),
     ]
 
     translatable_fields = [
         ('name', 'name'),
         ('link_rewrite', 'link_rewrite'),
-    ]
+        ('meta_title', 'meta_title'),
+        ('meta_description', 'meta_description'),
+        ('meta_keywords', 'meta_keywords'),
+        ('tags', 'tags'),
+        ('description_short_html', 'description_short'),
+        ('description_html', 'description'),
+   ]
 
     def _get_product_feature(self, record):
         product_feature = []

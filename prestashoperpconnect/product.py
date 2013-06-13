@@ -172,6 +172,7 @@ class ProductMapper(PrestashopImportMapper):
     direct = [
         ('name', 'name'),
         ('description', 'description_html'),
+        ('description_short', 'description_short_html'),
         ('weight', 'weight'),
         ('wholesale_price', 'standard_price'),
         ('price', 'lst_price'),
@@ -280,7 +281,12 @@ class prestashop_product_product(orm.Model):
         ),
         'description_html': fields.html(
             'Description',
-            help="Description html from prestashop"
+            translate=True,
+            help="Description html from prestashop",
+        ),
+        'description_short_html': fields.html(
+            'Short Description',
+            translate=True,
         ),
         'date_add': fields.datetime(
             'Created At (on Presta)',

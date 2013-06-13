@@ -26,6 +26,7 @@
                         <field name="backend_id"/>
                         <field name="default_shop_id"/>
                         <field name="link_rewrite"/>
+                        <field name="description_short_html"/>
                         <field name="description_html"/>
                     </group>
                     <group col="4" colspan="4">

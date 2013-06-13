@@ -362,7 +362,16 @@ class TaxGroupMapper(PrestashopImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
-class TranslationPrestashopExportMapper(ExportMapper):
+class PrestashopExportMapper(ExportMapper):
+
+    def _map_direct(self, record, from_attr, to_attr):
+        res = super(PrestashopExportMapper, self)._map_direct(record, from_attr, to_attr)
+        column = self.model._all_columns[from_attr].column
+        if column._type == 'boolean':
+            return res and 1 or 0
+        return res
+
+class TranslationPrestashopExportMapper(PrestashopExportMapper):
     
     def convert(self, records_by_language, fields=None):
         self.records_by_language = records_by_language
