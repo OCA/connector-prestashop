@@ -60,9 +60,12 @@ class prestashop_product_attribute(orm.Model):
             ondelete='cascade'
         ),
         'prestashop_position': fields.integer(
-            'Prestashop Position',
-            required=True),
+            'Prestashop Position'),
+    }
 
+    #has to be different than 0 because of prestashop
+    _defaults = {
+        'prestashop_position' : 1
     }
 
 
