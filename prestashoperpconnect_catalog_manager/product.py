@@ -181,3 +181,9 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         binder = self.get_binder_for_model('prestashop.product.category')
         ext_categ_id = binder.to_backend(record.categ_id.id, unwrap=True)
         return {'id_category_default': ext_categ_id}
+
+    @mapping
+    def tax_ids(self, record):
+        binder = self.get_binder_for_model('prestashop.account.tax.group')
+        ext_id = binder.to_backend(record.tax_group_id.id, unwrap=True)
+        return {'id_tax_rules_group' : ext_id}
