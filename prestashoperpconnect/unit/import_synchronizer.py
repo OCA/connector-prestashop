@@ -140,6 +140,16 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
 
         self._after_import(erp_id)
 
+    def _check_dependency(self, ext_id, model_name):
+        ext_id = int(ext_id)
+        if not self.get_binder_for_model(model_name).to_openerp(ext_id):
+            import_record(
+                self.session,
+                model_name,
+                self.backend_record.id,
+                ext_id
+            )
+
 
 class BatchImportSynchronizer(ImportSynchronizer):
     """ The role of a BatchImportSynchronizer is to search for a list of
@@ -208,6 +218,14 @@ class DelayedBatchImport(BatchImportSynchronizer):
 class ResPartnerRecordImport(PrestashopImportSynchronizer):
     _model_name = 'prestashop.res.partner'
 
+    def _import_dependencies(self):
+        groups = self.prestashop_record['associations']['groups']['group']
+        if not isinstance(groups, list):
+            groups = [groups]
+        for group in groups:
+            self._check_dependency(group['id'],
+                                   'prestashop.res.partner.category')
+
     def _after_import(self, erp_id):
         binder = self.get_binder_for_model(self._model_name)
         ps_id = binder.to_backend(erp_id)
@@ -227,8 +245,25 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
         'prestashop.shop',
         'prestashop.address',
         'prestashop.account.tax.group',
-        'prestashop.sale.order',
     ]
+
+
+@prestashop
+class SaleOrderImport(PrestashopImportSynchronizer):
+    _model_name = ['prestashop.sale.order']
+
+    def _import_dependencies(self):
+        record = self.prestashop_record
+        self._check_dependency(record['id_customer'], 'prestashop.res.partner')
+        self._check_dependency(record['id_address_invoice'],
+                               'prestashop.address')
+
+        orders = record['associations']['order_rows']['order_row']
+        if isinstance(orders, dict):
+            orders = [orders]
+        for order in orders:
+            self._check_dependency(order['product_id'],
+                                   'prestashop.product.product')
 
 
 @prestashop
@@ -236,19 +271,10 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
     """ Import one translatable record """
     _model_name = [
         'prestashop.res.partner.category',
-        'prestashop.product.category',
     ]
 
     _translatable_fields = {
         'prestashop.res.partner.category': ['name'],
-        'prestashop.product.category': [
-            'name',
-            'description',
-            'link_rewrite',
-            'meta_description',
-            'meta_keywords',
-            'meta_title'
-        ],
     }
 
     _default_language = 'en_US'
@@ -299,7 +325,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         :param prestashop_id: identifier of the record on Prestashop
         """
         self.prestashop_id = prestashop_id
-        prestashop_record = self._get_prestashop_data()
+        self.prestashop_record = self._get_prestashop_data()
         skip = self._has_to_skip()
         if skip:
             return skip
@@ -308,7 +334,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         self._import_dependencies()
 
         #split prestashop data for every lang
-        splitted_record = self._split_per_language(prestashop_record)
+        splitted_record = self._split_per_language(self.prestashop_record)
 
         erp_id = None
 
@@ -355,6 +381,30 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
 
 @prestashop
+class ProductCategoryImport(TranslatableRecordImport):
+    _model_name = [
+        'prestashop.product.category',
+    ]
+
+    _translatable_fields = {
+        'prestashop.product.category': [
+            'name',
+            'description',
+            'link_rewrite',
+            'meta_description',
+            'meta_keywords',
+            'meta_title'
+        ],
+    }
+
+    def _import_dependencies(self):
+        record = self.prestashop_record
+        if record['id_parent'] != '0':
+            self._check_dependency(record['id_parent'],
+                                   'prestashop.product.category')
+
+
+@prestashop
 class ProductRecordImport(TranslatableRecordImport):
     """ Import one translatable record """
     _model_name = [
@@ -383,6 +433,18 @@ class ProductRecordImport(TranslatableRecordImport):
                 prestashop_record['id'],
                 image['id']
             )
+
+    def _import_dependencies(self):
+        record = self.prestashop_record
+        self._check_dependency(record['id_category_default'],
+                               'prestashop.product.category')
+
+        categories = record['associations']['categories']['category']
+        if not isinstance(categories, list):
+            categories = [categories]
+        for category in categories:
+            self._check_dependency(category['id'],
+                                   'prestashop.product.category')
 
 
 @prestashop

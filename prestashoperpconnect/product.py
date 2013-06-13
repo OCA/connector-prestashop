@@ -300,7 +300,7 @@ class prestashop_product_product(orm.Model):
             translate=True,
             required=True,
         ),
-   }
+    }
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
@@ -387,7 +387,8 @@ INVENTORY_FIELDS = ('quantity',
 
 
 @on_record_write(model_names='prestashop.product.product')
-def prestashop_product_stock_updated(session, model_name, record_id, fields=None):
+def prestashop_product_stock_updated(session, model_name, record_id,
+                                     fields=None):
     if session.context.get('connector_no_export'):
         return
     inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
