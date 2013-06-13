@@ -242,7 +242,10 @@ class SaleOrderMapper(PrestashopImportMapper):
     ]
 
     def _get_sale_order_lines(self, record):
-        return record['associations']['order_rows']['order_row']
+        orders = record['associations']['order_rows']['order_row']
+        if isinstance(orders, dict):
+            return [orders]
+        return orders
 
     children = [
         (
@@ -303,16 +306,13 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     @mapping
     def payment(self, record):
-        if record['payment']:
-            model = self.session.pool.get('payment.method')
-            payment_method_id = model.get_or_create_payment_method(
-                self.session.cr,
-                self.session.uid,
-                record['payment'],
-                self.session.context
-            )
-            return {'payment_method_id': payment_method_id}
-        return {}
+        method_ids = self.session.search('payment.method',
+                                         [['name', '=', record['payment']]])
+        assert method_ids, ("method %s should exist because the import fails "
+                            "in SaleOrderImport._before_import when it is "
+                            " missing" % record['payment'])
+        method_id = method_ids[0]
+        return {'payment_method_id': method_id}
 
     def _after_mapping(self, result):
         sess = self.session
