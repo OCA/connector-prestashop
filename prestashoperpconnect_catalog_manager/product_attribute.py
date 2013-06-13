@@ -60,7 +60,8 @@ class prestashop_product_attribute(orm.Model):
             ondelete='cascade'
         ),
         'prestashop_position': fields.integer(
-            'Prestashop Position'),
+            'Prestashop Position',
+            required=True),
 
     }
 
@@ -228,13 +229,7 @@ class AttributeOptionExportMapper(TranslationPrestashopExportMapper):
 
     @mapping
     def prestashop_product_attribute_id(self, record):
-        prest_attribute_obj = self.session.pool['prestashop.product.attribute']
-        feature_id = prest_attribute_obj.read(self.session.cr,
-                                              self.session.uid,
-                                              record['prestashop_product_attribute_id'][0],
-                                              ['prestashop_id'],
-                                              self.session.context)['prestashop_id']
-        return {'id_feature': feature_id}
+        return {'id_feature': record.prestashop_product_attribute_id.prestashop_id}
 
     translatable_fields = [
         ('name', 'value'),
