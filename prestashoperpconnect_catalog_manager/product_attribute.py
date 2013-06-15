@@ -36,7 +36,7 @@ from openerp.addons.connector.unit.mapper import mapping
 
 
 class product_attribute(orm.Model):
-    _inherit = 'product.attribute'
+    _inherit = 'attribute.attribute'
 
     _columns ={
         'prestashop_bind_ids': fields.one2many(
@@ -50,11 +50,11 @@ class product_attribute(orm.Model):
 class prestashop_product_attribute(orm.Model):
     _name = 'prestashop.product.attribute'
     _inherit = 'prestashop.binding'
-    _inherits = {'product.attribute': 'openerp_id'}
+    _inherits = {'attribute.attribute': 'openerp_id'}
 
     _columns = {
         'openerp_id': fields.many2one(
-            'product.attribute',
+            'attribute.attribute',
             string='Product Attribute',
             required=True,
             ondelete='cascade'
@@ -145,7 +145,7 @@ def prestashop_attribute_option_written(session, model_name, record_id, fields=N
         return
     export_record.delay(session, model_name, record_id)
 
-@on_record_write(model_names='product.attribute')
+@on_record_write(model_names='attribute.attribute')
 def product_attribute_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return

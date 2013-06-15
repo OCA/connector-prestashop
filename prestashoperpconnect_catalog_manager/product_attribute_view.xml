@@ -10,9 +10,9 @@
 
 <!--This is a product inherited form that will be dynamically populated-->
 <record id="product_attribute_form_view" model="ir.ui.view">
-   <field name="name">product.attribute.form</field>
-   <field name="model">product.attribute</field>
-   <field name="inherit_id" ref="product_custom_attributes.product_attribute_form_view" />
+   <field name="name">attribute.attribute.form</field>
+   <field name="model">attribute.attribute</field>
+   <field name="inherit_id" ref="base_custom_attributes.attribute_attribute_form_view" />
    <field name="arch" type="xml">
        <xpath expr="/form/field[@name='create_date']" position="after">
             <group string="Prestashop Bindings" colspan="4">
@@ -47,7 +47,7 @@
 <record id="attribute_option_form_view" model="ir.ui.view">
    <field name="name">attribute.option.form</field>
    <field name="model">attribute.option</field>
-   <field name="inherit_id" ref="product_custom_attributes.attribute_option_form_view" />
+   <field name="inherit_id" ref="base_custom_attributes.attribute_option_form_view" />
    <field name="arch" type="xml">
        <xpath expr="/form/field[@name='attribute_id']" position="after">
             <group string="Prestashop Bindings" colspan="4">
