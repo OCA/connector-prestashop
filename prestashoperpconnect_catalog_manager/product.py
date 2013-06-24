@@ -33,6 +33,7 @@ from openerp.addons.prestashoperpconnect.connector import get_environment
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.product import INVENTORY_FIELDS
 from openerp.osv import fields, orm
+import openerp.addons.decimal_precision as dp
 
 @on_record_create(model_names='prestashop.product.product')
 def prestashop_product_product_create(session, model_name, record_id):
@@ -68,11 +69,11 @@ class prestashop_product_product(orm.Model):
             translate=True,
         ),
         'meta_description': fields.char(
-            'Meta Title',
+            'Meta Description',
             translate=True,
         ),
         'meta_keywords' : fields.char(
-            'Meta Title',
+            'Meta Keywords',
             translate=True,
         ),
         'tags': fields.char(
@@ -87,6 +88,25 @@ class prestashop_product_product(orm.Model):
         ),
         'online_only': fields.boolean(
             'Online Only'
+        ),
+        'additional_shipping_cost': fields.float(
+            'Sale Price',
+            digits_compute=dp.get_precision('Product Price'),
+            help="Additionnal Shipping Price for the product on Prestashop"),
+        'available_now': fields.char(
+            'Available Now',
+            translate=True,
+        ),
+        'available_later': fields.char(
+            'Available Later',
+            translate=True,
+        ),
+        'available_date': fields.date(
+            'Available Date'
+        ),
+        'minimal_quantity': fields.integer(
+            'Minimal Quantity',
+            help='Minimal Sale quantity',
         ),
     }
 
