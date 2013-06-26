@@ -549,7 +549,24 @@ def import_customers_since(session, backend_id, since_date=None):
         {'import_partners_since': now_fmt},
         context=session.context
     )
-
+@job
+def import_orders_since(session, backend_id, since_date=None):
+    """ Prepare the import of orders modified on Prestashop """
+ 
+    filters = None
+    if since_date:
+        date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
+        filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
+    import_batch(session, 'prestashop.sale.order', backend_id, filters)
+ 
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+    session.pool.get('prestashop.backend').write(
+        session.cr,
+        session.uid,
+        backend_id,
+        {'import_orders_since': now_fmt},
+        context=session.context
+    )
 
 @job
 def import_products(session, backend_id):
