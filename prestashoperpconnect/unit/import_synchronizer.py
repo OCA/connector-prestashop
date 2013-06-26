@@ -415,6 +415,8 @@ class ProductRecordImport(TranslatableRecordImport):
         'prestashop.product.product': [
             'name',
             'description',
+            'link_rewrite',
+            'description_short',
         ],
     }
 
@@ -422,17 +424,18 @@ class ProductRecordImport(TranslatableRecordImport):
         super(ProductRecordImport, self).run(prestashop_id)
 
         prestashop_record = self._get_prestashop_data()
-        images = prestashop_record['associations']['images']['image']
+        images = prestashop_record.get('associations',{}).get('images',{}).get('image',{})
         if not isinstance(images, list):
             images = [images]
         for image in images:
-            import_product_image(
-                self.session,
-                'prestashop.product.image',
-                self.backend_record.id,
-                prestashop_record['id'],
-                image['id']
-            )
+            if image.get('id'):
+                import_product_image.delay(
+                    self.session,
+                    'prestashop.product.image',
+                    self.backend_record.id,
+                    prestashop_record['id'],
+                    image['id']
+                )
 
     def _import_dependencies(self):
         record = self.prestashop_record

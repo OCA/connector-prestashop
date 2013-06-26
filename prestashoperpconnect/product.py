@@ -176,12 +176,18 @@ class ProductMapper(PrestashopImportMapper):
         ('weight', 'weight'),
         ('wholesale_price', 'standard_price'),
         ('price', 'lst_price'),
-        ('reference', 'default_code'),
+#        ('reference', 'default_code'),
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
         ('id_shop_default', 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
     ]
+
+    @mapping
+    def default_code(self, record):
+        if record.get('reference'):
+            return {'default_code': record.get('reference')}
+        return {}
 
     @mapping
     def active(self, record):
