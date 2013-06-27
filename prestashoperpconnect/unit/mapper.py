@@ -30,7 +30,7 @@ from openerp.addons.connector.unit.mapper import (
     ExportMapper
 )
 from ..backend import prestashop
-
+from backend_adapter import GenericAdapter
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
 
@@ -264,8 +264,12 @@ class SaleOrderMapper(PrestashopImportMapper):
 
         self._data_children[to_attr] = []
         for child_record in child_records:
+            adapter = self.get_connector_unit_for_model(GenericAdapter,
+                                                        model_name)
+            detail_record = adapter.read(child_record['id'])
+
             mapper = self._init_child_mapper(model_name)
-            mapper.convert_child(child_record, parent_values=record)
+            mapper.convert_child(detail_record, parent_values=record)
             self._data_children[to_attr].append(mapper)
 
     @mapping
@@ -308,9 +312,10 @@ class SaleOrderMapper(PrestashopImportMapper):
     def payment(self, record):
         method_ids = self.session.search('payment.method',
                                          [['name', '=', record['payment']]])
-        assert method_ids, ("method %s should exist because the import fails "
-                            "in SaleOrderImport._before_import when it is "
-                            " missing" % record['payment'])
+        assert method_ids, ("Payment method '%s' has not been found ; "
+                            "you should create it manually (in Sales->"
+                            "Configuration->Sales->Payment Methods" %
+                            record['payment'])
         method_id = method_ids[0]
         return {'payment_method_id': method_id}
 
@@ -336,6 +341,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
         ('id', 'sequence'),
         ('product_price', 'price_unit'),
         ('product_quantity', 'product_uom_qty'),
+        ('reduction_percent', 'discount'),
     ]
 
     @mapping
@@ -362,17 +368,21 @@ class TaxGroupMapper(PrestashopImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+
 class PrestashopExportMapper(ExportMapper):
 
     def _map_direct(self, record, from_attr, to_attr):
-        res = super(PrestashopExportMapper, self)._map_direct(record, from_attr, to_attr)
+        res = super(PrestashopExportMapper, self)._map_direct(record,
+                                                              from_attr,
+                                                              to_attr)
         column = self.model._all_columns[from_attr].column
         if column._type == 'boolean':
             return res and 1 or 0
         return res
 
+
 class TranslationPrestashopExportMapper(PrestashopExportMapper):
-    
+
     def convert(self, records_by_language, fields=None):
         self.records_by_language = records_by_language
         first_key = records_by_language.keys()[0]

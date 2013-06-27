@@ -131,6 +131,12 @@ class SaleOrderAdapter(GenericAdapter):
 
 
 @prestashop
+class SaleOrderLineAdapter(GenericAdapter):
+    _model_name = 'prestashop.sale.order.line'
+    _prestashop_model = 'order_details'
+
+
+@prestashop
 class SaleStateExport(ExportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
