@@ -273,6 +273,15 @@ class SaleOrderMapper(PrestashopImportMapper):
             self._data_children[to_attr].append(mapper)
 
     @mapping
+    def shipping(self, record):
+        shipping_tax_incl = float(record['total_shipping_tax_incl'])
+        shipping_tax_excl = float(record['total_shipping_tax_excl'])
+        return {
+            'shipping_amount_tax_included': shipping_tax_incl,
+            'shipping_amount_tax_excluded': shipping_tax_excl,
+        }
+
+    @mapping
     def shop_id(self, record):
         return {'shop_id': self.get_openerp_id(
             'prestashop.shop',
