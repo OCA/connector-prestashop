@@ -351,8 +351,10 @@ class ProductAdapter(GenericAdapter):
     _export_node_name = 'product'
 
     def update_inventory(self, id, attributes):
-        self._prestashop_model = 'stock_availables'
-        self.write(id, attributes)
+        api = self.connect()
+        if attributes is None:
+            attributes = {}
+        return api.edit('stock_availables', attributes)
 
 
 @prestashop
