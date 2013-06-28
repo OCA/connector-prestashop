@@ -81,15 +81,6 @@
                             </div>
                         </group>
                         <group>
-                            <label string="Import sale orders" class="oe_inline"/>
-                            <div>
-                                <button name="import_sale_orders"
-                                        type="object"
-                                        class="oe_highlight"
-                                        string="Import in background"/>
-                            </div>
-                        </group>
-                        <group>
                             <label string="Import carriers" class="oe_inline"/>
                             <div>
                                 <button name="import_carriers"
@@ -97,6 +88,18 @@
                                         class="oe_highlight"
                                         string="Import in background"/>
                             </div>
+                        </group>
+                        <group>
+                            <div>
+                               <label string="Import sale orders since" class="oe_inline"/>
+                               <field name="import_orders_since"
+                                    class="oe_inline"
+                                    nolabel="1"/>
+                            </div>
+                            <button name="import_sale_orders"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
                         </group>
                         <group>
                             <label string="Update all the products stock quantities" class="oe_inline"/>

@@ -35,6 +35,7 @@ from openerp.addons.connector.session import ConnectorSession
 from .unit.import_synchronizer import (
     import_batch,
     import_customers_since,
+    import_orders_since,
     import_products,
     import_carriers)
 from .unit.direct_binder import DirectBinder
@@ -76,6 +77,7 @@ class prestashop_backend(orm.Model):
         ),
         # add a field `auto_activate` -> activate a cron
         'import_partners_since': fields.datetime('Import partners since'),
+        'import_orders_since': fields.datetime('Import Orders since'),
         'language_ids': fields.one2many(
             'prestashop.res.lang',
             'backend_id',
@@ -180,11 +182,17 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-        for backend_id in ids:
-            import_batch.delay(
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            since_date = None
+            if backend_record.import_orders_since:
+                since_date = datetime.strptime(
+                    backend_record.import_orders_since,
+                    DEFAULT_SERVER_DATETIME_FORMAT
+                )
+            import_orders_since.delay(
                 session,
-                'prestashop.sale.order',
-                backend_id
+                backend_record.id,
+                since_date
             )
         return True
 
