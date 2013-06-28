@@ -128,7 +128,7 @@ class PartnerImportMapper(PrestashopImportMapper):
 
     @mapping
     def birthday(self, record):
-        if record['birthday'] == '0000-00-00':
+        if record['birthday'] in ['0000-00-00', '']:
             return {}
         return {'birthday': record['birthday']}
 
