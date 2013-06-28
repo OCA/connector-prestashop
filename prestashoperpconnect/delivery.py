@@ -80,7 +80,7 @@ class delivery_carrier(orm.Model):
     _inherit = "delivery.carrier"
     _columns = {
         'prestashop_bind_ids': fields.one2many(
-            'prestashop.carrier',
+            'prestashop.delivery.carrier',
             'openerp_id',
             string='PrestaShop Bindings',),
     }
@@ -102,10 +102,10 @@ class DeliveryCarrierAdapter(GenericAdapter):
             if attrs['id_reference'] in max_id:
                 max_id[attrs['id_reference']] = max(
                     max_id[attrs['id_reference']],
-                    attrs['id']
+                    int(attrs['id'])
                 )
             else:
-                max_id[attrs['id_reference']] = attrs['id']
+                max_id[attrs['id_reference']] = int(attrs['id'])
         return max_id.values()
 
     def search(self):
