@@ -281,8 +281,9 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
     def _get_oerp_language(self, prestashop_id):
         language_binder = self.get_binder_for_model('prestashop.res.lang')
-        #TODO FIXME when erp_language_id is None
         erp_language_id = language_binder.to_openerp(prestashop_id)
+        if erp_language_id is None:
+            return None
         model = self.environment.session.pool.get('prestashop.res.lang')
         erp_lang = model.read(
             self.session.cr,
@@ -301,7 +302,8 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
                 if not language or language['attrs']['id'] in languages:
                     continue
                 erp_lang = self._get_oerp_language(language['attrs']['id'])
-                languages[language['attrs']['id']] = erp_lang['code']
+                if erp_lang is not None:
+                    languages[language['attrs']['id']] = erp_lang['code']
         return languages
 
     def _split_per_language(self, record):
