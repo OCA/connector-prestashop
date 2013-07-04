@@ -24,6 +24,11 @@
                 <field name="available_for_order"/>
                 <field name="show_price"/>
                 <field name="online_only"/>
+                <field name="additional_shipping_cost"/>
+                <field name="available_now"/>
+                <field name="available_later"/>
+                <field name="available_date"/>
+                <field name="minimal_quantity"/>
             </group>
         </xpath>
     </field>
