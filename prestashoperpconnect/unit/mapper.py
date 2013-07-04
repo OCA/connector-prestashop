@@ -328,6 +328,13 @@ class SaleOrderMapper(PrestashopImportMapper):
         method_id = method_ids[0]
         return {'payment_method_id': method_id}
 
+    @mapping
+    def carrier_id(self, record):
+        return {'carrier_id': self.get_openerp_id(
+            'prestashop.delivery.carrier',
+            record['id_carrier']
+        )}
+
     def _after_mapping(self, result):
         sess = self.session
         result = sess.pool['sale.order']._convert_special_fields(
