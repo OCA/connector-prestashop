@@ -90,7 +90,7 @@ class prestashop_product_product(orm.Model):
             'Online Only'
         ),
         'additional_shipping_cost': fields.float(
-            'Sale Price',
+            'Additional Shipping Price',
             digits_compute=dp.get_precision('Product Price'),
             help="Additionnal Shipping Price for the product on Prestashop"),
         'available_now': fields.char(
@@ -110,6 +110,10 @@ class prestashop_product_product(orm.Model):
         ),
     }
 
+    _defaults = {
+        'minimal_quantity': 1,
+    }
+
 @prestashop
 class ProductExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.product'
@@ -117,7 +121,19 @@ class ProductExport(TranslationPrestashopExporter):
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
         #TODO add export of category
-        return 
+        attribute_binder = self.get_binder_for_model('prestashop.product.attribute')
+        option_binder = self.get_binder_for_model('prestashop.attribute.option')
+        for group in self.erp_record.attribute_group_ids:
+            for attribute in group.attribute_ids:
+                attribute_ext_id = attribute_binder.to_backend(attribute.id, unwrap=True)
+                if attribute_ext_id and attribute.ttype == 'many2one':
+                    option = record[attribute.name]
+                    if option and not option_binder.to_backend(option.id, unwrap=True)
+                        self.session.create('prestashop.attribute.option', {
+                                'backend_id': self.backend_id.id,
+                                'openerp_id': option.id,
+                                })
+      
 
 
 @prestashop
