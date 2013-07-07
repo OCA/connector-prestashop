@@ -158,7 +158,6 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         ('additional_shipping_cost', 'additional_shipping_cost'),
         ('available_now', 'available_now'),
         ('available_later', 'available_later'),
-        ('available_date', 'available_date'),
         ('minimal_quantity', 'minimal_quantity'),
     ]
 
@@ -230,3 +229,10 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         binder = self.get_binder_for_model('prestashop.account.tax.group')
         ext_id = binder.to_backend(record.tax_group_id.id, unwrap=True)
         return {'id_tax_rules_group' : ext_id}
+
+    @mapping
+    def available_date(self, record):
+        if record.available_date:
+            return {'available_date': record.available_date}
+        return {}
+
