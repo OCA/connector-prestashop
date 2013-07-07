@@ -127,12 +127,16 @@ class ProductExport(TranslationPrestashopExporter):
             for attribute in group.attribute_ids:
                 attribute_ext_id = attribute_binder.to_backend(attribute.id, unwrap=True)
                 if attribute_ext_id and attribute.ttype == 'many2one':
-                    option = record[attribute.name]
-                    if option and not option_binder.to_backend(option.id, unwrap=True)
-                        self.session.create('prestashop.attribute.option', {
-                                'backend_id': self.backend_id.id,
-                                'openerp_id': option.id,
-                                })
+                    option = self.erp_record[attribute.name]
+                    if option and not option_binder.to_backend(option.id, unwrap=True):
+                        ctx = self.session.context.copy()
+                        ctx['connector_no_export'] = True
+                        binding_id = self.session.pool['prestashop.attribute.option'].create(
+                                                self.session.cr, self.session.uid,{
+                                                'backend_id': self.backend_record.id,
+                                                'openerp_id': option.id,
+                                                }, context=ctx)
+                        export_record(self.session, 'prestashop.attribute.option', binding_id)
       
 
 
