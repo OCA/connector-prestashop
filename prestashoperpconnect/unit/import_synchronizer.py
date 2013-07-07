@@ -441,10 +441,11 @@ class ProductRecordImport(TranslatableRecordImport):
 
     def _import_dependencies(self):
         record = self.prestashop_record
-        self._check_dependency(record['id_category_default'],
+        if int(record['id_category_default']):
+            self._check_dependency(record['id_category_default'],
                                'prestashop.product.category')
 
-        categories = record['associations']['categories']['category']
+        categories = record['associations'].get('categories', {}).get('category', [])
         if not isinstance(categories, list):
             categories = [categories]
         for category in categories:
