@@ -125,7 +125,7 @@ class ProductExport(TranslationPrestashopExporter):
         option_binder = self.get_binder_for_model('prestashop.attribute.option')
         for group in self.erp_record.attribute_group_ids:
             for attribute in group.attribute_ids:
-                attribute_ext_id = attribute_binder.to_backend(attribute.id, unwrap=True)
+                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, unwrap=True)
                 if attribute_ext_id and attribute.ttype == 'many2one':
                     option = self.erp_record[attribute.name]
                     if option and not option_binder.to_backend(option.id, unwrap=True):
@@ -178,7 +178,7 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         option_binder = self.get_binder_for_model('prestashop.attribute.option')
         for group in record.attribute_group_ids:
             for attribute in group.attribute_ids:
-                attribute_ext_id = attribute_binder.to_backend(attribute.id, unwrap=True)
+                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, unwrap=True)
                 if not attribute_ext_id:
                     continue
                 feature_dict = {'id': attribute_ext_id}
