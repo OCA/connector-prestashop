@@ -247,6 +247,12 @@ class ProductMapper(PrestashopImportMapper):
         )
         return {"taxes_id": [(6, 0, tax_ids['tax_ids'])]}
 
+    @mapping
+    def type(self, record):
+        product_type = {"type": 'product'}
+        if record['type']['value'] and record['type']['value'] == 'virtual':
+             product_type = {"type": 'consu'}
+        return product_type
 
 class product_product(orm.Model):
     _inherit = 'product.product'
