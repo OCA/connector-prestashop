@@ -60,6 +60,8 @@ class prestashop_sale_order(orm.Model):
             'prestashop_order_id',
             'Prestashop Order Lines'
         ),
+        'prestashop_invoice_number': fields.char('PrestaShop Invoice Number',size=64),
+        'prestashop_delivery_number': fields.char('PrestaShop Delivery Number',size=64),
     }
 
 
