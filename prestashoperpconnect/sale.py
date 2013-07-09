@@ -30,6 +30,41 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 from .connector import get_environment
 from backend import prestashop
 
+class sale_order_state(orm.Model):
+    _name = 'sale.order.state'
+    
+    _columns = {
+        'name': fields.char('Name', size=128, translate=True),
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.sale.order.state',
+            'openerp_id',
+            string="Prestashop Bindings"
+        ),
+    }
+    
+class prestashop_sale_order_state(orm.Model):
+    _name = 'prestashop.sale.order.state'
+    _inherit = 'prestashop.binding'
+    _inherits = {'sale.order.state': 'openerp_id'}
+
+    _columns = {
+        'openerp_state': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ], 'OpenERP State', size=64),
+        'openerp_id': fields.many2one(
+            'sale.order.state',
+            string='Sale Order State',
+            required=True,
+            ondelete='cascade'
+        ),
+    }
 
 class sale_order(orm.Model):
     _inherit = 'sale.order'
@@ -119,6 +154,10 @@ class prestashop_sale_order_line(orm.Model):
             context=context
         )
 
+@prestashop
+class SaleOrderStateAdapter(GenericAdapter):
+    _model_name = 'prestashop.sale.order.state'
+    _prestashop_model = 'order_states'
 
 @prestashop
 class SaleOrderAdapter(GenericAdapter):

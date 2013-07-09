@@ -114,6 +114,7 @@ class prestashop_backend(orm.Model):
                 directBinder.run()
 
             import_batch(session, 'prestashop.account.tax.group', backend_id)
+            import_batch(session, 'prestashop.sale.order.state', backend_id)
         return True
 
     def import_customers_since(self, cr, uid, ids, context=None):

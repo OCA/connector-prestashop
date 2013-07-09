@@ -181,6 +181,7 @@ class DirectBatchImport(BatchImportSynchronizer):
         'prestashop.product.category',
         'prestashop.account.tax.group',
         'prestashop.res.partner.category',
+        'prestashop.sale.order.state',
         #'prestashop.delivery.carrier',
     ]
 
@@ -452,6 +453,18 @@ class ProductRecordImport(TranslatableRecordImport):
             self._check_dependency(category['id'],
                                    'prestashop.product.category')
 
+@prestashop
+class SaleOrderStateImport(TranslatableRecordImport):
+    """ Import one translatable record """
+    _model_name = [
+        'prestashop.sale.order.state',
+    ]
+
+    _translatable_fields = {
+        'prestashop.sale.order.state': [
+            'name',
+        ],
+    }
 
 @prestashop
 class ProductImageImport(PrestashopImportSynchronizer):
@@ -468,7 +481,6 @@ class ProductImageImport(PrestashopImportSynchronizer):
         self.image_id = image_id
 
         super(ProductImageImport, self).run(image_id)
-
 
 @prestashop
 class SaleOrderLineRecordImport(PrestashopImportSynchronizer):

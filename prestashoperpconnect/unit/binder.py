@@ -52,6 +52,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.product.image',
         'prestashop.product.product',
         'prestashop.sale.order',
+        'prestashop.sale.order.state',
         'prestashop.delivery.carrier',
     ]
 
