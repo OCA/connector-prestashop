@@ -35,8 +35,29 @@
             <field name="arch" type="xml">
                 <tree string="Sale order State">
                     <field name="backend_id"/>
-                    <field name="openerp_state"/>
+                    <field name="prestashop_id"/>
+                    <field name="openerp_state_ids"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_prestashop_sale_order_state_form" model="ir.ui.view">
+            <field name="name">prestashop.sale.order.state.form</field>
+            <field name="model">prestashop.sale.order.state</field>
+            <field name="arch" type="xml">
+                <form string="Sale order State" version="7.0">
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="prestashop_id"/>
+                    </group>
+                    <group>
+                        <field name="openerp_state_ids" nolabel="1" mode="tree">
+                            <tree string="States" editable="top">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>
             </field>
         </record>
 
