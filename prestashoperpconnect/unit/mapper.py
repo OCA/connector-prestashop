@@ -239,6 +239,7 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     direct = [
         ('reference', 'name'),
+        ('date_add','date_order')
     ]
 
     def _get_sale_order_lines(self, record):
