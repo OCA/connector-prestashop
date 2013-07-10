@@ -156,12 +156,28 @@ class BatchImportSynchronizer(ImportSynchronizer):
     items to import, then it can either import them directly or delay
     the import of each item separately.
     """
+    page_size = 1000
 
     def run(self, filters=None):
         """ Run the synchronization """
+        if filters is None:
+            filters = {}
+        if 'limit' in filters:
+            self._run_page(filters)
+            return
+        page_number = 0
+        filters['limit'] = '%d,%d' % (page_number * self.page_size, self.page_size)
+        record_ids = self._run_page(filters)
+        while len(record_ids) == self.page_size:
+            page_number += 1
+            filters['limit'] = '%d,%d' % (page_number * self.page_size, self.page_size)
+            record_ids = self._run_page(filters)
+
+    def _run_page(self, filters):
         record_ids = self.backend_adapter.search(filters)
         for record_id in record_ids:
             self._import_record(record_id)
+        return record_ids
 
     def _import_record(self, record):
         """ Import a record directly or delay the import of the record """
