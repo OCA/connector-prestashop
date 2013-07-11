@@ -156,8 +156,6 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         ('active', 'active'),
         ('ean13', 'ean13'),
         ('additional_shipping_cost', 'additional_shipping_cost'),
-        ('available_now', 'available_now'),
-        ('available_later', 'available_later'),
         ('minimal_quantity', 'minimal_quantity'),
     ]
 
@@ -170,7 +168,9 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         ('tags', 'tags'),
         ('description_short_html', 'description_short'),
         ('description_html', 'description'),
-   ]
+        ('available_now', 'available_now'),
+        ('available_later', 'available_later'),
+    ]
 
     def _get_product_feature(self, record):
         product_feature = []
