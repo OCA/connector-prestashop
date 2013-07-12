@@ -52,6 +52,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.product.image',
         'prestashop.product.product',
         'prestashop.sale.order',
+        'prestashop.sale.order.state',
         'prestashop.delivery.carrier',
     ]
 
@@ -98,9 +99,9 @@ class PrestashopModelBinder(PrestashopBinder):
         """
         if unwrap:
             erp_ps_id = self.session.search(self.model._name, [
-                                ['openerp_id','=', local_id],
-                                ['backend_id', '=', self.backend_record.id]
-                                ])
+                ['openerp_id', '=', local_id],
+                ['backend_id', '=', self.backend_record.id]
+            ])
             if erp_ps_id:
                 erp_ps_id = erp_ps_id[0]
             else:
@@ -108,8 +109,9 @@ class PrestashopModelBinder(PrestashopBinder):
         else:
             erp_ps_id = local_id
 
-        prestashop_id = self.session.read(self.model._name, erp_ps_id,
-                                ['prestashop_id'])['prestashop_id']
+        prestashop_id = self.session.read(
+            self.model._name,
+            erp_ps_id, ['prestashop_id'])['prestashop_id']
         return prestashop_id
 
     def bind(self, external_id, openerp_id):

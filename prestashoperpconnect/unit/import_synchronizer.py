@@ -166,11 +166,13 @@ class BatchImportSynchronizer(ImportSynchronizer):
             self._run_page(filters)
             return
         page_number = 0
-        filters['limit'] = '%d,%d' % (page_number * self.page_size, self.page_size)
+        filters['limit'] = '%d,%d' % (
+            page_number * self.page_size, self.page_size)
         record_ids = self._run_page(filters)
         while len(record_ids) == self.page_size:
             page_number += 1
-            filters['limit'] = '%d,%d' % (page_number * self.page_size, self.page_size)
+            filters['limit'] = '%d,%d' % (
+                page_number * self.page_size, self.page_size)
             record_ids = self._run_page(filters)
 
     def _run_page(self, filters):
@@ -197,7 +199,7 @@ class DirectBatchImport(BatchImportSynchronizer):
         'prestashop.product.category',
         'prestashop.account.tax.group',
         'prestashop.res.partner.category',
-        #'prestashop.delivery.carrier',
+        'prestashop.sale.order.state',
     ]
 
     def _import_record(self, record):
@@ -442,7 +444,8 @@ class ProductRecordImport(TranslatableRecordImport):
         super(ProductRecordImport, self).run(prestashop_id)
 
         prestashop_record = self._get_prestashop_data()
-        images = prestashop_record.get('associations',{}).get('images',{}).get('image',{})
+        associations = prestashop_record.get('associations', {})
+        images = associations.get('images', {}).get('image', {})
         if not isinstance(images, list):
             images = [images]
         for image in images:
@@ -459,14 +462,29 @@ class ProductRecordImport(TranslatableRecordImport):
         record = self.prestashop_record
         if int(record['id_category_default']):
             self._check_dependency(record['id_category_default'],
-                               'prestashop.product.category')
+                                   'prestashop.product.category')
 
-        categories = record['associations'].get('categories', {}).get('category', [])
+        associations = record.get('associations', {})
+        categories = associations.get('categories', {}).get('category', [])
         if not isinstance(categories, list):
             categories = [categories]
         for category in categories:
             self._check_dependency(category['id'],
                                    'prestashop.product.category')
+
+
+@prestashop
+class SaleOrderStateImport(TranslatableRecordImport):
+    """ Import one translatable record """
+    _model_name = [
+        'prestashop.sale.order.state',
+    ]
+
+    _translatable_fields = {
+        'prestashop.sale.order.state': [
+            'name',
+        ],
+    }
 
 
 @prestashop
@@ -571,16 +589,18 @@ def import_customers_since(session, backend_id, since_date=None):
         {'import_partners_since': now_fmt},
         context=session.context
     )
+
+
 @job
 def import_orders_since(session, backend_id, since_date=None):
     """ Prepare the import of orders modified on Prestashop """
- 
+
     filters = None
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
     import_batch(session, 'prestashop.sale.order', backend_id, filters)
- 
+
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
         session.cr,
@@ -589,6 +609,7 @@ def import_orders_since(session, backend_id, since_date=None):
         {'import_orders_since': now_fmt},
         context=session.context
     )
+
 
 @job
 def import_products(session, backend_id):

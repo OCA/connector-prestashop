@@ -31,6 +31,63 @@ from .connector import get_environment
 from backend import prestashop
 
 
+class sale_order_state(orm.Model):
+    _name = 'sale.order.state'
+
+    _columns = {
+        'name': fields.char('Name', size=128, translate=True),
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.sale.order.state',
+            'openerp_id',
+            string="Prestashop Bindings"
+        ),
+    }
+
+
+class prestashop_sale_order_state(orm.Model):
+    _name = 'prestashop.sale.order.state'
+    _inherit = 'prestashop.binding'
+    _inherits = {'sale.order.state': 'openerp_id'}
+
+    _columns = {
+        'openerp_state_ids': fields.one2many(
+            'sale.order.state.list',
+            'prestashop_state_id',
+            'OpenERP States'
+        ),
+        'openerp_id': fields.many2one(
+            'sale.order.state',
+            string='Sale Order State',
+            required=True,
+            ondelete='cascade'
+        ),
+    }
+
+
+class sale_order_state_list(orm.Model):
+    _name = 'sale.order.state.list'
+
+    _columns = {
+        'name': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ], 'OpenERP State', required=True),
+        'prestashop_state_id': fields.many2one(
+            'prestashop.sale.order.state',
+            'Prestashop State'
+        ),
+        'prestashop_id': fields.related(
+            'prestashop_state_id', 'prestashop_id', string='Prestashop ID',
+            type='integer', readonly=True, store=True),
+    }
+
+
 class sale_order(orm.Model):
     _inherit = 'sale.order'
 
@@ -121,6 +178,12 @@ class prestashop_sale_order_line(orm.Model):
 
 
 @prestashop
+class SaleOrderStateAdapter(GenericAdapter):
+    _model_name = 'prestashop.sale.order.state'
+    _prestashop_model = 'order_states'
+
+
+@prestashop
 class SaleOrderAdapter(GenericAdapter):
     _model_name = 'prestashop.sale.order'
     _prestashop_model = 'orders'
@@ -152,30 +215,37 @@ class SaleStateExport(ExportSynchronizer):
         self.backend_adapter.update_sale_state(prestashop_id, datas)
 
 
-# TODO improve me, this should be not hardcoded. Need to syncronize prestashop
-# state in OpenERP
-PRESTASHOP_MAP_STATE = {
-    'progress': 3,
-    'manual': 3,
-    'done': 5,
-}
-
-
+# TODO improve me, don't try to export state if the sale order does not come
+#      from a prestashop connector
+# TODO improve me, make the search on the sale order backend only
 @on_record_write(model_names='sale.order')
 def prestashop_sale_state_modified(session, model_name, record_id,
                                    fields=None):
+    import pdb; pdb.set_trace()
     if 'state' in fields:
-        sale = session.pool[model_name].read(
+        sale = session.pool[model_name].browse(
             session.cr,
             session.uid,
-            record_id, ['state']
+            record_id
         )
-        if sale['state'] in PRESTASHOP_MAP_STATE:
+        state_list_model = 'sale.order.state.list'
+        states = session.pool[state_list_model].search(
+            session.cr,
+            session.uid,
+            [('name', '=', sale.state)]
+        )
+
+        if states:
+            state = session.pool[state_list_model].browse(
+                session.cr,
+                session.uid,
+                states[0]
+            )
             export_sale_state.delay(
                 session,
                 model_name,
                 record_id,
-                PRESTASHOP_MAP_STATE[sale['state']],
+                state.prestashop_id,
                 priority=20
             )
     return True

@@ -234,12 +234,25 @@ class AddressImportMapper(PrestashopImportMapper):
 
 
 @prestashop
+class SaleOrderStateMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.sale.order.state'
+
+    direct = [
+        ('name', 'name'),
+    ]
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+
+@prestashop
 class SaleOrderMapper(PrestashopImportMapper):
     _model_name = 'prestashop.sale.order'
 
     direct = [
         ('reference', 'name'),
-        ('date_add','date_order')
+        ('date_add', 'date_order')
     ]
 
     def _get_sale_order_lines(self, record):
