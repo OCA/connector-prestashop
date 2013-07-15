@@ -93,7 +93,7 @@ class sale_order(orm.Model):
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
-            'prestashop.res.partner',
+            'prestashop.sale.order',
             'openerp_id',
             string="Prestashop Bindings"
         ),
