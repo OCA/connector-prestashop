@@ -301,17 +301,32 @@ class SaleOrderImport(PrestashopImportSynchronizer):
             self._check_dependency(order['product_id'],
                                    'prestashop.product.product')
 
+    def _check_if_total_ok(self, openerp_binding_id, data):
+        model_name = 'prestashop.sale.order'
+        amount_total = self.environment.session.read(
+            model_name,
+            [openerp_binding_id],
+            ['amount_total'])[0]['amount_total']
+        if data.get('total_paid') and \
+            float(data.get('total_paid')) == amount_total:
+            return True
+        return False
+
     def _create(self, data):
         openerp_binding_id = super(SaleOrderImport, self)._create(data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-        checkpoint.run(openerp_binding_id)
+        total_ok = self._check_if_total_ok(openerp_binding_id, data)
+        if not total_ok:
+            checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+            checkpoint.run(openerp_binding_id)
         return openerp_binding_id
 
     def _update(self, binding_id, data):
-        openerp_binding_id = super(SaleOrderImport, self)._update(binding_id, data)
-        checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
-        checkpoint.run(binding_id)
-        return binding_id
+        res = super(SaleOrderImport, self)._update(binding_id, data)
+        total_ok = self._check_if_total_ok(binding_id, data)
+        if not total_ok:
+            checkpoint = self.get_connector_unit_for_model(AddCheckpoint)
+            checkpoint.run(binding_id)
+        return res
 
 @prestashop
 class TranslatableRecordImport(PrestashopImportSynchronizer):
