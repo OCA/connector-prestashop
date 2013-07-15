@@ -39,7 +39,7 @@ from .unit.import_synchronizer import (
     import_products,
     import_carriers)
 from .unit.direct_binder import DirectBinder
-from .connector import get_environment
+from .connector import get_environment, add_checkpoint
 
 _logger = logging.getLogger(__name__)
 
