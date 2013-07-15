@@ -172,7 +172,7 @@ class PartnerImportMapper(PrestashopImportMapper):
                 self.session.uid,
                 'base',
                 'lang_en')[1]
-            record['id_lang'] = erp_lang_id
+            record['id_lang'] = binder.to_backend(erp_lang_id)
         else:
             erp_lang_id = binder.to_openerp(record['id_lang'])
         model = self.environment.session.pool.get('prestashop.res.lang')
