@@ -165,9 +165,16 @@ class PartnerImportMapper(PrestashopImportMapper):
     @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('prestashop.res.lang')
-        erp_lang_id = binder.to_openerp(record.get('id_lang', 1))
-        #hack
-        record['id_lang'] = 1
+        if not record.get('id_lang'):
+            data_obj = self.session.pool.get('ir.model.data')
+            erp_lang_id = data_obj.get_object_reference(
+                self.session.cr,
+                self.session.uid,
+                'base',
+                'lang_en')[1]
+            record['id_lang'] = erp_lang_id
+        else:
+            erp_lang_id = binder.to_openerp(record['id_lang'])
         model = self.environment.session.pool.get('prestashop.res.lang')
         erp_lang = model.read(
             self.session.cr,
