@@ -70,6 +70,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'partner_view.xml',
         'sale_view.xml',
         'setting_view.xml',
+        'ecommerce_data.xml',
     ],
     "active": False,
     "installable": True,
