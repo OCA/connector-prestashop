@@ -156,7 +156,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
     items to import, then it can either import them directly or delay
     the import of each item separately.
     """
-    page_size = 1000
+    page_size = 10
 
     def run(self, filters=None):
         """ Run the synchronization """
