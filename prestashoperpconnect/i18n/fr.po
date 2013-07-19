@@ -1,0 +1,999 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* prestashoperpconnect
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-19 10:09+0000\n"
+"PO-Revision-Date: 2013-07-19 10:09+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: prestashoperpconnect
+#: model:ir.ui.menu,name:prestashoperpconnect.menu_prestashop_carrier
+msgid "Carriers"
+msgstr "Transporteurs"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_shop_group
+#: field:prestashop.address,shop_group_id:0
+#: field:prestashop.res.partner,shop_group_id:0
+#: field:prestashop.shop,shop_group_id:0
+#: view:prestashop.shop.group:0
+msgid "PrestaShop Shop Group"
+msgstr "Groupe de Magasin PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.image,openerp_id:0
+msgid "Product image"
+msgstr "Image de produit"
+
+#. module: prestashoperpconnect
+#: field:connector.config.settings,module_prestashoperpconnect_other_module:0
+msgid "Example setting checkbox (experimental)"
+msgstr "Example setting checkbox (experimental)"
+
+#. module: prestashoperpconnect
+#: view:sale.order.state:0
+msgid "Connector"
+msgstr "Connecteur"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "By clicking on the buttons,\n"
+"                                    you will initiate the synchronizations\n"
+"                                    with Prestashop.\n"
+"                                    Note that the import or exports\n"
+"                                    won't be done directly,\n"
+"                                    they will create 'Jobs'\n"
+"                                    executed as soon as possible."
+msgstr "En cliquant sur les boutons,\n"
+"                                    vous allez initialiser les synchronisations\n"
+"                                    avec Prestashop.\n"
+"                                    Notez que les imports ou exports\n"
+"                                    ne seront pas fait directement,\n"
+"                                    ils vont créer des 'Jobs'\n"
+"                                    executés aussi rapidement que possible."
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner.category,openerp_id:0
+msgid "Partner Category"
+msgstr "Catégories de Partenaires"
+
+#. module: prestashoperpconnect
+#: field:prestashop.address,backend_id:0
+#: field:prestashop.res.partner,backend_id:0
+msgid "Prestashop Backend"
+msgstr "Backend Prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_shop
+#: view:prestashop.delivery.carrier:0
+#: field:prestashop.res.partner,shop_id:0
+#: view:prestashop.shop:0
+msgid "PrestaShop Shop"
+msgstr "Magasin PrestaShop"
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Waiting Schedule"
+msgstr "Attente de planification"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.shop.group:0
+msgid "A shop group with the same ID on PrestaShop already exists."
+msgstr "Un groupe de magasin avec le même ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,link_rewrite:0
+#: field:prestashop.product.product,link_rewrite:0
+msgid "Friendly URL"
+msgstr "URL simplifiée"
+
+#. module: prestashoperpconnect
+#: help:prestashop.product.product,always_available:0
+msgid "if check, this object is always available"
+msgstr "Si coché, cet object sera toujours disponible"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner,company:0
+msgid "Company"
+msgstr "Société"
+
+#. module: prestashoperpconnect
+#: field:sale.order.state.list,prestashop_id:0
+msgid "Prestashop ID"
+msgstr "ID Prestashop"
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Invoice Exception"
+msgstr "Incident de facturation"
+
+#. module: prestashoperpconnect
+#: field:prestashop.address,date_upd:0
+#: field:prestashop.res.partner.category,date_upd:0
+msgid "Updated At (on Prestashop)"
+msgstr "Mis à jour le (dans Prestashop)"
+
+#. module: prestashoperpconnect
+#: help:prestashop.res.partner,default_category_id:0
+msgid "This field is synchronized with the field 'Default customer group' in PrestaShop."
+msgstr "Ce champ va synchroniser avec le champ 'Groupe par défaut' de PrestaShop."
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Draft Quotation"
+msgstr "Devis brouillon"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,meta_keywords:0
+msgid "Meta keywords"
+msgstr "Méta mots-clés"
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Sale to Invoice"
+msgstr "Commande à facturer"
+
+#. module: prestashoperpconnect
+#: help:prestashop.backend,warehouse_id:0
+msgid "Warehouse used to compute the stock quantities."
+msgstr "Entrepôt utiliser pour calculer les quantités en stock."
+
+#. module: prestashoperpconnect
+#: model:ir.actions.act_window,name:prestashoperpconnect.action_prestashop_sale_order_state_form
+#: model:ir.ui.menu,name:prestashoperpconnect.sale_order_state_tree_menu
+msgid "Sale Order States"
+msgstr "Statuts de commande de vente"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order,openerp_id:0
+msgid "Sale Order"
+msgstr "Commande"
+
+#. module: prestashoperpconnect
+#: view:prestashop.product.product:0
+msgid "prestashop product"
+msgstr "Produits prestashop"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.address:0
+msgid "A partner address with the same ID on PrestaShop already exists."
+msgstr "Une adresse de partenaire avec le même ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_account_tax_group
+msgid "account tax group"
+msgstr "Groupe de taxes"
+
+#. module: prestashoperpconnect
+#: view:connector.config.settings:0
+msgid "Extensions"
+msgstr "Extensions"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner,default_category_id:0
+msgid "PrestaShop default category"
+msgstr "Catégorie par défaut PrestaShop"
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Cancelled"
+msgstr "Annulée"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Import product categories and products"
+msgstr "Importer les catégories de produits et les produits"
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Quotation Sent"
+msgstr "Devis envoyé"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Import sale orders since"
+msgstr "Importer les commandes depuis le"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.res.partner.category:0
+msgid "A partner group with the same ID on PrestaShop already exists."
+msgstr "Un groupe de partenaires ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: model:ir.ui.menu,name:prestashoperpconnect.menu_prestashop_shop
+msgid "Stores"
+msgstr "Magasins"
+
+#. module: prestashoperpconnect
+#: field:prestashop.account.tax,sync_date:0
+#: field:prestashop.account.tax.group,sync_date:0
+#: field:prestashop.address,sync_date:0
+#: field:prestashop.binding,sync_date:0
+#: field:prestashop.delivery.carrier,sync_date:0
+#: field:prestashop.product.category,sync_date:0
+#: field:prestashop.product.image,sync_date:0
+#: field:prestashop.product.product,sync_date:0
+#: field:prestashop.res.country,sync_date:0
+#: field:prestashop.res.currency,sync_date:0
+#: field:prestashop.res.lang,sync_date:0
+#: field:prestashop.res.partner,sync_date:0
+#: field:prestashop.res.partner.category,sync_date:0
+#: field:prestashop.sale.order,sync_date:0
+#: field:prestashop.sale.order.line,sync_date:0
+#: field:prestashop.sale.order.state,sync_date:0
+#: field:prestashop.shop,sync_date:0
+#: field:prestashop.shop.group,sync_date:0
+msgid "Last synchronization date"
+msgstr "Date de dernière synchronisation"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_connector_config_settings
+msgid "Connector Configuration"
+msgstr "Configuration du connecteur"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_delivery_carrier
+msgid "Prestashop Carrier"
+msgstr "Transporteur Prestashop"
+
+#. module: prestashoperpconnect
+#: help:prestashop.delivery.carrier,export_tracking:0
+msgid " ... in prestashop"
+msgstr " ... dans prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_res_partner
+#: field:prestashop.address,openerp_id:0
+#: field:prestashop.res.partner,openerp_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_sale_order
+#: selection:sale.order.state.list,name:0
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.res.lang:0
+msgid "A Lang with the same ID on Prestashop already exists."
+msgstr "Une langue avec le même ID dans Prestashop existe déjà."
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de commandes de vente"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order,prestashop_invoice_number:0
+msgid "PrestaShop Invoice Number"
+msgstr "Numéro de facture PrestaShop"
+
+#. module: prestashoperpconnect
+#: view:prestashop.delivery.carrier:0
+msgid "Last synchro"
+msgstr "Dernière synchronisation"
+
+#. module: prestashoperpconnect
+#: help:prestashop.product.product,quantity:0
+msgid "Last computed quantity to send on Prestashop."
+msgstr "Dernière quantité de stock calculée à envoyer dans Prestashop."
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,default_shop_id:0
+msgid "Default shop"
+msgstr "Magasin par défaut"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_account_tax
+#: field:prestashop.account.tax,openerp_id:0
+msgid "Tax"
+msgstr "Taxes"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_sale_order_state_list
+msgid "sale.order.state.list"
+msgstr "Liste des statuts de commandes"
+
+#. module: prestashoperpconnect
+#: field:prestashop.delivery.carrier,name_ext:0
+msgid "External name"
+msgstr "Nom externe"
+
+#. module: prestashoperpconnect
+#: model:ir.ui.menu,name:prestashoperpconnect.menu_prestashop_backend
+msgid "Backends"
+msgstr "Backends"
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,location:0
+msgid "Location"
+msgstr "Emplacement (URL)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,warehouse_id:0
+msgid "Warehouse"
+msgstr "Entrepôt"
+
+#. module: prestashoperpconnect
+#: view:prestashop.product.product:0
+msgid "prestashop fields"
+msgstr "Champs Prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_account_tax
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_account_tax_group
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_address
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_binding
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_product_category
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_product_image
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_product_product
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_res_country
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_res_currency
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_res_lang
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_res_partner
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_res_partner_category
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_sale_order
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_sale_order_line
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_sale_order_state
+msgid "PrestaShop Binding (abstract)"
+msgstr "PrestaShop Binding (abstract)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.delivery.carrier,id_reference:0
+msgid "Id reference"
+msgstr "Référence ID"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,date_upd:0
+msgid "Updated At (on Presta)"
+msgstr "Mis à jour le (dans PrestaShop)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,date_add:0
+#: field:prestashop.res.partner,date_add:0
+msgid "Created At (on PrestaShop)"
+msgstr "Créé le (dans PrestaShop)"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_product_category
+#: field:prestashop.product.category,openerp_id:0
+msgid "Product Category"
+msgstr "Catégorie d'articles"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner,group_ids:0
+msgid "PrestaShop Groups"
+msgstr "Groupes PrestaShop"
+
+#. module: prestashoperpconnect
+#: view:res.partner.category:0
+msgid "PrestaShop"
+msgstr "PrestaShop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_prestashoperpconnect_installed
+msgid "prestashoperpconnect.installed"
+msgstr "prestashoperpconnect.installed"
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,import_partners_since:0
+msgid "Import partners since"
+msgstr "Tmporter les partenaires depuis"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Import in background"
+msgstr "Importer dans OpenERP"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,description_short_html:0
+msgid "Short Description"
+msgstr "Description courte"
+
+#. module: prestashoperpconnect
+#: code:addons/prestashoperpconnect/unit/direct_binder.py:60
+#, python-format
+msgid "Error :"
+msgstr "Erreur :"
+
+#. module: prestashoperpconnect
+#: view:prestashop.delivery.carrier:0
+msgid "Id ref."
+msgstr "Ref. ID"
+
+#. module: prestashoperpconnect
+#: code:addons/prestashoperpconnect/unit/mapper.py:71
+#, python-format
+msgid "Undefined"
+msgstr "Indéfini"
+
+#. module: prestashoperpconnect
+#: field:prestashop.delivery.carrier,openerp_id:0
+msgid "Delivery carrier"
+msgstr "Transporteur"
+
+#. module: prestashoperpconnect
+#: code:addons/prestashoperpconnect/unit/export_synchronizer.py:148
+#: code:addons/prestashoperpconnect/unit/export_synchronizer.py:155
+#, python-format
+msgid "Nothing to export."
+msgstr "Rien à exporter."
+
+#. module: prestashoperpconnect
+#: help:prestashop.shop,default_category_id:0
+msgid "The category set on products when?? TODO.\n"
+"OpenERP requires a main category on products for accounting."
+msgstr "Quand est définie la catégorie les produits?? TODO.\n"
+"OpenERP a besoin d'une catégorie principale dans les produits pour la comptabilité."
+
+#. module: prestashoperpconnect
+#: field:prestashop.account.tax,prestashop_id:0
+#: field:prestashop.account.tax.group,prestashop_id:0
+#: field:prestashop.address,prestashop_id:0
+#: field:prestashop.binding,prestashop_id:0
+#: field:prestashop.delivery.carrier,prestashop_id:0
+#: field:prestashop.product.category,prestashop_id:0
+#: field:prestashop.product.image,prestashop_id:0
+#: field:prestashop.product.product,prestashop_id:0
+#: field:prestashop.res.country,prestashop_id:0
+#: field:prestashop.res.currency,prestashop_id:0
+#: field:prestashop.res.lang,prestashop_id:0
+#: field:prestashop.res.partner,prestashop_id:0
+#: field:prestashop.res.partner.category,prestashop_id:0
+#: field:prestashop.sale.order,prestashop_id:0
+#: field:prestashop.sale.order.line,prestashop_id:0
+#: field:prestashop.sale.order.state,prestashop_id:0
+#: field:prestashop.shop,prestashop_id:0
+#: field:prestashop.shop.group,prestashop_id:0
+msgid "ID on PrestaShop"
+msgstr "ID dans PrestaShop"
+
+#. module: prestashoperpconnect
+#: model:ir.actions.act_window,name:prestashoperpconnect.action_prestashop_carrier
+msgid "PrestaShop Carriers"
+msgstr "Transporteur PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order,prestashop_order_line_ids:0
+msgid "Prestashop Order Lines"
+msgstr "Lignes de commandes PrestaShop"
+
+#. module: prestashoperpconnect
+#: code:addons/prestashoperpconnect/unit/direct_binder.py:61
+#, python-format
+msgid "Failed to query %s via PS webservice"
+msgstr "Échec de la requête %s via PS webservice"
+
+#. module: prestashoperpconnect
+#: field:prestashop.address,vat_number:0
+msgid "PrestaShop VAT"
+msgstr "TVA PrestaShop"
+
+#. module: prestashoperpconnect
+#: code:addons/prestashoperpconnect/unit/export_synchronizer.py:159
+#, python-format
+msgid "Record exported with ID %s on Prestashop."
+msgstr "Enregistrement exporté avec l'ID %s dans Prestashop."
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Update in background"
+msgstr "Mise à jour dans PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,import_orders_since:0
+msgid "Import Orders since"
+msgstr "Importer les commandes depuis"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.account.tax:0
+msgid "A Tax with the same ID on prestashop already exists."
+msgstr "Une taxe avec le même ID dans prestashop existe déjà."
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_sale_shop
+msgid "Sales Shop"
+msgstr "Magasin"
+
+#. module: prestashoperpconnect
+#: field:account.tax,prestashop_bind_ids:0
+#: field:res.country,prestashop_bind_ids:0
+#: field:res.currency,prestashop_bind_ids:0
+#: field:res.lang,prestashop_bind_ids:0
+msgid "prestashop Bindings"
+msgstr "Liaisons Prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_res_currency
+#: field:prestashop.res.currency,openerp_id:0
+msgid "Currency"
+msgstr "Devise"
+
+#. module: prestashoperpconnect
+#: view:prestashop.delivery.carrier:0
+msgid "Delivery method"
+msgstr "Méthode de livraison"
+
+#. module: prestashoperpconnect
+#: view:prestashop.product.product:0
+msgid "Backend"
+msgstr "Backend"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,meta_description:0
+msgid "Meta description"
+msgstr "Méta description"
+
+#. module: prestashoperpconnect
+#: field:account.tax.group,prestashop_bind_ids:0
+#: view:product.product:0
+#: field:sale.order,prestashop_bind_ids:0
+#: view:sale.order.state:0
+#: field:sale.order.state,prestashop_bind_ids:0
+msgid "Prestashop Bindings"
+msgstr "Liaisons Prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_res_lang
+#: view:prestashop.backend:0
+#: field:prestashop.backend,language_ids:0
+msgid "Languages"
+msgstr "Langues"
+
+#. module: prestashoperpconnect
+#: model:ir.ui.menu,name:prestashoperpconnect.menu_prestashop_root
+msgid "Prestashop"
+msgstr "PrestaShop"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.product.product:0
+msgid "A product with the same ID on Prestashop already exists"
+msgstr "Un produit avec le même ID dans Prestashop existe déjà"
+
+#. module: prestashoperpconnect
+#: model:ir.actions.act_window,help:prestashoperpconnect.action_prestashop_sale_order_state_form
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Here are the sale order states mapped with e-commerce.\n"
+"              </p><p>\n"
+"                Each state can be linked between Prestashop and OpenERP.\n"
+"                When a sale order state change, the connector will update the sale order in Prestashop.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                Vous trouverez ici les statuts de commandes mappés avec l'E-commerce.\n"
+"              </p><p>\n"
+"                Chaque statut peut-être mappé entre Prestashop et OpenERP.\n"
+"                Quand le statut d'un bon de commande change dans OpenERP, le connecteurr va mettre à jour le bon de commande dans Prestashop.\n"
+"              </p>\n"
+"            "
+
+#. module: prestashoperpconnect
+#: model:ir.actions.act_window,name:prestashoperpconnect.action_prestashop_shop
+msgid "PrestaShop Shops"
+msgstr "Magasins PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order,prestashop_delivery_number:0
+msgid "PrestaShop Delivery Number"
+msgstr "Numéro de livraison PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.account.tax.group,openerp_id:0
+msgid "Tax Group"
+msgstr "Groupe de taxe"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Update all the products stock quantities"
+msgstr "Mettre à jour les quantités de stock des produits"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,default_shop_id:0
+msgid "unknown"
+msgstr "inconnu"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Synchonize shop and shop groups"
+msgstr "Synchronise les magasins et les groupes de magasins"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.account.tax.group:0
+msgid "A Tax Group with the same ID on prestashop already exists."
+msgstr "Un groupe de taxe avec le même ID dans prestashop existe déjà."
+
+#. module: prestashoperpconnect
+#: model:ir.actions.act_window,name:prestashoperpconnect.action_prestashop_shop_group
+msgid "PrestaShop Shop Groups"
+msgstr "Groupes de magasins PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,date_add:0
+msgid "Created At (on Presta)"
+msgstr "Créé le (dans PrestaShop)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner,birthday:0
+msgid "Birthday"
+msgstr "Anniversaire"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,date_upd:0
+#: field:prestashop.res.partner,date_upd:0
+msgid "Updated At (on PrestaShop)"
+msgstr "Mis à jour le (dans PrestaShop)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.shop,default_category_id:0
+msgid "Default Product Category"
+msgstr "Catégorie de produit par défaut"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,always_available:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,quantity:0
+msgid "Computed Quantity"
+msgstr "Quantité calculée"
+
+#. module: prestashoperpconnect
+#: view:prestashop.sale.order.state:0
+#: view:sale.order.state:0
+msgid "Sale order State"
+msgstr "Statut de commande"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.lang,openerp_id:0
+msgid "Lang"
+msgstr "Langue"
+
+#. module: prestashoperpconnect
+#: field:prestashop.address,date_add:0
+#: field:prestashop.res.partner.category,date_add:0
+msgid "Created At (on Prestashop)"
+msgstr "Créé le (dans PrestaShop)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order.line,prestashop_order_id:0
+msgid "Prestashop Sale Order"
+msgstr "Bon de commande Prestashop"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.res.partner:0
+msgid "A partner with the same ID on PrestaShop already exists for this website."
+msgstr "Un partenaire avec le même ID dans PrestaShop existe déjà pour ce site web."
+
+#. module: prestashoperpconnect
+#: field:prestashop.delivery.carrier,export_tracking:0
+msgid "Export tracking numbers"
+msgstr "Exporter les numéros de colis"
+
+#. module: prestashoperpconnect
+#: model:ir.ui.menu,name:prestashoperpconnect.menu_prestashop_shop_group
+msgid "Websites"
+msgstr "Sites web"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order.state,openerp_state_ids:0
+msgid "OpenERP States"
+msgstr "Statuts OpenERP"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_res_partner_category
+msgid "Partner Categories"
+msgstr "Catégories de partenaires"
+
+#. module: prestashoperpconnect
+#: help:prestashop.delivery.carrier,active_ext:0
+msgid "... in prestashop"
+msgstr "... dans prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.actions.act_window,name:prestashoperpconnect.action_prestashop_backend
+msgid "PrestaShop Backends"
+msgstr "PrestaShop Backends"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,meta_title:0
+msgid "Meta title"
+msgstr "Balise de titre"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Imports"
+msgstr "Import"
+
+#. module: prestashoperpconnect
+#: help:prestashop.product.product,sale_ok:0
+msgid "see parent field"
+msgstr "voir le champ parent"
+
+#. module: prestashoperpconnect
+#: view:prestashop.res.partner:0
+msgid "PrestaShop Partner"
+msgstr "Partenaire PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,version:0
+msgid "Version"
+msgstr "Version"
+
+#. module: prestashoperpconnect
+#: selection:sale.order.state.list,name:0
+msgid "Done"
+msgstr "Terminée"
+
+#. module: prestashoperpconnect
+#: field:prestashop.shop,openerp_id:0
+msgid "Sale Shop"
+msgstr "Magasin"
+
+#. module: prestashoperpconnect
+#: field:prestashop.account.tax,backend_id:0
+#: field:prestashop.account.tax.group,backend_id:0
+#: view:prestashop.backend:0
+#: field:prestashop.binding,backend_id:0
+#: field:prestashop.delivery.carrier,backend_id:0
+#: field:prestashop.product.category,backend_id:0
+#: field:prestashop.product.image,backend_id:0
+#: field:prestashop.product.product,backend_id:0
+#: field:prestashop.res.country,backend_id:0
+#: field:prestashop.res.currency,backend_id:0
+#: field:prestashop.res.lang,backend_id:0
+#: field:prestashop.res.partner.category,backend_id:0
+#: field:prestashop.sale.order,backend_id:0
+#: field:prestashop.sale.order.line,backend_id:0
+#: field:prestashop.sale.order.state,backend_id:0
+#: field:prestashop.shop,backend_id:0
+#: field:prestashop.shop.group,backend_id:0
+msgid "PrestaShop Backend"
+msgstr "Backend PrestaShop"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.res.currency:0
+msgid "A Currency with the same ID on prestashop already exists."
+msgstr "Une devise avec le même ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: view:connector.config.settings:0
+msgid "Prestashoperpconnect"
+msgstr "Prestashoperpconnect"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.lang,active:0
+msgid "Active in prestashop"
+msgstr "Actif dans prestashop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner,prestashop_address_bind_ids:0
+#: field:res.partner,prestashop_address_bind_ids:0
+msgid "PrestaShop Address Bindings"
+msgstr "Liaisons Adresses PrestaShop"
+
+#. module: prestashoperpconnect
+#: view:prestashop.delivery.carrier:0
+msgid "Prestashop Carriers"
+msgstr "Trasporteurs Prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_prestashop_backend
+msgid "Connector Backend"
+msgstr "Backend Connecteur"
+
+#. module: prestashoperpconnect
+#: view:prestashop.address:0
+msgid "PrestaShop Address"
+msgstr "Adresses PrestaShop"
+
+#. module: prestashoperpconnect
+#: view:prestashop.delivery.carrier:0
+msgid "Export tracking"
+msgstr "Exporter les colis"
+
+#. module: prestashoperpconnect
+#: help:connector.config.settings,module_prestashoperpconnect_other_module:0
+msgid "This installs the module prestashoperpconnect_... (no real action now)"
+msgstr "Ceci installe le module prestashoperpconnect_... (pas d'action réelle maintenant)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.delivery.carrier,active_ext:0
+msgid "External active"
+msgstr "Actif Externe"
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order.state,openerp_id:0
+msgid "Sale Order State"
+msgstr "Statut de commandes"
+
+#. module: prestashoperpconnect
+#: field:prestashop.address,prestashop_partner_id:0
+msgid "Prestashop Partner"
+msgstr "Partenaire Prestashop"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_product_product
+#: field:prestashop.product.product,openerp_id:0
+msgid "Product"
+msgstr "Article"
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.category,description:0
+#: field:prestashop.product.product,description_html:0
+msgid "Description"
+msgstr "Description"
+
+#. module: prestashoperpconnect
+#: view:prestashop.product.product:0
+msgid "qty"
+msgstr "Quantité"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Import carriers"
+msgstr "Importer les transporteurs"
+
+#. module: prestashoperpconnect
+#: field:sale.order.state.list,name:0
+msgid "OpenERP State"
+msgstr "Statut OpenERP"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Import customer groups and customers since"
+msgstr "Importer les groupes de clients et les clients depuis le"
+
+#. module: prestashoperpconnect
+#: help:prestashop.backend,webservice_key:0
+msgid "You have to put it in 'username' of the PrestaShop Webservice api path invite"
+msgstr "Vous devez mettre cela dans 'Nom d'utilisateur' lorsque vous allez dans le chemin de l'API du Service Web de PrestaShop"
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,webservice_key:0
+msgid "Webservice key"
+msgstr "Clé du Service Web"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_product_images
+msgid "Products Image gallery"
+msgstr "Gallerie d'image des produits"
+
+#. module: prestashoperpconnect
+#: field:sale.order.state.list,prestashop_state_id:0
+msgid "Prestashop State"
+msgstr "Statuts Prestashop"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Main Configuration"
+msgstr "Configuration principale"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.delivery.carrier:0
+msgid "A delivry carrier with the same ID on PrestaShop already exists."
+msgstr "Un transporteur avec le même ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: field:prestashop.backend,name:0
+#: field:prestashop.shop.group,name:0
+#: field:sale.order.state,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_res_country
+#: field:prestashop.res.country,openerp_id:0
+msgid "Country"
+msgstr "Pays"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Synchronize Metadata"
+msgstr "Synchroniser les méta données"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Synchronize Base Data"
+msgstr "Synchroniser les données de base"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_delivery_carrier
+msgid "Carrier"
+msgstr "Transporteur"
+
+#. module: prestashoperpconnect
+#: help:prestashop.product.product,description_html:0
+msgid "Description html from prestashop"
+msgstr "Description html de PrestaShop"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.shop:0
+msgid "A shop with the same ID on PrestaShop already exists."
+msgstr "Un magasin avec le même ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Once imported,\n"
+"                                    some types of records,\n"
+"                                    like the products or categories,\n"
+"                                    need a manual review.\n"
+"                                    You will find the list\n"
+"                                    of the new records to review\n"
+"                                    in the menu 'Connectors > Checkpoint'."
+msgstr "Une fois importés,\n"
+"                                    certains types d'enregistrements,\n"
+"                                    comme les produits ou leurs catégories,\n"
+"                                    ont besoin d'une revue manuelle.\n"
+"                                    Vous trouverez la liste\n"
+"                                    De tous les nouveaux enregistrements à vérifier\n"
+"                                    dans le menu 'Connecteurs > Checkpoint'."
+
+#. module: prestashoperpconnect
+#: field:prestashop.product.product,sale_ok:0
+msgid "For sale"
+msgstr "En vente"
+
+#. module: prestashoperpconnect
+#: model:ir.model,name:prestashoperpconnect.model_sale_order_state
+msgid "sale.order.state"
+msgstr "Statut de commande"
+
+#. module: prestashoperpconnect
+#: field:delivery.carrier,prestashop_bind_ids:0
+#: field:product.category,prestashop_bind_ids:0
+#: field:product.images,prestashop_bind_ids:0
+#: field:product.product,prestashop_bind_ids:0
+#: view:res.partner:0
+#: field:res.partner,prestashop_bind_ids:0
+#: field:res.partner.category,prestashop_bind_ids:0
+#: field:sale.order.line,prestashop_bind_ids:0
+#: field:sale.shop,prestashop_bind_ids:0
+msgid "PrestaShop Bindings"
+msgstr "Liaisons PrestaShop"
+
+#. module: prestashoperpconnect
+#: view:prestashop.sale.order.state:0
+msgid "States"
+msgstr "Statuts"
+
+#. module: prestashoperpconnect
+#: field:prestashop.shop.group,shop_ids:0
+msgid "Shops"
+msgstr "Magasins"
+
+#. module: prestashoperpconnect
+#: help:prestashop.delivery.carrier,id_reference:0
+msgid "In Prestashop, carriers with the same 'id_reference' are some copies from the first one id_reference (only the last one copied is taken account ; and the only one which synchronized with erp)"
+msgstr "Dans Prestashop, les transporteurs avec le même 'id_reference' sont des copies du premier id_reference (seulement le dernier copié sera pris en compte; et un seul sera synchonisé avec l'ERP)"
+
+#. module: prestashoperpconnect
+#: field:prestashop.res.partner,newsletter:0
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#. module: prestashoperpconnect
+#: view:prestashop.backend:0
+msgid "Synchonize datas like language, country, currency, tax"
+msgstr "Synchonise des données telles que les langues, les pays, les devises, et les taxes"
+
+#. module: prestashoperpconnect
+#: sql_constraint:prestashop.res.country:0
+msgid "A Country with the same ID on prestashop already exists."
+msgstr "Un pays avec le même ID dans PrestaShop existe déjà."
+
+#. module: prestashoperpconnect
+#: field:prestashop.sale.order.line,openerp_id:0
+msgid "Sale Order line"
+msgstr "Ligne de commande"
+
