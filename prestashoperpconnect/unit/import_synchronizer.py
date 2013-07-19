@@ -28,8 +28,9 @@ from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.connector import ConnectorUnit
 from ..backend import prestashop
-from ..connector import get_environment
+from ..connector import get_environment, add_checkpoint
 
 _logger = logging.getLogger(__name__)
 
@@ -185,6 +186,23 @@ class BatchImportSynchronizer(ImportSynchronizer):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
 
+@prestashop
+class AddCheckpoint(ConnectorUnit):
+    """ Add a connector.checkpoint on the underlying model
+    (not the prestashop.* but the _inherits'ed model) """
+
+    _model_name = [
+        'prestashop.sale.order',
+    ]
+
+    def run(self, openerp_binding_id):
+        binding = self.session.browse(self.model._name,
+                                      openerp_binding_id)
+        record = binding.openerp_id
+        add_checkpoint(self.session,
+                       record._model._name,
+                       record.id,
+                       self.backend_record.id)
 
 @prestashop
 class DirectBatchImport(BatchImportSynchronizer):
@@ -282,7 +300,6 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         for order in orders:
             self._check_dependency(order['product_id'],
                                    'prestashop.product.product')
-
 
 @prestashop
 class TranslatableRecordImport(PrestashopImportSynchronizer):

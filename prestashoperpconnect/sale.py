@@ -20,6 +20,7 @@
 ###############################################################################
 
 from openerp.osv import fields, orm
+import openerp.addons.decimal_precision as dp
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
@@ -119,6 +120,9 @@ class prestashop_sale_order(orm.Model):
         ),
         'prestashop_invoice_number': fields.char('PrestaShop Invoice Number',size=64),
         'prestashop_delivery_number': fields.char('PrestaShop Delivery Number',size=64),
+        'total_paid': fields.float('Total paid in Prestashop',
+            digits_compute=dp.get_precision('Account'),
+            readonly=True),
     }
 
 
@@ -223,7 +227,6 @@ class SaleStateExport(ExportSynchronizer):
 @on_record_write(model_names='sale.order')
 def prestashop_sale_state_modified(session, model_name, record_id,
                                    fields=None):
-    import pdb; pdb.set_trace()
     if 'state' in fields:
         sale = session.pool[model_name].browse(
             session.cr,

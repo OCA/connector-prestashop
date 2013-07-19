@@ -255,6 +255,7 @@ class SaleOrderMapper(PrestashopImportMapper):
         ('date_add', 'date_order'),
         ('invoice_number','prestashop_invoice_number'),
         ('delivery_number','prestashop_delivery_number'),
+        ('total_paid', 'total_paid'),
     ]
 
     def _get_sale_order_lines(self, record):
