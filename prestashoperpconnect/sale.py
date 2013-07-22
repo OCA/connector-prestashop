@@ -223,7 +223,6 @@ class SaleStateExport(ExportSynchronizer):
 @on_record_write(model_names='sale.order')
 def prestashop_sale_state_modified(session, model_name, record_id,
                                    fields=None):
-    import pdb; pdb.set_trace()
     if 'state' in fields:
         sale = session.pool[model_name].browse(
             session.cr,
