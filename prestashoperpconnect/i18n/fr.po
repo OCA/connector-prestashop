@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-19 10:09+0000\n"
-"PO-Revision-Date: 2013-07-19 10:09+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2013-07-25 11:45+0000\n"
+"Last-Translator: Mathieu Vatel <mathieu@julius.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgid "By clicking on the buttons,\n"
 "                                    executed as soon as possible."
 msgstr "En cliquant sur les boutons,\n"
 "                                    vous allez initialiser les synchronisations\n"
-"                                    avec Prestashop.\n"
+"                                    avec PrestaShop.\n"
 "                                    Notez que les imports ou exports\n"
 "                                    ne seront pas fait directement,\n"
 "                                    ils vont créer des 'Jobs'\n"
@@ -70,7 +70,7 @@ msgstr "Catégories de Partenaires"
 #: field:prestashop.address,backend_id:0
 #: field:prestashop.res.partner,backend_id:0
 msgid "Prestashop Backend"
-msgstr "Backend Prestashop"
+msgstr "Backend PrestaShop"
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_prestashop_shop
@@ -99,7 +99,7 @@ msgstr "URL simplifiée"
 #. module: prestashoperpconnect
 #: help:prestashop.product.product,always_available:0
 msgid "if check, this object is always available"
-msgstr "Si coché, cet object sera toujours disponible"
+msgstr "Si coché, cet objet sera toujours disponible"
 
 #. module: prestashoperpconnect
 #: field:prestashop.res.partner,company:0
@@ -109,7 +109,7 @@ msgstr "Société"
 #. module: prestashoperpconnect
 #: field:sale.order.state.list,prestashop_id:0
 msgid "Prestashop ID"
-msgstr "ID Prestashop"
+msgstr "ID PrestaShop"
 
 #. module: prestashoperpconnect
 #: selection:sale.order.state.list,name:0
@@ -120,7 +120,7 @@ msgstr "Incident de facturation"
 #: field:prestashop.address,date_upd:0
 #: field:prestashop.res.partner.category,date_upd:0
 msgid "Updated At (on Prestashop)"
-msgstr "Mis à jour le (dans Prestashop)"
+msgstr "Mis à jour le (dans PrestaShop)"
 
 #. module: prestashoperpconnect
 #: help:prestashop.res.partner,default_category_id:0
@@ -151,7 +151,7 @@ msgstr "Entrepôt utiliser pour calculer les quantités en stock."
 #: model:ir.actions.act_window,name:prestashoperpconnect.action_prestashop_sale_order_state_form
 #: model:ir.ui.menu,name:prestashoperpconnect.sale_order_state_tree_menu
 msgid "Sale Order States"
-msgstr "Statuts de commande de vente"
+msgstr "États de commande de vente"
 
 #. module: prestashoperpconnect
 #: field:prestashop.sale.order,openerp_id:0
@@ -243,7 +243,7 @@ msgstr "Configuration du connecteur"
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_prestashop_delivery_carrier
 msgid "Prestashop Carrier"
-msgstr "Transporteur Prestashop"
+msgstr "Transporteur PrestaShop"
 
 #. module: prestashoperpconnect
 #: help:prestashop.delivery.carrier,export_tracking:0
@@ -266,7 +266,7 @@ msgstr "Bon de commande"
 #. module: prestashoperpconnect
 #: sql_constraint:prestashop.res.lang:0
 msgid "A Lang with the same ID on Prestashop already exists."
-msgstr "Une langue avec le même ID dans Prestashop existe déjà."
+msgstr "Une langue avec le même ID dans PrestaShop existe déjà."
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_sale_order_line
@@ -286,7 +286,7 @@ msgstr "Dernière synchronisation"
 #. module: prestashoperpconnect
 #: help:prestashop.product.product,quantity:0
 msgid "Last computed quantity to send on Prestashop."
-msgstr "Dernière quantité de stock calculée à envoyer dans Prestashop."
+msgstr "Dernière quantité de stock calculée à envoyer dans PrestaShop."
 
 #. module: prestashoperpconnect
 #: field:prestashop.product.product,default_shop_id:0
@@ -302,7 +302,7 @@ msgstr "Taxes"
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_sale_order_state_list
 msgid "sale.order.state.list"
-msgstr "Liste des statuts de commandes"
+msgstr "Liste des états de commandes"
 
 #. module: prestashoperpconnect
 #: field:prestashop.delivery.carrier,name_ext:0
@@ -483,7 +483,7 @@ msgstr "TVA PrestaShop"
 #: code:addons/prestashoperpconnect/unit/export_synchronizer.py:159
 #, python-format
 msgid "Record exported with ID %s on Prestashop."
-msgstr "Enregistrement exporté avec l'ID %s dans Prestashop."
+msgstr "Enregistrement exporté avec l'ID %s dans PrestaShop."
 
 #. module: prestashoperpconnect
 #: view:prestashop.backend:0
@@ -511,7 +511,7 @@ msgstr "Magasin"
 #: field:res.currency,prestashop_bind_ids:0
 #: field:res.lang,prestashop_bind_ids:0
 msgid "prestashop Bindings"
-msgstr "Liaisons Prestashop"
+msgstr "Liaisons PrestaShop"
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_res_currency
@@ -541,7 +541,7 @@ msgstr "Méta description"
 #: view:sale.order.state:0
 #: field:sale.order.state,prestashop_bind_ids:0
 msgid "Prestashop Bindings"
-msgstr "Liaisons Prestashop"
+msgstr "Liaisons PrestaShop"
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_res_lang
@@ -558,7 +558,7 @@ msgstr "PrestaShop"
 #. module: prestashoperpconnect
 #: sql_constraint:prestashop.product.product:0
 msgid "A product with the same ID on Prestashop already exists"
-msgstr "Un produit avec le même ID dans Prestashop existe déjà"
+msgstr "Un produit avec le même ID dans PrestaShop existe déjà"
 
 #. module: prestashoperpconnect
 #: model:ir.actions.act_window,help:prestashoperpconnect.action_prestashop_sale_order_state_form
@@ -566,14 +566,14 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                Here are the sale order states mapped with e-commerce.\n"
 "              </p><p>\n"
 "                Each state can be linked between Prestashop and OpenERP.\n"
-"                When a sale order state change, the connector will update the sale order in Prestashop.\n"
+"                When a sale order state change, the connector will update the sale order in PrestaShop.\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Vous trouverez ici les statuts de commandes mappés avec l'E-commerce.\n"
+"                Vous trouverez ici les états de commandes mappés avec l'E-commerce.\n"
 "              </p><p>\n"
-"                Chaque statut peut-être mappé entre Prestashop et OpenERP.\n"
-"                Quand le statut d'un bon de commande change dans OpenERP, le connecteurr va mettre à jour le bon de commande dans Prestashop.\n"
+"                Chaque état peut-être mappé entre PrestaShop et OpenERP.\n"
+"                Quand le état d'un bon de commande change dans OpenERP, le connecteur va mettre à jour le bon de commande dans PrestaShop.\n"
 "              </p>\n"
 "            "
 
@@ -652,7 +652,7 @@ msgstr "Quantité calculée"
 #: view:prestashop.sale.order.state:0
 #: view:sale.order.state:0
 msgid "Sale order State"
-msgstr "Statut de commande"
+msgstr "État de commande"
 
 #. module: prestashoperpconnect
 #: field:prestashop.res.lang,openerp_id:0
@@ -668,7 +668,7 @@ msgstr "Créé le (dans PrestaShop)"
 #. module: prestashoperpconnect
 #: field:prestashop.sale.order.line,prestashop_order_id:0
 msgid "Prestashop Sale Order"
-msgstr "Bon de commande Prestashop"
+msgstr "Bon de commande PrestaShop"
 
 #. module: prestashoperpconnect
 #: sql_constraint:prestashop.res.partner:0
@@ -688,7 +688,7 @@ msgstr "Sites web"
 #. module: prestashoperpconnect
 #: field:prestashop.sale.order.state,openerp_state_ids:0
 msgid "OpenERP States"
-msgstr "Statuts OpenERP"
+msgstr "États OpenERP"
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_res_partner_category
@@ -785,7 +785,7 @@ msgstr "Liaisons Adresses PrestaShop"
 #. module: prestashoperpconnect
 #: view:prestashop.delivery.carrier:0
 msgid "Prestashop Carriers"
-msgstr "Trasporteurs Prestashop"
+msgstr "Trasporteurs PrestaShop"
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_prestashop_backend
@@ -815,12 +815,12 @@ msgstr "Actif Externe"
 #. module: prestashoperpconnect
 #: field:prestashop.sale.order.state,openerp_id:0
 msgid "Sale Order State"
-msgstr "Statut de commandes"
+msgstr "État de commandes"
 
 #. module: prestashoperpconnect
 #: field:prestashop.address,prestashop_partner_id:0
 msgid "Prestashop Partner"
-msgstr "Partenaire Prestashop"
+msgstr "Partenaire PrestaShop"
 
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_product_product
@@ -847,7 +847,7 @@ msgstr "Importer les transporteurs"
 #. module: prestashoperpconnect
 #: field:sale.order.state.list,name:0
 msgid "OpenERP State"
-msgstr "Statut OpenERP"
+msgstr "État OpenERP"
 
 #. module: prestashoperpconnect
 #: view:prestashop.backend:0
@@ -857,7 +857,7 @@ msgstr "Importer les groupes de clients et les clients depuis le"
 #. module: prestashoperpconnect
 #: help:prestashop.backend,webservice_key:0
 msgid "You have to put it in 'username' of the PrestaShop Webservice api path invite"
-msgstr "Vous devez mettre cela dans 'Nom d'utilisateur' lorsque vous allez dans le chemin de l'API du Service Web de PrestaShop"
+msgstr "C'est la 'Clé' du Service Web dans PrestaShop. Vous devez mettre cela dans 'Nom d'utilisateur' lorsque vous vous connectez directement à l'API du Service Web de PrestaShop via un navigateur par exemple"
 
 #. module: prestashoperpconnect
 #: field:prestashop.backend,webservice_key:0
@@ -872,7 +872,7 @@ msgstr "Gallerie d'image des produits"
 #. module: prestashoperpconnect
 #: field:sale.order.state.list,prestashop_state_id:0
 msgid "Prestashop State"
-msgstr "Statuts Prestashop"
+msgstr "État PrestaShop"
 
 #. module: prestashoperpconnect
 #: view:prestashop.backend:0
@@ -947,7 +947,7 @@ msgstr "En vente"
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_sale_order_state
 msgid "sale.order.state"
-msgstr "Statut de commande"
+msgstr "État de commande"
 
 #. module: prestashoperpconnect
 #: field:delivery.carrier,prestashop_bind_ids:0
@@ -965,7 +965,7 @@ msgstr "Liaisons PrestaShop"
 #. module: prestashoperpconnect
 #: view:prestashop.sale.order.state:0
 msgid "States"
-msgstr "Statuts"
+msgstr "États"
 
 #. module: prestashoperpconnect
 #: field:prestashop.shop.group,shop_ids:0
@@ -975,7 +975,7 @@ msgstr "Magasins"
 #. module: prestashoperpconnect
 #: help:prestashop.delivery.carrier,id_reference:0
 msgid "In Prestashop, carriers with the same 'id_reference' are some copies from the first one id_reference (only the last one copied is taken account ; and the only one which synchronized with erp)"
-msgstr "Dans Prestashop, les transporteurs avec le même 'id_reference' sont des copies du premier id_reference (seulement le dernier copié sera pris en compte; et un seul sera synchonisé avec l'ERP)"
+msgstr "Dans PrestaShop, les transporteurs avec le même 'id_reference' sont des copies du premier id_reference (seulement le dernier copié sera pris en compte; et un seul sera synchonisé avec l'ERP)"
 
 #. module: prestashoperpconnect
 #: field:prestashop.res.partner,newsletter:0
