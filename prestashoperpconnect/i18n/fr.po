@@ -867,7 +867,7 @@ msgstr "Clé du Service Web"
 #. module: prestashoperpconnect
 #: model:ir.model,name:prestashoperpconnect.model_product_images
 msgid "Products Image gallery"
-msgstr "Gallerie d'image des produits"
+msgstr "Galerie d'image des produits"
 
 #. module: prestashoperpconnect
 #: field:sale.order.state.list,prestashop_state_id:0
