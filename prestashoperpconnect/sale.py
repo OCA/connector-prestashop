@@ -189,10 +189,11 @@ class SaleOrderStateAdapter(GenericAdapter):
 class SaleOrderAdapter(GenericAdapter):
     _model_name = 'prestashop.sale.order'
     _prestashop_model = 'orders'
+    _export_node_name = 'order'
 
     def update_sale_state(self, prestashop_id, datas):
-        self._prestashop_model = 'order_histories'
-        self.create(datas)
+        api = self.connect()
+        return api.add('order_histories', datas)
 
 
 @prestashop
@@ -256,8 +257,11 @@ def prestashop_sale_state_modified(session, model_name, record_id,
 def export_sale_state(session, model_name, record_id, new_state):
     inherit_model = 'prestashop.' + model_name
     object_pool = session.pool[inherit_model]
-    sale = object_pool.browse(session.cr, session.uid, record_id)
-    backend_id = sale.backend_id.id
-    env = get_environment(session, inherit_model, backend_id)
-    sale_exporter = env.get_connector_unit(SaleStateExport)
-    return sale_exporter.run(record_id, new_state)
+    sale_ids = object_pool.search(session.cr, session.uid, [('openerp_id', '=', record_id)])
+    if type(sale_ids) is not list:
+        sale_ids = [sale_ids]
+    for sale in object_pool.browse(session.cr, session.uid, sale_ids):
+        backend_id = sale.backend_id.id
+        env = get_environment(session, inherit_model, backend_id)
+        sale_exporter = env.get_connector_unit(SaleStateExport)
+        return sale_exporter.run(record_id, new_state)
