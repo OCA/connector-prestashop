@@ -162,6 +162,7 @@ class prestashop_backend(orm.Model):
             [('backend_id', 'in', ids)],
             context=context
         )
+        import pdb;pdb.set_trace()
         ps_product_obj.recompute_prestashop_qty(cr, uid, product_ids,
                                                 context=context)
         return True

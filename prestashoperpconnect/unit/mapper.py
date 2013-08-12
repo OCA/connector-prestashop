@@ -404,13 +404,29 @@ class TaxGroupMapper(PrestashopImportMapper):
 class PrestashopExportMapper(ExportMapper):
 
     def _map_direct(self, record, from_attr, to_attr):
-        res = super(PrestashopExportMapper, self)._map_direct(record,
-                                                              from_attr,
-                                                              to_attr)
+        value = record[from_attr]
+        if not value:
+            return False
+
+        column = self.model._all_columns[from_attr].column
+        if column._type == 'many2one':
+            rel_id = record[from_attr].id
+            model_name = column._obj
+            unwrap=False
+            if model_name[0:10] != 'prestashop':
+                model_name = 'prestashop.' + model_name
+                unwrap = True
+            binder = self.get_binder_for_model(model_name)
+            value = binder.to_backend(rel_id, unwrap=unwrap)
+
+            if not value:
+                raise MappingError("Can not find an external id for record "
+                                   "%s in model %s" % (rel_id, model_name))
+
         column = self.model._all_columns[from_attr].column
         if column._type == 'boolean':
-            return res and 1 or 0
-        return res
+            return value and 1 or 0
+        return value
 
 
 class TranslationPrestashopExportMapper(PrestashopExportMapper):

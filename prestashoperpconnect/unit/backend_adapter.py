@@ -118,6 +118,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         :rtype: list
         """
         api = self.connect()
+        print '    search/ model:', self._prestashop_model, '\nattr:', filters
         return api.search(self._prestashop_model, filters)
 
     def read(self, id, attributes=None):
@@ -134,13 +135,20 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     def create(self, attributes=None):
         """ Create a record on the external system """
         api = self.connect()
+        print '    crea/ model:', self._prestashop_model, '\nattr:', attributes
         return api.add(self._prestashop_model, {self._export_node_name: attributes})
 
     def write(self, id, attributes=None):
         """ Update records on the external system """
         api = self.connect()
         attributes['id'] = id
+        print '    write / model:', self._prestashop_model, '\nattr:', attributes
         return api.edit(self._prestashop_model, {self._export_node_name: attributes})
+
+    def delete(self, ids):
+        print '\n    delete / model:', self._prestashop_model, '\nattr:', ids
+        """ Delete a record(s) on the external system """
+        return api.delete(self._prestashop_model, ids)
 
 
 @prestashop

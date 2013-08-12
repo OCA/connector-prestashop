@@ -173,7 +173,7 @@ class TranslationPrestashopExporter(PrestashopExporter):
         self.mapper.convert(self.get_record_by_lang(), fields=fields)
 
     def get_record_by_lang(self):
-        # get the backend's languages 
+        # get the backend's languages
         languages = self.backend_record.language_ids
         records = {}
         # for each languages:
@@ -200,4 +200,6 @@ def export_record(session, model_name, binding_id, fields=None):
     record = session.browse(model_name, binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(PrestashopExporter)
+    #print 'fields', fields
+    #import pdb;pdb.set_trace()
     return exporter.run(binding_id, fields=fields)

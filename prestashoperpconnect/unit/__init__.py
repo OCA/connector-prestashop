@@ -27,5 +27,5 @@ import mapper
 import binder
 import import_synchronizer
 #import export_synchronizer
-#import delete_synchronizer
+import delete_synchronizer
 import backend_adapter
