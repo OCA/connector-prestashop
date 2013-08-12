@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+
+<record id="pricelist_builder_form_view" model="ir.ui.view">
+    <field name="model">pricelist.builder</field>
+    <field name="inherit_id" ref="pricelist_builder.pricelist_builder_form_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree[@name='item']/field[@name='price_round']" position="before">
+            <field name="let_base_price"/>
+            <field name="new_base_price"
+                   attrs="{'readonly': [('let_base_price','=',True)]}"/>
+        </xpath>
+        <xpath expr="//tree[@name='item']/field[@name='price_discount']" position="replace">
+            <field name="price_discount"
+                string="Discount"
+                on_change="onchange_price_presta(price_discount, price_surcharge, context)" context="{'reduction_type': 'discount'}" />
+        </xpath>
+        <xpath expr="//tree[@name='item']/field[@name='price_surcharge']" position="replace">            <field name="price_surcharge"
+                string="Surcharge"
+                on_change="onchange_price_presta(price_discount, price_surcharge, context)" context="{'reduction_type': 'surcharge'}" />
+        </xpath>
+    </field>
+</record>
+
+
+    </data>
+</openerp>
