@@ -231,7 +231,12 @@ class AddressImportMapper(PrestashopImportMapper):
     @mapping
     def customer(self, record):
         return {'customer': True}
-
+    
+    @mapping
+    def country(self, record):
+        binder = self.get_binder_for_model('prestashop.res.country')
+        erp_country_id = binder.to_openerp(record['id_country'], unwrap=True)
+        return {'country_id': erp_country_id}
 
 @prestashop
 class SaleOrderStateMapper(PrestashopImportMapper):
