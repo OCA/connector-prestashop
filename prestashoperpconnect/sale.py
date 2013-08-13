@@ -264,4 +264,4 @@ def export_sale_state(session, model_name, record_id, new_state):
         backend_id = sale.backend_id.id
         env = get_environment(session, inherit_model, backend_id)
         sale_exporter = env.get_connector_unit(SaleStateExport)
-        return sale_exporter.run(record_id, new_state)
+        return sale_exporter.run(sale.id, new_state)
