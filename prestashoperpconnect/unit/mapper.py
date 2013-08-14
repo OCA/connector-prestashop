@@ -89,6 +89,10 @@ class ShopImportMapper(PrestashopImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
+
 
 @prestashop
 class PartnerCategoryImportMapper(PrestashopImportMapper):
@@ -399,6 +403,10 @@ class TaxGroupMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
 
 
 class PrestashopExportMapper(ExportMapper):

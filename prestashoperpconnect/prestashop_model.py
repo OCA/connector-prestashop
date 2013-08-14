@@ -83,6 +83,11 @@ class prestashop_backend(orm.Model):
             'backend_id',
             'Languages'
         ),
+        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
+    }
+
+    _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'prestashop.backend', context=c),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -243,6 +248,7 @@ class prestashop_shop_group(orm.Model):
             'shop_group_id',
             string="Shops",
             readonly=True),
+        'company_id': fields.related('backend_id', 'company_id', type="many2one", relation="res.company",string='Company', store=False),
     }
 
     _sql_constraints = [
@@ -494,4 +500,5 @@ class account_tax_group(orm.Model):
             string='Prestashop Bindings',
             readonly=True
         ),
+        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
     }

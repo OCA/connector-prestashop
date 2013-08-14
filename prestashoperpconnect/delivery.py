@@ -46,7 +46,7 @@ class prestashop_delivery_carrier(orm.Model):
             'delivery.carrier',
             string='Delivery carrier',
             required=True,
-            ondelete='restrict'
+            ondelete='cascade'
         ),
         'id_reference': fields.integer(
             'Id reference',
@@ -83,6 +83,7 @@ class delivery_carrier(orm.Model):
             'prestashop.delivery.carrier',
             'openerp_id',
             string='PrestaShop Bindings',),
+        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
     }
 
 
@@ -181,6 +182,10 @@ class CarrierImportMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
 
 
 @prestashop
