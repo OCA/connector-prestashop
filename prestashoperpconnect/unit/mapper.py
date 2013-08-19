@@ -36,7 +36,9 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 
 
 class PrestashopImportMapper(ImportMapper):
-
+    
+    #get_openerp_id is deprecated use the binder intead
+    #we should have only 1 way to map the field to avoid error
     def get_openerp_id(self, model, prestashop_id):
         '''
         Returns an openerp id from a model name and a prestashop_id.
@@ -234,9 +236,11 @@ class AddressImportMapper(PrestashopImportMapper):
     
     @mapping
     def country(self, record):
-        binder = self.get_binder_for_model('prestashop.res.country')
-        erp_country_id = binder.to_openerp(record['id_country'], unwrap=True)
-        return {'country_id': erp_country_id}
+        if record.get('id_country'):
+            binder = self.get_binder_for_model('prestashop.res.country')
+            erp_country_id = binder.to_openerp(record['id_country'], unwrap=True)
+            return {'country_id': erp_country_id}
+        return {}
 
 @prestashop
 class SaleOrderStateMapper(PrestashopImportMapper):
