@@ -191,9 +191,7 @@ class AddCheckpoint(ConnectorUnit):
     """ Add a connector.checkpoint on the underlying model
     (not the prestashop.* but the _inherits'ed model) """
 
-    _model_name = [
-#        'prestashop.sale.order',
-    ]
+    _model_name = []
 
     def run(self, openerp_binding_id):
         binding = self.session.browse(self.model._name,
