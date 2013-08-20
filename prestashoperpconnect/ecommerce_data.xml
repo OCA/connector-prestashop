@@ -7,7 +7,7 @@
             <field name="description">The total amount is different than the prestashop total payment.</field>
             <field name="sequence">20</field>
             <field name="model">sale.order</field>
-            <field name="code">if abs(order.amount_total - order.prestashop_bind_ids[0].total_paid) >= 0.01:
+            <field name="code">if order.prestashop_bind_ids and order.prestashop_bind_ids[0] and abs(order.amount_total - order.prestashop_bind_ids[0].total_paid) >= 0.001:
     failed = True</field>
             <field name="active" eval="True"/>
         </record>
