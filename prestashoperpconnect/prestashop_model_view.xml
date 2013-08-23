@@ -30,6 +30,9 @@
                     <field name="name" class="oe_inline"/>
                 </h1>
                 <group>
+                    <field name="company_id" />
+                </group>
+                <group>
                     <field name="version"/>
                 </group>
                 <group col="4">

@@ -65,6 +65,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'prestashop_model_view.xml',
         'product_view.xml',
         'security/ir.model.access.csv',
+        'security/prestashop_security.xml',
         'delivery_view.xml',
         'prestashoperpconnect_menu.xml',
         'partner_view.xml',

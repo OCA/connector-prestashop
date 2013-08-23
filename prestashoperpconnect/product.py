@@ -224,6 +224,10 @@ class ProductMapper(PrestashopImportMapper):
         return {'backend_id': self.backend_record.id}
 
     @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
+
+    @mapping
     def ean13(self, record):
         #TODO who is the reference data prestashop ean13 or prestatshop ean13 ?
         if record['ean13'] == '0':
