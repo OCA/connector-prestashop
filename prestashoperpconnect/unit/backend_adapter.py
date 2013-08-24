@@ -134,13 +134,17 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     def create(self, attributes=None):
         """ Create a record on the external system """
         api = self.connect()
-        return api.add(self._prestashop_model, {self._export_node_name: attributes})
+        return api.add(self._prestashop_model, {
+            self._export_node_name: attributes
+        })
 
     def write(self, id, attributes=None):
         """ Update records on the external system """
         api = self.connect()
         attributes['id'] = id
-        return api.edit(self._prestashop_model, {self._export_node_name: attributes})
+        return api.edit(self._prestashop_model, {
+            self._export_node_name: attributes
+        })
 
 
 @prestashop
@@ -223,3 +227,9 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
 class TaxGroupAdapter(GenericAdapter):
     _model_name = 'prestashop.account.tax.group'
     _prestashop_model = 'tax_rule_groups'
+
+
+@prestashop
+class OrderPaymentAdapter(GenericAdapter):
+    _model_name = '__not_exist_prestashop.payment'
+    _prestashop_model = 'order_payments'
