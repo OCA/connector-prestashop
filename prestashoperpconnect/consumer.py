@@ -29,13 +29,7 @@ from openerp.addons.connector.connector import Binder
 from .unit.delete_synchronizer import export_delete_record
 from .connector import get_environment
 
-_MODEL_NAMES = []
 
-_BIND_MODEL_NAMES = []
-
-
-#@on_record_create(model_names=_BIND_MODEL_NAMES)
-#@on_record_write(model_names=_BIND_MODEL_NAMES)
 def delay_export(session, model_name, record_id, fields=None):
     """ Delay a job which export a binding record.
 
@@ -47,7 +41,6 @@ def delay_export(session, model_name, record_id, fields=None):
     export_record.delay(session, model_name, record_id, fields=fields)
 
 
-#@on_record_write(model_names=_MODEL_NAMES)
 def delay_export_all_bindings(session, model_name, record_id, fields=None):
     """ Delay a job which export all the bindings of a record.
 
@@ -64,9 +57,8 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
                             fields=fields)
 
 
-@on_record_unlink(model_names=_BIND_MODEL_NAMES)
 def delay_unlink(session, model_name, record_id):
-    """ Delay a job which delete a record on Magento.
+    """ Delay a job which delete a record on Prestashop.
 
     Called on binding records."""
     model = session.pool.get(model_name)
@@ -74,25 +66,24 @@ def delay_unlink(session, model_name, record_id):
                           record_id, context=session.context)
     env = get_environment(session, model_name, record.backend_id.id)
     binder = env.get_connector_unit(Binder)
-    magento_id = binder.to_backend(record_id)
-    if magento_id:
+    external_id = binder.to_backend(record_id)
+    if external_id:
         export_delete_record.delay(session, model_name,
-                                   record.backend_id.id, magento_id)
+                                   record.backend_id.id, external_id)
 
 
-@on_record_unlink(model_names=_MODEL_NAMES)
-def delay_unlink(session, model_name, record_id):
-    """ Delay a job which delete a record on Magento.
+def delay_unlink_all_bindings(session, model_name, record_id):
+    """ Delay a job which delete a record on Prestashop.
 
     Called on binding records."""
-    import pdb;pdb.set_trace()
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
-    env = get_environment(session, 'prestashop.%s'%model_name, record.backend_id.id)
-    binder = env.get_connector_unit(Binder)
     for bind_record in record.prestashop_bind_ids:
+        prestashop_model_name = bind_record._name
+        env = get_environment(session, prestashop_model_name, bind_record.backend_id.id)
+        binder = env.get_connector_unit(Binder)
         ext_id = binder.to_backend(bind_record.id)
         if ext_id:
-            export_delete_record.delay(session, model_name,
+            export_delete_record.delay(session, prestashop_model_name,
                                    bind_record.backend_id.id, ext_id)

@@ -146,6 +146,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         return api.edit(self._prestashop_model, {self._export_node_name: attributes})
 
     def delete(self, ids):
+        api = self.connect()
         print '\n    delete / model:', self._prestashop_model, '\nattr:', ids
         """ Delete a record(s) on the external system """
         return api.delete(self._prestashop_model, ids)
