@@ -7,6 +7,7 @@
 #     @author :
 #     David BEAL <david.beal@akretion.com>
 #     Sébastien BEAU <sebastien.beau@akretion.com>
+#     Guewen Baconnier (camptocamp)
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
 #   published by the Free Software Foundation, either version 3 of the
@@ -38,15 +39,15 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     )
 from openerp.addons.prestashoperpconnect.unit.binder import PrestashopModelBinder
 from openerp.addons.prestashoperpconnect.unit.mapper import PrestashopExportMapper
+from openerp.addons.prestashoperpconnect.unit.delete_synchronizer import PrestashopDeleteSynchronizer
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.unit.backend_adapter import GenericAdapter
 #from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.connector.unit.mapper import mapping
 
-from openerp.addons.prestashoperpconnect.consumer import _MODEL_NAMES, _BIND_MODEL_NAMES
+import openerp.addons.prestashoperpconnect.consumer as prestashoperpconnect
 
-
-_MODEL_NAMES.append('product.pricelist.item')
+#_MODEL_NAMES.append('product.pricelist.item')
 
 PRICELIST_FIELDS = [
         'product_id',
@@ -73,7 +74,7 @@ class pricelist_item_template(orm.Model):
     _columns = {
         'new_base_price': fields.float('New base price',
             digits_compute=dp.get_precision('Sale Price'),
-            help="New base price : 'base price' field is not used in this case (specfic to PrestaShop)."
+            help="New base price : 'base price' field is not used in this case (specific to PrestaShop)."
             ),
         'let_base_price': fields.boolean('Let base price',
             help="True if OpenERP like behavior with 'based on' field"
@@ -139,7 +140,7 @@ class product_pricelist_item(orm.Model):
             ),
         'let_base_price': fields.boolean(
             'Let base price',
-            help="True if OpenERP like behavior with 'based on' field"
+            help="If true the behavior is like in OpenERP alone (with 'based on' field)"
             ),
         #'reduction_type': fields.selection(
         #        (
@@ -176,7 +177,15 @@ class product_pricelist_item(orm.Model):
             backend_rec.append(presta_item_obj.create(cr, uid, vals, context=context))
         print 'res', res
         return res
-    #
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(product_pricelist_item, self).unlink(cr, uid, ids, context=context)
+        #ps_item_obj = self.pool['prestashop.product.pricelist.item']
+        #ps_item_ids = ps_item_obj.search(cr, uid, [('openerp_is', 'in', ids)], context=context)
+        #ps_item_obj.unlink(cr, uid, ps_item_ids, context=context)
+        #import pdb;pdb.set_trace()
+        return res
+
     #def write(self, cr, uid, ids, vals, context=None):
     #    print 'vals:', vals, 'ids', ids
     #    keys = vals.keys()
@@ -218,7 +227,9 @@ class PricelistBuilder(orm.Model):
     _inherit = "pricelist.builder"
 
     def _prepare_item_vals(self, cr, uid, tpl, builder_id, context=None):
-        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid, tpl, builder_id, context=context)
+        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid, tpl,
+                                                    builder_id, context=context)
+        #import pdb;pdb.set_trace()
         name = vals['name']
         #if tpl.reduction_type:
         #    vals['reduction_type'] = tpl.reduction_type
@@ -251,6 +262,10 @@ def product_pricelist_item_written(session, model_name, record_id, fields):
             print "  from item written:", model, '  bind', binding.id, '  f', fields
             export_record.delay(session, 'prestashop.product.pricelist.item',
                                                             binding.id, fields)
+
+@on_record_unlink(model_names='product.pricelist.item')
+def delay_unlink_all_bindings(session, model_name, record_id):
+    prestashoperpconnect.delay_unlink_all_bindings(session, model_name, record_id)
 
 
 @prestashop
@@ -299,17 +314,37 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
         return { 'from': start, 'to': end, }
 
     @mapping
-    def div(self, record):
-        return {'id_cart': '0', 'id_country': '0'}
+    def id_country(self, record):
+        vals = {'id_country': '0'}
+        if record.country_id and record.country_id.prestashop_bind_ids:
+            #TODO : improve backend selection
+            for ps_country in record.country_id.prestashop_bind_ids:
+                vals['id_country'] = ps_country.prestashop_id
+        return vals
+
+    @mapping
+    def id_shop(self, record):
+        import pdb;pdb.set_trace()
+        #TODO : manage value
+        return {'id_shop': 1}
 
     @mapping
     def id_currency(self, record):
-        return {'id_currency': '0'}
+        vals = {'id_currency': '0'}
+        if record.price_version_id.pricelist_id.currency_id and record.price_version_id.pricelist_id.currency_id.prestashop_bind_ids:
+            #TODO : improve backend selection
+            for ps_currency in record.price_version_id.pricelist_id.currency_id.prestashop_bind_ids:
+                vals['id_currency'] = ps_currency.prestashop_id
+        return vals
 
     @mapping
-    def div2(self, record):
-        #return {'id_customer': '0', 'id_group': '0', 'id_product': '11', 'id_shop': 1}
-        return {'id_customer': '0', 'id_group': '0', 'id_shop': 1}
+    def id_group(self, record):
+        vals = {'id_group': '0'}
+        if record.partner_cat_id and record.partner_cat_id.prestashop_bind_ids:
+            #TODO : improve backend selection
+            for ps_partn_cat in record.partner_cat_id.prestashop_bind_ids:
+                vals['id_group'] = ps_partn_cat.prestashop_id
+        return vals
 
     @mapping
     def reduction(self, record):
@@ -330,3 +365,11 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
             return {'price': -1.000000}
         else:
             return {'price': record.new_base_price}
+
+    @mapping
+    def unused_in_erp_but_mandatory_in_presta(self, record):
+        return {'id_customer': '0', 'id_cart': '0'}
+
+@prestashop
+class PrestashopPricelistItemDeleteSynchronizer(PrestashopDeleteSynchronizer):
+    _model_name = 'prestashop.product.pricelist.item'

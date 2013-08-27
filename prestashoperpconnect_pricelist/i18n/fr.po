@@ -1,0 +1,151 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* prestashoperpconnect_pricelist
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-27 14:00+0000\n"
+"PO-Revision-Date: 2013-08-27 16:11+0100\n"
+"Last-Translator: David Béal <david.beal@akretion.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+
+#. module: prestashoperpconnect_pricelist
+#: code:addons/prestashoperpconnect_pricelist/pricelist.py:102
+#: code:addons/prestashoperpconnect_pricelist/pricelist.py:103
+#, python-format
+msgid ""
+"'Discount' must be between -1 and 0 for PrestaShop webservice.\n"
+"Discount of '%s' founded"
+msgstr ""
+"'Remise' doit être entre -1 et 0 for le webservice PrestaShop.\n"
+"Remise de '%s' relevé."
+
+#. module: prestashoperpconnect_pricelist
+#: constraint:pricelist.item.template:0
+msgid "Error: Invalid"
+msgstr "Erreur: Invalide"
+
+#. module: prestashoperpconnect_pricelist
+#: help:product.pricelist.item,new_base_price:0
+msgid "New base price : 'based on' field is not used in this case (specfic to PrestaShop)."
+msgstr "New base price : 'based on' field is not used in this case (specfic to PrestaShop)."
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_sync_date
+#: field:prestashop.product.pricelist.item,sync_date:0
+msgid "Last synchronization date"
+msgstr "Dernière date de synchronisation"
+
+#. module: prestashoperpconnect_pricelist
+#: help:pricelist.item.template,new_base_price:0
+msgid "New base price : 'base price' field is not used in this case (specfic to PrestaShop)."
+msgstr "New base price : 'base price' field is not used in this case (specfic to PrestaShop)."
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model,name:prestashoperpconnect_pricelist.model_prestashop_product_pricelist_item
+msgid "PrestaShop Binding (abstract)"
+msgstr "PrestaShop Binding (abstract)"
+
+#. module: prestashoperpconnect_pricelist
+#: code:addons/prestashoperpconnect_pricelist/pricelist.py:101
+#: code:addons/prestashoperpconnect_pricelist/pricelist.py:102
+#, python-format
+msgid "Error on discount for PrestaShop:"
+msgstr "Erreur sur la remise pour PrestaShop:"
+
+#. module: prestashoperpconnect_pricelist
+#: view:pricelist.builder:0
+msgid "Discount"
+msgstr "Remise"
+
+#. module: prestashoperpconnect_pricelist
+#: help:pricelist.item.template,let_base_price:0
+#: help:product.pricelist.item,let_base_price:0
+msgid "True if OpenERP like behavior with 'based on' field"
+msgstr "True if OpenERP like behavior with 'based on' field"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_shop_id
+#: field:prestashop.product.pricelist.item,shop_id:0
+msgid "Shop"
+msgstr "Magasin"
+
+#. module: prestashoperpconnect_pricelist
+#: code:addons/prestashoperpconnect_pricelist/pricelist.py:231
+#: code:addons/prestashoperpconnect_pricelist/pricelist.py:242
+#, python-format
+msgid "base price"
+msgstr "price de base"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_pricelist_item_template_let_base_price
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_product_pricelist_item_let_base_price
+#: field:pricelist.item.template,let_base_price:0
+#: field:product.pricelist.item,let_base_price:0
+msgid "Let base price"
+msgstr "Laisser le prix de base"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_prestashop_id
+#: field:prestashop.product.pricelist.item,prestashop_id:0
+msgid "ID on PrestaShop"
+msgstr "ID sur PrestaShop"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model,name:prestashoperpconnect_pricelist.model_prestashoperpconnect_pricelist_installed
+msgid "prestashoperpconnect_pricelist.installed"
+msgstr "prestashoperpconnect_pricelist.installed"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model,name:prestashoperpconnect_pricelist.model_pricelist_item_template
+msgid "Definition of the creation of the item"
+msgstr "Définition de la création d'un item"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_pricelist_item_template_new_base_price
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_product_pricelist_item_new_base_price
+#: field:pricelist.item.template,new_base_price:0
+#: field:product.pricelist.item,new_base_price:0
+msgid "New base price"
+msgstr "Nveau prix de base"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_product_pricelist_item_prestashop_bind_ids
+#: field:product.pricelist.item,prestashop_bind_ids:0
+msgid "PrestaShop Bindings"
+msgstr "PrestaShop Bindings"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model,name:prestashoperpconnect_pricelist.model_pricelist_builder
+msgid "pricelist.builder"
+msgstr "pricelist.builder"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model,name:prestashoperpconnect_pricelist.model_abstract_pricelist_item
+msgid "Abstrack Pricelist Items"
+msgstr "Abstrack Pricelist Items"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_backend_id
+#: field:prestashop.product.pricelist.item,backend_id:0
+msgid "PrestaShop Backend"
+msgstr "PrestaShop Backend"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model,name:prestashoperpconnect_pricelist.model_product_pricelist_item
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_openerp_id
+#: field:prestashop.product.pricelist.item,openerp_id:0
+msgid "Pricelist item"
+msgstr "Item de liste de prix"
+
+#. module: prestashoperpconnect_pricelist
+#: view:pricelist.builder:0
+msgid "Surcharge"
+msgstr "Complément"
+
