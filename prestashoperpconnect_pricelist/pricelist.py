@@ -42,12 +42,9 @@ from openerp.addons.prestashoperpconnect.unit.mapper import PrestashopExportMapp
 from openerp.addons.prestashoperpconnect.unit.delete_synchronizer import PrestashopDeleteSynchronizer
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.unit.backend_adapter import GenericAdapter
-#from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.connector.unit.mapper import mapping
 
 import openerp.addons.prestashoperpconnect.consumer as prestashoperpconnect
-
-#_MODEL_NAMES.append('product.pricelist.item')
 
 PRICELIST_FIELDS = [
         'product_id',
@@ -61,32 +58,39 @@ PRICELIST_FIELDS = [
         'end_date',
     ]
 
-class pricelist_item_template(orm.Model):
+
+class PricelistItemTemplate(orm.Model):
     _inherit = "pricelist.item.template"
 
-    #def _reduction_type(self, cr, uid, ids, field_names, arg, context=None):
-    #    res={}
-    #    for elm in self.browse(cr, uid, ids):
-    #        result[elm.id] = {}
-    #        result[elm.id]['newfield'] = val
-    #    return result
+    def _check_min_quantity(self, cr, uid, ids):
+        for item in self.browse(cr, uid, ids):
+            if item.min_quantity < 1:
+                raise except_osv(_('Error in quantity:'),
+                    _("'Minimum quantity' must be greater than 1. " \
+                    "Quantity '%s' founded") \
+                    % item.min_quantity)
+                return False
+        return True
+
+    _constraints = [(_check_min_quantity,
+        'Error: Invalid quantity',
+        ['min_quantity'])]
+
+
+class pricelist_item_template(orm.Model):
+    """ - add specific fields for prestashop api
+        - check validity of these fields
+    """
+    _inherit = "pricelist.item.template"
 
     _columns = {
-        'new_base_price': fields.float('New base price',
+        'new_base_price': fields.float('New price',
             digits_compute=dp.get_precision('Sale Price'),
             help="New base price : 'base price' field is not used in this case (specific to PrestaShop)."
             ),
-        'let_base_price': fields.boolean('Let base price',
-            help="True if OpenERP like behavior with 'based on' field"
+        'let_base_price': fields.boolean('Let price',
+            help="If False, use the 'New price' field (specific to Prestashop) instead of 'based on' field"
             ),
-        #'reduction_type': fields.selection(
-        #        (
-        #            ('amount', _('Amount')),
-        #            ('percentage', _('Percent.')),
-        #        ),
-        #    'Reduc. type',
-        #    help="Prestashop type of reduction"
-        #    ),
         'price_discount': fields.float('Price Discount', digits=(16,4)
             ),
     }
@@ -96,18 +100,22 @@ class pricelist_item_template(orm.Model):
     }
 
     def _check_price_elements(self, cr, uid, ids):
-        for tpl in self.browse(cr, uid, ids):
-            if tpl.price_discount:
-                if tpl.price_discount > 0 or tpl.price_discount < -1:
+        "check quantity"
+        for item_tpl in self.browse(cr, uid, ids):
+            if item_tpl.price_discount:
+                if item_tpl.price_discount > 0 or item_tpl.price_discount < -1:
                     raise except_osv(_('Error on discount for PrestaShop:'),
                         _("'Discount' must be between -1 and 0 for PrestaShop webservice.\n" \
                         "Discount of '%s' founded") \
-                        % tpl.price_discount)
+                        % item_tpl.price_discount)
                     return False
         return True
 
     def onchange_price_presta(self, cr, uid, ids, discount, surcharge,
                                                                 context=None):
+        """Prestashop do not support in the same time 'price_discount'
+            and 'price_surcharge' fields : either one or the other
+            On change mechanism allow to switch from one to the other """
         if discount != 0 and surcharge != 0:
             if context.get('reduction_type') == 'discount':
                 value = {'price_surcharge': 0}
@@ -120,6 +128,7 @@ class pricelist_item_template(orm.Model):
     _constraints = [(
             _check_price_elements,
             'Error: Invalid',
+            # TODO check needs conditon on price_surcharge ?
             ['price_discount', 'price_surcharge']
         )]
 
@@ -142,72 +151,44 @@ class product_pricelist_item(orm.Model):
             'Let base price',
             help="If true the behavior is like in OpenERP alone (with 'based on' field)"
             ),
-        #'reduction_type': fields.selection(
-        #        (
-        #            ('', ''),
-        #            ('amount', _('Amount')),
-        #            ('percentage', _('Percent.')),
-        #        ),
-        #    'Reduc. type',
-        #    help="Prestashop type of reduction"
-        #    ),
     }
 
     _defaults = {
         'let_base_price': True,
-        #'reduction_type': '',
     }
 
     def create(self, cr, uid, vals, context=None):
         res = super(product_pricelist_item, self).create(cr, uid, vals, context=context)
-        presta_item_obj = self.pool['prestashop.product.pricelist.item']
-        version_obj = self.pool['product.pricelist.version']
-        shop_obj = self.pool['prestashop.shop']
+        presta_item_m = self.pool['prestashop.product.pricelist.item']
+        version_m = self.pool['product.pricelist.version']
+        shop_m = self.pool['prestashop.shop']
         price_version_id = vals['price_version_id']
-        pricelist_id = version_obj.browse(cr, uid, [price_version_id], context=context)[0].pricelist_id.id
-        shop_ids = shop_obj.search(cr, uid, [('pricelist_id', '=',
-                                              pricelist_id)], context=context)
+        pricelist = version_m.browse(cr, uid, [price_version_id], context=context)[0].pricelist_id
+        ## search shops using current pricelist
+        shop_ids = shop_m.search(cr, uid, [('pricelist_id', '=',
+                                              pricelist.id)], context=context)
         #TODO FIXME : mostly there is only one backend per shop : needs a clean solution for other situations
         if shop_ids:
-            for shop in shop_obj.browse(cr, uid, shop_ids, context=context):
+            for shop in shop_m.browse(cr, uid, shop_ids, context=context):
                 backend_id = shop.prestashop_bind_ids[0].id
-        backend_rec = []
-        for shop_id in shop_ids:
-            vals = {'backend_id': backend_id, 'shop_id': shop_id, 'openerp_id': res}
-            backend_rec.append(presta_item_obj.create(cr, uid, vals, context=context))
-        print 'res', res
+                vals = {'backend_id': backend_id,
+                        'shop_id': shop.id,
+                        'openerp_id': res}
+                ## creation of 'prestas..product.pricel..item' record by shop
+                presta_item_m.create(cr, uid, vals, context=context)
+        else:
+            raise except_osv("Error with PrestaShop: ",
+                unicode("""There is no shop connected with PrestaShop with this pricelist :
+                    '%s'\nNo synchronisation """ % pricelist.name) + \
+                unicode ("of this pricelist is possible with PrestaShop"))
+            #self.pool.get('mail.thread').message_post(cr, uid, False, "mess mine", context=context, partner_ids=[(6, 0, [1])], subtype='__.notify')
         return res
-
-    def unlink(self, cr, uid, ids, context=None):
-        res = super(product_pricelist_item, self).unlink(cr, uid, ids, context=context)
-        #ps_item_obj = self.pool['prestashop.product.pricelist.item']
-        #ps_item_ids = ps_item_obj.search(cr, uid, [('openerp_is', 'in', ids)], context=context)
-        #ps_item_obj.unlink(cr, uid, ps_item_ids, context=context)
-        #import pdb;pdb.set_trace()
-        return res
-
-    #def write(self, cr, uid, ids, vals, context=None):
-    #    print 'vals:', vals, 'ids', ids
-    #    keys = vals.keys()
-    #    if len(keys) > 1 or keysvals.get('price_version_id') is None:
-    #        ps_item_obj = self.pool['prestashop.product.pricelist.item']
-    #        print '    write en cours'
-    #        res = super(product_pricelist_item, self).write(cr, uid, ids, vals, context=context)
-    #        ps_item_ids = ps_item_obj.search(cr, uid,
-    #                            [('openerp_id', 'in', ids)], context=context)
-    #        ps_item_obj.write(cr, uid, ps_item_ids, {'update': True}, context=context)
 
 
 class prestashop_product_pricelist_item(orm.Model):
     _name = 'prestashop.product.pricelist.item'
     _inherit = 'prestashop.binding'
     _inherits = {'product.pricelist.item': 'openerp_id'}
-
-
-    def unlink(self, *args, **kwargs):
-        import pdb;pdb.set_trace()
-        return super(prestashop_product_pricelist_item, self).unlink(*args, **kwargs)
-
 
     _columns = {
         'openerp_id': fields.many2one(
@@ -226,23 +207,30 @@ class prestashop_product_pricelist_item(orm.Model):
 class PricelistBuilder(orm.Model):
     _inherit = "pricelist.builder"
 
-    def _prepare_item_vals(self, cr, uid, tpl, builder_id, context=None):
-        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid, tpl,
-                                                    builder_id, context=context)
-        #import pdb;pdb.set_trace()
-        name = vals['name']
-        #if tpl.reduction_type:
-        #    vals['reduction_type'] = tpl.reduction_type
-        #    if tpl.reduction_type == 'amount':
-        #        name += ', ' + _('(amount) ')
-        vals['let_base_price'] = tpl.let_base_price
-        if tpl.new_base_price:
-            vals['new_base_price'] = tpl.new_base_price
-            if tpl.let_base_price == False:
-                name += ', '+_('base price') + ': ' + str(tpl.new_base_price)
-        vals.update({'name': name})
+    _columns = {
+        'partner_cat_id': fields.many2one(
+            'res.partner.category',
+            'Partner Categ.',
+            domain=[('prestashop_bind_ids', '!=', False)],
+            help="NOT USED by OpenERP to modify pricelist computation (only " \
+                "with external connected applications)"
+        ),
+    }
+
+    def _prepare_item_vals(self, cr, uid, item_tpl, builder_o, context=None):
+        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid, item_tpl,
+                                                    builder_o, context=context)
+        vals['let_base_price'] = item_tpl.let_base_price
+        if item_tpl.new_base_price:
+            vals['new_base_price'] = item_tpl.new_base_price
         return vals
 
+    def product_filter(self, cr, uid, product_ids, context=None):
+        product_m = self.pool['product.product']
+        for product in product_m.browse(cr, uid, product_ids, context=context):
+            if not product.prestashop_bind_ids:
+                product_ids.remove(product.id)
+        return product_ids
 
 @on_record_create(model_names='prestashop.product.pricelist.item')
 def prestashop_product_pricelist_item_created(session, model_name, record_id, fields=None):
@@ -265,11 +253,11 @@ def product_pricelist_item_written(session, model_name, record_id, fields):
 
 @on_record_unlink(model_names='product.pricelist.item')
 def delay_unlink_all_bindings(session, model_name, record_id):
+    print '\n     >> unlink all'
     prestashoperpconnect.delay_unlink_all_bindings(session, model_name, record_id)
 
 
 @prestashop
-#class ProductPricelistItemAdapter(GenericAdapter):
 class PricelistItemAdapter(GenericAdapter):
     _model_name = 'prestashop.product.pricelist.item'
     _prestashop_model = 'specific_prices'
@@ -277,7 +265,6 @@ class PricelistItemAdapter(GenericAdapter):
 
 
 @prestashop
-#class PrestashopProductPricelistItemBinder(PrestashopModelBinder):
 class PrestashopPricelistItemBinder(PrestashopModelBinder):
     _model_name = 'prestashop.product.pricelist.item'
 
@@ -288,7 +275,6 @@ class PricelistExport(PrestashopExporter):
 
 
 @prestashop
-#class PrestashopProductPricelistItemExportMapper(PrestashopExportMapper):
 class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
     _model_name = 'prestashop.product.pricelist.item'
 
@@ -324,9 +310,7 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
 
     @mapping
     def id_shop(self, record):
-        import pdb;pdb.set_trace()
-        #TODO : manage value
-        return {'id_shop': 1}
+        return {'id_shop': record.shop_id.id}
 
     @mapping
     def id_currency(self, record):
@@ -335,6 +319,15 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
             #TODO : improve backend selection
             for ps_currency in record.price_version_id.pricelist_id.currency_id.prestashop_bind_ids:
                 vals['id_currency'] = ps_currency.prestashop_id
+        return vals
+
+    @mapping
+    def id_product(self, record):
+        #TODO : choose method to cancel synchro instead of 0
+        vals = {'id_product': '0'}
+        for ps_product in record.product_id.prestashop_bind_ids:
+            if ps_product.prestashop_id:
+                vals['id_product'] = ps_product.prestashop_id
         return vals
 
     @mapping

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-27 14:00+0000\n"
-"PO-Revision-Date: 2013-08-27 16:11+0100\n"
+"POT-Creation-Date: 2013-08-27 15:58+0000\n"
+"PO-Revision-Date: 2013-08-27 17:59+0100\n"
 "Last-Translator: David Béal <david.beal@akretion.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,9 +32,20 @@ msgid "Error: Invalid"
 msgstr "Erreur: Invalide"
 
 #. module: prestashoperpconnect_pricelist
+#: help:pricelist.item.template,new_base_price:0
+msgid "New base price : 'base price' field is not used in this case (specific to PrestaShop)."
+msgstr "Nouveau prix de base : le champ 'base price' n'est pas utilisé dans ce cas (specifique à PrestaShop)."
+
+#. module: prestashoperpconnect_pricelist
 #: help:product.pricelist.item,new_base_price:0
 msgid "New base price : 'based on' field is not used in this case (specfic to PrestaShop)."
 msgstr "New base price : 'based on' field is not used in this case (specfic to PrestaShop)."
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_pricelist_item_template_new_base_price
+#: field:pricelist.item.template,new_base_price:0
+msgid "New price"
+msgstr "Nveau prix"
 
 #. module: prestashoperpconnect_pricelist
 #: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_sync_date
@@ -43,14 +54,20 @@ msgid "Last synchronization date"
 msgstr "Dernière date de synchronisation"
 
 #. module: prestashoperpconnect_pricelist
-#: help:pricelist.item.template,new_base_price:0
-msgid "New base price : 'base price' field is not used in this case (specfic to PrestaShop)."
-msgstr "New base price : 'base price' field is not used in this case (specfic to PrestaShop)."
-
-#. module: prestashoperpconnect_pricelist
 #: model:ir.model,name:prestashoperpconnect_pricelist.model_prestashop_product_pricelist_item
 msgid "PrestaShop Binding (abstract)"
 msgstr "PrestaShop Binding (abstract)"
+
+#. module: prestashoperpconnect_pricelist
+#: help:pricelist.item.template,let_base_price:0
+msgid "If False, use the 'New price' field (specific to Prestashop) instead of 'based on' field"
+msgstr "If False, use the 'New price' field (specific to Prestashop) instead of 'based on' field"
+
+#. module: prestashoperpconnect_pricelist
+#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_pricelist_item_template_let_base_price
+#: field:pricelist.item.template,let_base_price:0
+msgid "Let price"
+msgstr "Laisser le prix"
 
 #. module: prestashoperpconnect_pricelist
 #: code:addons/prestashoperpconnect_pricelist/pricelist.py:101
@@ -63,12 +80,6 @@ msgstr "Erreur sur la remise pour PrestaShop:"
 #: view:pricelist.builder:0
 msgid "Discount"
 msgstr "Remise"
-
-#. module: prestashoperpconnect_pricelist
-#: help:pricelist.item.template,let_base_price:0
-#: help:product.pricelist.item,let_base_price:0
-msgid "True if OpenERP like behavior with 'based on' field"
-msgstr "True if OpenERP like behavior with 'based on' field"
 
 #. module: prestashoperpconnect_pricelist
 #: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_prestashop_product_pricelist_item_shop_id
@@ -84,9 +95,7 @@ msgid "base price"
 msgstr "price de base"
 
 #. module: prestashoperpconnect_pricelist
-#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_pricelist_item_template_let_base_price
 #: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_product_pricelist_item_let_base_price
-#: field:pricelist.item.template,let_base_price:0
 #: field:product.pricelist.item,let_base_price:0
 msgid "Let base price"
 msgstr "Laisser le prix de base"
@@ -108,12 +117,15 @@ msgid "Definition of the creation of the item"
 msgstr "Définition de la création d'un item"
 
 #. module: prestashoperpconnect_pricelist
-#: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_pricelist_item_template_new_base_price
 #: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_product_pricelist_item_new_base_price
-#: field:pricelist.item.template,new_base_price:0
 #: field:product.pricelist.item,new_base_price:0
 msgid "New base price"
 msgstr "Nveau prix de base"
+
+#. module: prestashoperpconnect_pricelist
+#: help:product.pricelist.item,let_base_price:0
+msgid "If true the behavior is like in OpenERP alone (with 'based on' field)"
+msgstr "Si vrai le comportement est comme dans OpenERP en solo (avec la champ 'basé sur')"
 
 #. module: prestashoperpconnect_pricelist
 #: model:ir.model.fields,field_description:prestashoperpconnect_pricelist.field_product_pricelist_item_prestashop_bind_ids

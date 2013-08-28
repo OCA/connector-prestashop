@@ -25,5 +25,16 @@
 </record>
 
 
+<record id="product_pricelist_version_form_view" model="ir.ui.view">
+    <field name="model">product.pricelist.version</field>
+    <field name="inherit_id" ref="pricelist_builder.product_pricelist_version_form_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree[@name='item_auto']" position="inside">
+            <field name="let_base_price" attrs="{'invisible': True}"/>
+            <field name="new_base_price" attrs="{'invisible': [('let_base_price', '=', True)]}"/>
+        </xpath>
+    </field>
+</record>
+
     </data>
 </openerp>
