@@ -36,7 +36,9 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 
 
 class PrestashopImportMapper(ImportMapper):
-
+    
+    #get_openerp_id is deprecated use the binder intead
+    #we should have only 1 way to map the field to avoid error
     def get_openerp_id(self, model, prestashop_id):
         '''
         Returns an openerp id from a model name and a prestashop_id.
@@ -169,9 +171,16 @@ class PartnerImportMapper(PrestashopImportMapper):
     @mapping
     def lang(self, record):
         binder = self.get_binder_for_model('prestashop.res.lang')
-        erp_lang_id = binder.to_openerp(record['id_lang'])
-        #hack
-        record['id_lang'] = 1
+        if not record.get('id_lang'):
+            data_obj = self.session.pool.get('ir.model.data')
+            erp_lang_id = data_obj.get_object_reference(
+                self.session.cr,
+                self.session.uid,
+                'base',
+                'lang_en')[1]
+            record['id_lang'] = binder.to_backend(erp_lang_id)
+        else:
+            erp_lang_id = binder.to_openerp(record['id_lang'])
         model = self.environment.session.pool.get('prestashop.res.lang')
         erp_lang = model.read(
             self.session.cr,
@@ -235,7 +244,14 @@ class AddressImportMapper(PrestashopImportMapper):
     @mapping
     def customer(self, record):
         return {'customer': True}
-
+    
+    @mapping
+    def country(self, record):
+        if record.get('id_country'):
+            binder = self.get_binder_for_model('prestashop.res.country')
+            erp_country_id = binder.to_openerp(record['id_country'], unwrap=True)
+            return {'country_id': erp_country_id}
+        return {}
 
 @prestashop
 class SaleOrderStateMapper(PrestashopImportMapper):
