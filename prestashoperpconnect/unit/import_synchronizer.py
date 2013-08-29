@@ -31,7 +31,7 @@ from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.connector import ConnectorUnit
 from ..backend import prestashop
 from ..connector import get_environment
-from .adapter import GenericAdapter
+from backend_adapter import GenericAdapter
 
 from openerp.addons.connector.exception import FailedJobError
 
@@ -296,7 +296,7 @@ class SaleImportRule(ConnectorUnit):
         })
         paid_amount = 0.0
         for payment_id in payment_ids:
-            payment = payment_adapter.read(payment_id['attrs']['id'])
+            payment = payment_adapter.read(payment_id)
             paid_amount += float(payment['amount'])
         return paid_amount
 
@@ -348,7 +348,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         self._check_dependency(record['id_carrier'],
                                'prestashop.delivery.carrier')
 
-        orders = record['associations']['order_rows']['order_row']
+        orders = record['associations'].get('order_rows', {}).get('order_row', [])
         if isinstance(orders, dict):
             orders = [orders]
         for order in orders:
