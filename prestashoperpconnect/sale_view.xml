@@ -41,6 +41,17 @@
             </field>
         </record>
 
+        <record id="view_shop_form" model="ir.ui.view">
+            <field name="model">sale.shop</field>
+            <field name="inherit_id" ref="sale.view_shop_form"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="after">
+                    <field name="prestashop_bind_ids"/>
+                </field>
+            </field>
+        </record>
+
+
         <record id="view_prestashop_sale_order_state_form" model="ir.ui.view">
             <field name="name">prestashop.sale.order.state.form</field>
             <field name="model">prestashop.sale.order.state</field>
