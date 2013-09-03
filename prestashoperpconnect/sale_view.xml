@@ -46,7 +46,15 @@
             <field name="inherit_id" ref="sale.view_shop_form"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="after">
-                    <field name="prestashop_bind_ids"/>
+                    <group colspan="5" string="PrestaShop">
+                        <field name="prestashop_bind_ids" nolabel="1">
+                            <tree name="prestashop_binding">
+                                <field name="openerp_id" />
+                                <field name="shop_group_id"/>
+                                <field name="default_category_id"/>
+                            </tree>
+                        </field>
+                    </group>
                 </field>
             </field>
         </record>
