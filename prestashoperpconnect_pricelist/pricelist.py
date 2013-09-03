@@ -247,13 +247,11 @@ def product_pricelist_item_written(session, model_name, record_id, fields):
         record = model.browse(session.cr, session.uid,
                        record_id, context=session.context)
         for binding in record.prestashop_bind_ids:
-            print "  from item written:", model, '  bind', binding.id, '  f', fields
             export_record.delay(session, 'prestashop.product.pricelist.item',
                                                             binding.id, fields)
 
 @on_record_unlink(model_names='product.pricelist.item')
 def delay_unlink_all_bindings(session, model_name, record_id):
-    print '\n     >> unlink all'
     prestashoperpconnect.delay_unlink_all_bindings(session, model_name, record_id)
 
 

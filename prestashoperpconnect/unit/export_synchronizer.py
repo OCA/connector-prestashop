@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright (C) 2013 Akretion (http://www.akretion.com).
+#    Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
+#    @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -200,6 +202,4 @@ def export_record(session, model_name, binding_id, fields=None):
     record = session.browse(model_name, binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(PrestashopExporter)
-    #print 'fields', fields
-    #import pdb;pdb.set_trace()
     return exporter.run(binding_id, fields=fields)

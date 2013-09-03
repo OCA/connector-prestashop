@@ -400,7 +400,6 @@ class ProductInventoryExport(ExportSynchronizer):
         product = self.session.browse(self.model._name, binding_id)
         binder = self.get_binder_for_model()
         prestashop_id = binder.to_backend(product.id)
-        import pdb;pdb.set_trace()
         attributes = {'stock_available': self._get_data(product, fields)}
         self.backend_adapter.update_inventory(prestashop_id, attributes)
 

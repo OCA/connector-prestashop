@@ -36,9 +36,7 @@ How to :
 - define a pricelist in your imported shop (from PrestaShop) in OpenERP
 - modify items in each pricelist defined above to active synchronisation :
 
-    * each item record creation trigger a record creation in 'prestashop.product.pricelist.item'
-    * each item record update trigger an record update in 'prestashop.product.pricelist.item'
-    * each item record deletion trigger an deletion in this model
+    * each item record creation/update/deletion trigger a record creation/update/deletion in 'prestashop.product.pricelist.item'
     * each modification in this model trigger a synchronisation with prestashop
     """,
     'author': 'akretion',

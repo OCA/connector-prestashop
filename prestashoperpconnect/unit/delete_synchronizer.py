@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#   Copyright (C) 2013 Akretion (http://www.akretion.com).
+#   Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#   @author Sébastien BEAU <sebastien.beau@akretion.com>
+#   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -31,7 +33,7 @@ class PrestashopDeleteSynchronizer(DeleteSynchronizer):
     def run(self, external_id):
         """ Run the synchronization, delete the record on Prestashop
 
-        :param magento_id: identifier of the record to delete
+        :param external_id: identifier of the record to delete
         """
         self.backend_adapter.delete(external_id)
         return _('Record %s deleted on Prestashop') % external_id

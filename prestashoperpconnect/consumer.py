@@ -33,8 +33,8 @@ from .connector import get_environment
 def delay_export(session, model_name, record_id, fields=None):
     """ Delay a job which export a binding record.
 
-    (A binding record being a ``magento.res.partner``,
-    ``magento.product.product``, ...)
+    (A binding record being a ``external.res.partner``,
+    ``external.product.product``, ...)
     """
     if session.context.get('connector_no_export'):
         return
@@ -52,7 +52,7 @@ def delay_export_all_bindings(session, model_name, record_id, fields=None):
     model = session.pool.get(model_name)
     record = model.browse(session.cr, session.uid,
                           record_id, context=session.context)
-    for binding in record.magento_bind_ids:
+    for binding in record.prestashop_bind_ids:
         export_record.delay(session, binding._model._name, binding.id,
                             fields=fields)
 
