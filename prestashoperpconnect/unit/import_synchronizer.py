@@ -28,8 +28,12 @@ from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.addons.connector.connector import ConnectorUnit
 from ..backend import prestashop
 from ..connector import get_environment
+from backend_adapter import GenericAdapter
+
+from openerp.addons.connector.exception import FailedJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -267,6 +271,69 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
 
 
 @prestashop
+class SaleImportRule(ConnectorUnit):
+    _model_name = ['prestashop.sale.order']
+
+    def _rule_always(self, record, method):
+        """ Always import the order """
+        return True
+
+    def _rule_never(self, record, method):
+        """ Never import the order """
+        return False
+
+    def _rule_paid(self, record, method):
+        """ Import the order only if it has received a payment """
+        return self._get_paid_amount(record) == record['total_paid']
+
+    def _get_paid_amount(self, record):
+        payment_adapter = self.get_connector_unit_for_model(
+            GenericAdapter,
+            '__not_exist_prestashop.payment'
+        )
+        payment_ids = payment_adapter.search({
+            'filter[order_reference]': record['reference']
+        })
+        paid_amount = 0.0
+        for payment_id in payment_ids:
+            payment = payment_adapter.read(payment_id)
+            paid_amount += float(payment['amount'])
+        return paid_amount
+
+    _rules = {'always': _rule_always,
+              'paid': _rule_paid,
+              'authorized': _rule_paid,
+              'never': _rule_never,
+              }
+
+    def check(self, record):
+        """ Check whether the current sale order should be imported
+        or not. It will actually use the payment method configuration
+        and see if the chosen rule is fullfilled.
+
+        :returns: True if the sale order should be imported
+        :rtype: boolean
+        """
+        session = self.session
+        payment_method = record['payment']
+        method_ids = session.search('payment.method',
+                                    [('name', '=', payment_method)])
+        if not method_ids:
+            raise FailedJobError(
+                "The configuration is missing for the Payment Method '%s'.\n\n"
+                "Resolution:\n"
+                "- Go to 'Sales > Configuration > Sales > Customer Payment "
+                "Method'\n"
+                "- Create a new Payment Method with name '%s'\n"
+                "-Eventually  link the Payment Method to an existing Workflow "
+                "Process or create a new one." % (payment_method,
+                                                  payment_method))
+        method = session.browse('payment.method', method_ids[0])
+
+        self._rules[method.import_rule](self, record, method)
+
+
+@prestashop
 class SaleOrderImport(PrestashopImportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
@@ -281,12 +348,17 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         self._check_dependency(record['id_carrier'],
                                'prestashop.delivery.carrier')
 
-        orders = record['associations']['order_rows']['order_row']
+        orders = record['associations'].get('order_rows', {}).get('order_row', [])
         if isinstance(orders, dict):
             orders = [orders]
         for order in orders:
             self._check_dependency(order['product_id'],
                                    'prestashop.product.product')
+
+    def _has_to_skip(self):
+        """ Return True if the import can be skipped """
+        rules = self.get_connector_unit_for_model(SaleImportRule)
+        return rules.check(self.prestashop_record)
 
 
 @prestashop

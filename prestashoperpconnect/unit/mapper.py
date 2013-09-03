@@ -278,7 +278,7 @@ class SaleOrderMapper(PrestashopImportMapper):
     ]
 
     def _get_sale_order_lines(self, record):
-        orders = record['associations']['order_rows']['order_row']
+        orders = record['associations'].get('order_rows', {}).get('order_row', [])
         if isinstance(orders, dict):
             return [orders]
         return orders
@@ -373,11 +373,14 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     def _after_mapping(self, result):
         sess = self.session
+        order_line_ids = []
+        if 'prestashop_order_line_ids' in result:
+            order_line_ids = result['prestashop_order_line_ids']
         result = sess.pool['sale.order']._convert_special_fields(
             sess.cr,
             sess.uid,
             result,
-            result['prestashop_order_line_ids'],
+            order_line_ids,
             sess.context
         )
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
