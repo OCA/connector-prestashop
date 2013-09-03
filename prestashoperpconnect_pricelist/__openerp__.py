@@ -48,7 +48,7 @@ How to :
         ],
     'data': [
         'pricelist_view.xml',
-        #'security/ir.model.access.csv',
+        'sale_view.xml',
     ],
     'demo': [
     ],

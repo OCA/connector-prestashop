@@ -282,7 +282,6 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
         # (erp_field, external_app_field),
         ('min_quantity', 'from_quantity'),
         ('product_id', 'id_product'),
-        #('', ''),
     ]
 
     @mapping
@@ -301,12 +300,11 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
 
     @mapping
     def id_country(self, record):
-        vals = {'id_country': '0'}
-        if record.country_id and record.country_id.prestashop_bind_ids:
-            #TODO : improve backend selection
-            for ps_country in record.country_id.prestashop_bind_ids:
-                vals['id_country'] = ps_country.prestashop_id
-        return vals
+        binder = self.get_binder_for_model('prestashop.res.country')
+        id_country = binder.to_backend(record.country_id.id, unwrap=True)
+        if not id_country:
+            id_country = 0
+        return {'id_country': id_country}
 
     @mapping
     def id_shop(self, record):
@@ -314,30 +312,18 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
 
     @mapping
     def id_currency(self, record):
-        vals = {'id_currency': '0'}
-        if record.price_version_id.pricelist_id.currency_id and record.price_version_id.pricelist_id.currency_id.prestashop_bind_ids:
-            #TODO : improve backend selection
-            for ps_currency in record.price_version_id.pricelist_id.currency_id.prestashop_bind_ids:
-                vals['id_currency'] = ps_currency.prestashop_id
-        return vals
-
-    @mapping
-    def id_product(self, record):
-        #TODO : choose method to cancel synchro instead of 0
-        vals = {'id_product': '0'}
-        for ps_product in record.product_id.prestashop_bind_ids:
-            if ps_product.prestashop_id:
-                vals['id_product'] = ps_product.prestashop_id
-        return vals
+        binder = self.get_binder_for_model('prestashop.res.currency')
+        currency_id = binder.to_backend(
+            record.price_version_id.pricelist_id.currency_id.id, unwrap=True)
+        return {'id_currency': currency_id}
 
     @mapping
     def id_group(self, record):
-        vals = {'id_group': '0'}
-        if record.partner_cat_id and record.partner_cat_id.prestashop_bind_ids:
-            #TODO : improve backend selection
-            for ps_partn_cat in record.partner_cat_id.prestashop_bind_ids:
-                vals['id_group'] = ps_partn_cat.prestashop_id
-        return vals
+        binder = self.get_binder_for_model('prestashop.res.partner.category')
+        id_group = binder.to_backend(record.partner_cat_id.id, unwrap=True)
+        if not id_group:
+            id_group = 0
+        return {'id_group': id_group}
 
     @mapping
     def reduction(self, record):
@@ -352,8 +338,6 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
 
     @mapping
     def price(self, record):
-        print '\n   record id, oe, nbp, lbp', record.id, record.openerp_id, record.new_base_price, record.let_base_price
-        #import pdb;pdb.set_trace()
         if record.let_base_price == True:
             return {'price': -1.000000}
         else:
