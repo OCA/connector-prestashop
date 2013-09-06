@@ -227,13 +227,14 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.sale.order',
     ]
 
-    def _import_record(self, record):
+    def _import_record(self, record, **kwargs):
         """ Delay the import of the records"""
         import_record.delay(
             self.session,
             self.model._name,
             self.backend_record.id,
-            record
+            record,
+            **kwargs
         )
 
 
@@ -256,7 +257,8 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
             self.session,
             'prestashop.address',
             self.backend_record.id,
-            filters={'filter[id_customer]': '[%d]' % (ps_id)}
+            filters={'filter[id_customer]': '[%d]' % (ps_id)},
+            priority=10,
         )
 
 
@@ -536,7 +538,8 @@ class ProductRecordImport(TranslatableRecordImport):
                     'prestashop.product.image',
                     self.backend_record.id,
                     prestashop_record['id'],
-                    image['id']
+                    image['id'],
+                    priority=10,
                 )
 
     def _import_dependencies(self):
@@ -660,7 +663,7 @@ def import_customers_since(session, backend_id, since_date=None):
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
-    import_batch(session, 'prestashop.res.partner', backend_id, filters)
+    import_batch(session, 'prestashop.res.partner', backend_id, filters, priority=15)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
@@ -680,7 +683,7 @@ def import_orders_since(session, backend_id, since_date=None):
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
-    import_batch(session, 'prestashop.sale.order', backend_id, filters)
+    import_batch(session, 'prestashop.sale.order', backend_id, filters, priority=10)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
@@ -694,10 +697,10 @@ def import_orders_since(session, backend_id, since_date=None):
 
 @job
 def import_products(session, backend_id):
-    import_batch(session, 'prestashop.product.category', backend_id)
-    import_batch(session, 'prestashop.product.product', backend_id)
+    import_batch(session, 'prestashop.product.category', backend_id, priority=15)
+    import_batch(session, 'prestashop.product.product', backend_id, priority=15)
 
 
 @job
 def import_carriers(session, backend_id):
-    import_batch(session, 'prestashop.delivery.carrier', backend_id)
+    import_batch(session, 'prestashop.delivery.carrier', backend_id, priority=5)

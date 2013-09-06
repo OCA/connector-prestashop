@@ -136,7 +136,8 @@ class prestashop_backend(orm.Model):
             import_customers_since.delay(
                 session,
                 backend_record.id,
-                since_date
+                since_date,
+                priority=10,
             )
 
         return True
@@ -146,7 +147,7 @@ class prestashop_backend(orm.Model):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            import_products.delay(session, backend_id)
+            import_products.delay(session, backend_id, priority=10)
         return True
 
     def import_carriers(self, cr, uid, ids, context=None):
@@ -154,7 +155,7 @@ class prestashop_backend(orm.Model):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
-            import_carriers.delay(session, backend_id)
+            import_carriers.delay(session, backend_id, priority=10)
         return True
 
     def update_product_stock_qty(self, cr, uid, ids, context=None):
@@ -198,7 +199,8 @@ class prestashop_backend(orm.Model):
             import_orders_since.delay(
                 session,
                 backend_record.id,
-                since_date
+                since_date,
+                priority=5,
             )
         return True
 

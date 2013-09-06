@@ -39,7 +39,7 @@ import openerp.addons.decimal_precision as dp
 def prestashop_product_product_create(session, model_name, record_id):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 @on_record_write(model_names='prestashop.product.product')
 def prestashop_product_product_write(session, model_name, record_id, fields):
@@ -47,7 +47,7 @@ def prestashop_product_product_write(session, model_name, record_id, fields):
         return
     fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
     if fields:
-        export_record.delay(session, model_name, record_id, fields)
+        export_record.delay(session, model_name, record_id, fields, priority=20)
 
 @on_record_write(model_names='product.product')
 def product_product_write(session, model_name, record_id, fields):
@@ -57,7 +57,7 @@ def product_product_write(session, model_name, record_id, fields):
     record = model.browse(session.cr, session.uid,
                            record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.product.product', binding.id, fields)
+        export_record.delay(session, 'prestashop.product.product', binding.id, fields, priority=20)
 
 
 class prestashop_product_product(orm.Model):
