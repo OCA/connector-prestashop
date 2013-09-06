@@ -163,12 +163,12 @@ class BatchImportSynchronizer(ImportSynchronizer):
     """
     page_size = 1000
 
-    def run(self, filters=None):
+    def run(self, filters=None, **kwargs):
         """ Run the synchronization """
         if filters is None:
             filters = {}
         if 'limit' in filters:
-            self._run_page(filters)
+            self._run_page(filters, **kwargs)
             return
         page_number = 0
         filters['limit'] = '%d,%d' % (
@@ -180,10 +180,10 @@ class BatchImportSynchronizer(ImportSynchronizer):
                 page_number * self.page_size, self.page_size)
             record_ids = self._run_page(filters)
 
-    def _run_page(self, filters):
+    def _run_page(self, filters, **kwargs):
         record_ids = self.backend_adapter.search(filters)
         for record_id in record_ids:
-            self._import_record(record_id)
+            self._import_record(record_id, **kwargs)
         return record_ids
 
     def _import_record(self, record):
@@ -630,11 +630,11 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
 
 
 @job
-def import_batch(session, model_name, backend_id, filters=None):
+def import_batch(session, model_name, backend_id, filters=None, **kwargs):
     """ Prepare a batch import of records from Prestashop """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
-    importer.run(filters=filters)
+    importer.run(filters=filters, **kwargs)
 
 
 @job
