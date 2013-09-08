@@ -32,6 +32,7 @@ from openerp.addons.connector.connector import ConnectorUnit
 from ..backend import prestashop
 from ..connector import get_environment
 from backend_adapter import GenericAdapter
+from .exception import OrderImportRuleRetry
 
 from openerp.addons.connector.exception import FailedJobError
 
@@ -280,12 +281,15 @@ class SaleImportRule(ConnectorUnit):
 
     def _rule_never(self, record, method):
         """ Never import the order """
-        return False
+        raise NothingToDoJob('Orders with payment method %s '
+                             'are never imported.' %
+                             record['payment']['method'])
 
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment """
-        return self._get_paid_amount(record) == record['total_paid']
-
+        if float(record['total_paid']) - self._get_paid_amount(record) > 0.01:
+            raise OrderImportRuleRetry('The order has not been paid.\n'
+                                       'The import will be retried later.')
     def _get_paid_amount(self, record):
         payment_adapter = self.get_connector_unit_for_model(
             GenericAdapter,
