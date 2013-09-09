@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_pricelist for OpenERP
 #   Copyright (C) 2013-TODAY Akretion <http://www.akretion.com>.
 #     All Rights Reserved
 #     @author David BEAL <david.beal@akretion.com>
+#     Sébastien BEAU <sebastien.beau@akretion.com>
+#     Guewen Baconnier (camptocamp)
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
 #   published by the Free Software Foundation, either version 3 of the

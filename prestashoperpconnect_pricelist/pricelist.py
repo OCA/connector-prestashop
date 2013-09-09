@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_pricelist for OpenERP
 #   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>.
 #     All Rights Reserved
 #     @author :
@@ -46,6 +45,7 @@ from openerp.addons.connector.unit.mapper import mapping
 
 import openerp.addons.prestashoperpconnect.consumer as prestashoperpconnect
 
+
 PRICELIST_FIELDS = [
         'product_id',
         'min_quantity',
@@ -59,57 +59,102 @@ PRICELIST_FIELDS = [
     ]
 
 
-class PricelistItemTemplate(orm.Model):
-    _inherit = "pricelist.item.template"
+class PricelistBuilder(orm.Model):
+    _inherit = "pricelist.builder"
+
+    _columns = {
+        'partner_cat_id': fields.many2one(
+            'res.partner.category',
+            'Partner Categ.',
+            #TODO improve
+            #domain=[('prestashop_bind_ids', '!=', False)],
+            help="NOT USED by OpenERP to modify pricelist computation (only "
+                "with external connected applications)"
+        ),
+    }
+
+    def _prepare_item_vals(self, cr, uid, item_tpl, builder_o, context=None):
+        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid,
+                                        item_tpl, builder_o, context=context)
+        vals['let_base_price'] = item_tpl.let_base_price
+        if item_tpl.new_base_price:
+            vals['new_base_price'] = item_tpl.new_base_price
+        return vals
+
+    def product_filter(self, cr, uid, product_ids, context=None):
+        product_m = self.pool['product.product']
+        for product in product_m.browse(cr, uid, product_ids, context=context):
+            if not product.prestashop_bind_ids:
+                product_ids.remove(product.id)
+        return product_ids
+
+
+class AbstractPriceListItem(orm.AbstractModel):
+    _inherit = "abstract.pricelist.item"
+
+    _columns = {
+        'new_base_price': fields.float('New price',
+            digits_compute=dp.get_precision('Sale Price'),
+            help="New base price : 'base price' field is not used in this case "
+                " (specific to PrestaShop)."
+            ),
+        'let_base_price': fields.boolean('Let price',
+            help="If False, use the 'New price' field (specific to Prestashop) "
+                " instead of 'based on' field"
+            ),
+        #'price_discount': fields.float('Price Discount', digits=(16,4)
+        #    ),
+    }
+
+    def check_price_elements(self, cr, uid, item):
+        # check price validity
+        if item.price_discount == 0 and item.price_surcharge == 0:
+            if item.let_base_price == False:
+                if item.new_base_price <= 0:
+                    return (True, _('Error on prices for PrestaShop:'),
+                        _("'New base price' must be greater than 0 "
+                        "when 'Let price' is False."))
+            else:
+                return (True, _('Error on prices:'),
+                        _("'Discount' or 'Surcharge' must be different of 0 "
+                          "when 'Let price' is True"))
+        if item.price_surcharge > 0 and item.let_base_price == True:
+            return (True, _('Error on prices for PrestaShop:'),
+                        _("'Surcharge' must be negative or 0."))
+        # check quantity
+        if item.price_discount:
+            if item.price_discount > 0 or item.price_discount < -1:
+                return (True, _('Error on discount for PrestaShop:'),
+                        _("'Discount' must be between -1 and 0 for "
+                          "PrestaShop webservice.\n"
+                        "Discount of '%s' founded")
+                        % item.price_discount)
+        return (False, False, False)
 
     def _check_min_quantity(self, cr, uid, ids):
         for item in self.browse(cr, uid, ids):
             if item.min_quantity < 1:
                 raise except_osv(_('Error in quantity:'),
-                    _("'Minimum quantity' must be greater than 1. " \
+                    _("'Minimum quantity' must be greater or equal than 1. " \
                     "Quantity '%s' founded") \
                     % item.min_quantity)
                 return False
         return True
 
-    _constraints = [(_check_min_quantity,
-        'Error: Invalid quantity',
-        ['min_quantity'])]
-
-
-class pricelist_item_template(orm.Model):
-    """ - add specific fields for prestashop api
-        - check validity of these fields
-    """
-    _inherit = "pricelist.item.template"
-
-    _columns = {
-        'new_base_price': fields.float('New price',
-            digits_compute=dp.get_precision('Sale Price'),
-            help="New base price : 'base price' field is not used in this case (specific to PrestaShop)."
-            ),
-        'let_base_price': fields.boolean('Let price',
-            help="If False, use the 'New price' field (specific to Prestashop) instead of 'based on' field"
-            ),
-        'price_discount': fields.float('Price Discount', digits=(16,4)
-            ),
-    }
+    _constraints = [
+            (_check_min_quantity,
+            'Error: Invalid quantity',
+            ['min_quantity'])
+        ]
 
     _defaults = {
         'let_base_price': True,
     }
 
-    def _check_price_elements(self, cr, uid, ids):
-        "check quantity"
-        for item_tpl in self.browse(cr, uid, ids):
-            if item_tpl.price_discount:
-                if item_tpl.price_discount > 0 or item_tpl.price_discount < -1:
-                    raise except_osv(_('Error on discount for PrestaShop:'),
-                        _("'Discount' must be between -1 and 0 for PrestaShop webservice.\n" \
-                        "Discount of '%s' founded") \
-                        % item_tpl.price_discount)
-                    return False
-        return True
+
+class PricelistItemTemplate(orm.Model):
+    _inherit = ['abstract.pricelist.item', 'pricelist.item.template']
+    _name = 'pricelist.item.template'
 
     def onchange_price_presta(self, cr, uid, ids, discount, surcharge,
                                                                 context=None):
@@ -125,12 +170,9 @@ class pricelist_item_template(orm.Model):
         return True
 
 
-    _constraints = [(
-            _check_price_elements,
-            'Error: Invalid',
-            # TODO check needs conditon on price_surcharge ?
-            ['price_discount', 'price_surcharge']
-        )]
+class ProductPricelistItem(orm.Model):
+    _inherit = ['product.pricelist.item', 'abstract.pricelist.item']
+    _name = 'product.pricelist.item'
 
 
 class product_pricelist_item(orm.Model):
@@ -142,28 +184,17 @@ class product_pricelist_item(orm.Model):
             'openerp_id',
             string="PrestaShop Bindings"
             ),
-        'new_base_price': fields.float(
-            'New base price',
-            digits_compute=dp.get_precision('Sale Price'),
-            help="New base price : 'based on' field is not used in this case (specfic to PrestaShop)."
-            ),
-        'let_base_price': fields.boolean(
-            'Let base price',
-            help="If true the behavior is like in OpenERP alone (with 'based on' field)"
-            ),
-    }
-
-    _defaults = {
-        'let_base_price': True,
     }
 
     def create(self, cr, uid, vals, context=None):
-        res = super(product_pricelist_item, self).create(cr, uid, vals, context=context)
+        res = super(product_pricelist_item, self).create(cr, uid, vals,
+                                                                context=context)
         presta_item_m = self.pool['prestashop.product.pricelist.item']
         version_m = self.pool['product.pricelist.version']
         shop_m = self.pool['prestashop.shop']
         price_version_id = vals['price_version_id']
-        pricelist = version_m.browse(cr, uid, [price_version_id], context=context)[0].pricelist_id
+        pricelist = version_m.browse(cr, uid, [price_version_id],
+                                            context=context)[0].pricelist_id
         ## search shops using current pricelist
         shop_ids = shop_m.search(cr, uid, [('pricelist_id', '=',
                                               pricelist.id)], context=context)
@@ -178,7 +209,8 @@ class product_pricelist_item(orm.Model):
                 presta_item_m.create(cr, uid, vals, context=context)
         else:
             raise except_osv("Error with PrestaShop: ",
-                unicode("""There is no shop connected with PrestaShop with this pricelist :
+                unicode("""There is no shop connected with PrestaShop "
+                    "with this pricelist :
                     '%s'\nNo synchronisation """ % pricelist.name) + \
                 unicode ("of this pricelist is possible with PrestaShop"))
             #self.pool.get('mail.thread').message_post(cr, uid, False, "mess mine", context=context, partner_ids=[(6, 0, [1])], subtype='__.notify')
@@ -203,34 +235,6 @@ class prestashop_product_pricelist_item(orm.Model):
         ),
     }
 
-
-class PricelistBuilder(orm.Model):
-    _inherit = "pricelist.builder"
-
-    _columns = {
-        'partner_cat_id': fields.many2one(
-            'res.partner.category',
-            'Partner Categ.',
-            domain=[('prestashop_bind_ids', '!=', False)],
-            help="NOT USED by OpenERP to modify pricelist computation (only " \
-                "with external connected applications)"
-        ),
-    }
-
-    def _prepare_item_vals(self, cr, uid, item_tpl, builder_o, context=None):
-        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid, item_tpl,
-                                                    builder_o, context=context)
-        vals['let_base_price'] = item_tpl.let_base_price
-        if item_tpl.new_base_price:
-            vals['new_base_price'] = item_tpl.new_base_price
-        return vals
-
-    def product_filter(self, cr, uid, product_ids, context=None):
-        product_m = self.pool['product.product']
-        for product in product_m.browse(cr, uid, product_ids, context=context):
-            if not product.prestashop_bind_ids:
-                product_ids.remove(product.id)
-        return product_ids
 
 @on_record_create(model_names='prestashop.product.pricelist.item')
 def prestashop_product_pricelist_item_created(session, model_name, record_id, fields=None):
@@ -279,7 +283,6 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
     direct = [
         # (erp_field, external_app_field),
         ('min_quantity', 'from_quantity'),
-        ('product_id', 'id_product'),
     ]
 
     @mapping
@@ -314,6 +317,13 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
         currency_id = binder.to_backend(
             record.price_version_id.pricelist_id.currency_id.id, unwrap=True)
         return {'id_currency': currency_id}
+
+    @mapping
+    def id_product(self, record):
+        binder = self.get_binder_for_model('prestashop.product.product')
+        product_id = binder.to_backend(
+            record.product_id.id, unwrap=True)
+        return {'id_product': product_id}
 
     @mapping
     def id_group(self, record):

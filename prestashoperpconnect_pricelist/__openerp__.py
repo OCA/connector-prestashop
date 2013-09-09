@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_pricelist for OpenERP
 #   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>.
 #     All Rights Reserved
 #     @author David BEAL <david.beal@akretion.com>
+#     Sébastien BEAU <sebastien.beau@akretion.com>
+#     Guewen Baconnier (camptocamp)
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
 #   published by the Free Software Foundation, either version 3 of the
@@ -22,17 +23,19 @@
 
 {
     'name': 'prestashoperpconnect_pricelist',
-    'version': '0.1',
+    'version': '0.2',
     'category': '',
     'sequence': 10,
     'summary': "Synchronise pricelists with PrestaShop",
     'description': """
 Synchronise pricelists defined in OpenERP with PrestaShop:
+-----------------------------------------------------------
 
 How to :
 
 - follow prestashoperpconnect intructions
 - import customers
+- import products
 - define a pricelist in your imported shop (from PrestaShop) in OpenERP
 - modify items in each pricelist defined above to active synchronisation :
 
@@ -42,7 +45,8 @@ How to :
     'author': 'akretion',
     'website': 'http://www.akretion.com',
     'depends': [
-        'prestashoperpconnect', 'pricelist_builder_customer_attribute'
+        'prestashoperpconnect',
+        'pricelist_builder_customer_attribute',
         ],
     'data': [
         'pricelist_view.xml',
