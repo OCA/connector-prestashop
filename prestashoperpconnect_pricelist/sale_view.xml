@@ -11,7 +11,7 @@
 Read only for this element if shop type is 'prestashop' (constraint from module prestashoperpconnect pricelist)</attribute>
             <!-- TO DEBUG -->
             <!--<attribute name="attrs">{'readonly': [('pricelist_id','!=',False), ('prestashop_bind_ids','is',None)]}</attribute>-->
-            <attribute name="attrs">{'readonly': [('pricelist_id','!=',False)]}</attribute>
+            <!--<attribute name="attrs">{'readonly': [('pricelist_id','!=',False)]}</attribute>-->
         </field>
     </field>
 </record>

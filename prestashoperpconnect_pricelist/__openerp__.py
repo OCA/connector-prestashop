@@ -41,6 +41,10 @@ How to :
 
     * each item record creation/update/deletion trigger a record creation/update/deletion in 'prestashop.product.pricelist.item'
     * each modification in this model trigger a synchronisation with prestashop
+
+TODO :
+put a delay between activation and desactivation of pricelist.builder
+
     """,
     'author': 'akretion',
     'website': 'http://www.akretion.com',

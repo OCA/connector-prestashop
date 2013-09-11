@@ -102,8 +102,6 @@ class AbstractPriceListItem(orm.AbstractModel):
             help="If False, use the 'New price' field (specific to Prestashop) "
                 " instead of 'based on' field"
             ),
-        #'price_discount': fields.float('Price Discount', digits=(16,4)
-        #    ),
     }
 
     def check_price_elements(self, cr, uid, item):
@@ -135,7 +133,7 @@ class AbstractPriceListItem(orm.AbstractModel):
         for item in self.browse(cr, uid, ids):
             if item.min_quantity < 1:
                 raise except_osv(_('Error in quantity:'),
-                    _("'Minimum quantity' must be greater or equal than 1. " \
+                    _("'Minimum quantity' must be greater or equal than 1. "
                     "Quantity '%s' founded") \
                     % item.min_quantity)
                 return False
@@ -336,12 +334,16 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
     @mapping
     def reduction(self, record):
         vals = {'reduction_type': 'percentage'}
-        if record.price_surcharge != 0:
-            vals.update({'reduction_type': 'amount'})
-        if vals['reduction_type'] == 'amount':
-            vals.update({'reduction': str(record.price_surcharge * (-1))})
+        if record.price_surcharge != 0.0:
+            vals.update({
+                'reduction_type': 'amount',
+                'reduction': str(record.price_surcharge * (-1))
+                })
         else:
-            vals.update({'reduction': str(record.price_discount * (-1))})
+            reduction = str(record.price_discount * (-1))
+            if reduction == '-0.0':
+                reduction = '0.0'
+            vals.update({'reduction': reduction})
         return vals
 
     @mapping
