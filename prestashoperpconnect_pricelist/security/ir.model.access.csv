@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_prestashop_pricelist_item_connector_manager","prestashop_pricelist_item connector manager","model_prestashop_product_pricelist_item","connector.group_connector_manager",1,1,1,1
+"access_pricelist_builder_connector_manager","pricelist_builder connector manager","model_pricelist_builder","connector.group_connector_manager",1,1,1,1

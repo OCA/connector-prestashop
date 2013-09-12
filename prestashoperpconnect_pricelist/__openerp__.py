@@ -55,6 +55,8 @@ put a delay between activation and desactivation of pricelist.builder
     'data': [
         'pricelist_view.xml',
         'sale_view.xml',
+        'security/pricelist_security.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
     ],
