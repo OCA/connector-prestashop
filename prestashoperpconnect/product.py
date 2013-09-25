@@ -273,7 +273,6 @@ class product_product(orm.Model):
         if default is None:
             default = {}
         default['prestashop_bind_ids'] = []
-        default['image_ids'] = []
         return super(product_product, self).copy(cr, uid, id, default=default,
                                                  context=context)
 
