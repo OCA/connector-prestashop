@@ -269,6 +269,14 @@ class product_product(orm.Model):
         ),
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['prestashop_bind_ids'] = []
+        default['image_ids'] = []
+        return super(product_product, self).copy(cr, uid, id, default=default,
+                                                 context=context)
+
 
 class prestashop_product_product(orm.Model):
     _name = 'prestashop.product.product'
