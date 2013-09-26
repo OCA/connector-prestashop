@@ -384,7 +384,10 @@ class SaleOrderMapper(PrestashopImportMapper):
             sess.context
         )
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
-        return onchange.play(result, result['prestashop_order_line_ids'])
+        order_line_ids = []
+        if 'prestashop_order_line_ids' in result:
+            order_line_ids = result['prestashop_order_line_ids']
+        return onchange.play(result, order_line_ids)
 
 
 @prestashop
