@@ -92,41 +92,12 @@ class DeliveryCarrierAdapter(GenericAdapter):
     _model_name = 'prestashop.delivery.carrier'
     _prestashop_model = 'carriers'
 
-    def filter_carrier_infos(self, api, carriers):
-        """In Prestashop, carriers with the same 'id_reference' are some
-        copies from the first one id_reference (only the last one copied is
-        taken account.
-        And the only one which synchronized with erp"""
-        max_id = {}
-        for carrier in carriers:
-            attrs = api.get(self._prestashop_model, carrier)['carrier']
-            if attrs['id_reference'] in max_id:
-                max_id[attrs['id_reference']] = max(
-                    max_id[attrs['id_reference']],
-                    int(attrs['id'])
-                )
-            else:
-                max_id[attrs['id_reference']] = int(attrs['id'])
-        return max_id.values()
+    def search(self, filters=None):
+        if filters is None:
+            filters = {}
+        filters['filter[deleted]'] = 0
 
-    def search(self):
-        """ Search records according to some criterias
-        and returns a list of ids
-        :rtype: list
-        """
-        api = self.connect()
-        all_carriers = api.search(self._prestashop_model)
-        return self.filter_carrier_infos(api, all_carriers)
-
-    def read(self, id):
-        """ Returns the information of a record
-        :rtype: dict
-        """
-        api = self.connect()
-        res = api.get(self._prestashop_model, id)
-
-        first_key = res.keys()[0]
-        return res[first_key]
+        return super(DeliveryCarrierAdapter, self).search(filters)
 
 
 @prestashop
