@@ -36,6 +36,7 @@ class sale_order_state(orm.Model):
 
     _columns = {
         'name': fields.char('Name', size=128, translate=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'prestashop_bind_ids': fields.one2many(
             'prestashop.sale.order.state',
             'openerp_id',
