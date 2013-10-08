@@ -24,7 +24,7 @@ Getting started
   - settings -> modules
   - choose your country accounting
 - install the module  account_accountant 
-- configure the chart of account
+- configure the chart of account (it seems that it is not required anymore with ocb branches)
   - in settings -> configuration -> Accounting -> Chart of account
   - set the template for your country
   - apply
