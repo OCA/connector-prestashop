@@ -370,6 +370,8 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     @mapping
     def carrier_id(self, record):
+        if record['id_carrier'] == '0':
+            return {}
         return {'carrier_id': self.get_openerp_id(
             'prestashop.delivery.carrier',
             record['id_carrier']

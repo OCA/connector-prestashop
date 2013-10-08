@@ -345,8 +345,9 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         self._check_dependency(record['id_address_delivery'],
                                'prestashop.address')
 
-        self._check_dependency(record['id_carrier'],
-                               'prestashop.delivery.carrier')
+        if record['id_carrier'] != '0':
+            self._check_dependency(record['id_carrier'],
+                                   'prestashop.delivery.carrier')
 
         orders = record['associations'].get('order_rows', {}).get('order_row', [])
         if isinstance(orders, dict):
