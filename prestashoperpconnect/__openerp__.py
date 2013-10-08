@@ -59,18 +59,21 @@ This connector is built on a very solid basis, but still requires deep knowledge
     "website": "https://launchpad.net/prestashoperpconnect",
     "category": "Connector",
     "complexity": "expert",
-    "init_xml": [],
-    "demo_xml": [],
-    'update_xml': [
+    "demo": [],
+    'data': [
+        'data/cron.xml',
+        'data/product_decimal_precision.xml',
+
         'prestashop_model_view.xml',
         'product_view.xml',
-        'security/ir.model.access.csv',
-        'security/prestashop_security.xml',
         'delivery_view.xml',
         'prestashoperpconnect_menu.xml',
         'partner_view.xml',
         'sale_view.xml',
         'setting_view.xml',
+
+        'security/ir.model.access.csv',
+        'security/prestashop_security.xml',
     ],
     "active": False,
     "installable": True,
