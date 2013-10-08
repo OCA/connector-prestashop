@@ -28,7 +28,7 @@ from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
 from openerp.addons.connector.unit.mapper import mapping
 
-from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
 
 from .connector import get_environment
 from .unit.mapper import PrestashopImportMapper
@@ -114,7 +114,7 @@ class ProductImageMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.image'
 
     direct = [
-        ('content', 'file_db_store'),
+        ('content', 'file'),
     ]
 
     @mapping
@@ -183,6 +183,17 @@ class ProductMapper(PrestashopImportMapper):
     ]
 
     @mapping
+    def image(self, record):
+        if record['id_default_image']['value'] == '':
+            return {}
+        adapter = self.get_connector_unit_for_model(
+            PrestaShopCRUDAdapter,
+            'prestashop.product.image'
+        )
+        image = adapter.read(record['id'], record['id_default_image']['value'])
+        return {"image": image['content']}
+
+    @mapping
     def default_code(self, record):
         if record.get('reference'):
             return {'default_code': record.get('reference')}
@@ -206,7 +217,8 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def categ_ids(self, record):
-        categories = record['associations'].get('categories', {}).get('category', [])
+        categories = record['associations'].get('categories', {}).get(
+            'category', [])
         if not isinstance(categories, list):
             categories = [categories]
         product_categories = []
@@ -255,8 +267,9 @@ class ProductMapper(PrestashopImportMapper):
     def type(self, record):
         product_type = {"type": 'product'}
         if record['type']['value'] and record['type']['value'] == 'virtual':
-             product_type = {"type": 'consu'}
+            product_type = {"type": 'consu'}
         return product_type
+
 
 class product_product(orm.Model):
     _inherit = 'product.product'

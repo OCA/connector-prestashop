@@ -23,6 +23,7 @@
 #
 ##############################################################################
 
+import base64
 import logging
 from prestapyt import PrestaShopWebServiceDict
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
@@ -44,9 +45,12 @@ class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
             self._validate_query_options(options)
             full_url += "?%s" % (self._options_to_querystring(options),)
         response = self._execute(full_url, 'GET')
+
+        image_content = base64.b64encode(response.content)
+
         return {
             'type': response.headers['content-type'],
-            'content': response.content,
+            'content': image_content,
             'id_' + resource[:-1]: resource_id,
             'id_image': image_id
         }
