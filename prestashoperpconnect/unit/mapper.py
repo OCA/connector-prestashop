@@ -95,6 +95,10 @@ class ShopImportMapper(PrestashopImportMapper):
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
 
+    @mapping
+    def warehouse_id(self, record):
+        return {'warehouse_id': self.backend_record.warehouse_id.id}
+
 
 @prestashop
 class PartnerCategoryImportMapper(PrestashopImportMapper):
