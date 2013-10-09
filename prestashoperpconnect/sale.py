@@ -118,8 +118,19 @@ class prestashop_sale_order(orm.Model):
             'prestashop_order_id',
             'Prestashop Order Lines'
         ),
-        'prestashop_invoice_number': fields.char('PrestaShop Invoice Number',size=64),
-        'prestashop_delivery_number': fields.char('PrestaShop Delivery Number',size=64),
+        'prestashop_discount_line_ids': fields.one2many(
+            'prestashop.sale.order.line.discount',
+            'prestashop_order_id',
+            'Prestashop Discount Lines'
+        ),
+        'prestashop_invoice_number': fields.char(
+            'PrestaShop Invoice Number',
+            size=64
+        ),
+        'prestashop_delivery_number': fields.char(
+            'PrestaShop Delivery Number',
+            size=64
+        ),
     }
 
 
@@ -136,6 +147,11 @@ class sale_order_line(orm.Model):
             'prestashop.sale.order.line',
             'openerp_id',
             string="PrestaShop Bindings"
+        ),
+        'prestashop_discount_bind_ids': fields.one2many(
+            'prestashop.sale.order.line.discount',
+            'openerp_id',
+            string="PrestaShop Discount Bindings"
         ),
     }
 
@@ -178,6 +194,28 @@ class prestashop_sale_order_line(orm.Model):
             vals,
             context=context
         )
+
+class prestashop_sale_order_line_discount(orm.Model):
+    _name = 'prestashop.sale.order.line.discount'
+    _inherit = 'prestashop.binding'
+    _inherits = {'sale.order.line': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'sale.order.line',
+            string='Sale Order line',
+            required=True,
+            ondelete='cascade'
+        ),
+        'prestashop_order_id': fields.many2one(
+            'prestashop.sale.order',
+            'Prestashop Sale Order',
+            required=True,
+            ondelete='cascade',
+            select=True
+        ),
+    }
+
 
 
 @prestashop
