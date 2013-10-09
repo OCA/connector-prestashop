@@ -450,9 +450,19 @@ class SaleOrderLineDiscount(PrestashopImportMapper):
         return {
             'name': _('Discount %s') % (record['name']),
             'product_uom_qty': 1,
-            #'price_unit': '-%s' % (record['value_tax_excl']),
-            'price_unit': '-%s' % (record['value']),
+            'price_unit': '-%s' % (record['value_tax_excl']),
         }
+
+    @mapping
+    def product_id(self, record):
+        data_obj = self.session.pool.get('ir.model.data')
+        model_name, product_id = data_obj.get_object_reference(
+            self.session.cr,
+            self.session.uid,
+            'connector_ecommerce',
+            'product_product_discount'
+        )
+        return {'product_id': product_id}
 
     @mapping
     def backend_id(self, record):
