@@ -124,26 +124,26 @@ class prestashop_attribute_option(orm.Model):
 def prestashop_product_attribute_created(session, model_name, record_id):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_create(model_names='prestashop.attribute.option')
 def prestashop_attribute_option_created(session, model_name, record_id):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 @on_record_write(model_names='prestashop.product.attribute')
 def prestashop_product_attribute_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 @on_record_write(model_names='prestashop.attribute.option')
 def prestashop_attribute_option_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 @on_record_write(model_names='attribute.attribute')
 def product_attribute_written(session, model_name, record_id, fields=None):
@@ -153,7 +153,7 @@ def product_attribute_written(session, model_name, record_id, fields=None):
     record = model.browse(session.cr, session.uid,
                            record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.product.attribute', binding.id, fields)
+        export_record.delay(session, 'prestashop.product.attribute', binding.id, fields, priority=20)
 
 @on_record_write(model_names='attribute.option')
 def attribute_option_written(session, model_name, record_id, fields=None):
@@ -163,7 +163,7 @@ def attribute_option_written(session, model_name, record_id, fields=None):
     record = model.browse(session.cr, session.uid,
                            record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.attribute.option', binding.id, fields)
+        export_record.delay(session, 'prestashop.attribute.option', binding.id, fields, priority=20)
 
 
 @prestashop

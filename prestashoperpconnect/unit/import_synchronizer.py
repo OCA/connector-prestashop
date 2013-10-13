@@ -163,12 +163,12 @@ class BatchImportSynchronizer(ImportSynchronizer):
     """
     page_size = 1000
 
-    def run(self, filters=None):
+    def run(self, filters=None, **kwargs):
         """ Run the synchronization """
         if filters is None:
             filters = {}
         if 'limit' in filters:
-            self._run_page(filters)
+            self._run_page(filters, **kwargs)
             return
         page_number = 0
         filters['limit'] = '%d,%d' % (
@@ -180,10 +180,10 @@ class BatchImportSynchronizer(ImportSynchronizer):
                 page_number * self.page_size, self.page_size)
             record_ids = self._run_page(filters)
 
-    def _run_page(self, filters):
+    def _run_page(self, filters, **kwargs):
         record_ids = self.backend_adapter.search(filters)
         for record_id in record_ids:
-            self._import_record(record_id)
+            self._import_record(record_id, **kwargs)
         return record_ids
 
     def _import_record(self, record):
@@ -227,13 +227,14 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.sale.order',
     ]
 
-    def _import_record(self, record):
+    def _import_record(self, record, **kwargs):
         """ Delay the import of the records"""
         import_record.delay(
             self.session,
             self.model._name,
             self.backend_record.id,
-            record
+            record,
+            **kwargs
         )
 
 
@@ -256,7 +257,8 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
             self.session,
             'prestashop.address',
             self.backend_record.id,
-            filters={'filter[id_customer]': '[%d]' % (ps_id)}
+            filters={'filter[id_customer]': '[%d]' % (ps_id)},
+            priority=10,
         )
 
 
@@ -539,7 +541,8 @@ class ProductRecordImport(TranslatableRecordImport):
                     'prestashop.product.image',
                     self.backend_record.id,
                     prestashop_record['id'],
-                    image['id']
+                    image['id'],
+                    priority=10,
                 )
 
     def _import_dependencies(self):
@@ -630,11 +633,11 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
 
 
 @job
-def import_batch(session, model_name, backend_id, filters=None):
+def import_batch(session, model_name, backend_id, filters=None, **kwargs):
     """ Prepare a batch import of records from Prestashop """
     env = get_environment(session, model_name, backend_id)
     importer = env.get_connector_unit(BatchImportSynchronizer)
-    importer.run(filters=filters)
+    importer.run(filters=filters, **kwargs)
 
 
 @job
@@ -663,7 +666,7 @@ def import_customers_since(session, backend_id, since_date=None):
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
-    import_batch(session, 'prestashop.res.partner', backend_id, filters)
+    import_batch(session, 'prestashop.res.partner', backend_id, filters, priority=15)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
@@ -683,7 +686,7 @@ def import_orders_since(session, backend_id, since_date=None):
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
-    import_batch(session, 'prestashop.sale.order', backend_id, filters)
+    import_batch(session, 'prestashop.sale.order', backend_id, filters, priority=10)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
@@ -697,10 +700,10 @@ def import_orders_since(session, backend_id, since_date=None):
 
 @job
 def import_products(session, backend_id):
-    import_batch(session, 'prestashop.product.category', backend_id)
-    import_batch(session, 'prestashop.product.product', backend_id)
+    import_batch(session, 'prestashop.product.category', backend_id, priority=15)
+    import_batch(session, 'prestashop.product.product', backend_id, priority=15)
 
 
 @job
 def import_carriers(session, backend_id):
-    import_batch(session, 'prestashop.delivery.carrier', backend_id)
+    import_batch(session, 'prestashop.delivery.carrier', backend_id, priority=5)
