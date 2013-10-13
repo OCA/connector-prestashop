@@ -186,7 +186,8 @@ class prestashop_backend(orm.Model):
             import_orders_since.delay(
                 session,
                 backend_record.id,
-                since_date
+                since_date,
+                priority=5,
             )
         return True
 
