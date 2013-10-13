@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   PrestashopERPconnect for OpenERP
-#   Copyright (C) 2013 Akretion (http://www.akretion.com).
-#   Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
-#   @author Sébastien BEAU <sebastien.beau@akretion.com>
-#   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
-#
+#   Copyright (C) 2013-TODAY Akretion <http://www.akretion.com>.
+#     All Rights Reserved
+#     @author David BEAL <david.beal@akretion.com>
+#     Sébastien BEAU <sebastien.beau@akretion.com>
+#     Guewen Baconnier (camptocamp)
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
 #   published by the Free Software Foundation, either version 3 of the
@@ -22,10 +21,13 @@
 #
 ###############################################################################
 
-# ConnectorUnit needs to be registered
-import mapper
-import binder
-import import_synchronizer
-#import export_synchronizer
-import delete_synchronizer
-import backend_adapter
+from openerp.osv import orm
+
+class prestashoperpconnect_pricelist_installed(orm.AbstractModel):
+    """Empty model used to know if the module is installed on the
+    database.
+
+    If the model is in the registry, the module is installed.
+    """
+    _name = 'prestashoperpconnect_pricelist.installed'
+

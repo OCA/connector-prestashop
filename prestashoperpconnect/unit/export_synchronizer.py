@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Guewen Baconnier
-#    Copyright 2013 Camptocamp SA
+#    Copyright (C) 2013 Akretion (http://www.akretion.com).
+#    Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
+#    @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -173,7 +175,7 @@ class TranslationPrestashopExporter(PrestashopExporter):
         self.mapper.convert(self.get_record_by_lang(), fields=fields)
 
     def get_record_by_lang(self):
-        # get the backend's languages 
+        # get the backend's languages
         languages = self.backend_record.language_ids
         records = {}
         # for each languages:

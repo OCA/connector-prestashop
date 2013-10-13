@@ -41,6 +41,25 @@
             </field>
         </record>
 
+        <record id="view_shop_form" model="ir.ui.view">
+            <field name="model">sale.shop</field>
+            <field name="inherit_id" ref="sale.view_shop_form"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="after">
+                    <group colspan="5" string="PrestaShop">
+                        <field name="prestashop_bind_ids" nolabel="1">
+                            <tree name="prestashop_binding">
+                                <field name="openerp_id" />
+                                <field name="shop_group_id"/>
+                                <field name="default_category_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+
         <record id="view_prestashop_sale_order_state_form" model="ir.ui.view">
             <field name="name">prestashop.sale.order.state.form</field>
             <field name="model">prestashop.sale.order.state</field>
