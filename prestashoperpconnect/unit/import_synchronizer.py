@@ -342,10 +342,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
     def _has_to_skip(self):
-        order_ref = self.prestashop_record['reference']
-        if self.session.search(self.model._name, [['name', '=', order_ref]]):
-            return True
-        return False
+        return bool(self._get_openerp_id())
 
     def _import_dependencies(self):
         record = self.prestashop_record
