@@ -315,21 +315,6 @@ class SaleOrderMapper(PrestashopImportMapper):
             mapper = self._init_child_mapper(model_name)
             mapper.convert_child(detail_record, parent_values=record)
             self._data_children[to_attr].append(mapper)
-        discount_lines = self._get_discounts_lines(record)
-        self._data_children[to_attr].extend(discount_lines)
-
-    def _get_discounts_lines(self, record):
-        if record['total_discounts'] == '0.00':
-            return []
-        adapter = self.get_connector_unit_for_model(GenericAdapter, 'prestashop.sale.order.line.discount')
-        discount_ids = adapter.search({'filter[id_order]': record['id']})
-        discount_mappers = []
-        for discount_id in discount_ids:
-            discount = adapter.read(discount_id)
-            mapper = self._init_child_mapper('prestashop.sale.order.line.discount')
-            mapper.convert_child(discount, parent_values=record)
-            discount_mappers.append(mapper)
-        return discount_mappers
 
     @mapping
     def shipping(self, record):
@@ -422,8 +407,8 @@ class SaleOrderLineMapper(PrestashopImportMapper):
     direct = [
         ('product_name', 'name'),
         ('id', 'sequence'),
-        ('unit_price_tax_excl', 'price_unit'),
-        ('product_quantity', 'product_uom_qty'),
+        ('product_price', 'price_unit'),
+        ('unit_price_tax_excl', 'product_uom_qty'),
         ('reduction_percent', 'discount'),
     ]
 
@@ -433,36 +418,6 @@ class SaleOrderLineMapper(PrestashopImportMapper):
             'prestashop.product.product',
             record['product_id']
         )}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-
-@prestashop
-class SaleOrderLineDiscount(PrestashopImportMapper):
-    _model_name = 'prestashop.sale.order.line.discount'
-    
-    direct = []
-
-    @mapping
-    def discount(self, record):
-        return {
-            'name': _('Discount %s') % (record['name']),
-            'product_uom_qty': 1,
-            'price_unit': '-%s' % (record['value_tax_excl']),
-        }
-
-    @mapping
-    def product_id(self, record):
-        data_obj = self.session.pool.get('ir.model.data')
-        model_name, product_id = data_obj.get_object_reference(
-            self.session.cr,
-            self.session.uid,
-            'connector_ecommerce',
-            'product_product_discount'
-        )
-        return {'product_id': product_id}
 
     @mapping
     def backend_id(self, record):

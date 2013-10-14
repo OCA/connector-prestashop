@@ -243,9 +243,3 @@ class TaxGroupAdapter(GenericAdapter):
 class OrderPaymentAdapter(GenericAdapter):
     _model_name = '__not_exist_prestashop.payment'
     _prestashop_model = 'order_payments'
-
-
-@prestashop
-class OrderDiscountAdapter(GenericAdapter):
-    _model_name = 'prestashop.sale.order.line.discount'
-    _prestashop_model = 'order_discounts'
