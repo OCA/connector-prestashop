@@ -408,7 +408,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
         ('product_name', 'name'),
         ('id', 'sequence'),
         ('product_price', 'price_unit'),
-        ('unit_price_tax_excl', 'product_uom_qty'),
+        ('product_quantity', 'product_uom_qty'),
         ('reduction_percent', 'discount'),
     ]
 
