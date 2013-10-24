@@ -165,10 +165,10 @@ class DeliveryCarrierBatchImport(DelayedBatchImport):
     """
     _model_name = ['prestashop.delivery.carrier']
 
-    def run(self, filters=None):
+    def run(self, filters=None, **kwargs):
         """ Run the synchronization """
         record_ids = self.backend_adapter.search()
         _logger.info('search for prestashop carriers %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
-            self._import_record(record_id)
+            self._import_record(record_id, **kwargs)
