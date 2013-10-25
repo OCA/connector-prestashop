@@ -363,8 +363,13 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     @mapping
     def payment(self, record):
-        method_ids = self.session.search('payment.method',
-                                         [['name', '=', record['payment']]])
+        method_ids = self.session.search(
+            'payment.method',
+            [
+                ('name', '=', record['payment']),
+                ('company_id', '=', self.backend_record.company_id.id),
+            ]
+        )
         assert method_ids, ("Payment method '%s' has not been found ; "
                             "you should create it manually (in Sales->"
                             "Configuration->Sales->Payment Methods" %
