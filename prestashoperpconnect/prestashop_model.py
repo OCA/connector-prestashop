@@ -75,7 +75,7 @@ class prestashop_backend(orm.Model):
             required=True,
             help='Warehouse used to compute the stock quantities.'
         ),
-        # add a field `auto_activate` -> activate a cron
+        'taxes_included': fields.boolean("Use tax included prices"),
         'import_partners_since': fields.datetime('Import partners since'),
         'import_orders_since': fields.datetime('Import Orders since'),
         'language_ids': fields.one2many(
