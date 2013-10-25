@@ -531,6 +531,20 @@ class ProductRecordImport(TranslatableRecordImport):
 
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
+
+        combinations = associations.get('combinations', {}).get(
+            'combinations', {})
+        if not isinstance(combinations, list):
+            combinations = [combinations]
+        for combination in combinations:
+            if 'id' in combination:
+                import_record(
+                    self.session,
+                    'prestashop.product.combination',
+                    self.backend_record.id,
+                    combination['id']
+                )
+
         images = associations.get('images', {}).get('image', {})
         if not isinstance(images, list):
             images = [images]
@@ -546,11 +560,61 @@ class ProductRecordImport(TranslatableRecordImport):
                 )
 
     def _import_dependencies(self):
+        self._import_default_category()
+        self._import_categories()
+        self._import_attribute_set()
+
+    def _import_attribute_set(self):
+        record = self.prestashop_record
+
+        combinations = record.get('associations', {}).get(
+            'combinations', {}).get('combinations', [])
+        if len(combinations) == 0:
+            return
+
+        splitted_record = self._split_per_language(self.prestashop_record)
+        if self._default_language in splitted_record:
+            name = splitted_record[self._default_language]['name']
+        else:
+            name = splitted_record.values()[0]['name']
+
+        product_model_id = self.get_product_model_id()
+        attribute_group = {
+            'model_id': product_model_id,
+            'name': 'Combinations options',
+            'sequence': 0,
+        }
+        attribute_set = {
+            'model_id': product_model_id,
+            'name': name + ' Options',
+            'attribute_group_ids': [(0, 0,  attribute_group)],
+        }
+        model = self.environment.session.pool.get('attribute.set')
+        attribute_set_id = model.create(
+            self.session.cr,
+            self.session.uid,
+            attribute_set
+        )
+        self.prestashop_record['attribute_set_id'] = attribute_set_id
+
+    def get_product_model_id(self):
+        model = self.environment.session.pool.get('ir.model')
+        ids = model.search(
+            self.session.cr,
+            self.session.uid,
+            [('model', '=', 'product.product')]
+        )
+        assert len(ids) == 1
+        return ids[0]
+
+    def _import_default_category(self):
         record = self.prestashop_record
         if int(record['id_category_default']):
             self._check_dependency(record['id_category_default'],
                                    'prestashop.product.category')
 
+    def _import_categories(self):
+        record = self.prestashop_record
         associations = record.get('associations', {})
         categories = associations.get('categories', {}).get('category', [])
         if not isinstance(categories, list):

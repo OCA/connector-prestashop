@@ -32,6 +32,7 @@
         "product_m2mcategories",
         "connector_ecommerce",
         "product_images",
+        "product_custom_attributes",
     ],
     "author": "PrestashopERPconnect Core Editors",
     "description": """This module connects OpenERP and Prestashop.

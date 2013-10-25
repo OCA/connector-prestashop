@@ -20,4 +20,6 @@ access_prestashop_delivery_carrier_full,Full access on prestashop.delivery.carri
 access_prestashop_product_category_full,Full access on prestashop.product.category,model_prestashop_product_category,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_image_full,Full access on prestashop.product.image,model_prestashop_product_image,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_product_full,Full access on prestashop.product.product,model_prestashop_product_product,connector.group_connector_manager,1,1,1,1
-
+access_prestashop_product_combination_full,Full access on prestashop.product.combination,model_prestashop_product_combination,connector.group_connector_manager,1,1,1,1
+access_prestashop_product_combination_option_full,Full access on prestashop.product.combination.option,model_prestashop_product_combination_option,connector.group_connector_manager,1,1,1,1
+access_prestashop_product_combination_option_value_full,Full access on prestashop.product.combination.option.value,model_prestashop_product_combination_option_value,connector.group_connector_manager,1,1,1,1
