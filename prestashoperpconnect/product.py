@@ -19,6 +19,7 @@
 #                                                                             #
 ###############################################################################
 
+import datetime
 import mimetypes
 import json
 
@@ -43,8 +44,6 @@ class ProductCategoryMapper(PrestashopImportMapper):
     direct = [
         ('name', 'name'),
         ('position', 'sequence'),
-        ('date_add', 'date_add'),
-        ('date_upd', 'date_upd'),
         ('description', 'description'),
         ('link_rewrite', 'link_rewrite'),
         ('meta_description', 'meta_description'),
@@ -65,6 +64,18 @@ class ProductCategoryMapper(PrestashopImportMapper):
             'prestashop.product.category',
             record['id_parent']
         )}
+
+    @mapping
+    def data_add(self, record):
+        if record['date_add'] == '0000-00-00 00:00:00':
+            return {'date_add': datetime.datetime.now()}
+        return {'date_add': record['date_add']}
+
+    @mapping
+    def data_upd(self, record):
+        if record['date_upd'] == '0000-00-00 00:00:00':
+            return {'date_upd': datetime.datetime.now()}
+        return {'date_upd': record['date_upd']}
 
 
 class product_category(orm.Model):
@@ -176,11 +187,21 @@ class ProductMapper(PrestashopImportMapper):
         ('weight', 'weight'),
         ('wholesale_price', 'standard_price'),
         ('price', 'list_price'),
-        ('date_add', 'date_add'),
-        ('date_upd', 'date_upd'),
         ('id_shop_default', 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
     ]
+
+    @mapping
+    def date_add(self, record):
+        if record['date_add'] == '0000-00-00 00:00:00':
+            return {'date_add': datetime.datetime.now()}
+        return {'date_add': record['date_add']}
+
+    @mapping
+    def date_upd(self, record):
+        if record['date_upd'] == '0000-00-00 00:00:00':
+            return {'date_upd': datetime.datetime.now()}
+        return {'date_upd': record['date_upd']}
 
     @mapping
     def image(self, record):
