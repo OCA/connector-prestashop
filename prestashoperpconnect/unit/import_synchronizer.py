@@ -201,9 +201,7 @@ class DirectBatchImport(BatchImportSynchronizer):
     _model_name = [
         'prestashop.shop.group',
         'prestashop.shop',
-        'prestashop.product.category',
         'prestashop.account.tax.group',
-        'prestashop.res.partner.category',
         'prestashop.sale.order.state',
     ]
 
@@ -221,8 +219,10 @@ class DirectBatchImport(BatchImportSynchronizer):
 class DelayedBatchImport(BatchImportSynchronizer):
     """ Delay import of the records """
     _model_name = [
+        'prestashop.res.partner.category',
         'prestashop.res.partner',
         'prestashop.address',
+        'prestashop.product.category',
         'prestashop.product.product',
         'prestashop.sale.order',
     ]
