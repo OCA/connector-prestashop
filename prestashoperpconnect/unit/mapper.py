@@ -22,6 +22,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from decimal import Decimal
 
 from openerp.tools.translate import _
 from openerp.addons.connector.unit.mapper import (
