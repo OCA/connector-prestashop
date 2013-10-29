@@ -200,6 +200,8 @@ class AccountTaxDirectBinder(DirectBinder):
     _ps_field = 'rate'
 
     def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        if erp_dict['type_tax_use'] == 'sale' and \
+        taxes_inclusion_test = self.backend_record.taxes_included and \
+            erp_dict['price_include'] or not erp_dict['price_include']
+        if taxes_inclusion_test and erp_dict['type_tax_use'] == 'sale' and \
                 abs(erp_val*100 - float(ps_val)) < 0.01:
             return True

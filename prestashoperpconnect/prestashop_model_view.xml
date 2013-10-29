@@ -41,6 +41,7 @@
                 </group>
                 <group name="main_configuration" string="Main Configuration">
                     <field name="warehouse_id"/>
+                    <field name="taxes_included"/>
                 </group>
                 <notebook>
                     <page name="import" string="Imports">
