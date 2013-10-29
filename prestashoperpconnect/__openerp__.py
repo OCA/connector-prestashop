@@ -34,6 +34,7 @@
         "product_images",
         "product_custom_attributes",
     ],
+    "external_dependencies": ["unidecode"],
     "author": "PrestashopERPconnect Core Editors",
     "description": """This module connects OpenERP and Prestashop.
 
