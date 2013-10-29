@@ -88,7 +88,7 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
         option_binder = self.get_binder_for_model(
             'prestashop.product.combination.option')
         attribute_id = option_binder.to_openerp(
-            option_value['id_attribute_group'], True)
+            option_value['id_attribute_group'], unwrap=True)
         product = self.mapper.main_product(self.prestashop_record)
         attribute_group_id = product.attribute_set_id.attribute_group_ids[0].id
 
@@ -388,7 +388,8 @@ class ProductCombinationOptionValueMapper(PrestashopImportMapper):
     def attribute_id(self, record):
         binder = self.get_binder_for_model(
             'prestashop.product.combination.option')
-        attribute_id = binder.to_openerp(record['id_attribute_group'], True)
+        attribute_id = binder.to_openerp(record['id_attribute_group'],
+                                         unwrap=True)
         return {'attribute_id': attribute_id}
 
     @mapping

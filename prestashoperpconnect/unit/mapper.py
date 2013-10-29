@@ -425,7 +425,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
                 'prestashop.product.combination')
             product_id = combination_binder.to_openerp(
                 record['product_attribute_id'],
-                True
+                unwrap=True
             )
         else:
             product_id = self.get_openerp_id(
