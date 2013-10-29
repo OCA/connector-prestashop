@@ -384,16 +384,19 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     def _after_mapping(self, result):
         sess = self.session
+        backend = self.backend_record
         order_line_ids = []
         if 'prestashop_order_line_ids' in result:
             order_line_ids = result['prestashop_order_line_ids']
-        result = sess.pool['sale.order']._convert_special_fields(
-            sess.cr,
-            sess.uid,
-            result,
-            order_line_ids,
-            sess.context
-        )
+        taxes_included = backend.taxes_included
+        with self.session.change_context({'is_tax_included': taxes_included}):
+            result = sess.pool['sale.order']._convert_special_fields(
+                sess.cr,
+                sess.uid,
+                result,
+                order_line_ids,
+                sess.context
+            )
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
         order_line_ids = []
         if 'prestashop_order_line_ids' in result:
