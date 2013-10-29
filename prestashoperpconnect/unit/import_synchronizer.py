@@ -589,21 +589,11 @@ class ProductRecordImport(TranslatableRecordImport):
             'name': name + ' Options',
             'attribute_group_ids': [(0, 0,  attribute_group)],
         }
-        model = self.environment.session.pool.get('attribute.set')
-        attribute_set_id = model.create(
-            self.session.cr,
-            self.session.uid,
-            attribute_set
-        )
+        attribute_set_id = self.session.create('attribute.set', attribute_set)
         self.prestashop_record['attribute_set_id'] = attribute_set_id
 
     def get_product_model_id(self):
-        model = self.environment.session.pool.get('ir.model')
-        ids = model.search(
-            self.session.cr,
-            self.session.uid,
-            [('model', '=', 'product.product')]
-        )
+        ids = model.search('ir.model', [('model', '=', 'product.product')])
         assert len(ids) == 1
         return ids[0]
 
