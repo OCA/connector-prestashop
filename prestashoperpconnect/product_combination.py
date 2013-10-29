@@ -1,3 +1,12 @@
+'''
+A product combination is a product with different attributes in prestashop.
+In prestashop, we can sell a product or a combination of a product with some attributes.
+
+For example, for the iPod product we can found in demo data, it has some combinations with different colors and different storage size.
+
+We map that in OpenERP to a product.product with an attribute.set defined for the main product.
+'''
+
 from unidecode import unidecode
 
 from openerp.osv import fields, orm
