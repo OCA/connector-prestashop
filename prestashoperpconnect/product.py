@@ -29,6 +29,8 @@ from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
 from openerp.addons.connector.unit.mapper import mapping
 
+from prestapyt import PrestaShopWebServiceError
+
 from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
 
 from .connector import get_environment
@@ -211,8 +213,12 @@ class ProductMapper(PrestashopImportMapper):
             PrestaShopCRUDAdapter,
             'prestashop.product.image'
         )
-        image = adapter.read(record['id'], record['id_default_image']['value'])
-        return {"image": image['content']}
+        try:
+            image = adapter.read(record['id'],
+                                 record['id_default_image']['value'])
+            return {"image": image['content']}
+        except PrestaShopWebServiceError:
+            return {}
 
     @mapping
     def default_code(self, record):
