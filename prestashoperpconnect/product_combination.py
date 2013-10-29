@@ -137,7 +137,7 @@ class ProductCombinationMapper(PrestashopImportMapper):
                 continue
             if hasattr(main_product[attribute], 'id'):
                 result[attribute] = main_product[attribute].id
-            elif type(main_product[attribute]) is list:
+            elif isinstance(main_product[attribute]), list):
                 ids = []
                 for element in main_product[attribute]:
                     ids.append(element.id)
@@ -172,7 +172,7 @@ class ProductCombinationMapper(PrestashopImportMapper):
     def attributes_values(self, record):
         option_values = record['associations']['product_option_values'][
             'product_option_value']
-        if type(option_values) is dict:
+        if isinstance(option_values, dict):
             option_values = [option_values]
 
         results = {}
@@ -313,7 +313,7 @@ class ProductCombinationOptionMapper(PrestashopImportMapper):
         if 'language' in record['name']:
             language_binder = self.get_binder_for_model('prestashop.res.lang')
             languages = record['name']['language']
-            if type(languages) != list:
+            if not isinstance(languages, list):
                 languages = [languages]
             for lang in languages:
                 erp_language_id = language_binder.to_openerp(
