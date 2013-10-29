@@ -226,43 +226,41 @@ class SaleStateExport(ExportSynchronizer):
 def prestashop_sale_state_modified(session, model_name, record_id,
                                    fields=None):
     if 'state' in fields:
-        sale = session.pool[model_name].browse(
-            session.cr,
-            session.uid,
-            record_id
-        )
-        state_list_model = 'sale.order.state.list'
-        states = session.pool[state_list_model].search(
-            session.cr,
-            session.uid,
+        sale = session.browse(model_name, record_id)
+        # a quick test to see if it is worth trying to export sale state
+        states = session.search(
+            'sale.order.state.list',
             [('name', '=', sale.state)]
         )
-
         if states:
-            state = session.pool[state_list_model].browse(
-                session.cr,
-                session.uid,
-                states[0]
-            )
-            export_sale_state.delay(
-                session,
-                model_name,
-                record_id,
-                state.prestashop_id,
-                priority=20
-            )
+            export_sale_state.delay(session, record_id, priority=20)
     return True
 
 
+def find_prestashop_state(session, sale_state, backend_id):
+    state_list_model = 'sale.order.state.list'
+    state_list_ids = session.search(
+        state_list_model,
+        [('name', '=', sale_state)]
+    )
+    for state_list in session.browse(state_list_model, state_list_ids):
+        if state_list.prestashop_state_id.backend_id.id == backend_id:
+            return state_list.prestashop_state_id.prestashop_id
+    return None
+
+
 @job
-def export_sale_state(session, model_name, record_id, new_state):
-    inherit_model = 'prestashop.' + model_name
-    object_pool = session.pool[inherit_model]
-    sale_ids = object_pool.search(session.cr, session.uid, [('openerp_id', '=', record_id)])
-    if type(sale_ids) is not list:
+def export_sale_state(session, record_id):
+    import pdb; pdb.set_trace()
+    inherit_model = 'prestashop.sale.order'
+    sale_ids = session.search(inherit_model, [('openerp_id', '=', record_id)])
+    if not isinstance(sale_ids, list):
         sale_ids = [sale_ids]
-    for sale in object_pool.browse(session.cr, session.uid, sale_ids):
+    for sale in session.browse(inherit_model, sale_ids):
         backend_id = sale.backend_id.id
+        new_state = find_prestashop_state(session, sale.state, backend_id)
+        if new_state is None:
+            continue
         env = get_environment(session, inherit_model, backend_id)
         sale_exporter = env.get_connector_unit(SaleStateExport)
-        return sale_exporter.run(sale.id, new_state)
+        sale_exporter.run(sale.id, new_state)
