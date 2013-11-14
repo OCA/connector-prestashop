@@ -251,7 +251,6 @@ def find_prestashop_state(session, sale_state, backend_id):
 
 @job
 def export_sale_state(session, record_id):
-    import pdb; pdb.set_trace()
     inherit_model = 'prestashop.sale.order'
     sale_ids = session.search(inherit_model, [('openerp_id', '=', record_id)])
     if not isinstance(sale_ids, list):
