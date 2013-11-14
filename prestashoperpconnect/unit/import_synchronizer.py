@@ -202,10 +202,16 @@ class PaymentMethodsImportSynchronizer(BatchImportSynchronizer):
         return super(PaymentMethodsImportSynchronizer, self).run(filters, **kwargs)
 
     def _import_record(self, record):
-        ids = self.session.search('payment.method', [('name', '=', record['payment'])])
+        ids = self.session.search('payment.method', [
+            ('name', '=', record['payment']),
+            ('company_id', '=', self.backend_record.company_id.id),
+        ])
         if ids:
             return
-        self.session.create('payment.method', {'name': record['payment']})
+        self.session.create('payment.method', {
+            'name': record['payment'],
+            'company_id': self.backend_record.company_id.id,
+        })
 
 
 @prestashop
