@@ -16,6 +16,7 @@ access_prestashop_sale_order_state_full,Full access on prestashop.sale.order.sta
 access_sale_order_state_list_full,Full access on sale.order.state.list,model_sale_order_state_list,connector.group_connector_manager,1,1,1,1
 access_prestashop_sale_order_full,Full access on prestashop.sale.order,model_prestashop_sale_order,connector.group_connector_manager,1,1,1,1
 access_prestashop_sale_order_line_full,Full access on prestashop.sale.order.line,model_prestashop_sale_order_line,connector.group_connector_manager,1,1,1,1
+access_prestashop_sale_order_line_discount_full,Full access on prestashop.sale.order.line.discount,model_prestashop_sale_order_line_discount,connector.group_connector_manager,1,1,1,1
 access_prestashop_delivery_carrier_full,Full access on prestashop.delivery.carrier,model_prestashop_delivery_carrier,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_category_full,Full access on prestashop.product.category,model_prestashop_product_category,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_image_full,Full access on prestashop.product.image,model_prestashop_product_image,connector.group_connector_manager,1,1,1,1
