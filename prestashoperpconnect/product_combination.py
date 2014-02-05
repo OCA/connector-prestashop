@@ -121,7 +121,6 @@ class ProductCombinationMapper(PrestashopImportMapper):
     ]
 
     from_main = [
-        'name',
         'categ_id',
         'categ_ids',
         'taxes_ids',
@@ -191,6 +190,16 @@ class ProductCombinationMapper(PrestashopImportMapper):
             field_name = option_value_object.attribute_id.name
             results[field_name] = option_value_object.id
         return results
+
+    @mapping
+    def name(self, record):
+        product = self.main_product(record)
+        options = []
+        for option_value_object in self._get_option_value(record):
+            key = option_value_object.attribute_id.field_description
+            value = option_value_object.name
+            options.append('%s:%s' % (key, value))
+        return {'name': '%s (%s)' % (product.name, ' ; '.join(options))}
 
     @mapping
     def main_product_id(self, record):
