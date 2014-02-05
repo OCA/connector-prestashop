@@ -84,6 +84,7 @@ class prestashop_backend(orm.Model):
             'Languages'
         ),
         'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
+        'shipping_product_id': fields.many2one('product.product', 'Shipping Product', select=1, required=False),
     }
 
     _defaults = {
