@@ -283,6 +283,10 @@ class AddressImportMapper(PrestashopImportMapper):
             return {'country_id': erp_country_id}
         return {}
 
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
+
 @prestashop
 class SaleOrderStateMapper(PrestashopImportMapper):
     _model_name = 'prestashop.sale.order.state'
