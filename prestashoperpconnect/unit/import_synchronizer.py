@@ -313,7 +313,7 @@ class SaleImportRule(ConnectorUnit):
 
     def _rule_paid(self, record, method):
         """ Import the order only if it has received a payment """
-        if float(record['total_paid']) - self._get_paid_amount(record) > 0.01:
+        if self._get_paid_amount(record) == 0.0:
             raise OrderImportRuleRetry('The order has not been paid.\n'
                                        'The import will be retried later.')
     def _get_paid_amount(self, record):
