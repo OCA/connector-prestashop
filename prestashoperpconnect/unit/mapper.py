@@ -481,6 +481,10 @@ class SaleOrderLineMapper(PrestashopImportMapper):
     ]
 
     @mapping
+    def prestashop_id(self, record):
+        return {'prestashop_id': record['id']}
+
+    @mapping
     def price_unit(self, record):
         if self.backend_record.taxes_included:
             key = 'unit_price_tax_incl'
