@@ -47,7 +47,6 @@ class ProductCategoryMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.category'
 
     direct = [
-        ('name', 'name'),
         ('position', 'sequence'),
         ('description', 'description'),
         ('link_rewrite', 'link_rewrite'),
@@ -56,6 +55,12 @@ class ProductCategoryMapper(PrestashopImportMapper):
         ('meta_title', 'meta_title'),
         ('id_shop_default', 'default_shop_id'),
     ]
+
+    @mapping
+    def name(self, record):
+        if record['name'] is None:
+            return {'name': ''}
+        return {'name': record['name']}
 
     @mapping
     def backend_id(self, record):
