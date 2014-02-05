@@ -123,7 +123,7 @@ class ProductCombinationMapper(PrestashopImportMapper):
     from_main = [
         'categ_id',
         'categ_ids',
-        'taxes_ids',
+        'taxes_id',
         'type',
         'company_id',
     ]
@@ -167,6 +167,8 @@ class ProductCombinationMapper(PrestashopImportMapper):
         if 'attribute_set_id' in product:
             return {'attribute_set_id': product.attribute_set_id.id}
         return {}
+
+
 
     @mapping
     def attributes_values(self, record):
