@@ -593,7 +593,9 @@ class ProductRecordImport(TranslatableRecordImport):
         self.prestashop_record['attribute_set_id'] = attribute_set_id
 
     def get_product_model_id(self):
-        ids = model.search('ir.model', [('model', '=', 'product.product')])
+        ids = self.session.search('ir.model', [
+            ('model', '=', 'product.product')]
+        )
         assert len(ids) == 1
         return ids[0]
 
