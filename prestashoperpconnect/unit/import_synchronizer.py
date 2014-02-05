@@ -815,7 +815,7 @@ def import_orders_since(session, backend_id, since_date=None):
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
-    import_batch(session, 'prestashop.sale.order', backend_id, filters, priority=10)
+    import_batch(session, 'prestashop.sale.order', backend_id, filters, priority=10, max_retries=0)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
