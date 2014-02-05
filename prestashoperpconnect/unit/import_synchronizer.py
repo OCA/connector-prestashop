@@ -177,12 +177,12 @@ class BatchImportSynchronizer(ImportSynchronizer):
         page_number = 0
         filters['limit'] = '%d,%d' % (
             page_number * self.page_size, self.page_size)
-        record_ids = self._run_page(filters)
+        record_ids = self._run_page(filters, **kwargs)
         while len(record_ids) == self.page_size:
             page_number += 1
             filters['limit'] = '%d,%d' % (
                 page_number * self.page_size, self.page_size)
-            record_ids = self._run_page(filters)
+            record_ids = self._run_page(filters, **kwargs)
 
     def _run_page(self, filters, **kwargs):
         record_ids = self.backend_adapter.search(filters)
