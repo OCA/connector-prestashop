@@ -217,7 +217,7 @@ class prestashop_backend(orm.Model):
                                context=context)
 
     def _scheduler_import_customers(self, cr, uid, domain=None, context=None):
-        self._scheduler_launch(cr, uid, self.import_custmers_since,
+        self._scheduler_launch(cr, uid, self.import_customers_since,
                                domain=domain, context=context)
 
     def _scheduler_import_products(self, cr, uid, domain=None, context=None):
