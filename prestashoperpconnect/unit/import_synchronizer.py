@@ -789,15 +789,15 @@ def import_product_image(session, model_name, backend_id, product_id,
 @job
 def import_customers_since(session, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
-    import_batch(session, 'prestashop.res.partner.category', backend_id)
 
     filters = None
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+    import_batch(session, 'prestashop.res.partner.category', backend_id, filters)
     import_batch(session, 'prestashop.res.partner', backend_id, filters, priority=15)
 
-    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(
         session.cr,
         session.uid,
