@@ -447,10 +447,20 @@ class SaleOrderLineMapper(PrestashopImportMapper):
 
     @mapping
     def product_id(self, record):
-        return {'product_id': self.get_openerp_id(
-            'prestashop.product.product',
-            record['product_id']
-        )}
+        if ('product_attribute_id' in record and
+                record['product_attribute_id'] != '0'):
+            combination_binder = self.get_binder_for_model(
+                'prestashop.product.combination')
+            product_id = combination_binder.to_openerp(
+                record['product_attribute_id'],
+                unwrap=True
+            )
+        else:
+            product_id = self.get_openerp_id(
+                'prestashop.product.product',
+                record['product_id']
+            )
+        return {'product_id': product_id}
 
     @mapping
     def backend_id(self, record):

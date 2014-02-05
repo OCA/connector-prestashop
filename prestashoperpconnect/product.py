@@ -205,6 +205,24 @@ class ProductMapper(PrestashopImportMapper):
             return {'date_upd': datetime.datetime.now()}
         return {'date_upd': record['date_upd']}
 
+    def has_combinations(self, record):
+        combinations = record.get('associations', {}).get(
+            'combinations', {}).get('combinations', [])
+        return len(combinations) != 0
+
+    @mapping
+    def attribute_set_id(self, record):
+        if self.has_combinations(record) and 'attribute_set_id' in record:
+            return {'attribute_set_id': record['attribute_set_id']}
+        return {}
+
+    def _product_code_exists(self, code):
+        model = self.session.pool.get('product.product')
+        product_ids = model.search(self.session.cr, self.session.uid, [
+            ('default_code', '=', code)
+        ])
+        return len(product_ids) > 0
+
     @mapping
     def image(self, record):
         if record['id_default_image']['value'] == '':
@@ -222,9 +240,17 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def default_code(self, record):
-        if record.get('reference'):
-            return {'default_code': record.get('reference')}
-        return {}
+        if not record.get('reference'):
+            return {}
+        code = record.get('reference')
+        if not self._product_code_exists(code):
+            return {'default_code': code}
+        i = 1
+        current_code = '%s_%d' % (code, i)
+        while self._product_code_exists(current_code):
+            i += 1
+            current_code = '%s_%d' % (code, i)
+        return {'default_code': current_code}
 
     @mapping
     def active(self, record):
@@ -232,7 +258,11 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def sale_ok(self, record):
-        return {'sale_ok': record['available_for_order'] == '1'}
+		# if this product has combinations, we do not want to sell this product,
+		# but its combinations (so sale_ok = False in that case).
+        sale_ok = (record['available_for_order'] == '1'
+                   and not self.has_combinations(record))
+        return {'sale_ok': sale_ok}
 
     @mapping
     def categ_id(self, record):
@@ -292,10 +322,14 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def type(self, record):
-        product_type = {"type": 'product'}
-        if record['type']['value'] and record['type']['value'] == 'virtual':
-            product_type = {"type": 'consu'}
-        return product_type
+		# If the product has combinations, this main product is not a real
+		# product. So it is set to a 'service' kind of product. Should better be
+		# a 'virtual' product... but it does not exist...
+		# The same if the product is a virtual one in prestashop.
+        if ((record['type']['value'] and record['type']['value'] == 'virtual')
+                or self.has_combinations(record)):
+            return {"type": 'service'}
+        return {"type": 'product'}
 
 
 class product_product(orm.Model):
@@ -334,10 +368,6 @@ class prestashop_product_product(orm.Model):
         'always_available': fields.boolean(
             'Active',
             help='if check, this object is always available'),
-        'sale_ok': fields.boolean(
-            'For sale',
-            help='see parent field'
-        ),
         'quantity': fields.float(
             'Computed Quantity',
             help="Last computed quantity to send on Prestashop."
@@ -368,6 +398,11 @@ class prestashop_product_product(orm.Model):
             'Friendly URL',
             translate=True,
             required=True,
+        ),
+        'combinations_ids': fields.one2many(
+            'prestashop.product.combination',
+            'main_product_id',
+            string='Combinations'
         ),
     }
 
