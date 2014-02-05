@@ -51,5 +51,11 @@
         <field name="domain_force"> ['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
+    <record id="refund_comp_rule" model="ir.rule">
+        <field name="name" >Refund</field>
+        <field name="model_id" ref="model_prestashop_refund"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force"> ['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+    </record>
 </data>
 </openerp>
