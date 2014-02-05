@@ -67,5 +67,17 @@
             <field name="args" eval="'()'"/>
         </record>
 
+        <record forcecreate="True" id="ir_cron_import_payment_methods" model="ir.cron">
+            <field name="name">Prestashop - Payment methods</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_import_payment_methods'"/>
+            <field name="args" eval="'()'"/>
+        </record>
     </data>
 </openerp>
