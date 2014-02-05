@@ -376,6 +376,12 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     @mapping
     def shop_id(self, record):
+        if record['id_shop'] == '0':
+            shop_ids = self.session.search('prestashop.shop', [
+                ('backend_id', '=', self.backend_record.id)
+            ])
+            shop = self.session.read('prestashop.shop', shop_ids[0], ['openerp_id'])
+            return {'shop_id': shop['openerp_id'][0]}
         return {'shop_id': self.get_openerp_id(
             'prestashop.shop',
             record['id_shop']
