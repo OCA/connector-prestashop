@@ -236,6 +236,10 @@ class prestashop_backend(orm.Model):
         self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
                                context=context)
 
+    def _scheduler_import_payment_methods(self, cr, uid, domain=None, context=None):
+        self._scheduler_launch(cr, uid, self.import_payment_methods,
+                               domain=domain, context=context)
+
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'
     _inherit = 'external.binding'
