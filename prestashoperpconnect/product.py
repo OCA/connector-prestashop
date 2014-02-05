@@ -23,6 +23,7 @@ import datetime
 import mimetypes
 import json
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, orm
 
 from openerp.addons.product.product import check_ean
@@ -231,7 +232,7 @@ class ProductMapper(PrestashopImportMapper):
 
     def _product_code_exists(self, code):
         model = self.session.pool.get('product.product')
-        product_ids = model.search(self.session.cr, self.session.uid, [
+        product_ids = model.search(self.session.cr, SUPERUSER_ID, [
             ('default_code', '=', code)
         ])
         return len(product_ids) > 0

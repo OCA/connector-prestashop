@@ -12,6 +12,7 @@ the main product.
 
 from unidecode import unidecode
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, orm
 from backend import prestashop
 from .unit.backend_adapter import GenericAdapter
@@ -209,8 +210,10 @@ class ProductCombinationMapper(PrestashopImportMapper):
         return {'main_product_id': self.get_main_product_id(record)}
 
     def _product_code_exists(self, code):
-        product_ids = self.session.search('product.product',
-                                          [('default_code', '=', code)])
+        model = self.session.pool.get('product.product')
+        product_ids = model.search(self.session.cr, SUPERUSER_ID, [
+            ('default_code', '=', code)
+        ])
         return len(product_ids) > 0
 
     @mapping
