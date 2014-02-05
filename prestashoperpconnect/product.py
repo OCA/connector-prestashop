@@ -280,11 +280,27 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def categ_id(self, record):
-        if int(record['id_category_default']):
-            return {'categ_id': self.get_openerp_id(
-                'prestashop.product.category',
-                record['id_category_default']
-            )}
+        if not int(record['id_category_default']):
+            return
+        category_id = self.get_openerp_id(
+            'prestashop.product.category',
+            record['id_category_default']
+        )
+        if category_id is not None:
+            return {'categ_id': category_id}
+
+        categories = record['associations'].get('categories', {}).get(
+            'category', [])
+        if not isinstance(categories, list):
+            categories = [categories]
+        if not categories:
+            return
+        category_id = self.get_openerp_id(
+            'prestashop.product.category',
+            categories[0]['id']
+        )
+        return {'categ_id': category_id}
+
 
     @mapping
     def categ_ids(self, record):
