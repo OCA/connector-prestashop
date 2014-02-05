@@ -266,7 +266,8 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
     _model_name = 'prestashop.res.partner'
 
     def _import_dependencies(self):
-        groups = self.prestashop_record['associations']['groups']['group']
+        groups = self.prestashop_record.get('associations', {})\
+            .get('groups', {}).get('group', [])
         if not isinstance(groups, list):
             groups = [groups]
         for group in groups:
