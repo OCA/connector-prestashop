@@ -67,15 +67,6 @@
                                 </p>
                         <group>
                             <div>
-                                <label string="Import payment methods" class="oe_inline"/>
-                            </div>
-                            <button name="import_payment_methods"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import in background"/>
-                        </group>
-                        <group>
-                            <div>
                                 <label string="Import customer groups and customers since" class="oe_inline"/>
                                 <field name="import_partners_since"
                                        class="oe_inline"
@@ -87,22 +78,16 @@
                                     string="Import in background"/>
                         </group>
                         <group>
+                            <div>
                             <label string="Import product categories and products" class="oe_inline"/>
-                            <div>
-                                <button name="import_products"
+                                <field name="import_products_since"
+                                       class="oe_inline"
+                                       nolabel="1"/>
+                            </div>
+                            <button name="import_products"
                                         type="object"
                                         class="oe_highlight"
                                         string="Import in background"/>
-                            </div>
-                        </group>
-                        <group>
-                            <label string="Import carriers" class="oe_inline"/>
-                            <div>
-                                <button name="import_carriers"
-                                        type="object"
-                                        class="oe_highlight"
-                                        string="Import in background"/>
-                            </div>
                         </group>
                         <group>
                             <div>
@@ -115,6 +100,36 @@
                                 type="object"
                                 class="oe_highlight"
                                 string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                               <label string="Import refunds" class="oe_inline"/>
+                               <field name="import_refunds_since"
+                                    class="oe_inline"
+                                    nolabel="1"/>
+                            </div>
+                            <button name="import_refunds"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                                <label string="Import payment methods" class="oe_inline"/>
+                            </div>
+                            <button name="import_payment_methods"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                        </group>
+                        <group>
+                            <label string="Import carriers" class="oe_inline"/>
+                            <div>
+                                <button name="import_carriers"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                            </div>
                         </group>
                         <group>
                             <label string="Update all the products stock quantities" class="oe_inline"/>
