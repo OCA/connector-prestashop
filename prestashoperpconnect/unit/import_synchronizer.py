@@ -533,8 +533,11 @@ class ProductCategoryImport(TranslatableRecordImport):
     def _import_dependencies(self):
         record = self.prestashop_record
         if record['id_parent'] != '0':
-            self._check_dependency(record['id_parent'],
-                                   'prestashop.product.category')
+            try:
+                self._check_dependency(record['id_parent'],
+                                       'prestashop.product.category')
+            except PrestaShopWebServiceError:
+                pass
 
 
 @prestashop
