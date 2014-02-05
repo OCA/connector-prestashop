@@ -672,8 +672,11 @@ class ProductRecordImport(TranslatableRecordImport):
     def _import_default_category(self):
         record = self.prestashop_record
         if int(record['id_category_default']):
-            self._check_dependency(record['id_category_default'],
-                                   'prestashop.product.category')
+            try:
+                self._check_dependency(record['id_category_default'],
+                                       'prestashop.product.category')
+            except PrestaShopWebServiceError:
+                pass
 
     def _import_categories(self):
         record = self.prestashop_record
