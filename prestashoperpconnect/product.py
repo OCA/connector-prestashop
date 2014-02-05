@@ -191,7 +191,6 @@ class ProductMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.product'
 
     direct = [
-        ('name', 'name'),
         ('description', 'description_html'),
         ('description_short', 'description_short_html'),
         ('weight', 'weight'),
@@ -200,6 +199,12 @@ class ProductMapper(PrestashopImportMapper):
         ('id_shop_default', 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
     ]
+
+    @mapping
+    def name(self, record):
+        if record['name']:
+            return {'name': record['name']}
+        return {'name': 'noname'}
 
     @mapping
     def date_add(self, record):
