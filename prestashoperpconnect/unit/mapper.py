@@ -309,7 +309,6 @@ class SaleOrderMapper(PrestashopImportMapper):
     _model_name = 'prestashop.sale.order'
 
     direct = [
-        ('reference', 'name'),
         ('date_add', 'date_order'),
         ('invoice_number','prestashop_invoice_number'),
         ('delivery_number','prestashop_delivery_number'),
@@ -346,6 +345,25 @@ class SaleOrderMapper(PrestashopImportMapper):
             mapper = self._init_child_mapper(model_name)
             mapper.convert_child(detail_record, parent_values=record)
             self._data_children[to_attr].append(mapper)
+
+    def _sale_order_exists(self, name):
+        ids = self.session.search('sale.order', [
+            ('name', '=', name),
+            ('company_id', '=', self.backend_record.company_id.id),
+        ])
+        return len(ids) == 1
+
+    @mapping
+    def name(self, record):
+        basename = record['reference']
+        if not self._sale_order_exists(basename):
+            return {"name": basename}
+        i = 1
+        name = basename + '_%d' % (i)
+        while self._sale_order_exists(name):
+            i += 1
+            name = basename + '_%d' % (i)
+        return {"name": name}
 
     @mapping
     def shipping(self, record):
