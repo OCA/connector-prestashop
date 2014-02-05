@@ -203,5 +203,7 @@ class AccountTaxDirectBinder(DirectBinder):
         taxes_inclusion_test = self.backend_record.taxes_included and \
             erp_dict['price_include'] or not erp_dict['price_include']
         if taxes_inclusion_test and erp_dict['type_tax_use'] == 'sale' and \
-                abs(erp_val*100 - float(ps_val)) < 0.01:
+                abs(erp_val*100 - float(ps_val)) < 0.01 and \
+                self.backend_record.company_id.id == erp_dict['company_id'][0]:
             return True
+        return False
