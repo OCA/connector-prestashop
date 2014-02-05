@@ -226,16 +226,35 @@ class AddressImportMapper(PrestashopImportMapper):
         ('postcode', 'zip'),
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
-        ('vat_number', 'vat_number'),
         ('id_customer', 'prestashop_partner_id'),
     ]
 
     @mapping
     def parent_id(self, record):
-        return {'parent_id': self.get_openerp_id(
+        parent_id = self.get_openerp_id(
             'prestashop.res.partner',
             record['id_customer']
-        )}
+        )
+        if record['vat_number']:
+            vat_number = record['vat_number'].replace('.', '').replace(' ', '')
+            if self._check_vat(vat_number):
+                self.session.write(
+                    'res.partner',
+                    [parent_id],
+                    {'vat': vat_number}
+                )
+            # TODO else: checkpoint
+        return {'parent_id': parent_id}
+
+    def _check_vat(self, vat):
+        vat_country, vat_number = vat[:2].lower(), vat[2:]
+        return self.session.pool['res.partner'].simple_vat_check(
+            self.session.cr,
+            self.session.uid,
+            vat_country,
+            vat_number,
+            context=self.session.context
+        )
 
     @mapping
     def name(self, record):
