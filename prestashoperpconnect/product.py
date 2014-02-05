@@ -412,7 +412,7 @@ class prestashop_product_product(orm.Model):
         'link_rewrite': fields.char(
             'Friendly URL',
             translate=True,
-            required=True,
+            required=False,
         ),
         'combinations_ids': fields.one2many(
             'prestashop.product.combination',
