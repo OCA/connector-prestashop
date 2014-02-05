@@ -24,6 +24,9 @@ import mimetypes
 import json
 
 from openerp.osv import fields, orm
+
+from openerp.addons.product.product import check_ean
+
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
@@ -298,10 +301,11 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def ean13(self, record):
-        #TODO who is the reference data prestashop ean13 or prestatshop ean13 ?
-        if record['ean13'] == '0':
+        if record['ean13'] in ['', '0']:
             return {}
-        return {'ean13': record['ean13']}
+        if check_ean(record['ean13']):
+            return {'ean13': record['ean13']}
+        return {}
 
     @mapping
     def taxes_id(self, record):
