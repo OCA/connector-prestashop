@@ -21,6 +21,7 @@ from .unit.import_synchronizer import TranslatableRecordImport
 from .unit.mapper import PrestashopImportMapper
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import mapping
+from openerp.osv.orm import browse_record_list
 
 from openerp.addons.product.product import check_ean
 
@@ -139,7 +140,7 @@ class ProductCombinationMapper(PrestashopImportMapper):
                 continue
             if hasattr(main_product[attribute], 'id'):
                 result[attribute] = main_product[attribute].id
-            elif isinstance(main_product[attribute]), list):
+            elif type(main_product[attribute]) is browse_record_list:
                 ids = []
                 for element in main_product[attribute]:
                     ids.append(element.id)
@@ -170,16 +171,12 @@ class ProductCombinationMapper(PrestashopImportMapper):
             return {'attribute_set_id': product.attribute_set_id.id}
         return {}
 
-
-
-    @mapping
-    def attributes_values(self, record):
+    def _get_option_value(self, record):
         option_values = record['associations']['product_option_values'][
             'product_option_value']
-        if isinstance(option_values, dict):
+        if type(option_values) is dict:
             option_values = [option_values]
 
-        results = {}
         for option_value in option_values:
 
             option_value_binder = self.get_binder_for_model(
@@ -191,6 +188,12 @@ class ProductCombinationMapper(PrestashopImportMapper):
                 'prestashop.product.combination.option.value',
                 option_value_openerp_id
             )
+            yield option_value_object
+
+    @mapping
+    def attributes_values(self, record):
+        results = {}
+        for option_value_object in self._get_option_value(record):
             field_name = option_value_object.attribute_id.name
             results[field_name] = option_value_object.id
         return results
@@ -301,7 +304,23 @@ class ProductCombinationOptionRecordImport(PrestashopImportSynchronizer):
             )
 
     def run(self, ext_id):
-        super(ProductCombinationOptionRecordImport, self).run(ext_id)
+        # looking for an attribute.attribute with the same name
+        self.prestashop_id = ext_id
+        self.prestashop_record = self._get_prestashop_data()
+        field_name = self.mapper.name(self.prestashop_record)['name']
+        attribute_ids = self.session.search('attribute.attribute', [('name', '=', field_name)])
+        if len(attribute_ids) == 0:
+            # if we don't find it, we create a prestashop_product_combination
+            super(ProductCombinationOptionRecordImport, self).run(ext_id)
+        else:
+            # else, we create only a prestashop.product.combination.option
+            context = self._context()
+            data = {
+                'openerp_id': attribute_ids[0],
+                'backend_id': self.backend_record.id,
+            }
+            erp_id = self.model.create(self.session.cr, self.session.uid, data, context)
+            self.binder.bind(self.prestashop_id, erp_id)
 
         self._import_values()
 
