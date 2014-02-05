@@ -828,9 +828,21 @@ def import_orders_since(session, backend_id, since_date=None):
 
 
 @job
-def import_products(session, backend_id):
-    import_batch(session, 'prestashop.product.category', backend_id, priority=15)
-    import_batch(session, 'prestashop.product.product', backend_id, priority=15)
+def import_products(session, backend_id, since_date):
+    filters = None
+    if since_date:
+        date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
+        filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+    import_batch(session, 'prestashop.product.category', backend_id, filters, priority=15)
+    import_batch(session, 'prestashop.product.product', backend_id, filters, priority=15)
+    session.pool.get('prestashop.backend').write(
+        session.cr,
+        session.uid,
+        backend_id,
+        {'import_products_since': now_fmt},
+        context=session.context
+    )
 
 
 @job

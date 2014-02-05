@@ -78,6 +78,7 @@ class prestashop_backend(orm.Model):
         'taxes_included': fields.boolean("Use tax included prices"),
         'import_partners_since': fields.datetime('Import partners since'),
         'import_orders_since': fields.datetime('Import Orders since'),
+        'import_products_since': fields.datetime('Import Products since'),
         'language_ids': fields.one2many(
             'prestashop.res.lang',
             'backend_id',
@@ -147,8 +148,14 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-        for backend_id in ids:
-            import_products.delay(session, backend_id, priority=10)
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            since_date = None
+            if backend_record.import_products_since:
+                since_date = datetime.strptime(
+                    backend_record.import_products_since,
+                    DEFAULT_SERVER_DATETIME_FORMAT
+                )
+            import_products.delay(session, backend_record.id, since_date, priority=10)
         return True
 
     def import_carriers(self, cr, uid, ids, context=None):
