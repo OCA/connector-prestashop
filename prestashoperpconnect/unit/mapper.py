@@ -49,6 +49,8 @@ class PrestashopImportMapper(ImportMapper):
         '''
         binder = self.get_binder_for_model(model)
         erp_ps_id = binder.to_openerp(prestashop_id)
+        if erp_ps_id is None:
+            return None
 
         model = self.session.pool.get(model)
         erp_ps_object = model.read(
@@ -460,7 +462,30 @@ class SaleOrderLineMapper(PrestashopImportMapper):
                 'prestashop.product.product',
                 record['product_id']
             )
+            if product_id is None:
+                return self.tax_id(record)
         return {'product_id': product_id}
+
+    def _find_tax(self, ps_tax_id):
+        binder = self.get_binder_for_model('prestashop.account.tax')
+        openerp_id = binder.to_openerp(ps_tax_id, unwrap=True)
+        tax = self.session.read('account.tax', openerp_id, ['price_include', 'related_inc_tax_id'])
+        if self.backend_record.taxes_included and not tax['price_include'] and tax['related_inc_tax_id']:
+            return tax['related_inc_tax_id'][0]
+        return openerp_id
+        
+    def tax_id(self, record):
+        taxes = record.get('associations', {}).get('taxes', {}).get('tax', [])
+        if not isinstance(taxes, list):
+            taxes = [taxes]
+        result = []
+        for tax in taxes:
+            openerp_id = self._find_tax(tax['id'])
+            if openerp_id:
+                result.append(openerp_id)
+        if result:
+            return {'tax_id': [(6, 0, result)]}
+        return {}
 
     @mapping
     def backend_id(self, record):

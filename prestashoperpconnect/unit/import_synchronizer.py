@@ -383,8 +383,11 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         if isinstance(orders, dict):
             orders = [orders]
         for order in orders:
-            self._check_dependency(order['product_id'],
-                                   'prestashop.product.product')
+            try:
+                self._check_dependency(order['product_id'],
+                                       'prestashop.product.product')
+            except PrestaShopWebServiceError:
+                pass
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
