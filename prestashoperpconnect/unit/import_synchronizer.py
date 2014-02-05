@@ -36,6 +36,9 @@ from backend_adapter import GenericAdapter
 from .exception import OrderImportRuleRetry
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.exception import NothingToDoJob
+from backend_adapter import PrestaShopCRUDAdapter
+
+from prestapyt import PrestaShopWebServiceError
 
 _logger = logging.getLogger(__name__)
 
@@ -603,6 +606,28 @@ class ProductRecordImport(TranslatableRecordImport):
                     image['id'],
                     priority=10,
                 )
+
+        self.import_default_image(prestashop_id)
+
+    def import_default_image(self, ps_id):
+        record = self._get_prestashop_data()
+        if record['id_default_image']['value'] == '':
+            return
+        adapter = self.get_connector_unit_for_model(
+            PrestaShopCRUDAdapter,
+            'prestashop.product.image'
+        )
+        binder = self.get_binder_for_model()
+        product_id = binder.to_openerp(ps_id)
+        try:
+            image = adapter.read(record['id'],
+                                 record['id_default_image']['value'])
+            self.session.write('prestashop.product.product', [product_id], {"image": image['content']}) 
+        except PrestaShopWebServiceError:
+            pass
+        except IOError:
+            pass
+
 
     def _import_dependencies(self):
         self._import_default_category()
