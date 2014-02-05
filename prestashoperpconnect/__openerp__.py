@@ -74,6 +74,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
 
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
+        'ecommerce_data.xml',
     ],
     "active": False,
     "installable": True,

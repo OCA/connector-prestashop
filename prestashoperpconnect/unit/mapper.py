@@ -288,6 +288,7 @@ class SaleOrderMapper(PrestashopImportMapper):
         ('date_add', 'date_order'),
         ('invoice_number','prestashop_invoice_number'),
         ('delivery_number','prestashop_delivery_number'),
+        ('total_paid', 'total_amount'),
     ]
 
     def _get_sale_order_lines(self, record):
@@ -390,6 +391,12 @@ class SaleOrderMapper(PrestashopImportMapper):
             'prestashop.delivery.carrier',
             record['id_carrier']
         )}
+
+    @mapping
+    def total_tax_amount(self, record):
+        tax = float(record['total_paid_tax_incl'])\
+                - float(record['total_paid_tax_excl'])
+        return {'total_amount_tax': tax}
 
     def _after_mapping(self, result):
         sess = self.session

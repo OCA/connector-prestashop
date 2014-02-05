@@ -103,6 +103,24 @@
             action="action_prestashop_sale_order_state_form"
             parent="base.menu_sale_config_sales"
             sequence="50"/>
+        
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <page string="Other Information" position="inside">
+                    <separator string="Prestashop Information"/>
+                    <field name="prestashop_bind_ids" readonly="True">
+                        <tree string="Prestashop Binding">
+                            <field name="total_amount"/>
+                            <field name="total_amount_tax"/>
+                        </tree>
+                    </field>
+                </page>
+            </field>
+        </record>
+
 
     </data>
 </openerp>
