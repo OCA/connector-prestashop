@@ -25,6 +25,7 @@
 
 import logging
 from datetime import datetime
+from datetime import timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
@@ -33,8 +34,8 @@ from ..backend import prestashop
 from ..connector import get_environment
 from backend_adapter import GenericAdapter
 from .exception import OrderImportRuleRetry
-
 from openerp.addons.connector.exception import FailedJobError
+from openerp.addons.connector.exception import NothingToDoJob
 
 _logger = logging.getLogger(__name__)
 
@@ -360,7 +361,21 @@ class SaleImportRule(ConnectorUnit):
                                                   payment_method))
         method = session.browse('payment.method', method_ids[0])
 
+        self._rule_global(record, method)
         self._rules[method.import_rule](self, record, method)
+
+    def _rule_global(self, record, method):
+        """ Rule always executed, whichever is the selected rule """
+        order_id = record['id']
+        max_days = method.days_before_cancel
+        if not max_days:
+            return
+        fmt = '%Y-%m-%d %H:%M:%S'
+        order_date = datetime.strptime(record['date_add'], fmt)
+        if order_date + timedelta(days=max_days) < datetime.now():
+            raise NothingToDoJob('Import of the order %s canceled '
+                                 'because it has not been paid since %d '
+                                 'days' % (order_id, max_days))
 
 
 @prestashop
