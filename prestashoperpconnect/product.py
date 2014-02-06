@@ -254,9 +254,11 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def default_code(self, record):
-        if not record.get('reference'):
-            return {}
         code = record.get('reference')
+        if not code:
+            code = "backend_%d_product_%s" % (
+                self.backend_record.id, record['id']
+            )
         if not self._product_code_exists(code):
             return {'default_code': code}
         i = 1
