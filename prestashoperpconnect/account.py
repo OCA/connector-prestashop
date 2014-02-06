@@ -15,6 +15,7 @@ from .backend import prestashop
 from .unit.backend_adapter import GenericAdapter
 from .unit.mapper import PrestashopImportMapper
 from .unit.import_synchronizer import PrestashopImportSynchronizer
+from .connector import add_checkpoint
 
 
 class account_invoice(orm.Model):
@@ -136,17 +137,25 @@ class RefundImport(PrestashopImportSynchronizer):
         )
 
         invoice = self.session.browse('account.invoice', erp_id)
-        #assert invoice.amount_total == float(self.prestashop_record['amount']), (
-        #    'amounts in openerp (%f) and prestashop (%s) are not the same' % (
-        #        invoice.amount_total, self.prestashop_record['amount']))
-
         if invoice.amount_total == float(self.prestashop_record['amount']):
             wf_service = netsvc.LocalService("workflow")
             try:
                 wf_service.trg_validate(self.session.uid, 'account.invoice',
                                         erp_id, 'invoice_open', self.session.cr)
             except:
-                pass
+                add_checkpoint(
+                    self.session,
+                    'account.invoice',
+                    erp_id,
+                    self.backend_record.id
+                )
+        else:
+            add_checkpoint(
+                self.session,
+                'account.invoice',
+                erp_id,
+                self.backend_record.id
+            )
 
 
 @prestashop
