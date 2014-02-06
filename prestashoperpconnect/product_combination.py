@@ -84,6 +84,10 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
                 option_value['id_attribute_group'],
                 'prestashop.product.combination.option',
             )
+            self._check_dependency(
+                option_value['id'],
+                'prestashop.product.combination.option.value'
+            )
 
             self.check_location(option_value)
 
