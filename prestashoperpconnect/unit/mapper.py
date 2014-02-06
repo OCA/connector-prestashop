@@ -31,6 +31,7 @@ from openerp.addons.connector.unit.mapper import (
     ExportMapper
 )
 from ..backend import prestashop
+from ..connector import add_checkpoint
 from backend_adapter import GenericAdapter
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
@@ -243,7 +244,13 @@ class AddressImportMapper(PrestashopImportMapper):
                     [parent_id],
                     {'vat': vat_number}
                 )
-            # TODO else: checkpoint
+            else:
+                add_checkpoint(
+                    self.session,
+                    'res.partner',
+                    parent_id,
+                    self.backend_record.id
+                )
         return {'parent_id': parent_id}
 
     def _check_vat(self, vat):
