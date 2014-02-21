@@ -130,10 +130,13 @@ class ProductCombinationMapper(PrestashopImportMapper):
         'categ_id',
         'categ_ids',
         'taxes_id',
-        'type',
         'company_id',
         'image_medium',
     ]
+
+    @mapping
+    def type(self, record):
+        return {'type': 'product'}
 
     @mapping
     def from_main_product(self, record):
