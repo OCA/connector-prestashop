@@ -139,16 +139,8 @@ class RefundImport(PrestashopImportSynchronizer):
         invoice = self.session.browse('account.invoice', erp_id)
         if invoice.amount_total == float(self.prestashop_record['amount']):
             wf_service = netsvc.LocalService("workflow")
-            try:
-                wf_service.trg_validate(self.session.uid, 'account.invoice',
-                                        erp_id, 'invoice_open', self.session.cr)
-            except:
-                add_checkpoint(
-                    self.session,
-                    'account.invoice',
-                    erp_id,
-                    self.backend_record.id
-                )
+            wf_service.trg_validate(self.session.uid, 'account.invoice',
+                                    erp_id, 'invoice_open', self.session.cr)
         else:
             add_checkpoint(
                 self.session,
