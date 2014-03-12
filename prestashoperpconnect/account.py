@@ -175,12 +175,18 @@ class RefundMapper(PrestashopImportMapper):
         ])
         return {'journal_id': journal_ids[0]}
 
-    @mapping
-    def origin(self, record):
+    def _get_order(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'], unwrap=True)
-        sale_order = self.session.read('prestashop.sale.order', sale_order_id, ['name'])
-        return {'origin': sale_order['name']}
+        return self.session.read('prestashop.sale.order', sale_order_id)
+
+    @mapping
+    def from_sale_order(self, record):
+        sale_order = self._get_order(record)
+        return {
+            'origin': sale_order['name'],
+            'fiscal_position': sale_order['fiscal_position'],
+        }
 
     @mapping
     def comment(self, record):
@@ -193,15 +199,19 @@ class RefundMapper(PrestashopImportMapper):
         if isinstance(slip_details, dict):
             slip_details = [slip_details]
         lines = []
-        shipping_line = self._invoice_line_shipping(record)
+        fpos_id = self.from_sale_order(record)['fiscal_position']
+        fpos = None
+        if fpos_id:
+            fpos = self.session.browse('account.fiscal.position', fpos_id)
+        shipping_line = self._invoice_line_shipping(record, fpos)
         if shipping_line is not None:
             lines.append((0, 0, shipping_line))
         for slip_detail in slip_details:
-            line = self._invoice_line(slip_detail)
+            line = self._invoice_line(slip_detail, fpos)
             lines.append((0, 0, line))
         return {'invoice_line': lines}
 
-    def _invoice_line_shipping(self, record):
+    def _invoice_line_shipping(self, record, fpos):
         order_line = self._get_shipping_order_line(record)
         if order_line is None:
             return None
@@ -211,13 +221,29 @@ class RefundMapper(PrestashopImportMapper):
             price_unit = record['shipping_cost_amount']
         if price_unit in [0.0, '0.00']:
             return None
+        product = self.session.browse(
+            'product.product',
+            order_line['product_id'][0]
+        )
+        account_id = product.property_account_income.id
+        if not account_id:
+            account_id = product.categ_id.property_account_income_categ.id
+        if fpos:
+            fpos_obj = self.session.pool['account.fiscal.position']
+            account_id = fpos_obj.map_account(
+                self.session.cr,
+                self.session.uid,
+                fpos,
+                account_id
+            )
         return {
             'quantity': 1,
-            'product_id': order_line['product_id'][0],
+            'product_id': product.id,
             'name': order_line['name'],
             'invoice_line_tax_id': [(6, 0, order_line['tax_id'])],
             'price_unit': price_unit,
             'discount': order_line['discount'],
+            'account_id': account_id,
         }
 
     def _get_shipping_order_line(self, record):
@@ -236,17 +262,30 @@ class RefundMapper(PrestashopImportMapper):
             return None
         return self.session.read('sale.order.line', sale_order_line_ids[0], [])
 
-    def _invoice_line(self, record):
+    def _invoice_line(self, record, fpos):
         order_line = self._get_order_line(record['id_order_detail'])
         tax_ids = []
         if order_line is None:
             product_id = None
             name = "Order line not found"
+            account_id = None
         else:
-            product_id = order_line.product_id.id
+            product = order_line.product_id
+            product_id = product.id
             name = order_line.name
             for tax in order_line.tax_id:
                 tax_ids.append(tax.id)
+            account_id = product.property_account_income.id
+            if not account_id:
+                account_id = product.categ_id.property_account_income_categ.id
+        if fpos and account_id:
+            fpos_obj = self.session.pool['account.fiscal.position']
+            account_id = fpos_obj.map_account(
+                self.session.cr,
+                self.session.uid,
+                fpos,
+                account_id
+            )
         if record['product_quantity'] == '0':
             quantity = 1
         else:
@@ -270,6 +309,7 @@ class RefundMapper(PrestashopImportMapper):
             'invoice_line_tax_id': [(6, 0, tax_ids)],
             'price_unit': price_unit,
             'discount': discount,
+            'account_id': account_id,
         }
 
     def _get_order_line(self, order_details_id):
