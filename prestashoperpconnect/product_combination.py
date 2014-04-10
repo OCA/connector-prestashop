@@ -365,6 +365,7 @@ class ProductCombinationOptionMapper(PrestashopImportMapper):
                 erp_lang = self.session.read(
                     'prestashop.res.lang',
                     erp_language_id,
+                    []
                 )
                 if erp_lang['code'] == 'en_US':
                     name = lang['value']

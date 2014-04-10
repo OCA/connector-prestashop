@@ -671,6 +671,7 @@ class ProductRecordImport(TranslatableRecordImport):
             'model_id': product_model_id,
             'name': 'Combinations options',
             'sequence': 0,
+            'attribute_ids': [],
         }
         attribute_set = {
             'model_id': product_model_id,
