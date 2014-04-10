@@ -33,6 +33,7 @@ from openerp.addons.connector.unit.mapper import (
 from ..backend import prestashop
 from ..connector import add_checkpoint
 from backend_adapter import GenericAdapter
+from backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
 
@@ -233,7 +234,18 @@ class SupplierMapper(PrestashopImportMapper):
 
     @mapping
     def supplier(self, record):
-        return {'supplier': True}
+        return {
+            'supplier': True,
+            'is_company': True,
+            'customer': False,
+        }
+
+    @mapping
+    def image(self, record):
+        supplier_image_adapter = self.get_connector_unit_for_model(
+            PrestaShopCRUDAdapter, 'prestashop.supplier.image'
+        )
+        return {'image': supplier_image_adapter.read(record['id'])}
 
 
 @prestashop
