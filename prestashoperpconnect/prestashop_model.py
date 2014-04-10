@@ -39,7 +39,9 @@ from .unit.import_synchronizer import (
     import_orders_since,
     import_products,
     import_refunds,
-    import_carriers)
+    import_carriers,
+    import_suppliers,
+)
 from .unit.direct_binder import DirectBinder
 from .connector import get_environment
 
@@ -82,6 +84,7 @@ class prestashop_backend(orm.Model):
         'import_orders_since': fields.datetime('Import Orders since'),
         'import_products_since': fields.datetime('Import Products since'),
         'import_refunds_since': fields.datetime('Import Refunds since'),
+        'import_suppliers_since': fields.datetime('Import Suppliers since'),
         'language_ids': fields.one2many(
             'prestashop.res.lang',
             'backend_id',
@@ -224,6 +227,17 @@ class prestashop_backend(orm.Model):
             import_refunds.delay(session, backend_record.id, since_date)
         return True
 
+    def import_suppliers(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            since_date = self._date_as_user_tz(
+                cr, uid, backend_record.import_suppliers_since
+            )
+            import_suppliers.delay(session, backend_record.id, since_date)
+        return True
+
     def _scheduler_launch(self, cr, uid, callback, domain=None,
                           context=None):
         if domain is None:
@@ -259,6 +273,10 @@ class prestashop_backend(orm.Model):
 
     def _scheduler_import_refunds(self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_refunds,
+                               domain=domain, context=context)
+
+    def _scheduler_import_suppliers(self, cr, uid, domain=None, context=None):
+        self._scheduler_launch(cr, uid, self.import_suppliers,
                                domain=domain, context=context)
 
 

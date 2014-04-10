@@ -214,6 +214,29 @@ class PartnerImportMapper(PrestashopImportMapper):
 
 
 @prestashop
+class SupplierMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.supplier'
+
+    direct = [
+        ('name', 'name'),
+        ('id', 'prestashop_id'),
+        ('active', 'active'),
+    ]
+
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def supplier(self, record):
+        return {'supplier': True}
+
+
+@prestashop
 class AddressImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.address'
 

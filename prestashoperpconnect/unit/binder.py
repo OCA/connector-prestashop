@@ -58,6 +58,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.sale.order.state',
         'prestashop.delivery.carrier',
         'prestashop.refund',
+        'prestashop.supplier',
     ]
 
     def to_openerp(self, external_id, unwrap=False):

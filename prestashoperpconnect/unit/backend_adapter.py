@@ -249,3 +249,9 @@ class OrderPaymentAdapter(GenericAdapter):
 class OrderDiscountAdapter(GenericAdapter):
     _model_name = 'prestashop.sale.order.line.discount'
     _prestashop_model = 'order_discounts'
+
+
+@prestashop
+class SupplierAdapter(GenericAdapter):
+    _model_name = 'prestashop.supplier'
+    _prestashop_model = 'suppliers'

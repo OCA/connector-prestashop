@@ -54,6 +54,19 @@
             <field name="args" eval="'()'"/>
         </record>
 
+        <record forcecreate="True" id="ir_cron_import_suppliers" model="ir.cron">
+            <field name="name">Prestashop -  Import suppliers</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_import_suppliers'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+
         <record forcecreate="True" id="ir_cron_import_carriers" model="ir.cron">
             <field name="name">Prestashop -  Import Carriers</field>
             <field name="active" eval="False"/>

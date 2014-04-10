@@ -33,3 +33,4 @@ import setting
 import delivery
 import consumer
 import account
+import models
