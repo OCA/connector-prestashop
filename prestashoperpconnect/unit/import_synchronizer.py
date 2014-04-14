@@ -271,6 +271,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.sale.order',
         'prestashop.refund',
         'prestashop.supplier',
+        'prestashop.product.supplierinfo',
     ]
 
     def _import_record(self, record, **kwargs):
@@ -317,9 +318,43 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
         'prestashop.shop',
         'prestashop.address',
         'prestashop.account.tax.group',
-        'prestashop.supplier',
     ]
 
+
+@prestashop
+class SupplierRecordImport(PrestashopImportSynchronizer):
+    """ Import one simple record """
+    _model_name = 'prestashop.supplier'
+
+    def _after_import(self, erp_id):
+        binder = self.get_binder_for_model(self._model_name)
+        ps_id = binder.to_backend(erp_id)
+        import_batch(
+            self.session,
+            'prestashop.product.supplierinfo',
+            self.backend_record.id,
+            filters={'filter[id_supplier]': '%d' % ps_id},
+            priority=10,
+        )
+
+
+@prestashop
+class SupplierInfoImport(PrestashopImportSynchronizer):
+    _model_name = 'prestashop.product.supplierinfo'
+
+    def _import_dependencies(self):
+        record = self.prestashop_record
+        self._check_dependency(record['id_supplier'], 'prestashop.supplier')
+        if record['id_product']:
+            self._check_dependency(
+                record['id_product'], 'prestashop.product.product'
+            )
+
+        if record['id_product_attribute']:
+            self._check_dependency(
+                record['id_product_attribute'],
+                'prestashop.product.combination'
+            )
 
 @prestashop
 class SaleImportRule(ConnectorUnit):

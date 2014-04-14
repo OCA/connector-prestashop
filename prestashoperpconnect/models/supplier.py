@@ -26,3 +26,30 @@ class prestashop_supplier(orm.Model):
             ondelete='cascade'
         ),
     }
+
+
+class product_supplierinfo(orm.Model):
+    _inherit = 'product.supplierinfo'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.product.supplierinfo',
+            'openerp_id',
+            string="Prestashop bindings",
+        ),
+    }
+
+
+class prestashop_product_supplierinfo(orm.Model):
+    _name = 'prestashop.product.supplierinfo'
+    _inherit = 'prestashop.binding'
+    _inherits = {'product.supplierinfo': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'product.supplierinfo',
+            string='Supplier info',
+            required=True,
+            ondelete='cascade'
+        ),
+    }

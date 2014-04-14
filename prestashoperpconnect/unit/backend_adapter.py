@@ -270,3 +270,9 @@ class OrderDiscountAdapter(GenericAdapter):
 class SupplierAdapter(GenericAdapter):
     _model_name = 'prestashop.supplier'
     _prestashop_model = 'suppliers'
+
+
+@prestashop
+class SupplierInfoAdapter(GenericAdapter):
+    _model_name = 'prestashop.product.supplierinfo'
+    _prestashop_model = 'product_suppliers'
