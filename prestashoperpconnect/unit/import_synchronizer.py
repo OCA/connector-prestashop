@@ -352,12 +352,11 @@ class SupplierInfoImport(PrestashopImportSynchronizer):
     def _import_dependencies(self):
         record = self.prestashop_record
         self._check_dependency(record['id_supplier'], 'prestashop.supplier')
-        if record['id_product']:
-            self._check_dependency(
-                record['id_product'], 'prestashop.product.product'
-            )
+        self._check_dependency(
+            record['id_product'], 'prestashop.product.product'
+        )
 
-        if record['id_product_attribute']:
+        if record['id_product_attribute'] != '0':
             self._check_dependency(
                 record['id_product_attribute'],
                 'prestashop.product.combination'
