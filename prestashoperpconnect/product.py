@@ -238,21 +238,6 @@ class ProductMapper(PrestashopImportMapper):
         return len(product_ids) > 0
 
     @mapping
-    def image(self, record):
-        if record['id_default_image']['value'] == '':
-            return {}
-        adapter = self.get_connector_unit_for_model(
-            PrestaShopCRUDAdapter,
-            'prestashop.product.image'
-        )
-        try:
-            image = adapter.read(record['id'],
-                                 record['id_default_image']['value'])
-            return {"image": image['content']}
-        except PrestaShopWebServiceError:
-            return {}
-
-    @mapping
     def default_code(self, record):
         code = record.get('reference')
         if not code:
