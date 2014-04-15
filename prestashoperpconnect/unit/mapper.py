@@ -246,7 +246,10 @@ class SupplierMapper(PrestashopImportMapper):
         supplier_image_adapter = self.get_connector_unit_for_model(
             PrestaShopCRUDAdapter, 'prestashop.supplier.image'
         )
-        return {'image': supplier_image_adapter.read(record['id'])}
+        try:
+            return {'image': supplier_image_adapter.read(record['id'])}
+        except:
+            return {}
 
 
 @prestashop
