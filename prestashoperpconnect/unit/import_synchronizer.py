@@ -326,6 +326,13 @@ class SupplierRecordImport(PrestashopImportSynchronizer):
     """ Import one simple record """
     _model_name = 'prestashop.supplier'
 
+    def _create(self, record):
+        try:
+            return super(SupplierRecordImport, self)._create(record)
+        except ZeroDivisionError:
+            del record['image']
+            return super(SupplierRecordImport, self)._create(record)
+
     def _after_import(self, erp_id):
         binder = self.get_binder_for_model(self._model_name)
         ps_id = binder.to_backend(erp_id)
