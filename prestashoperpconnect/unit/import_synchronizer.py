@@ -454,6 +454,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         self._check_dependency(record['id_address_delivery'],
                                'prestashop.address')
 
+        self._check_refunds(record['id_customer'])
         if record['id_carrier'] != '0':
             self._check_dependency(record['id_carrier'],
                                    'prestashop.delivery.carrier')
@@ -467,6 +468,15 @@ class SaleOrderImport(PrestashopImportSynchronizer):
                                        'prestashop.product.product')
             except PrestaShopWebServiceError:
                 pass
+
+    def _check_refunds(self, id_customer):
+        backend_adapter = self.get_connector_unit_for_model(
+            GenericAdapter, 'pretashop.refund'
+        )
+        filters = {'filter[id_customer]': id_customer}
+        refund_ids = backend_adapter.search(filters=filters)
+        for refund_id in refund_ids:
+            self._check_dependency(refund_id, 'prestashop.refund')
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
