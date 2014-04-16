@@ -144,11 +144,18 @@
                             </div>
                         </group>
                         <group>
-                            <label string="Update all the products stock quantities" class="oe_inline"/>
+                            <label string="Export stock quantities" class="oe_inline"/>
                             <button name="update_product_stock_qty"
                                 type="object"
                                 class="oe_highlight"
-                                string="Update in background"/>
+                                string="Export in background"/>
+                        </group>
+                        <group>
+                            <label string="Import stock quantities" class="oe_inline"/>
+                            <button name="import_stock_qty"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
                         </group>
                     </page>
                     <page string="Languages">

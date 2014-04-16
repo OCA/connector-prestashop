@@ -192,6 +192,14 @@ class prestashop_backend(orm.Model):
                                                 context=context)
         return True
 
+    def import_stock_qty(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        from .product import import_inventory
+        for backend_id in ids:
+            import_inventory.delay(session, backend_id)
+
     def import_sale_orders(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
