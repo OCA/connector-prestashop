@@ -471,7 +471,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
 
     def _check_refunds(self, id_customer):
         backend_adapter = self.get_connector_unit_for_model(
-            GenericAdapter, 'pretashop.refund'
+            GenericAdapter, 'prestashop.refund'
         )
         filters = {'filter[id_customer]': id_customer}
         refund_ids = backend_adapter.search(filters=filters)
