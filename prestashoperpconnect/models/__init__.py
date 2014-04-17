@@ -1,1 +1,2 @@
+import stock
 import supplier
