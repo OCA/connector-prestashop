@@ -270,6 +270,10 @@ class ProductMapper(PrestashopImportMapper):
         return {'sale_ok': sale_ok}
 
     @mapping
+    def purchase_ok(self, record):
+        return {'purchase_ok': not self.has_combinations(record)}
+
+    @mapping
     def categ_id(self, record):
         if not int(record['id_category_default']):
             return
