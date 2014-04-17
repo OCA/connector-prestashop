@@ -454,7 +454,9 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         self._check_dependency(record['id_address_delivery'],
                                'prestashop.address')
 
-        self._check_refunds(record['id_customer'])
+        if not('so_refund_no_dep' in self.session.context 
+               and self.session.context['so_refund_no_dep']):
+            self._check_refunds(record['id_customer'])
         if record['id_carrier'] != '0':
             self._check_dependency(record['id_carrier'],
                                    'prestashop.delivery.carrier')

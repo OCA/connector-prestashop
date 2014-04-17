@@ -121,7 +121,9 @@ class RefundImport(PrestashopImportSynchronizer):
     def _import_dependencies(self):
         record = self.prestashop_record
         self._check_dependency(record['id_customer'], 'prestashop.res.partner')
+        self.session.context['so_refund_no_dep'] = True
         self._check_dependency(record['id_order'], 'prestashop.sale.order')
+        del self.session.context['so_refund_no_dep']
 
     def _after_import(self, refund_id):
         context = self.session.context
