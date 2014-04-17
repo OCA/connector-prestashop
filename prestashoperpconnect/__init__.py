@@ -24,7 +24,6 @@
 
 import backend
 import connector
-import prestashop_model
 import product
 import product_combination
 import sale

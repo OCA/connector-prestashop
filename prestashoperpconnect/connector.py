@@ -24,13 +24,6 @@ from openerp.osv import orm
 from openerp.addons.connector.connector import Environment
 from openerp.addons.connector.checkpoint import checkpoint
 
-class prestashoperpconnect_installed(orm.AbstractModel):
-    """Empty model used to know if the module is installed in the
-    database.
-
-    If the model is in the registry, the module is installed.
-    """
-    _name = 'prestashoperpconnect.installed'
 
 def add_checkpoint(session, model_name, record_id, backend_id):
     """ Add a row in the model ``connector.checkpoint`` for a record,
