@@ -1,8 +1,8 @@
+import prestashop_model
 import account
 import connector
 import delivery
 import partner
-import prestashop_model
 import product
 import product_combination
 import sale

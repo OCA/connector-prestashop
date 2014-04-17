@@ -33,7 +33,7 @@ from openerp.osv import fields, orm
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
-from .unit.import_synchronizer import (
+from ..unit.import_synchronizer import (
     import_batch,
     import_customers_since,
     import_orders_since,
@@ -42,8 +42,8 @@ from .unit.import_synchronizer import (
     import_carriers,
     import_suppliers,
 )
-from .unit.direct_binder import DirectBinder
-from .connector import get_environment
+from ..unit.direct_binder import DirectBinder
+from ..connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
