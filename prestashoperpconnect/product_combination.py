@@ -11,6 +11,7 @@ the main product.
 '''
 
 from unidecode import unidecode
+import json
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, orm
@@ -24,6 +25,8 @@ from openerp.addons.connector.unit.mapper import mapping
 from openerp.osv.orm import browse_record_list
 
 from openerp.addons.product.product import check_ean
+
+from .product import ProductInventoryExport
 
 class product_product(orm.Model):
     _inherit = 'product.product'
@@ -55,13 +58,39 @@ class prestashop_product_combination(orm.Model):
             required=True,
             ondelete='cascade'
         ),
+        'quantity': fields.float(
+            'Computed Quantity',
+            help="Last computed quantity to send on Prestashop."
+        ),
     }
+
+    def recompute_prestashop_qty(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+
+        for product in self.browse(cr, uid, ids, context=context):
+            new_qty = self._prestashop_qty(cr, uid, product, context=context)
+            if new_qty == product.quantity:
+                continue
+            self.write(
+                cr, uid, product.id, {'quantity': new_qty}, context=context
+            )
+        return True
+
+    def _prestashop_qty(self, cr, uid, product, context=None):
+        return product.qty_available
 
 
 @prestashop
 class ProductCombinationAdapter(GenericAdapter):
     _model_name = 'prestashop.product.combination'
     _prestashop_model = 'combinations'
+
+    def update_inventory(self, id, attributes):
+        api = self.connect()
+        if attributes is None:
+            attributes = {}
+        return api.edit('stock_availables', attributes)
 
 
 @prestashop
@@ -365,6 +394,8 @@ class ProductCombinationOptionMapper(PrestashopImportMapper):
             for lang in languages:
                 erp_language_id = language_binder.to_openerp(
                     lang['attrs']['id'])
+                if not erp_language_id:
+                    continue
                 erp_lang = self.session.read(
                     'prestashop.res.lang',
                     erp_language_id,
@@ -443,3 +474,28 @@ class ProductCombinationOptionValueMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+
+@prestashop
+class CombinationInventoryExport(ProductInventoryExport):
+    _model_name = ['prestashop.product.combination']
+
+    def _get_data(self, product, fields):
+        if 'quantity' not in fields:
+            return {}
+        options = {
+            'filter[id_product]': product.main_product_id.prestashop_id,
+            'filter[id_product_attribute]': product.prestashop_id,
+            'filter[id_shop]': product.main_product_id.default_shop_id.prestashop_id,
+        }
+        stock_adapter = self.get_connector_unit_for_model(GenericAdapter, '_import_stock_available')
+        stock_ids = stock_adapter.search(options)
+        return {
+            'quantity': int(product.quantity),
+            "id_product": product.main_product_id.prestashop_id,
+            "id_product_attribute": product.prestashop_id,
+            'depends_on_stock': 0,
+            'out_of_stock': product.quantity > 0 and 1 or 0,
+            'id': stock_ids[0],
+            'id_shop': product.main_product_id.default_shop_id.prestashop_id,
+        }

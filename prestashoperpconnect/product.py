@@ -603,11 +603,13 @@ class ProductInventoryAdapter(GenericAdapter):
 
 # fields which should not trigger an export of the products
 # but an export of their inventory
-INVENTORY_FIELDS = ('quantity',
-                    )
+INVENTORY_FIELDS = ('quantity',)
 
 
-@on_record_write(model_names='prestashop.product.product')
+@on_record_write(model_names=[
+    'prestashop.product.product',
+    'prestashop.product.combination'
+])
 def prestashop_product_stock_updated(session, model_name, record_id,
                                      fields=None):
     if session.context.get('connector_no_export'):
