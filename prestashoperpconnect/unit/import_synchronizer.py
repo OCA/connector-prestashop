@@ -944,9 +944,7 @@ def import_suppliers(session, backend_id, since_date):
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     import_batch(session, 'prestashop.supplier', backend_id, filters)
-    import_batch(
-        session, 'prestashop.product.supplierinfo', backend_id, filters
-    )
+    import_batch(session, 'prestashop.product.supplierinfo', backend_id)
     session.pool.get('prestashop.backend').write(
         session.cr,
         session.uid,
