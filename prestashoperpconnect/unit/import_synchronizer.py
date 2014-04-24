@@ -272,6 +272,7 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.refund',
         'prestashop.supplier',
         'prestashop.product.supplierinfo',
+        'prestashop.mail.message',
     ]
 
     def _import_record(self, record, **kwargs):
@@ -319,6 +320,22 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
         'prestashop.address',
         'prestashop.account.tax.group',
     ]
+
+
+@prestashop
+class MailMessageRecordImport(PrestashopImportSynchronizer):
+    """ Import one simple record """
+    _model_name = 'prestashop.mail.message'
+
+    def _import_dependencies(self):
+        record = self.prestashop_record
+        self._check_dependency(record['id_order'], 'prestashop.sale.order')
+        if record['id_customer'] != '0':
+            self._check_dependency(record['id_customer'], 'prestasop.res.partner')
+
+    def _has_to_skip(self):
+        record = self.prestashop_record
+        return record['id_order'] == '0'
 
 
 @prestashop
@@ -890,6 +907,10 @@ def import_orders_since(session, backend_id, since_date=None):
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
     import_batch(session, 'prestashop.sale.order', backend_id, filters, priority=10, max_retries=0)
+
+    if since_date:
+        filters = {'date': '1', 'filter[date_add]':'>[%s]' % date_str}
+    import_batch(session, 'prestashop.mail.message', backend_id, filters, priority=10)
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(

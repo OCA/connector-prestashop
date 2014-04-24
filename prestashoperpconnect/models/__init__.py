@@ -9,3 +9,4 @@ import sale
 import setting
 import stock
 import supplier
+import mail_message

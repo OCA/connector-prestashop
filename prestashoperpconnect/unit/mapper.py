@@ -730,3 +730,39 @@ class TranslationPrestashopExportMapper(PrestashopExportMapper):
                 })
             res[to_attr] = value
         return res
+
+
+@prestashop
+class MailMessageMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.mail.message'
+
+    direct = [
+        ('message', 'body'),
+    ]
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def type(self, record):
+        return {'type': 'comment'}
+
+    @mapping
+    def object_ref(self, record):
+        binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.sale.order'
+        )
+        order_id = binder.to_openerp(record['id_order'], unwrap=True)
+        return {
+            'model': 'sale.order',
+            'res_id': order_id,
+        }
+
+    @mapping
+    def author_id(self, record):
+        if record['id_customer'] != '0':
+            binder = self.get_connector_unit_for_model(Binder, 'prestashop.res.partner')
+            partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
+            return {'author_id': partner_id}
+        return {}

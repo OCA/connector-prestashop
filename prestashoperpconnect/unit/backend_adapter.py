@@ -276,3 +276,8 @@ class SupplierAdapter(GenericAdapter):
 class SupplierInfoAdapter(GenericAdapter):
     _model_name = 'prestashop.product.supplierinfo'
     _prestashop_model = 'product_suppliers'
+
+@prestashop
+class MailMessageAdapter(GenericAdapter):
+    _model_name = 'prestashop.mail.message'
+    _prestashop_model = 'messages'

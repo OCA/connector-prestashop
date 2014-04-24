@@ -60,6 +60,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.refund',
         'prestashop.supplier',
         'prestashop.product.supplierinfo',
+        'prestashop.mail.message',
     ]
 
     def to_openerp(self, external_id, unwrap=False):
