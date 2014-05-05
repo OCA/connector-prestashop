@@ -37,6 +37,8 @@ from backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
 from openerp.addons.connector.connector import Binder
+from openerp.addons.connector.unit.mapper import only_create
+
 
 
 class PrestashopImportMapper(ImportMapper):
@@ -766,3 +768,56 @@ class MailMessageMapper(PrestashopImportMapper):
             partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
             return {'author_id': partner_id}
         return {}
+
+
+@prestashop
+class MrpBomMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.mrp.bom'
+
+    direct = []
+
+    @mapping
+    def static(self, record):
+        return {
+            'type': 'phantom',
+            'product_qty': 1,
+        }
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
+
+    @mapping
+    def product_id(self, record):
+        binder = self.get_connector_unit_for_model(Binder, 'prestashop.product.product')
+        product_id = binder.to_openerp(record['id'], unwrap=True)
+
+        product = self.session.browse('product.product', product_id)
+        return {
+            'product_id': product_id,
+            'product_uom': product.uom_id.id,
+        }
+
+    @mapping
+    @only_create
+    def bom_lines(self, record):
+        lines = []
+        bundle = record.get('associations', {}).get('product_bundle', {})
+        if 'products' not in bundle:
+            return {}
+        binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.product.product',
+        )
+        for product in bundle['products']:
+            product_oerp_id = binder.to_openerp(product['id'], unwrap=True)
+            product_oerp = self.session.browse('product.product', product_oerp_id)
+            lines.append((0, 0, {
+                'product_id': product_oerp_id,
+                'product_qty': product['quantity'],
+                'product_uom': product_oerp.uom_id.id,
+            }))
+        return {'bom_lines': lines}

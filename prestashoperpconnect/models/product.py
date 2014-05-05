@@ -171,6 +171,10 @@ class prestashop_product_product(orm.Model):
             'main_product_id',
             string='Combinations'
         ),
+        'prestashop_bundle_id': fields.many2one(
+            'prestashop.mrp.bom',
+            'Prestashop bundle',
+        ),
     }
 
     _sql_constraints = [
@@ -204,3 +208,29 @@ class prestashop_product_product(orm.Model):
             cr, uid, product.id, [stock_field], context=location_ctx
         )
         return product_stk[stock_field]
+
+
+class mrp_bom(orm.Model):
+    _inherit = 'mrp.bom'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.mrp.bom',
+            'openerp_id',
+            string='PrestaShop Bindings'
+        ),
+    }
+
+class prestashop_mrp_bom(orm.Model):
+    _name = 'prestashop.mrp.bom'
+    _inherit = 'prestashop.binding'
+    _inherits = {'mrp.bom': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'mrp.bom',
+            string='Openerp BOM',
+            required=True,
+            ondelete='cascade'
+        ),
+    }

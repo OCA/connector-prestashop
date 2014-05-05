@@ -33,6 +33,7 @@
         "connector_ecommerce",
         "product_images",
         "product_custom_attributes",
+        "mrp",
     ],
     "external_dependencies": {
         'python': ["unidecode"],

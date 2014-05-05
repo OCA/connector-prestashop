@@ -323,6 +323,22 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
 
 
 @prestashop
+class MrpBomImport(PrestashopImportSynchronizer):
+    _model_name = [
+        'prestashop.mrp.bom',
+    ]
+
+    def _import_dependencies(self):
+        record = self.prestashop_record
+
+        bundle = record.get('associations', {}).get('product_bundle', {})
+        if 'products' not in bundle:
+            return
+        for product in bundle['products']:
+            self._check_dependency(product['id'], 'prestashop.product.product')
+
+
+@prestashop
 class MailMessageRecordImport(PrestashopImportSynchronizer):
     """ Import one simple record """
     _model_name = 'prestashop.mail.message'
@@ -664,9 +680,25 @@ class ProductRecordImport(TranslatableRecordImport):
         ],
     }
 
-    def run(self, prestashop_id):
-        super(ProductRecordImport, self).run(prestashop_id)
+    def _after_import(self, erp_id):
+        self.import_combinations()
+        self.import_images()
+        self.import_default_image()
+        self.import_bundle()
+    
+    def import_bundle(self):
+        record = self._get_prestashop_data()
+        bundle = record.get('associations', {}).get('product_bundle', {})
+        if 'products' not in bundle:
+            return
+        import_record(
+            self.session,
+            'prestashop.mrp.bom',
+            self.backend_record.id,
+            record['id']
+        )
 
+    def import_combinations(self):
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
 
@@ -683,6 +715,9 @@ class ProductRecordImport(TranslatableRecordImport):
                     combination['id']
                 )
 
+    def import_images(self):
+        prestashop_record = self._get_prestashop_data()
+        associations = prestashop_record.get('associations', {})
         images = associations.get('images', {}).get('image', {})
         if not isinstance(images, list):
             images = [images]
@@ -697,9 +732,7 @@ class ProductRecordImport(TranslatableRecordImport):
                     priority=10,
                 )
 
-        self.import_default_image(prestashop_id)
-
-    def import_default_image(self, ps_id):
+    def import_default_image(self):
         record = self._get_prestashop_data()
         if record['id_default_image']['value'] == '':
             return
@@ -708,7 +741,7 @@ class ProductRecordImport(TranslatableRecordImport):
             'prestashop.product.image'
         )
         binder = self.get_binder_for_model()
-        product_id = binder.to_openerp(ps_id)
+        product_id = binder.to_openerp(record['id'])
         try:
             image = adapter.read(record['id'],
                                  record['id_default_image']['value'])

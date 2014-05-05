@@ -61,6 +61,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.supplier',
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
+        'prestashop.mrp.bom',
     ]
 
     def to_openerp(self, external_id, unwrap=False):
