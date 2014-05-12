@@ -234,3 +234,30 @@ class prestashop_mrp_bom(orm.Model):
             ondelete='cascade'
         ),
     }
+
+
+class product_pricelist(orm.Model):
+    _inherit = 'product.pricelist'
+
+    _columns = {
+        'prestashop_groups_bind_ids': fields.one2many(
+            'prestashop.groups.pricelist',
+            'openerp_id',
+            string='Prestashop user groups'
+        ),
+    }
+
+
+class prestashop_groups_pricelist(orm.Model):
+    _name = 'prestashop.groups.pricelist'
+    _inherit = 'prestashop.binding'
+    _inherits = {'product.pricelist': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'product.pricelist',
+            string='Openerp Pricelist',
+            required=True,
+            ondelete='cascade'
+        ),
+    }

@@ -524,13 +524,9 @@ class SaleOrderImport(PrestashopImportSynchronizer):
 @prestashop
 class TranslatableRecordImport(PrestashopImportSynchronizer):
     """ Import one translatable record """
-    _model_name = [
-        'prestashop.res.partner.category',
-    ]
+    _model_name = []
 
-    _translatable_fields = {
-        'prestashop.res.partner.category': ['name'],
-    }
+    _translatable_fields = {}
 
     _default_language = 'en_US'
 
@@ -635,6 +631,27 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
             erp_id = self._create(record, context)
 
         return erp_id
+
+@prestashop
+class PartnerCategoryRecordImport(PrestashopImportSynchronizer):
+    """ Import one translatable record """
+    _model_name = [
+        'prestashop.res.partner.category',
+    ]
+
+    _translatable_fields = {
+        'prestashop.res.partner.category': ['name'],
+    }
+
+    def _after_import(self, erp_id):
+        record = self._get_prestashop_data()
+        if float(record['reduction']):
+            import_record(
+                self.session,
+                'prestashop.groups.pricelist',
+                self.backend_record.id,
+                record['id']
+            )
 
 
 @prestashop
@@ -883,6 +900,22 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
         #self.binder.bind(self.prestashop_id, erp_id)
 
         self._after_import(erp_id)
+
+
+@prestashop
+class ProductPricelistImport(TranslatableRecordImport):
+    _model_name = [
+        'prestashop.groups.pricelist',
+    ]
+
+    _translatable_fields = {
+        'prestashop.groups.pricelist': ['name'],
+    }
+
+    def _run_record(self, prestashop_record, lang_code, erp_id=None):
+        return super(ProductPricelistImport, self)._run_record(
+            prestashop_record, lang_code, erp_id=erp_id
+        )
 
 
 @job

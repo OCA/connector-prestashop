@@ -27,3 +27,4 @@ access_prestashop_product_combination_option_value_full,Full access on prestasho
 access_prestashop_refund,Full access on prestashop.refund,model_prestashop_refund,connector.group_connector_manager,1,1,1,1
 access_prestashop_supplier,Full access on prestashop.supplier,model_prestashop_supplier,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_supplierinfo,Full access on prestashop.product.supplierinfo,model_prestashop_product_supplierinfo,connector.group_connector_manager,1,1,1,1
+access_prestashop_groups_pricelist,Full access on prestashop.groups.pricelist,model_prestashop_groups_pricelist,connector.group_connector_manager,1,1,1,1

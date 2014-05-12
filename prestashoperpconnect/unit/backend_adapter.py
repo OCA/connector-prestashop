@@ -287,3 +287,9 @@ class MailMessageAdapter(GenericAdapter):
 class BundleAdapter(GenericAdapter):
     _model_name = 'prestashop.mrp.bom'
     _prestashop_model = 'products'
+
+
+@prestashop
+class PricelistAdapter(GenericAdapter):
+    _model_name = 'prestashop.groups.pricelist'
+    _prestashop_model = 'groups'

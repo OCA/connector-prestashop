@@ -145,6 +145,14 @@ class PartnerImportMapper(PrestashopImportMapper):
     ]
 
     @mapping
+    def pricelist(self, record):
+        binder = self.get_connector_unit_for_model(Binder, 'prestashop.groups.pricelist')
+        pricelist_id = binder.to_openerp(record['id_default_group'], unwrap=True)
+        if not pricelist_id:
+            return {}
+        return {'property_product_pricelist': pricelist_id}
+
+    @mapping
     def birthday(self, record):
         if record['birthday'] in ['0000-00-00', '']:
             return {}
@@ -821,3 +829,40 @@ class MrpBomMapper(PrestashopImportMapper):
                 'product_uom': product_oerp.uom_id.id,
             }))
         return {'bom_lines': lines}
+
+
+@prestashop
+class ProductPricelistMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.groups.pricelist'
+
+    direct = [
+        ('name', 'name'),
+    ]
+
+    @mapping
+    def static(self, record):
+        return {'active': True, 'type': 'sale'}
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def company_id(self, record):
+        return {'company_id': self.backend_record.company_id.id}
+
+    @mapping
+    @only_create
+    def versions(self, record):
+        item = {
+            'min_quantity': 0,
+            'sequence': 5,
+            'base': 1,
+            'price_discount': - float(record['reduction']) / 100.0,
+        }
+        version = {
+            'name': 'Version',
+            'active': True,
+            'items_id': [(0, 0, item)],
+        }
+        return {'version_id': [(0, 0, version)]}

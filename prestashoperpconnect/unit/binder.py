@@ -62,6 +62,7 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
         'prestashop.mrp.bom',
+        'prestashop.groups.pricelist',
     ]
 
     def to_openerp(self, external_id, unwrap=False):
