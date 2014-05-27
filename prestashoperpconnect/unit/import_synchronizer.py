@@ -508,7 +508,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
 
         if not('so_refund_no_dep' in self.session.context 
                and self.session.context['so_refund_no_dep']):
-            self._check_refunds(record['id_customer'])
+            self._check_refunds(record['id_customer'], record['id'])
         if record['id_carrier'] != '0':
             self._check_dependency(record['id_carrier'],
                                    'prestashop.delivery.carrier')
@@ -523,13 +523,16 @@ class SaleOrderImport(PrestashopImportSynchronizer):
             except PrestaShopWebServiceError:
                 pass
 
-    def _check_refunds(self, id_customer):
+    def _check_refunds(self, id_customer, id_order):
         backend_adapter = self.get_connector_unit_for_model(
             GenericAdapter, 'prestashop.refund'
         )
         filters = {'filter[id_customer]': id_customer}
         refund_ids = backend_adapter.search(filters=filters)
         for refund_id in refund_ids:
+            refund = backend_adapter.read(refund_id)
+            if refund['id_order'] == id_order:
+                continue
             self._check_dependency(refund_id, 'prestashop.refund')
 
     def _has_to_skip(self):

@@ -81,15 +81,15 @@ class RefundMapper(PrestashopImportMapper):
 
     def _get_order(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
-        sale_order_id = binder.to_openerp(record['id_order'], unwrap=True)
+        sale_order_id = binder.to_openerp(record['id_order'])
         return self.session.read('prestashop.sale.order', sale_order_id, [])
 
     @mapping
     def from_sale_order(self, record):
         sale_order = self._get_order(record)
         fiscal_position = None
-        if sale_order['fiscal_position']:
-            fiscal_position = sale_order['fiscal_position'][0]
+        if sale_order.fiscal_position:
+            fiscal_position = sale_order.fiscal_position.id
         return {
             'origin': sale_order['name'],
             'fiscal_position': fiscal_position,
@@ -155,7 +155,7 @@ class RefundMapper(PrestashopImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
-        sale_order_id = binder.to_openerp(record['id_order'], unwrap=True)
+        sale_order_id = binder.to_openerp(record['id_order'])
         sale_order = self.session.browse('prestashop.sale.order', sale_order_id)
 
         if not sale_order.carrier_id:
