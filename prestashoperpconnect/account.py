@@ -82,7 +82,7 @@ class RefundMapper(PrestashopImportMapper):
     def _get_order(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'])
-        return self.session.read('prestashop.sale.order', sale_order_id, [])
+        return self.session.browse('prestashop.sale.order', sale_order_id)
 
     @mapping
     def from_sale_order(self, record):
