@@ -134,6 +134,7 @@ class ProductMapper(PrestashopImportMapper):
         ('price', 'list_price'),
         ('id_shop_default', 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
+        ('reference', 'reference'),
     ]
 
     @mapping
@@ -307,32 +308,27 @@ class ProductAdapter(GenericAdapter):
 class ProductInventoryExport(ExportSynchronizer):
     _model_name = ['prestashop.product.product']
 
-    def _get_data(self, product, fields):
-        if 'quantity' in fields:
-            return {
-                'quantity': int(product.quantity),
-                'id_product': product.prestashop_id,
-                'id_product_attribute': 0,
-                'depends_on_stock': 0,
-                'out_of_stock': product.quantity > 0 and 1 or 0,
-                'id': json.dumps({
-                    "id_product": product.prestashop_id,
-                    "id_product_attribute": 0
-                }),
-                'id_shop': product.default_shop_id.prestashop_id,
-                #TODO FIXME: what datas
-                #'id_shop_group': 0,
-            }
-        return {}
+    def get_filter(self, product):
+        binder = self.get_binder_for_model()
+        prestashop_id = binder.to_backend(product.id)
+        return {
+            'filter[id_product]': prestashop_id,
+            'filter[id_product_attribute]': 0
+        }
 
     def run(self, binding_id, fields):
         """ Export the product inventory to Prestashop """
         product = self.session.browse(self.model._name, binding_id)
-        binder = self.get_binder_for_model()
-        prestashop_id = binder.to_backend(product.id)
-        attributes = {'stock_available': self._get_data(product, fields)}
-        if attributes['stock_available']:
-            self.backend_adapter.update_inventory(prestashop_id, attributes)
+        adapter = self.get_connector_unit_for_model(
+            GenericAdapter, '_import_stock_available'
+        )
+        filter = self.get_filter(product)
+        response = adapter.search(filter)
+        #assert len(response) == 1, 'Found %d stocks' % len(response)
+        for stock_id in response:
+            stock = adapter.read(stock_id)
+            stock['quantity'] = int(product.quantity)
+            adapter.write(stock_id, stock)
 
 
 @prestashop

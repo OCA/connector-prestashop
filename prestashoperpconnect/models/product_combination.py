@@ -12,6 +12,10 @@ the main product.
 
 from openerp.osv import fields, orm
 
+from openerp.addons.connector.session import ConnectorSession
+
+from ..unit.import_synchronizer import import_record
+
 
 class product_product(orm.Model):
     _inherit = 'product.product'
@@ -47,6 +51,7 @@ class prestashop_product_combination(orm.Model):
             'Computed Quantity',
             help="Last computed quantity to send on Prestashop."
         ),
+        'reference': fields.char('Original reference'),
     }
 
     def recompute_prestashop_qty(self, cr, uid, ids, context=None):
@@ -55,8 +60,6 @@ class prestashop_product_combination(orm.Model):
 
         for product in self.browse(cr, uid, ids, context=context):
             new_qty = self._prestashop_qty(cr, uid, product, context=context)
-            if new_qty == product.quantity:
-                continue
             self.write(
                 cr, uid, product.id, {'quantity': new_qty}, context=context
             )

@@ -21,6 +21,10 @@
 
 from openerp.osv import fields, orm
 
+from openerp.addons.connector.session import ConnectorSession
+
+from ..unit.import_synchronizer import import_record
+
 
 class product_category(orm.Model):
     _inherit = 'product.category'
@@ -109,13 +113,14 @@ class product_product(orm.Model):
             cr, uid, id, default=default, context=context
         )
 
-    def _update_prestashop_quantities(self, cr, uid, ids, context=None):
+    def update_prestashop_quantities(self, cr, uid, ids, context=None):
         for product in self.browse(cr, uid, ids, context=context):
             for prestashop_product in product.prestashop_bind_ids:
                 prestashop_product.recompute_prestashop_qty()
             prestashop_combinations = product.prestashop_combinations_bind_ids
             for prestashop_combination in prestashop_combinations:
                 prestashop_combination.recompute_prestashop_qty()
+        return True
 
 
 class prestashop_product_product(orm.Model):
@@ -171,6 +176,7 @@ class prestashop_product_product(orm.Model):
             'main_product_id',
             string='Combinations'
         ),
+        'reference': fields.char('Original reference'),
         'prestashop_bundle_id': fields.many2one(
             'prestashop.mrp.bom',
             'Prestashop bundle',
@@ -188,12 +194,11 @@ class prestashop_product_product(orm.Model):
 
         for product in self.browse(cr, uid, ids, context=context):
             new_qty = self._prestashop_qty(cr, uid, product, context=context)
-            if new_qty != product.quantity:
-                self.write(
-                    cr, uid, product.id,
-                    {'quantity': new_qty},
-                    context=context
-                )
+            self.write(
+                cr, uid, product.id,
+                {'quantity': new_qty},
+                context=context
+            )
         return True
 
     def _prestashop_qty(self, cr, uid, product, context=None):

@@ -19,6 +19,7 @@ from backend import prestashop
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import TranslatableRecordImport
+from .unit.import_synchronizer import import_batch
 from .unit.mapper import PrestashopImportMapper
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import mapping
@@ -27,6 +28,11 @@ from openerp.osv.orm import browse_record_list
 from openerp.addons.product.product import check_ean
 
 from .product import ProductInventoryExport
+
+try:
+    from xml.etree import cElementTree as ElementTree
+except ImportError, e:
+    from xml.etree import ElementTree
 
 
 @prestashop
@@ -51,11 +57,11 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
             'product_option_values', {}).get('product_option_value', [])
         if not isinstance(option_values, list):
             option_values = [option_values]
+        backend_adapter = self.get_connector_unit_for_model(
+            BackendAdapter,
+            'prestashop.product.combination.option.value'
+        )
         for option_value in option_values:
-            backend_adapter = self.get_connector_unit_for_model(
-                BackendAdapter,
-                'prestashop.product.combination.option.value'
-            )
             option_value = backend_adapter.read(option_value['id'])
             self._check_dependency(
                 option_value['id_attribute_group'],
@@ -92,6 +98,22 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
                 }
             )
 
+    def _after_import(self, erp_id):
+        record = self.prestashop_record
+        self.import_supplierinfo(record['id_product'], record['id'])
+
+    def import_supplierinfo(self, ps_product_id, ps_combination_id):
+        filters = {
+            'filter[id_product]': ps_product_id,
+            'filter[id_product_attribute]': ps_combination_id,
+        }
+        import_batch(
+            self.session,
+            'prestashop.product.supplierinfo',
+            self.backend_record.id,
+            filters=filters
+        )
+
 
 @prestashop
 class ProductCombinationMapper(PrestashopImportMapper):
@@ -99,8 +121,7 @@ class ProductCombinationMapper(PrestashopImportMapper):
 
     direct = [
         ('weight', 'weight'),
-        ('wholesale_price', 'standard_price'),
-        ('price', 'lst_price'),
+        ('reference', 'reference'),
     ]
 
     from_main = [
@@ -110,6 +131,23 @@ class ProductCombinationMapper(PrestashopImportMapper):
         'company_id',
         'image_medium',
     ]
+
+    @mapping
+    def price(self, record):
+        main_product = self.main_product(record)
+        if self.backend_record.taxes_included:
+            price = main_product.list_price_tax_inc + float(record['unit_price_impact'])
+            return {'list_price_tax_inc': price}
+        price = main_product.list_price + float(record['unit_price_impact'])
+        return {'list_price': price}
+
+    @mapping
+    def standard_price(self, record):
+        price = float(record['wholesale_price'])
+        if price == 0.0:
+            main_product = self.main_product(record)
+            price = main_product.standard_price
+        return {'standard_price': price}
 
     @mapping
     def type(self, record):
@@ -175,14 +213,6 @@ class ProductCombinationMapper(PrestashopImportMapper):
             yield option_value_object
 
     @mapping
-    def attributes_values(self, record):
-        results = {}
-        for option_value_object in self._get_option_value(record):
-            field_name = option_value_object.attribute_id.name
-            results[field_name] = option_value_object.id
-        return results
-
-    @mapping
     def name(self, record):
         product = self.main_product(record)
         options = []
@@ -191,6 +221,14 @@ class ProductCombinationMapper(PrestashopImportMapper):
             value = option_value_object.name
             options.append('%s:%s' % (key, value))
         return {'name': '%s (%s)' % (product.name, ' ; '.join(options))}
+
+    @mapping
+    def attributes_values(self, record):
+        results = {}
+        for option_value_object in self._get_option_value(record):
+            field_name = option_value_object.attribute_id.name
+            results[field_name] = option_value_object.id
+        return results
 
     @mapping
     def main_product_id(self, record):
@@ -374,22 +412,14 @@ class ProductCombinationOptionValueMapper(PrestashopImportMapper):
 class CombinationInventoryExport(ProductInventoryExport):
     _model_name = ['prestashop.product.combination']
 
-    def _get_data(self, product, fields):
-        if 'quantity' not in fields:
-            return {}
-        options = {
+    def get_filter(self, product):
+        return {
             'filter[id_product]': product.main_product_id.prestashop_id,
             'filter[id_product_attribute]': product.prestashop_id,
-            'filter[id_shop]': product.main_product_id.default_shop_id.prestashop_id,
         }
-        stock_adapter = self.get_connector_unit_for_model(GenericAdapter, '_import_stock_available')
-        stock_ids = stock_adapter.search(options)
-        return {
-            'quantity': int(product.quantity),
-            "id_product": product.main_product_id.prestashop_id,
-            "id_product_attribute": product.prestashop_id,
-            'depends_on_stock': 0,
-            'out_of_stock': product.quantity > 0 and 1 or 0,
-            'id': stock_ids[0],
-            'id_shop': product.main_product_id.default_shop_id.prestashop_id,
-        }
+
+    def run(self, binding_id, fields):
+        try:
+            super(CombinationInventoryExport, self).run(binding_id, fields)
+        except ElementTree.ParseError:
+            pass

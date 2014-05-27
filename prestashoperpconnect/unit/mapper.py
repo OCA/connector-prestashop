@@ -820,12 +820,15 @@ class MrpBomMapper(PrestashopImportMapper):
         binder = self.get_connector_unit_for_model(
             Binder, 'prestashop.product.product',
         )
-        for product in bundle['products']:
+        products = bundle['products']
+        if not isinstance(products, list):
+            products = [products]
+        for product in products:
             product_oerp_id = binder.to_openerp(product['id'], unwrap=True)
             product_oerp = self.session.browse('product.product', product_oerp_id)
             lines.append((0, 0, {
                 'product_id': product_oerp_id,
-                'product_qty': product['quantity'],
+                'product_qty': int(product['quantity']) or 1,
                 'product_uom': product_oerp.uom_id.id,
             }))
         return {'bom_lines': lines}

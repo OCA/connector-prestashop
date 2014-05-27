@@ -299,6 +299,15 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
             self._check_dependency(group['id'],
                                    'prestashop.res.partner.category')
 
+        if self.prestashop_record['company']:
+            name = self.prestashop_record['company']
+        else:
+            name = '%s %s' % (
+                self.prestashop_record['firstname'], 
+                self.prestashop_record['lastname']
+            )
+        self.create_account(self.prestashop_record['id'], name)
+
     def _after_import(self, erp_id):
         binder = self.get_binder_for_model(self._model_name)
         ps_id = binder.to_backend(erp_id)
@@ -334,7 +343,10 @@ class MrpBomImport(PrestashopImportSynchronizer):
         bundle = record.get('associations', {}).get('product_bundle', {})
         if 'products' not in bundle:
             return
-        for product in bundle['products']:
+        products = bundle['products']
+        if not isinstance(products, list):
+            products = [products]
+        for product in products:
             self._check_dependency(product['id'], 'prestashop.product.product')
 
 
@@ -347,11 +359,14 @@ class MailMessageRecordImport(PrestashopImportSynchronizer):
         record = self.prestashop_record
         self._check_dependency(record['id_order'], 'prestashop.sale.order')
         if record['id_customer'] != '0':
-            self._check_dependency(record['id_customer'], 'prestasop.res.partner')
+            self._check_dependency(record['id_customer'], 'prestashop.res.partner')
 
     def _has_to_skip(self):
         record = self.prestashop_record
-        return record['id_order'] == '0'
+        binder = self.get_binder_for_model('prestashop.sale.order')
+        ps_so_id = binder.to_openerp(record['id_order'])
+        return record['id_order'] == '0' or not ps_so_id
+
 
 
 @prestashop
@@ -384,16 +399,20 @@ class SupplierInfoImport(PrestashopImportSynchronizer):
 
     def _import_dependencies(self):
         record = self.prestashop_record
-        self._check_dependency(record['id_supplier'], 'prestashop.supplier')
-        self._check_dependency(
-            record['id_product'], 'prestashop.product.product'
-        )
-
-        if record['id_product_attribute'] != '0':
+        try:
+            self._check_dependency(record['id_supplier'], 'prestashop.supplier')
             self._check_dependency(
-                record['id_product_attribute'],
-                'prestashop.product.combination'
+                record['id_product'], 'prestashop.product.product'
             )
+
+            if record['id_product_attribute'] != '0':
+                self._check_dependency(
+                    record['id_product_attribute'],
+                    'prestashop.product.combination'
+                )
+        except PrestaShopWebServiceError:
+            raise NothingToDoJob('Error fetching a dependency')
+            
 
 @prestashop
 class SaleImportRule(ConnectorUnit):
@@ -483,7 +502,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         record = self.prestashop_record
         self._check_dependency(record['id_customer'], 'prestashop.res.partner')
         self._check_dependency(record['id_address_invoice'],
-                               'prestashop.address')
+                    	       'prestashop.address')
         self._check_dependency(record['id_address_delivery'],
                                'prestashop.address')
 
@@ -702,6 +721,7 @@ class ProductRecordImport(TranslatableRecordImport):
         self.import_images()
         self.import_default_image()
         self.import_bundle()
+        self.import_supplierinfo()
     
     def import_bundle(self):
         record = self._get_prestashop_data()
@@ -720,17 +740,16 @@ class ProductRecordImport(TranslatableRecordImport):
         associations = prestashop_record.get('associations', {})
 
         combinations = associations.get('combinations', {}).get(
-            'combinations', {})
+            'combinations', [])
         if not isinstance(combinations, list):
             combinations = [combinations]
         for combination in combinations:
-            if 'id' in combination:
-                import_record(
-                    self.session,
-                    'prestashop.product.combination',
-                    self.backend_record.id,
-                    combination['id']
-                )
+            import_record(
+                self.session,
+                'prestashop.product.combination',
+                self.backend_record.id,
+                combination['id']
+            )
 
     def import_images(self):
         prestashop_record = self._get_prestashop_data()
@@ -748,6 +767,20 @@ class ProductRecordImport(TranslatableRecordImport):
                     image['id'],
                     priority=10,
                 )
+
+
+    def import_supplierinfo(self):
+        ps_id = self._get_prestashop_data()['id']
+        filters = {
+            'filter[id_product]': ps_id,
+            'filter[id_product_attribute]': 0
+        }
+        import_batch(
+            self.session,
+            'prestashop.product.supplierinfo',
+            self.backend_record.id,
+            filters=filters
+        )
 
     def import_default_image(self):
         record = self._get_prestashop_data()
@@ -976,7 +1009,10 @@ def import_orders_since(session, backend_id, since_date=None):
 
     if since_date:
         filters = {'date': '1', 'filter[date_add]':'>[%s]' % date_str}
-    import_batch(session, 'prestashop.mail.message', backend_id, filters, priority=10)
+    try:
+        import_batch(session, 'prestashop.mail.message', backend_id, filters)
+    except:
+        pass
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     session.pool.get('prestashop.backend').write(

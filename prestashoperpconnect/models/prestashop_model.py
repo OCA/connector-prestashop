@@ -41,9 +41,12 @@ from ..unit.import_synchronizer import (
     import_refunds,
     import_carriers,
     import_suppliers,
+    import_record,
 )
 from ..unit.direct_binder import DirectBinder
 from ..connector import get_environment
+
+from openerp.addons.prestashoperpconnect.product import import_inventory
 
 _logger = logging.getLogger(__name__)
 
@@ -196,7 +199,6 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-        from .product import import_inventory
         for backend_id in ids:
             import_inventory.delay(session, backend_id)
 
@@ -306,6 +308,22 @@ class prestashop_binding(orm.AbstractModel):
 
     # the _sql_contraints cannot be there due to this bug:
     # https://bugs.launchpad.net/openobject-server/+bug/1151703
+
+    def resync(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        func = import_record
+        if context and context.get('connector_delay'):
+            func = import_record.delay
+        for product in self.browse(cr, uid, ids, context=context):
+            func(
+                session,
+                self._name,
+                product.backend_id.id,
+                product.prestashop_id
+            )
+        return True
 
 
 # TODO remove external.shop.group from connector_ecommerce

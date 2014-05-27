@@ -79,7 +79,7 @@
                         </group>
                         <group>
                             <div>
-                            <label string="Import product categories and products" class="oe_inline"/>
+                                <label string="Import product categories and products" class="oe_inline"/>
                                 <field name="import_products_since"
                                        class="oe_inline"
                                        nolabel="1"/>
