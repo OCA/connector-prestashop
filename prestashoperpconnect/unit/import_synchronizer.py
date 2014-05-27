@@ -891,7 +891,10 @@ class ProductImageImport(PrestashopImportSynchronizer):
         self.product_id = product_id
         self.image_id = image_id
 
-        super(ProductImageImport, self).run(image_id)
+        try:
+            super(ProductImageImport, self).run(image_id)
+        except PrestaShopWebServiceError:
+            pass
 
 
 @prestashop
