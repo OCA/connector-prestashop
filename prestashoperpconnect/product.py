@@ -345,7 +345,7 @@ class ProductInventoryBatchImport(DelayedBatchImport):
         records = self.backend_adapter.get(filters)
         for record in records['stock_availables']['stock_available']:
             self._import_record(record, **kwargs)
-        return records
+        return records['stock_availables']['stock_available']
 
     def _import_record(self, record, **kwargs):
         """ Delay the import of the records"""
