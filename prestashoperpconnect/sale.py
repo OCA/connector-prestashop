@@ -75,9 +75,7 @@ class SaleOrderLineAdapter(GenericAdapter):
 class SaleStateExport(ExportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
-    def run(self, binding_id, state):
-        binder = self.get_binder_for_model()
-        prestashop_id = binder.to_backend(binding_id)
+    def run(self, prestashop_id, state):
         datas = {
             'order_history': {
                 'id_order': prestashop_id,
@@ -130,4 +128,4 @@ def export_sale_state(session, record_id):
             continue
         env = get_environment(session, inherit_model, backend_id)
         sale_exporter = env.get_connector_unit(SaleStateExport)
-        sale_exporter.run(sale.id, new_state)
+        sale_exporter.run(sale.prestashop_id, new_state)
