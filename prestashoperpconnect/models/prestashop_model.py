@@ -405,6 +405,7 @@ class prestashop_shop(orm.Model):
             },
             readonly=True
         ),
+        'default_url': fields.char('Default url'),
     }
 
     _sql_constraints = [

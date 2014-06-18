@@ -18,6 +18,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
 #                                                                             #
 ###############################################################################
+from prestapyt import PrestaShopWebServiceDict
 
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
@@ -52,6 +53,23 @@ class SaleOrderAdapter(GenericAdapter):
     def update_sale_state(self, prestashop_id, datas):
         api = self.connect()
         return api.add('order_histories', datas)
+
+    def search(self, filters=None):
+        result = super(SaleOrderAdapter, self).search(filters=filters)
+
+        shop_ids = self.session.search('prestashop.shop', [
+            ('backend_id', '=', self.backend_record.id)
+        ])
+        shops = self.session.browse('prestashop.shop', shop_ids)
+        for shop in shops:
+            if not shop.default_url:
+                continue
+
+            api = PrestaShopWebServiceDict(
+                '%s/api' % shop.default_url, self.prestashop.webservice_key
+            )
+            result += api.search(self._prestashop_model, filters)
+        return result
 
 
 @prestashop
