@@ -486,6 +486,8 @@ class SaleImportRule(ConnectorUnit):
         max_days = method.days_before_cancel
         if not max_days:
             return
+        if self._get_paid_amount(record) != 0.0:
+            return
         fmt = '%Y-%m-%d %H:%M:%S'
         order_date = datetime.strptime(record['date_add'], fmt)
         if order_date + timedelta(days=max_days) < datetime.now():
