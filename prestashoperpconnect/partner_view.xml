@@ -37,9 +37,6 @@
                         <field name="date_upd"/>
                         <field name="group_ids"/>
                         <field name="newsletter"/>
-                        <button name="resync"
-                            type="object"
-                            string="Resync" />
                     </group>
                 </form>
             </field>
@@ -52,6 +49,9 @@
                 <tree string="PrestaShop Partner" version="7.0">
                     <field name="backend_id"/>
                     <field name="shop_group_id"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
                 </tree>
             </field>
         </record>
