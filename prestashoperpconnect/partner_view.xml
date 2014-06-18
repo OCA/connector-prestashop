@@ -37,6 +37,9 @@
                         <field name="date_upd"/>
                         <field name="group_ids"/>
                         <field name="newsletter"/>
+                        <button name="resync"
+                            type="object"
+                            string="Resync" />
                     </group>
                 </form>
             </field>
