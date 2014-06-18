@@ -404,11 +404,11 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
         product_id = self._get_product(record)
 
         product_qty_obj = self.session.pool['stock.change.product.qty']
-        vals = product_qty_obj.default_get(
-            self.session.cr, self.session.uid, ['location_id'], {}
-        )
-        vals['product_id'] = product_id
-        vals['new_quantity'] = qty
+        vals = {
+            'location_id': self.backend_record.warehouse_id.lot_stock_id.id,
+            'product_id': product_id,
+            'new_quantity': qty,
+        }
         
         product_qty_id = self.session.create("stock.change.product.qty", vals)
         context = {'active_id': product_id}
