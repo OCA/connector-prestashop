@@ -780,7 +780,7 @@ class MailMessageMapper(PrestashopImportMapper):
 
 @prestashop
 class MrpBomMapper(PrestashopImportMapper):
-    _model_name = 'prestashop.mrp.bom'
+    _model_name = ['prestashop.mrp.bom', 'prestashop.combination.mrp.bom']
 
     direct = []
 

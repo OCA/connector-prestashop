@@ -285,7 +285,7 @@ class MailMessageAdapter(GenericAdapter):
 
 @prestashop
 class BundleAdapter(GenericAdapter):
-    _model_name = 'prestashop.mrp.bom'
+    _model_name = ['prestashop.mrp.bom', 'prestashop.combination.mrp.bom']
     _prestashop_model = 'products'
 
 

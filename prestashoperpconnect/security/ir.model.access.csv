@@ -29,4 +29,5 @@ access_prestashop_supplier,Full access on prestashop.supplier,model_prestashop_s
 access_prestashop_product_supplierinfo,Full access on prestashop.product.supplierinfo,model_prestashop_product_supplierinfo,connector.group_connector_manager,1,1,1,1
 access_mail_message,Full access on prestashop.mail.message,model_prestashop_mail_message,connector.group_connector_manager,1,1,1,1
 access_prestashop_mrp_bom,Full access on prestashop.mrp.bom,model_prestashop_mrp_bom,connector.group_connector_manager,1,1,1,1
+access_prestashop_combination_mrp_bom,Full access on prestashop.combination.mrp.bom,model_prestashop_combination_mrp_bom,connector.group_connector_manager,1,1,1,1
 access_prestashop_groups_pricelist,Full access on prestashop.groups.pricelist,model_prestashop_groups_pricelist,connector.group_connector_manager,1,1,1,1

@@ -37,6 +37,7 @@ from .exception import OrderImportRuleRetry
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.exception import NothingToDoJob
 from backend_adapter import PrestaShopCRUDAdapter
+from openerp.addons.connector.connector import Binder
 
 from prestapyt import PrestaShopWebServiceError
 from ..connector import add_checkpoint
@@ -348,6 +349,40 @@ class MrpBomImport(PrestashopImportSynchronizer):
             products = [products]
         for product in products:
             self._check_dependency(product['id'], 'prestashop.product.product')
+
+
+@prestashop
+class CombinationMrpBomImport(MrpBomImport):
+    _model_name = [
+        'prestashop.combination.mrp.bom',
+    ]
+
+    def _get_prestashop_data(self):
+        """ Return the raw prestashop data for ``self.prestashop_id`` """
+        combination_adapter = self.get_connector_unit_for_model(
+            GenericAdapter, 'prestashop.product.combination'
+        )
+        combination = combination_adapter.read(self.prestashop_id)
+        return self.backend_adapter.read(combination['id_product'])
+
+    def _validate_data(self, data):
+        combination_binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.product.combination'
+        )
+        product_id = combination_binder.to_openerp(self.prestashop_id, unwrap=True)
+        data['product_id'] = product_id
+
+    def _after_import(self, erp_id):
+        combination_binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.product.combination'
+        )
+        combination_id = combination_binder.to_openerp(self.prestashop_id)
+        erp_id = self._get_openerp_id()
+        self.session.write(
+            'prestashop.product.combination',
+            combination_id,
+            {'prestashop_bundle_id': erp_id}
+        )
 
 
 @prestashop

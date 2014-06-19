@@ -21,6 +21,7 @@ from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import TranslatableRecordImport
 from .unit.import_synchronizer import import_batch
 from .unit.mapper import PrestashopImportMapper
+from .unit.import_synchronizer import import_record
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import mapping
 from openerp.osv.orm import browse_record_list
@@ -101,6 +102,7 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
     def _after_import(self, erp_id):
         record = self.prestashop_record
         self.import_supplierinfo(record['id_product'], record['id'])
+        self.import_bundle()
 
     def import_supplierinfo(self, ps_product_id, ps_combination_id):
         filters = {
@@ -112,6 +114,23 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
             'prestashop.product.supplierinfo',
             self.backend_record.id,
             filters=filters
+        )
+
+    def import_bundle(self):
+        record = self.prestashop_record
+        product_adapter = self.get_connector_unit_for_model(
+            GenericAdapter, 'prestashop.product.product'
+        )
+        main_product = product_adapter.read(record['id_product'])
+
+        bundle = main_product.get('associations', {}).get('product_bundle', {})
+        if 'products' not in bundle:
+            return
+        import_record(
+            self.session,
+            'prestashop.combination.mrp.bom',
+            self.backend_record.id,
+            record['id']
         )
 
 
