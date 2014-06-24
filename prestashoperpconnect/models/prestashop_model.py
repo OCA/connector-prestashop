@@ -289,6 +289,12 @@ class prestashop_backend(orm.Model):
         self._scheduler_launch(cr, uid, self.import_suppliers,
                                domain=domain, context=context)
 
+    def import_record(self, cr, uid, backend_id, model_name, ext_id,
+                      context=None):
+        session = ConnectorSession(cr, uid, context=context)
+        import_record(session, model_name, backend_id, ext_id)
+        return True
+
 
 class prestashop_binding(orm.AbstractModel):
     _name = 'prestashop.binding'
