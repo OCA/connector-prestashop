@@ -30,6 +30,8 @@ from openerp.addons.product.product import check_ean
 
 from .product import ProductInventoryExport
 
+from prestapyt import PrestaShopWebServiceError
+
 try:
     from xml.etree import cElementTree as ElementTree
 except ImportError, e:
@@ -101,10 +103,10 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
 
     def _after_import(self, erp_id):
         record = self.prestashop_record
-        self.import_supplierinfo(record['id_product'], record['id'])
+        self.import_supplierinfo(erp_id, record['id_product'], record['id'])
         self.import_bundle()
 
-    def import_supplierinfo(self, ps_product_id, ps_combination_id):
+    def import_supplierinfo(self, erp_id, ps_product_id, ps_combination_id):
         filters = {
             'filter[id_product]': ps_product_id,
             'filter[id_product_attribute]': ps_combination_id,
@@ -115,6 +117,21 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
             self.backend_record.id,
             filters=filters
         )
+        product = self.session.browse(
+            'prestashop.product.combination', erp_id
+        )
+        ps_supplierinfo_ids = self.session.search(
+            'prestashop.product.supplierinfo',
+            [('product_id', '=', product.openerp_id.id)]
+        )
+        ps_supplierinfos = self.session.browse(
+            'prestashop.product.supplierinfo', ps_supplierinfo_ids
+        )
+        for ps_supplierinfo in ps_supplierinfos:
+            try:
+                ps_supplierinfo.resync()
+            except PrestaShopWebServiceError:
+                ps_supplierinfo.openerp_id.unlink()
 
     def import_bundle(self):
         record = self.prestashop_record

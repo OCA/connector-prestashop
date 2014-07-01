@@ -761,8 +761,8 @@ class ProductRecordImport(TranslatableRecordImport):
         self.import_images()
         self.import_default_image()
         self.import_bundle()
-        self.import_supplierinfo()
-    
+        self.import_supplierinfo(erp_id)
+
     def import_bundle(self):
         record = self._get_prestashop_data()
         bundle = record.get('associations', {}).get('product_bundle', {})
@@ -808,8 +808,7 @@ class ProductRecordImport(TranslatableRecordImport):
                     priority=10,
                 )
 
-
-    def import_supplierinfo(self):
+    def import_supplierinfo(self, erp_id):
         ps_id = self._get_prestashop_data()['id']
         filters = {
             'filter[id_product]': ps_id,
@@ -821,6 +820,19 @@ class ProductRecordImport(TranslatableRecordImport):
             self.backend_record.id,
             filters=filters
         )
+        product = self.session.browse('prestashop.product.product', erp_id)
+        ps_supplierinfo_ids = self.session.search(
+            'prestashop.product.supplierinfo',
+            [('product_id', '=', product.openerp_id.id)]
+        )
+        ps_supplierinfos = self.session.browse(
+            'prestashop.product.supplierinfo', ps_supplierinfo_ids
+        )
+        for ps_supplierinfo in ps_supplierinfos:
+            try:
+                ps_supplierinfo.resync()
+            except PrestaShopWebServiceError:
+                ps_supplierinfo.openerp_id.unlink()
 
     def import_default_image(self):
         record = self._get_prestashop_data()
