@@ -447,9 +447,3 @@ class CombinationInventoryExport(ProductInventoryExport):
             'filter[id_product]': product.main_product_id.prestashop_id,
             'filter[id_product_attribute]': product.prestashop_id,
         }
-
-    def run(self, binding_id, fields):
-        try:
-            super(CombinationInventoryExport, self).run(binding_id, fields)
-        except ElementTree.ParseError:
-            pass
