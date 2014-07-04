@@ -1140,7 +1140,7 @@ def import_carriers(session, backend_id):
 @job
 def export_product_quantities(session, ids):
     for model in ['product', 'combination']:
-        model_obj = session.pool['prestashop.product' + model]
+        model_obj = session.pool['prestashop.product.' + model]
         model_ids = model_obj.search(
             session.cr,
             session.uid,
