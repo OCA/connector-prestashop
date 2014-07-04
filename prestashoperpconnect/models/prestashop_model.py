@@ -42,6 +42,7 @@ from ..unit.import_synchronizer import (
     import_carriers,
     import_suppliers,
     import_record,
+    export_product_quantities,
 )
 from ..unit.direct_binder import DirectBinder
 from ..connector import get_environment
@@ -184,15 +185,8 @@ class prestashop_backend(orm.Model):
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
-        ps_product_obj = self.pool['prestashop.product.product']
-        product_ids = ps_product_obj.search(
-            cr,
-            uid,
-            [('backend_id', 'in', ids)],
-            context=context
-        )
-        ps_product_obj.recompute_prestashop_qty(cr, uid, product_ids,
-                                                context=context)
+        session = ConnectorSession(cr, uid, context=context)
+        export_product_quantities.delay(session, ids)
         return True
 
     def import_stock_qty(self, cr, uid, ids, context=None):

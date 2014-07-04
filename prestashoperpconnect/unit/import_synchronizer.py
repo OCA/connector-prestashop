@@ -1135,3 +1135,18 @@ def import_suppliers(session, backend_id, since_date):
 @job
 def import_carriers(session, backend_id):
     import_batch(session, 'prestashop.delivery.carrier', backend_id, priority=5)
+
+
+@job
+def export_product_quantities(session, ids):
+    for model in ['product', 'combination']:
+        model_obj = session.pool['prestashop.product' + model]
+        model_ids = model_obj.search(
+            session.cr,
+            session.uid,
+            [('backend_id', 'in', ids)],
+            context=session.context
+        )
+        model_obj.recompute_prestashop_qty(
+            session.cr, session.uid, model_ids, context=session.context
+        )
