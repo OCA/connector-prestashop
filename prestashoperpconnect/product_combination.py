@@ -43,12 +43,6 @@ class ProductCombinationAdapter(GenericAdapter):
     _model_name = 'prestashop.product.combination'
     _prestashop_model = 'combinations'
 
-    def update_inventory(self, id, attributes):
-        api = self.connect()
-        if attributes is None:
-            attributes = {}
-        return api.edit('stock_availables', attributes)
-
 
 @prestashop
 class ProductCombinationRecordImport(PrestashopImportSynchronizer):

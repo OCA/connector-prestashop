@@ -44,6 +44,8 @@ from .connector import get_environment
 from .unit.mapper import PrestashopImportMapper
 from backend import prestashop
 
+from prestapyt import PrestaShopWebServiceDict
+
 
 ##########  product category ##########
 @prestashop
@@ -306,12 +308,6 @@ class ProductAdapter(GenericAdapter):
     _prestashop_model = 'products'
     _export_node_name = 'product'
 
-    def update_inventory(self, id, attributes):
-        api = self.connect()
-        if attributes is None:
-            attributes = {}
-        return api.edit('stock_availables', attributes)
-
 
 @prestashop
 class ProductInventoryExport(ExportSynchronizer):
@@ -430,6 +426,24 @@ class ProductInventoryAdapter(GenericAdapter):
         api = self.connect()
         return api.get(self._prestashop_model, options=options)
 
+    def write(self, id, attributes=None):
+        super(ProductInventoryAdapter, self).write(id, attributes)
+
+        shop_ids = self.session.search('prestashop.shop', [
+            ('backend_id', '=', self.backend_record.id)
+        ])
+        shops = self.session.browse('prestashop.shop', shop_ids)
+        for shop in shops:
+            if not shop.default_url:
+                continue
+
+            api = PrestaShopWebServiceDict(
+                '%s/api' % shop.default_url, self.prestashop.webservice_key
+            )
+            attributes['id'] = id
+            return api.edit(self._prestashop_model, {
+                self._export_node_name: attributes
+            })
 
 
 # fields which should not trigger an export of the products
