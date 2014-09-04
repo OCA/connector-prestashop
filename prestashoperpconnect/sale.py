@@ -71,6 +71,12 @@ class SaleOrderAdapter(GenericAdapter):
             result += api.search(self._prestashop_model, filters)
         return result
 
+@prestashop
+class OrderCarriers(GenericAdapter):
+    _model_name = '__not_exit_prestashop.order_carrier'
+    _prestashop_model = 'order_carriers'
+    _export_node_name = 'order_carrier'
+ 
 
 @prestashop
 class PaymentMethodAdapter(GenericAdapter):
