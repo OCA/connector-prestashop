@@ -197,6 +197,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
 
+
 @prestashop
 class AddCheckpoint(ConnectorUnit):
     """ Add a connector.checkpoint on the underlying model
@@ -213,6 +214,7 @@ class AddCheckpoint(ConnectorUnit):
                        record.id,
                        self.backend_record.id)
 
+
 @prestashop
 class PaymentMethodsImportSynchronizer(BatchImportSynchronizer):
     _model_name = 'payment.method'
@@ -221,7 +223,9 @@ class PaymentMethodsImportSynchronizer(BatchImportSynchronizer):
         if filters is None:
             filters = {}
         filters['display'] = '[id,payment]'
-        return super(PaymentMethodsImportSynchronizer, self).run(filters, **kwargs)
+        return super(PaymentMethodsImportSynchronizer, self).run(
+            filters, **kwargs
+        )
 
     def _import_record(self, record):
         ids = self.session.search('payment.method', [
@@ -360,7 +364,9 @@ class CombinationMrpBomImport(MrpBomImport):
         combination_binder = self.get_connector_unit_for_model(
             Binder, 'prestashop.product.combination'
         )
-        product_id = combination_binder.to_openerp(self.prestashop_id, unwrap=True)
+        product_id = combination_binder.to_openerp(
+            self.prestashop_id, unwrap=True
+        )
         data['product_id'] = product_id
 
     def _after_import(self, erp_id):
@@ -385,14 +391,15 @@ class MailMessageRecordImport(PrestashopImportSynchronizer):
         record = self.prestashop_record
         self._check_dependency(record['id_order'], 'prestashop.sale.order')
         if record['id_customer'] != '0':
-            self._check_dependency(record['id_customer'], 'prestashop.res.partner')
+            self._check_dependency(
+                record['id_customer'], 'prestashop.res.partner'
+            )
 
     def _has_to_skip(self):
         record = self.prestashop_record
         binder = self.get_binder_for_model('prestashop.sale.order')
         ps_so_id = binder.to_openerp(record['id_order'])
         return record['id_order'] == '0' or not ps_so_id
-
 
 
 @prestashop
@@ -426,7 +433,9 @@ class SupplierInfoImport(PrestashopImportSynchronizer):
     def _import_dependencies(self):
         record = self.prestashop_record
         try:
-            self._check_dependency(record['id_supplier'], 'prestashop.supplier')
+            self._check_dependency(
+                record['id_supplier'], 'prestashop.supplier'
+            )
             self._check_dependency(
                 record['id_product'], 'prestashop.product.product'
             )
@@ -438,7 +447,7 @@ class SupplierInfoImport(PrestashopImportSynchronizer):
                 )
         except PrestaShopWebServiceError:
             raise NothingToDoJob('Error fetching a dependency')
-            
+
 
 @prestashop
 class SaleImportRule(ConnectorUnit):
@@ -459,6 +468,7 @@ class SaleImportRule(ConnectorUnit):
         if self._get_paid_amount(record) == 0.0:
             raise OrderImportRuleRetry('The order has not been paid.\n'
                                        'The import will be retried later.')
+
     def _get_paid_amount(self, record):
         payment_adapter = self.get_connector_unit_for_model(
             GenericAdapter,
@@ -529,19 +539,23 @@ class SaleOrderImport(PrestashopImportSynchronizer):
     def _import_dependencies(self):
         record = self.prestashop_record
         self._check_dependency(record['id_customer'], 'prestashop.res.partner')
-        self._check_dependency(record['id_address_invoice'],
-                    	       'prestashop.address')
-        self._check_dependency(record['id_address_delivery'],
-                               'prestashop.address')
+        self._check_dependency(
+            record['id_address_invoice'], 'prestashop.address'
+        )
+        self._check_dependency(
+            record['id_address_delivery'], 'prestashop.address'
+        )
 
-        if not('so_refund_no_dep' in self.session.context 
+        if not('so_refund_no_dep' in self.session.context
                and self.session.context['so_refund_no_dep']):
             self._check_refunds(record['id_customer'], record['id'])
         if record['id_carrier'] != '0':
             self._check_dependency(record['id_carrier'],
                                    'prestashop.delivery.carrier')
 
-        orders = record['associations'].get('order_rows', {}).get('order_row', [])
+        orders = record['associations']\
+            .get('order_rows', {})\
+            .get('order_row', [])
         if isinstance(orders, dict):
             orders = [orders]
         for order in orders:
@@ -596,7 +610,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
     def find_each_language(self, record):
         languages = {}
         for field in self._translatable_fields[self.environment.model_name]:
-            #TODO FIXME in prestapyt
+            # TODO FIXME in prestapyt
             if not isinstance(record[field]['language'], list):
                 record[field]['language'] = [record[field]['language']]
             for language in record[field]['language']:
@@ -636,7 +650,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        #split prestashop data for every lang
+        # split prestashop data for every lang
         splitted_record = self._split_per_language(self.prestashop_record)
 
         erp_id = None
@@ -681,6 +695,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
             erp_id = self._create(record, context)
 
         return erp_id
+
 
 @prestashop
 class PartnerCategoryRecordImport(PrestashopImportSynchronizer):
@@ -838,12 +853,15 @@ class ProductRecordImport(TranslatableRecordImport):
         try:
             image = adapter.read(record['id'],
                                  record['id_default_image']['value'])
-            self.session.write('prestashop.product.product', [product_id], {"image": image['content']}) 
+            self.session.write(
+                'prestashop.product.product',
+                [product_id],
+                {"image": image['content']}
+            )
         except PrestaShopWebServiceError:
             pass
         except IOError:
             pass
-
 
     def _import_dependencies(self):
         self._import_default_category()
@@ -960,24 +978,14 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        #erp_id = self._get_openerp_id()
         self.mapper.convert(self.prestashop_record)
-        #if erp_id:
         record = self.mapper.data
         record['order_id'] = order_id
-        #else:
-        #    record = self.mapper.data_for_create
 
         # special check on data before import
         self._validate_data(record)
 
-        #if erp_id:
-        #    self._update(erp_id, record)
-        #else:
         erp_id = self._create(record)
-
-        #self.binder.bind(self.prestashop_id, erp_id)
-
         self._after_import(erp_id)
 
 
@@ -1031,8 +1039,12 @@ def import_customers_since(session, backend_id, since_date=None):
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    import_batch(session, 'prestashop.res.partner.category', backend_id, filters)
-    import_batch(session, 'prestashop.res.partner', backend_id, filters, priority=15)
+    import_batch(
+        session, 'prestashop.res.partner.category', backend_id, filters
+    )
+    import_batch(
+        session, 'prestashop.res.partner', backend_id, filters, priority=15
+    )
 
     session.pool.get('prestashop.backend').write(
         session.cr,
@@ -1051,10 +1063,17 @@ def import_orders_since(session, backend_id, since_date=None):
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
-    import_batch(session, 'prestashop.sale.order', backend_id, filters, priority=10, max_retries=0)
+    import_batch(
+        session,
+        'prestashop.sale.order',
+        backend_id,
+        filters,
+        priority=10,
+        max_retries=0
+    )
 
     if since_date:
-        filters = {'date': '1', 'filter[date_add]':'>[%s]' % date_str}
+        filters = {'date': '1', 'filter[date_add]': '>[%s]' % date_str}
     try:
         import_batch(session, 'prestashop.mail.message', backend_id, filters)
     except:
@@ -1077,8 +1096,20 @@ def import_products(session, backend_id, since_date):
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    import_batch(session, 'prestashop.product.category', backend_id, filters, priority=15)
-    import_batch(session, 'prestashop.product.product', backend_id, filters, priority=15)
+    import_batch(
+        session,
+        'prestashop.product.category',
+        backend_id,
+        filters,
+        priority=15
+    )
+    import_batch(
+        session,
+        'prestashop.product.product',
+        backend_id,
+        filters,
+        priority=15
+    )
     session.pool.get('prestashop.backend').write(
         session.cr,
         session.uid,
@@ -1125,7 +1156,9 @@ def import_suppliers(session, backend_id, since_date):
 
 @job
 def import_carriers(session, backend_id):
-    import_batch(session, 'prestashop.delivery.carrier', backend_id, priority=5)
+    import_batch(
+        session, 'prestashop.delivery.carrier', backend_id, priority=5
+    )
 
 
 @job
