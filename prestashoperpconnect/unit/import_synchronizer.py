@@ -300,15 +300,6 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
             self._check_dependency(group['id'],
                                    'prestashop.res.partner.category')
 
-        if self.prestashop_record['company']:
-            name = self.prestashop_record['company']
-        else:
-            name = '%s %s' % (
-                self.prestashop_record['firstname'], 
-                self.prestashop_record['lastname']
-            )
-        self.create_account(self.prestashop_record['id'], name)
-
     def _after_import(self, erp_id):
         binder = self.get_binder_for_model(self._model_name)
         ps_id = binder.to_backend(erp_id)
