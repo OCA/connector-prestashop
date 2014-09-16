@@ -385,25 +385,29 @@ class SaleOrderMapper(PrestashopImportMapper):
         ),
     ]
 
-    def _map_child(self, record, from_attr, to_attr, model_name):
+    def _map_child(self, map_record, from_attr, to_attr, model_name):
+        source = map_record.source
         # TODO patch ImportMapper in connector to support callable
         if callable(from_attr):
-            child_records = from_attr(self, record)
+            child_records = from_attr(self, source)
         else:
-            child_records = record[from_attr]
+            child_records = source[from_attr]
 
-        self._data_children[to_attr] = []
+        children = []
         for child_record in child_records:
             adapter = self.get_connector_unit_for_model(GenericAdapter,
                                                         model_name)
             detail_record = adapter.read(child_record['id'])
 
-            mapper = self._init_child_mapper(model_name)
-            mapper.convert_child(detail_record, parent_values=record)
-            self._data_children[to_attr].append(mapper)
+            mapper = self._get_map_child_unit(model_name)
+            items = mapper.get_items(
+                [detail_record], map_record, to_attr, options=self.options
+            )
+            children.extend(items)
 
-        discount_lines = self._get_discounts_lines(record)
-        self._data_children[to_attr].extend(discount_lines)
+        discount_lines = self._get_discounts_lines(source)
+        children.extend(discount_lines)
+        return children
 
     def _get_discounts_lines(self, record):
         if record['total_discounts'] == '0.00':

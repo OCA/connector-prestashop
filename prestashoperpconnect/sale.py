@@ -87,7 +87,10 @@ class PaymentMethodAdapter(GenericAdapter):
     def search(self, filters=None):
         api = self.connect()
         res = api.get(self._prestashop_model, options=filters)
-        return res[self._prestashop_model][self._export_node_name]
+        methods = res[self._prestashop_model][self._export_node_name]
+        if isinstance(methods, dict):
+            return [methods]
+        return methods
 
 @prestashop
 class SaleOrderLineAdapter(GenericAdapter):

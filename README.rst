@@ -12,10 +12,13 @@ You should install prestapyt (akretion branch) and python-requests :
 
    pip install -r requirements.txt
 
-This module is based on other modules :
- - `connector <https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0>`_
- - `e-commerce-addons <https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-e-commerce-addons>`_ (use `this branch <https://code.launchpad.net/~arthru/openerp-connector/7.0-e-commerce-addons-fix-workflow>`_ while `this merge has not been approved <https://code.launchpad.net/~arthru/openerp-connector/7.0-e-commerce-addons-fix-workflow/+merge/160350>`_)
- - openerp-product-attributes
+This module is based on modules in other repositories :
+ - https://github.com/OCA/connector.git
+ - https://github.com/OCA/connector-ecommerce.git
+ - https://github.com/OCA/product-attribute.git
+ - https://github.com/OCA/e-commerce.git
+ - https://github.com/OCA/sale-workflow.git
+ 
 
 Getting started
 ---------------

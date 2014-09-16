@@ -134,11 +134,8 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         self._import_dependencies()
 
         erp_id = self._get_openerp_id()
-        self.mapper.convert(self.prestashop_record)
-        if erp_id:
-            record = self.mapper.data
-        else:
-            record = self.mapper.data_for_create
+        map_record = self.mapper.map_record(self.prestashop_record)
+        record = map_record.values()
 
         # special check on data before import
         self._validate_data(record)
@@ -189,6 +186,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
 
     def _run_page(self, filters, **kwargs):
         record_ids = self.backend_adapter.search(filters)
+        
         for record_id in record_ids:
             self._import_record(record_id, **kwargs)
         return record_ids
@@ -546,12 +544,12 @@ class SaleOrderImport(PrestashopImportSynchronizer):
             record['id_address_delivery'], 'prestashop.address'
         )
 
-        if not('so_refund_no_dep' in self.session.context
-               and self.session.context['so_refund_no_dep']):
-            self._check_refunds(record['id_customer'], record['id'])
-        if record['id_carrier'] != '0':
-            self._check_dependency(record['id_carrier'],
-                                   'prestashop.delivery.carrier')
+        #if not('so_refund_no_dep' in self.session.context
+        #       and self.session.context['so_refund_no_dep']):
+        #    self._check_refunds(record['id_customer'], record['id'])
+        #if record['id_carrier'] != '0':
+        #    self._check_dependency(record['id_carrier'],
+        #                           'prestashop.delivery.carrier')
 
         orders = record['associations']\
             .get('order_rows', {})\
@@ -674,15 +672,12 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         self._after_import(erp_id)
 
     def _run_record(self, prestashop_record, lang_code, erp_id=None):
-        self.mapper.convert(prestashop_record)
+        mapped = self.mapper.map_record(prestashop_record)
 
         if erp_id is None:
             erp_id = self._get_openerp_id()
 
-        if erp_id:
-            record = self.mapper.data
-        else:
-            record = self.mapper.data_for_create
+        record = mapped.values()
 
         # special check on data before import
         self._validate_data(record)
