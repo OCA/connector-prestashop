@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_customize_example for OpenERP 
+#   prestashoperpconnect_customize_example for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
@@ -21,24 +21,23 @@
 ###############################################################################
 
 
-{'name': 'Prestashop Connector Customization Example',
- 'version': '1.0.0',
- 'category': 'Connector',
- 'depends': ['prestashoperpconnect',
-             ],
- 'author': 'Akretion',
- 'license': 'AGPL-3',
- 'description': """
+{
+    'name': 'Prestashop Connector Customization Example',
+    'version': '1.0.0',
+    'category': 'Connector',
+    'depends': [
+        'prestashoperpconnect',
+    ],
+    'author': 'Akretion',
+    'license': 'AGPL-3',
+    'description': """
 Prestashop Connector Customization Example
 =======================================
 
 Example of customizations:
 
-* mappings
-
-""",
- 'data': [],
- 'installable': True,
- 'application': False,
+* mappings""",
+    'data': [],
+    'installable': True,
+    'application': False,
 }
-
