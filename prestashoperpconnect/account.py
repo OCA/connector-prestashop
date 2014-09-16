@@ -2,11 +2,8 @@
 
 from datetime import date
 from datetime import datetime
-from decimal import Decimal
 
 from openerp import netsvc
-from openerp.osv import fields
-from openerp.osv import orm
 
 from openerp.addons.connector.unit.mapper import mapping
 from openerp.addons.connector.unit.mapper import only_create
@@ -102,7 +99,8 @@ class RefundMapper(PrestashopImportMapper):
     @mapping
     @only_create
     def invoice_lines(self, record):
-        slip_details = record.get('associations', {}).get('order_slip_details', []).get('order_slip_detail', [])
+        slip_details = record.get('associations', {}).get(
+            'order_slip_details', []).get('order_slip_detail', [])
         if isinstance(slip_details, dict):
             slip_details = [slip_details]
         lines = []
@@ -156,7 +154,8 @@ class RefundMapper(PrestashopImportMapper):
     def _get_shipping_order_line(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'])
-        sale_order = self.session.browse('prestashop.sale.order', sale_order_id)
+        sale_order = self.session.browse(
+            'prestashop.sale.order', sale_order_id)
 
         if not sale_order.carrier_id:
             return None
@@ -249,10 +248,14 @@ class RefundMapper(PrestashopImportMapper):
     def account_id(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'], unwrap=True)
-        sale_order = self.session.browse('prestashop.sale.order', sale_order_id)
-        date_invoice = datetime.strptime(record['date_upd'], '%Y-%m-%d %H:%M:%S')
+        sale_order = self.session.browse(
+            'prestashop.sale.order', sale_order_id)
+        date_invoice = datetime.strptime(
+            record['date_upd'], '%Y-%m-%d %H:%M:%S')
+        # TODO: Delete or change this ugly test
         if date(2014, 1, 1) > date_invoice.date() and \
-            sale_order.payment_method_id and sale_order.payment_method_id.account_id:
+                sale_order.payment_method_id and \
+                sale_order.payment_method_id.account_id:
             return {'account_id': sale_order.payment_method_id.account_id.id}
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id
@@ -273,4 +276,3 @@ class RefundMapper(PrestashopImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-

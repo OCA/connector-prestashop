@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
 from openerp.addons.connector.connector import Environment
 from openerp.addons.connector.checkpoint import checkpoint
 
@@ -30,7 +29,8 @@ def add_checkpoint(session, model_name, record_id, backend_id):
     meaning it has to be reviewed by a user.
 
     :param session: current session
-    :type session: :py:class:`openerp.addons.connector.session.ConnectorSession`
+    :type session: :py:class:
+        `openerp.addons.connector.session.ConnectorSession`
     :param model_name: name of the model of the record to be reviewed
     :type model_name: str
     :param record_id: ID of the record to be reviewed
@@ -40,6 +40,7 @@ def add_checkpoint(session, model_name, record_id, backend_id):
     """
     return checkpoint.add_checkpoint(session, model_name, record_id,
                                      'prestashop.backend', backend_id)
+
 
 def get_environment(session, model_name, backend_id):
     model = session.pool.get('prestashop.backend')

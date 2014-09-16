@@ -19,12 +19,6 @@
 #
 ##############################################################################
 
-from functools import wraps
-
-from openerp.addons.connector.event import (on_record_write,
-                                            on_record_create,
-                                            on_record_unlink
-                                            )
 from openerp.addons.connector.connector import Binder
 from .unit.delete_synchronizer import export_delete_record
 from .connector import get_environment
@@ -81,9 +75,11 @@ def delay_unlink_all_bindings(session, model_name, record_id):
                           record_id, context=session.context)
     for bind_record in record.prestashop_bind_ids:
         prestashop_model_name = bind_record._name
-        env = get_environment(session, prestashop_model_name, bind_record.backend_id.id)
+        env = get_environment(
+            session, prestashop_model_name, bind_record.backend_id.id)
         binder = env.get_connector_unit(Binder)
         ext_id = binder.to_backend(bind_record.id)
         if ext_id:
-            export_delete_record.delay(session, prestashop_model_name,
-                                   bind_record.backend_id.id, ext_id)
+            export_delete_record.delay(
+                session, prestashop_model_name, bind_record.backend_id.id,
+                ext_id)

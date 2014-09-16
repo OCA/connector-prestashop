@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
@@ -20,8 +20,6 @@
 ###############################################################################
 from prestapyt import PrestaShopWebServiceDict
 
-from openerp.osv import fields, orm
-import openerp.addons.decimal_precision as dp
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
@@ -71,23 +69,25 @@ class SaleOrderAdapter(GenericAdapter):
             result += api.search(self._prestashop_model, filters)
         return result
 
+
 @prestashop
 class OrderCarriers(GenericAdapter):
     _model_name = '__not_exit_prestashop.order_carrier'
     _prestashop_model = 'order_carriers'
     _export_node_name = 'order_carrier'
- 
+
 
 @prestashop
 class PaymentMethodAdapter(GenericAdapter):
     _model_name = 'payment.method'
     _prestashop_model = 'orders'
     _export_node_name = 'order'
-    
+
     def search(self, filters=None):
         api = self.connect()
         res = api.get(self._prestashop_model, options=filters)
         return res[self._prestashop_model][self._export_node_name]
+
 
 @prestashop
 class SaleOrderLineAdapter(GenericAdapter):

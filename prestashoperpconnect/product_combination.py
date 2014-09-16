@@ -11,10 +11,8 @@ the main product.
 '''
 
 from unidecode import unidecode
-import json
 
 from openerp import SUPERUSER_ID
-from openerp.osv import fields, orm
 from backend import prestashop
 from .unit.backend_adapter import GenericAdapter
 from .unit.import_synchronizer import PrestashopImportSynchronizer
@@ -31,11 +29,6 @@ from openerp.addons.product.product import check_ean
 from .product import ProductInventoryExport
 
 from prestapyt import PrestaShopWebServiceError
-
-try:
-    from xml.etree import cElementTree as ElementTree
-except ImportError, e:
-    from xml.etree import ElementTree
 
 
 @prestashop
@@ -166,7 +159,8 @@ class ProductCombinationMapper(PrestashopImportMapper):
     def price(self, record):
         main_product = self.main_product(record)
         if self.backend_record.taxes_included:
-            price = main_product.list_price_tax_inc + float(record['unit_price_impact'])
+            price = main_product.list_price_tax_inc \
+                + float(record['unit_price_impact'])
             return {'list_price_tax_inc': price}
         price = main_product.list_price + float(record['unit_price_impact'])
         return {'list_price': price}
@@ -288,13 +282,13 @@ class ProductCombinationMapper(PrestashopImportMapper):
             current_code = '%s_%d' % (code, i)
         return {'default_code': current_code}
 
-    ##@mapping
-    ##def active(self, record):
-    ##    return {'always_available': bool(int(record['active']))}
+    # #@mapping
+    # #def active(self, record):
+    # #    return {'always_available': bool(int(record['active']))}
 
-    ##@mapping
-    ##def sale_ok(self, record):
-    ##    return {'sale_ok': record['available_for_order'] == '1'}
+    # #@mapping
+    # #def sale_ok(self, record):
+    # #    return {'sale_ok': record['available_for_order'] == '1'}
 
     @mapping
     def backend_id(self, record):
@@ -336,7 +330,8 @@ class ProductCombinationOptionRecordImport(PrestashopImportSynchronizer):
         self.prestashop_id = ext_id
         self.prestashop_record = self._get_prestashop_data()
         field_name = self.mapper.name(self.prestashop_record)['name']
-        attribute_ids = self.session.search('attribute.attribute', [('name', '=', field_name)])
+        attribute_ids = self.session.search(
+            'attribute.attribute', [('name', '=', field_name)])
         if len(attribute_ids) == 0:
             # if we don't find it, we create a prestashop_product_combination
             super(ProductCombinationOptionRecordImport, self).run(ext_id)
@@ -347,7 +342,8 @@ class ProductCombinationOptionRecordImport(PrestashopImportSynchronizer):
                 'openerp_id': attribute_ids[0],
                 'backend_id': self.backend_record.id,
             }
-            erp_id = self.model.create(self.session.cr, self.session.uid, data, context)
+            erp_id = self.model.create(
+                self.session.cr, self.session.uid, data, context)
             self.binder.bind(self.prestashop_id, erp_id)
 
         self._import_values()
