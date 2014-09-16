@@ -130,7 +130,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: dict
         """
-        #TODO rename attributes in something better
+        # TODO rename attributes in something better
         api = self.connect()
         res = api.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
@@ -232,6 +232,7 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
             options=options
         )
 
+
 @prestashop
 class SupplierImageAdapter(PrestaShopCRUDAdapter):
     _model_name = 'prestashop.supplier.image'
@@ -276,6 +277,7 @@ class SupplierAdapter(GenericAdapter):
 class SupplierInfoAdapter(GenericAdapter):
     _model_name = 'prestashop.product.supplierinfo'
     _prestashop_model = 'product_suppliers'
+
 
 @prestashop
 class MailMessageAdapter(GenericAdapter):

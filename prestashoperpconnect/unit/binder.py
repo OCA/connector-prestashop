@@ -1,4 +1,4 @@
-## -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   PrestashopERPconnect for OpenERP
@@ -140,6 +140,6 @@ class PrestashopModelBinder(PrestashopBinder):
             openerp_id,
             {'prestashop_id': str(external_id),
              'sync_date': now_fmt},
-            #{'prestashop_id': external_id},
+            # {'prestashop_id': external_id},
             context=context
         )

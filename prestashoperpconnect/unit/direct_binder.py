@@ -22,6 +22,8 @@
 
 import logging
 
+from openerp.osv import osv
+from openerp.tools.translate import _
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from ..backend import prestashop
@@ -144,7 +146,7 @@ class CarrierDirectBinder(DirectBinder):
     _erp_field = 'name'
     _ps_field = 'name_ext'
 
-    #def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
+    # def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
     #    if len(erp_val) >= 2 and len(ps_val) >= 2 and \
     #            erp_val[0:2].lower() == ps_val[0:2].lower():
     #        return True
