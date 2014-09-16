@@ -94,13 +94,18 @@ class prestashop_backend(orm.Model):
             'backend_id',
             'Languages'
         ),
-        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
-        'discount_product_id': fields.many2one('product.product', 'Dicount Product', select=1, required=False),
-        'shipping_product_id': fields.many2one('product.product', 'Shipping Product', select=1, required=False),
+        'company_id': fields.many2one(
+            'res.company', 'Company', select=1, required=True),
+        'discount_product_id': fields.many2one(
+            'product.product', 'Dicount Product', select=1, required=False),
+        'shipping_product_id': fields.many2one(
+            'product.product', 'Shipping Product', select=1, required=False),
     }
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'prestashop.backend', context=c),
+        'company_id': lambda s, cr, uid, c:
+            s.pool.get('res.company')._company_default_get(
+                cr, uid, 'prestashop.backend', context=c),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -171,7 +176,8 @@ class prestashop_backend(orm.Model):
             since_date = self._date_as_user_tz(
                 cr, uid, backend_record.import_products_since
             )
-            import_products.delay(session, backend_record.id, since_date, priority=10)
+            import_products.delay(
+                session, backend_record.id, since_date, priority=10)
         return True
 
     def import_carriers(self, cr, uid, ids, context=None):
@@ -255,7 +261,8 @@ class prestashop_backend(orm.Model):
         self._scheduler_launch(cr, uid, self.update_product_stock_qty,
                                domain=domain, context=context)
 
-    def _scheduler_import_sale_orders(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_sale_orders(
+            self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_sale_orders, domain=domain,
                                context=context)
 
@@ -271,7 +278,8 @@ class prestashop_backend(orm.Model):
         self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
                                context=context)
 
-    def _scheduler_import_payment_methods(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_payment_methods(
+            self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_payment_methods,
                                domain=domain, context=context)
 
@@ -339,7 +347,9 @@ class prestashop_shop_group(orm.Model):
             'shop_group_id',
             string="Shops",
             readonly=True),
-        'company_id': fields.related('backend_id', 'company_id', type="many2one", relation="res.company",string='Company', store=False),
+        'company_id': fields.related(
+            'backend_id', 'company_id', type="many2one",
+            relation="res.company", string='Company', store=False),
     }
 
     _sql_constraints = [
@@ -441,7 +451,7 @@ class prestashop_res_lang(orm.Model):
     }
 
     _defaults = {
-        #'active': lambda *a: False,
+        # 'active': lambda *a: False,
         'active': False,
     }
 
@@ -592,5 +602,6 @@ class account_tax_group(orm.Model):
             string='Prestashop Bindings',
             readonly=True
         ),
-        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
+        'company_id': fields.many2one(
+            'res.company', 'Company', select=1, required=True),
     }

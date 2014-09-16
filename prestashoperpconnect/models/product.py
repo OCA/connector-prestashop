@@ -21,10 +21,6 @@
 
 from openerp.osv import fields, orm
 
-from openerp.addons.connector.session import ConnectorSession
-
-from ..unit.import_synchronizer import import_record
-
 
 class product_category(orm.Model):
     _inherit = 'product.category'
@@ -225,6 +221,7 @@ class mrp_bom(orm.Model):
             string='PrestaShop Bindings'
         ),
     }
+
 
 class prestashop_mrp_bom(orm.Model):
     _name = 'prestashop.mrp.bom'

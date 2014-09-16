@@ -1,9 +1,5 @@
 from openerp.osv import fields, orm
 
-from openerp.addons.connector.session import ConnectorSession
-
-from ..unit.import_synchronizer import import_record
-
 
 class res_partner(orm.Model):
     _inherit = 'res.partner'
