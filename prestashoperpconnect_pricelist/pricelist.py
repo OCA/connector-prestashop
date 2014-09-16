@@ -36,27 +36,31 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     export_record,
     PrestashopExporter,
     )
-from openerp.addons.prestashoperpconnect.unit.binder import PrestashopModelBinder
-from openerp.addons.prestashoperpconnect.unit.mapper import PrestashopExportMapper
-from openerp.addons.prestashoperpconnect.unit.delete_synchronizer import PrestashopDeleteSynchronizer
+from openerp.addons.prestashoperpconnect.unit.binder \
+    import PrestashopModelBinder
+from openerp.addons.prestashoperpconnect.unit.mapper \
+    import PrestashopExportMapper
+from openerp.addons.prestashoperpconnect.unit.delete_synchronizer \
+    import PrestashopDeleteSynchronizer
 from openerp.addons.prestashoperpconnect.backend import prestashop
-from openerp.addons.prestashoperpconnect.unit.backend_adapter import GenericAdapter
+from openerp.addons.prestashoperpconnect.unit.backend_adapter \
+    import GenericAdapter
 from openerp.addons.connector.unit.mapper import mapping
 
 import openerp.addons.prestashoperpconnect.consumer as prestashoperpconnect
 
 
 PRICELIST_FIELDS = [
-        'product_id',
-        'min_quantity',
-        'base',
-        'price_discount',
-        'price_surcharge',
-        'new_base_price',
-        'let_base_price',
-        'start_date',
-        'end_date',
-    ]
+    'product_id',
+    'min_quantity',
+    'base',
+    'price_discount',
+    'price_surcharge',
+    'new_base_price',
+    'let_base_price',
+    'start_date',
+    'end_date',
+]
 
 
 class PricelistBuilder(orm.Model):
@@ -66,16 +70,16 @@ class PricelistBuilder(orm.Model):
         'partner_cat_id': fields.many2one(
             'res.partner.category',
             'Partner Categ.',
-            #TODO improve
-            #domain=[('prestashop_bind_ids', '!=', False)],
+            # TODO improve
+            # domain=[('prestashop_bind_ids', '!=', False)],
             help="NOT USED by OpenERP to modify pricelist computation (only "
-                "with external connected applications)"
+            "with external connected applications)"
         ),
     }
 
     def _prepare_item_vals(self, cr, uid, item_tpl, builder_o, context=None):
-        vals = super(PricelistBuilder, self)._prepare_item_vals(cr, uid,
-                                        item_tpl, builder_o, context=context)
+        vals = super(PricelistBuilder, self)._prepare_item_vals(
+            cr, uid, item_tpl, builder_o, context=context)
         vals['let_base_price'] = item_tpl.let_base_price
         if item_tpl.new_base_price:
             vals['new_base_price'] = item_tpl.new_base_price
@@ -93,32 +97,35 @@ class AbstractPriceListItem(orm.AbstractModel):
     _inherit = "abstract.pricelist.item"
 
     _columns = {
-        'new_base_price': fields.float('New price',
-            digits_compute=dp.get_precision('Sale Price'),
-            help="New base price : 'base price' field is not used in this case "
-                " (specific to PrestaShop)."
+        'new_base_price': fields.float(
+            'New price', digits_compute=dp.get_precision('Sale Price'),
+            help="New base price : 'base price' field is not used in this"
+            "case (specific to PrestaShop)."
             ),
-        'let_base_price': fields.boolean('Let price',
-            help="If False, use the 'New price' field (specific to Prestashop) "
-                " instead of 'based on' field"
+        'let_base_price': fields.boolean(
+            'Let price',
+            help="If False, use the 'New price' field (specific to"
+            "Prestashop) instead of 'based on' field"
             ),
     }
 
     def check_price_elements(self, cr, uid, item):
         # check price validity
         if item.price_discount == 0 and item.price_surcharge == 0:
-            if item.let_base_price == False:
+            if not item.let_base_price:
                 if item.new_base_price <= 0:
-                    return (True, _('Error on prices for PrestaShop:'),
+                    return (
+                        True, _('Error on prices for PrestaShop:'),
                         _("'New base price' must be greater than 0 "
-                        "when 'Let price' is False."))
+                            "when 'Let price' is False."))
             else:
                 return (True, _('Error on prices:'),
                         _("'Discount' or 'Surcharge' must be different of 0 "
                           "when 'Let price' is True"))
-        if item.price_surcharge > 0 and item.let_base_price == True:
-            return (True, _('Error on prices for PrestaShop:'),
-                        _("'Surcharge' must be negative or 0."))
+        if item.price_surcharge > 0 and item.let_base_price:
+            return (
+                True, _('Error on prices for PrestaShop:'),
+                _("'Surcharge' must be negative or 0."))
         # check quantity
         if item.price_discount:
             if item.price_discount > 0 or item.price_discount < -1:
@@ -132,18 +139,19 @@ class AbstractPriceListItem(orm.AbstractModel):
     def _check_min_quantity(self, cr, uid, ids):
         for item in self.browse(cr, uid, ids):
             if item.min_quantity < 1:
-                raise except_osv(_('Error in quantity:'),
+                raise except_osv(
+                    _('Error in quantity:'),
                     _("'Minimum quantity' must be greater or equal than 1. "
-                    "Quantity '%s' founded") \
-                    % item.min_quantity)
+                        "Quantity '%s' founded") % item.min_quantity)
                 return False
         return True
 
     _constraints = [
-            (_check_min_quantity,
+        (
+            _check_min_quantity,
             'Error: Invalid quantity',
             ['min_quantity'])
-        ]
+    ]
 
     _defaults = {
         'let_base_price': True,
@@ -154,8 +162,8 @@ class PricelistItemTemplate(orm.Model):
     _inherit = ['abstract.pricelist.item', 'pricelist.item.template']
     _name = 'pricelist.item.template'
 
-    def onchange_price_presta(self, cr, uid, ids, discount, surcharge,
-                                                                context=None):
+    def onchange_price_presta(
+            self, cr, uid, ids, discount, surcharge, context=None):
         """Prestashop do not support in the same time 'price_discount'
             and 'price_surcharge' fields : either one or the other
             On change mechanism allow to switch from one to the other """
@@ -185,33 +193,37 @@ class product_pricelist_item(orm.Model):
     }
 
     def create(self, cr, uid, vals, context=None):
-        res = super(product_pricelist_item, self).create(cr, uid, vals,
-                                                                context=context)
+        res = super(product_pricelist_item, self).create(
+            cr, uid, vals, context=context)
         presta_item_m = self.pool['prestashop.product.pricelist.item']
         version_m = self.pool['product.pricelist.version']
         shop_m = self.pool['prestashop.shop']
         price_version_id = vals['price_version_id']
-        pricelist = version_m.browse(cr, uid, [price_version_id],
-                                            context=context)[0].pricelist_id
-        ## search shops using current pricelist
-        shop_ids = shop_m.search(cr, uid, [('pricelist_id', '=',
-                                              pricelist.id)], context=context)
-        #TODO FIXME : mostly there is only one backend per shop : needs a clean solution for other situations
+        pricelist = version_m.browse(
+            cr, uid, [price_version_id], context=context)[0].pricelist_id
+        # search shops using current pricelist
+        shop_ids = shop_m.search(
+            cr, uid, [('pricelist_id', '=', pricelist.id)], context=context)
+        # TODO FIXME : mostly there is only one backend per shop :
+        # needs a clean solution for other situations
         if shop_ids:
             for shop in shop_m.browse(cr, uid, shop_ids, context=context):
                 backend_id = shop.prestashop_bind_ids[0].id
                 vals = {'backend_id': backend_id,
                         'shop_id': shop.id,
                         'openerp_id': res}
-                ## creation of 'prestas..product.pricel..item' record by shop
+                # creation of 'prestas..product.pricel..item' record by shop
                 presta_item_m.create(cr, uid, vals, context=context)
         else:
-            raise except_osv("Error with PrestaShop: ",
+            raise except_osv(
+                "Error with PrestaShop: ",
                 unicode("""There is no shop connected with PrestaShop "
                     "with this pricelist :
-                    '%s'\nNo synchronisation """ % pricelist.name) + \
-                unicode ("of this pricelist is possible with PrestaShop"))
-            #self.pool.get('mail.thread').message_post(cr, uid, False, "mess mine", context=context, partner_ids=[(6, 0, [1])], subtype='__.notify')
+                    '%s'\nNo synchronisation """ % pricelist.name) +
+                unicode("of this pricelist is possible with PrestaShop"))
+            # self.pool.get('mail.thread').message_post(
+            #   cr, uid, False, "mess mine", context=context,
+            #   partner_ids=[(6, 0, [1])], subtype='__.notify')
         return res
 
 
@@ -235,10 +247,12 @@ class prestashop_product_pricelist_item(orm.Model):
 
 
 @on_record_create(model_names='prestashop.product.pricelist.item')
-def prestashop_product_pricelist_item_created(session, model_name, record_id, fields=None):
+def prestashop_product_pricelist_item_created(
+        session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     export_record.delay(session, model_name, record_id, fields)
+
 
 @on_record_write(model_names='product.pricelist.item')
 def product_pricelist_item_written(session, model_name, record_id, fields):
@@ -246,15 +260,18 @@ def product_pricelist_item_written(session, model_name, record_id, fields):
         return
     if set(fields).intersection(set(PRICELIST_FIELDS)):
         model = session.pool.get(model_name)
-        record = model.browse(session.cr, session.uid,
-                       record_id, context=session.context)
+        record = model.browse(
+            session.cr, session.uid, record_id, context=session.context)
         for binding in record.prestashop_bind_ids:
-            export_record.delay(session, 'prestashop.product.pricelist.item',
-                                                            binding.id, fields)
+            export_record.delay(
+                session, 'prestashop.product.pricelist.item', binding.id,
+                fields)
+
 
 @on_record_unlink(model_names='product.pricelist.item')
 def delay_unlink_all_bindings(session, model_name, record_id):
-    prestashoperpconnect.delay_unlink_all_bindings(session, model_name, record_id)
+    prestashoperpconnect.delay_unlink_all_bindings(
+        session, model_name, record_id)
 
 
 @prestashop
@@ -288,14 +305,14 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
         if record.start_date:
             start = record.start_date
         else:
-            start =  '0000-00-00'
+            start = '0000-00-00'
         if record.end_date:
             end = record.end_date
         else:
-            end =  '0000-00-00'
+            end = '0000-00-00'
         start += ' 00:00:00'
         end += ' 00:00:00'
-        return { 'from': start, 'to': end, }
+        return {'from': start, 'to': end}
 
     @mapping
     def id_country(self, record):
@@ -348,7 +365,7 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
 
     @mapping
     def price(self, record):
-        if record.let_base_price == True:
+        if record.let_base_price:
             return {'price': -1.000000}
         else:
             return {'price': record.new_base_price}
@@ -356,6 +373,7 @@ class PrestashopPricelistItemExportMapper(PrestashopExportMapper):
     @mapping
     def unused_in_erp_but_mandatory_in_presta(self, record):
         return {'id_customer': '0', 'id_cart': '0'}
+
 
 @prestashop
 class PrestashopPricelistItemDeleteSynchronizer(PrestashopDeleteSynchronizer):

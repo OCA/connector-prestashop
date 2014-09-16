@@ -29,21 +29,23 @@
     'summary': "Synchronise pricelists with PrestaShop",
     'description': """
 Synchronise pricelists defined in OpenERP with PrestaShop:
------------------------------------------------------------
+==========================================================
 
-How to :
+How to:
+-------
+* follow prestashoperpconnect intructions
+* import customers
+* import products
+* define a pricelist in your imported shop (from PrestaShop) in OpenERP
+* modify items in each pricelist defined above to active synchronisation :
 
-- follow prestashoperpconnect intructions
-- import customers
-- import products
-- define a pricelist in your imported shop (from PrestaShop) in OpenERP
-- modify items in each pricelist defined above to active synchronisation :
-
-    * each item record creation/update/deletion trigger a record creation/update/deletion in 'prestashop.product.pricelist.item'
+    * each item record creation/update/deletion trigger a record
+        creation/update/deletion in 'prestashop.product.pricelist.item'
     * each modification in this model trigger a synchronisation with prestashop
 
-TODO :
-put a delay between activation and desactivation of pricelist.builder
+TODO:
+-----
+* put a delay between activation and desactivation of pricelist.builder
 
     """,
     'author': 'akretion',
@@ -71,4 +73,3 @@ put a delay between activation and desactivation of pricelist.builder
     'qweb': [
     ],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
