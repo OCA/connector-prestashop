@@ -2,7 +2,8 @@
 ###############################################################################
 #
 #   Prestashop_catalog_manager for OpenERP
-#   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>. All Rights Reserved
+#   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>.
+#   All Rights Reserved
 #   @author : Sébastien BEAU <sebastien.beau@akretion.com>
 #             Benoît GUILLOT <benoit.guillot@akretion.com>
 #
@@ -22,31 +23,36 @@
 ###############################################################################
 
 {
-    "name" : "Prestashop-OpenERP Catalog Manager",
-    "version" : "0.2", # 0.1 codenamed "In tartiflette we trust"
+    "name": "Prestashop-OpenERP Catalog Manager",
+    "version": "0.2",  # 0.1 codenamed "In tartiflette we trust"
     "license": "AGPL-3",
-    "depends" : [
-                 "prestashoperpconnect",
-                 "product_custom_attributes",
-                ],
-    "author" : "PrestashopERPconnect Core Editors",
-    "description": """This module is an extention for PrestashopERPconnect.
+    "depends": [
+        "prestashoperpconnect",
+        "product_custom_attributes",
+    ],
+    "author": "PrestashopERPconnect Core Editors",
+    "description": """
+This module is an extention for PrestashopERPconnect.
+=====================================================
 
-With this module you will be able to manage your catalog directly from OpenERP. You can :
-- create/modify custom attributs and options in OpenERP and push then in pretashop.
+With this module you will be able to manage your catalog directly from
+ OpenERP. You can :
+* create/modify custom attributs and options in OpenERP and push then
+in pretashop.
 - create/modify products and push then in prestashop.
 
 TODO :
-- create/modify category and push then in prestashop.
-- create/modify image and push then in prestashop.
+------
+* create/modify category and push then in prestashop.
+* create/modify image and push then in prestashop.
 """,
     'images': [
     ],
-    "website" : "https://launchpad.net/prestashoperpconnect",
-    "category" : "Generic Modules",
-    "complexity" : "expert",
-    "demo" : [],
-    "data" : [
+    "website": "https://launchpad.net/prestashoperpconnect",
+    "category": "Generic Modules",
+    "complexity": "expert",
+    "demo": [],
+    "data": [
         'view/product_attribute_view.xml',
         'view/product_view.xml',
         ],
