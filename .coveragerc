@@ -3,7 +3,7 @@
 
 [report]
 include =
-    */OCA/sale-workflow/*
+    */OCA/connector-prestashop/*
 
 omit =
     */tests/*

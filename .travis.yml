@@ -12,6 +12,11 @@ virtualenv:
 
 before_install:
   - git clone https://github.com/OCA/connector-prestashop $HOME/connector-prestashop -b 7.0
+  - git clone https://github.com/OCA/connector.git $HOME/connector -b 7.0
+  - git clone https://github.com/OCA/connector-ecommerce.git $HOME/connector-ecommerce -b 7.0
+  - git clone https://github.com/OCA/e-commerce.git $HOME/e-commerce -b 7.0
+  - git clone https://github.com/OCA/product-attribute.git $HOME/product-attribute -b 7.0
+  - git clone https://github.com/OCA/sale-workflow.git $HOME/sale-workflow -b 7.0
 
 install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
