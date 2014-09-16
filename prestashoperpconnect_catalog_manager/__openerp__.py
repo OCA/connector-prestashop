@@ -47,8 +47,8 @@ TODO :
     "complexity" : "expert",
     "demo" : [],
     "data" : [
-        'product_attribute_view.xml',
-        'product_view.xml',
+        'view/product_attribute_view.xml',
+        'view/product_view.xml',
         ],
     "active": False,
     "installable": True,
