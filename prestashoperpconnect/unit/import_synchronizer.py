@@ -133,9 +133,12 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        erp_id = self._get_openerp_id()
         map_record = self.mapper.map_record(self.prestashop_record)
-        record = map_record.values()
+        erp_id = self._get_openerp_id()
+        if erp_id:
+            record = map_record.values()
+        else:
+            record = map_record.values(for_create=True)
 
         # special check on data before import
         self._validate_data(record)
@@ -677,7 +680,10 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         if erp_id is None:
             erp_id = self._get_openerp_id()
 
-        record = mapped.values()
+        if erp_id:
+            record = mapped.values()
+        else:
+            record = mapped.values(for_create=True)
 
         # special check on data before import
         self._validate_data(record)
