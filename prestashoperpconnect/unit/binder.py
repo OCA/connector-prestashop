@@ -140,6 +140,5 @@ class PrestashopModelBinder(PrestashopBinder):
             openerp_id,
             {'prestashop_id': str(external_id),
              'sync_date': now_fmt},
-            # {'prestashop_id': external_id},
             context=context
         )

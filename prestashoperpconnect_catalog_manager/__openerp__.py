@@ -30,7 +30,7 @@
         "prestashoperpconnect",
         "product_custom_attributes",
     ],
-    "author": "PrestashopERPconnect Core Editors",
+    "author": "['Akretion', 'Camptocamp']",
     "description": """
 This module is an extention for PrestashopERPconnect.
 =====================================================

@@ -38,7 +38,7 @@
     "external_dependencies": {
         'python': ["unidecode"],
     },
-    "author": "PrestashopERPconnect Core Editors",
+    "author": "['Akretion', 'Camptocamp']",
     "description": """This module connects OpenERP and Prestashop.
 
 Prestashop (http://www.prestashop.com/) is a popular e-commerce plateform
@@ -64,13 +64,10 @@ This connector was started by Akretion (http://www.akretion.com/) and
   in Seythenex (Haute-Savoie, France) on 6-10 February 2012. Publishing this
    connector as free software was possible thanks to a large R&D effort of
     Akretion and Camptocamp (with some help of Julius Network Solutions).
-     Akretion and Camptocamp form the "PrestashopERPconnect Core Editors".
 
 This connector is built on a very solid basis, but still requires deep
  knowledge of both OpenERP, Prestashop and the connector's internals to be
-  deployed successfully in production. The PrestashopERPconnect Core Editors
-   are available to help you deploy this solution for your Prestashop-based
-    e-commerce business.
+  deployed successfully in production.
 """,
     'images': [
     ],

@@ -97,9 +97,9 @@ class prestashop_backend(orm.Model):
         'company_id': fields.many2one(
             'res.company', 'Company', select=1, required=True),
         'discount_product_id': fields.many2one(
-            'product.product', 'Dicount Product', select=1, required=False),
+            'product.product', 'Discount Product', select=1),
         'shipping_product_id': fields.many2one(
-            'product.product', 'Shipping Product', select=1, required=False),
+            'product.product', 'Shipping Product', select=1),
     }
 
     _defaults = {
@@ -451,7 +451,6 @@ class prestashop_res_lang(orm.Model):
     }
 
     _defaults = {
-        # 'active': lambda *a: False,
         'active': False,
     }
 

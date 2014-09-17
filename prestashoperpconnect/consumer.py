@@ -24,35 +24,6 @@ from .unit.delete_synchronizer import export_delete_record
 from .connector import get_environment
 
 
-# TODO: Fix me OR Remove Me. The above code call unknown 'export_record'
-
-# def delay_export(session, model_name, record_id, fields=None):
-#    """ Delay a job which export a binding record.
-
-#    (A binding record being a ``external.res.partner``,
-#    ``external.product.product``, ...)
-#    """
-#    if session.context.get('connector_no_export'):
-#        return
-#    export_record.delay(session, model_name, record_id, fields=fields)
-
-
-# def delay_export_all_bindings(session, model_name, record_id, fields=None):
-#    """ Delay a job which export all the bindings of a record.
-
-#    In this case, it is called on records of normal models and will delay
-#    the export for all the bindings.
-#    """
-#    if session.context.get('connector_no_export'):
-#        return
-#    model = session.pool.get(model_name)
-#    record = model.browse(session.cr, session.uid,
-#                          record_id, context=session.context)
-#    for binding in record.prestashop_bind_ids:
-#        export_record.delay(session, binding._model._name, binding.id,
-#                            fields=fields)
-
-
 def delay_unlink(session, model_name, record_id):
     """ Delay a job which delete a record on Prestashop.
 

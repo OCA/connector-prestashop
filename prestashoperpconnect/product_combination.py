@@ -159,8 +159,9 @@ class ProductCombinationMapper(PrestashopImportMapper):
     def price(self, record):
         main_product = self.main_product(record)
         if self.backend_record.taxes_included:
-            price = main_product.list_price_tax_inc \
-                + float(record['unit_price_impact'])
+            price = (
+                main_product.list_price_tax_inc
+                + float(record['unit_price_impact']))
             return {'list_price_tax_inc': price}
         price = main_product.list_price + float(record['unit_price_impact'])
         return {'list_price': price}
@@ -281,14 +282,6 @@ class ProductCombinationMapper(PrestashopImportMapper):
             i += 1
             current_code = '%s_%d' % (code, i)
         return {'default_code': current_code}
-
-    # #@mapping
-    # #def active(self, record):
-    # #    return {'always_available': bool(int(record['active']))}
-
-    # #@mapping
-    # #def sale_ok(self, record):
-    # #    return {'sale_ok': record['available_for_order'] == '1'}
 
     @mapping
     def backend_id(self, record):

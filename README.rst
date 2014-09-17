@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=7.0)](https://travis-ci.org/OCA/connector-prestashop)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=7.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=7.0)
+
 prestashoperpconnect
 ====================
 
@@ -6,7 +9,7 @@ A module that permits OpenERP to connect to Prestashop.
 Requirements
 ------------
 
-You should install python librairies and other OCA repositories.
+You should install python libraries and other OCA repositories.
 Please refer to the travis.yml file.
 
 

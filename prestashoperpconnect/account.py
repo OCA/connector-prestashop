@@ -253,9 +253,9 @@ class RefundMapper(PrestashopImportMapper):
         date_invoice = datetime.strptime(
             record['date_upd'], '%Y-%m-%d %H:%M:%S')
         # TODO: Delete or change this ugly test
-        if date(2014, 1, 1) > date_invoice.date() and \
-                sale_order.payment_method_id and \
-                sale_order.payment_method_id.account_id:
+        if (date(2014, 1, 1) > date_invoice.date() and
+                sale_order.payment_method_id and
+                sale_order.payment_method_id.account_id):
             return {'account_id': sale_order.payment_method_id.account_id.id}
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id

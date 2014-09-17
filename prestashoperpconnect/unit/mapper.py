@@ -522,8 +522,9 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     @mapping
     def total_tax_amount(self, record):
-        tax = float(record['total_paid_tax_incl']) \
-            - float(record['total_paid_tax_excl'])
+        tax = (
+            float(record['total_paid_tax_incl'])
+            - float(record['total_paid_tax_excl']))
         return {'total_amount_tax': tax}
 
     def _after_mapping(self, result):
