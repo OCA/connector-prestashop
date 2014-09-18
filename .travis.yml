@@ -8,7 +8,7 @@ env:
   - VERSION="7.0" ODOO_REPO="OCA/OCB"
 
 virtualenv:
-  system_site_packages: true
+  system_site_packages: false
 
 before_install:
   - git clone https://github.com/OCA/connector.git $HOME/connector -b 7.0
