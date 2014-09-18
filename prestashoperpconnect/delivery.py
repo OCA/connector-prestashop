@@ -21,10 +21,7 @@
 ##############################################################################
 
 import logging
-from openerp.osv import fields, orm
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper,
-                                                  )
+from openerp.addons.connector.unit.mapper import mapping
 from .unit.backend_adapter import GenericAdapter
 from .unit.mapper import PrestashopImportMapper
 from .unit.import_synchronizer import (DelayedBatchImport,

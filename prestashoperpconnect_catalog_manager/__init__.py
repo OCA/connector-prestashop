@@ -2,7 +2,8 @@
 ###############################################################################
 #
 #   Prestashop_catalog_manager for OpenERP
-#   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>. All Rights Reserved
+#   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>.
+#   All Rights Reserved
 #   @author : Sébastien BEAU <sebastien.beau@akretion.com>
 #             Benoît GUILLOT <benoit.guillot@akretion.com>
 #

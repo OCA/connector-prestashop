@@ -38,26 +38,36 @@
     "external_dependencies": {
         'python': ["unidecode"],
     },
-    "author": "PrestashopERPconnect Core Editors",
+    "author": "['Akretion', 'Camptocamp']",
     "description": """This module connects OpenERP and Prestashop.
 
-Prestashop (http://www.prestashop.com/) is a popular e-commerce plateform written in PHP/MySQL and published under the Open Software licence v3.0.
+Prestashop (http://www.prestashop.com/) is a popular e-commerce plateform
+ written in PHP/MySQL and published under the Open Software licence v3.0.
 
-This module allows the synchronisation of the following objects between OpenERP and Prestashop :
-- shop groups and shops
-- currencies
-- languages
-- countries
-- carriers
-- products
+This module allows the synchronisation of the following objects between OpenERP
+ and Prestashop :
+* shop groups and shops
+* currencies
+* languages
+* countries
+* carriers
+* products
 
-Once these objects are synchronised, it will allow the import of orders, together with the related customers and addresses.
+Once these objects are synchronised, it will allow the import of orders,
+ together with the related customers and addresses.
 
-This connector supports Prestashop 1.5 and uses the webservices of Prestashop ; it doesn't require any plug-in in Prestashop.
+This connector supports Prestashop 1.5 and uses the webservices of Prestashop
+ ; it doesn't require any plug-in in Prestashop.
 
-This connector was started by Akretion (http://www.akretion.com/) and Camptocamp (http://www.camptocamp.com/) during a code sprint that took place in Seythenex (Haute-Savoie, France) on 6-10 February 2012. Publishing this connector as free software was possible thanks to a large R&D effort of Akretion and Camptocamp (with some help of Julius Network Solutions). Akretion and Camptocamp form the "PrestashopERPconnect Core Editors".
+This connector was started by Akretion (http://www.akretion.com/) and
+ Camptocamp (http://www.camptocamp.com/) during a code sprint that took place
+  in Seythenex (Haute-Savoie, France) on 6-10 February 2012. Publishing this
+   connector as free software was possible thanks to a large R&D effort of
+    Akretion and Camptocamp (with some help of Julius Network Solutions).
 
-This connector is built on a very solid basis, but still requires deep knowledge of both OpenERP, Prestashop and the connector's internals to be deployed successfully in production. The PrestashopERPconnect Core Editors are available to help you deploy this solution for your Prestashop-based e-commerce business.
+This connector is built on a very solid basis, but still requires deep
+ knowledge of both OpenERP, Prestashop and the connector's internals to be
+  deployed successfully in production.
 """,
     'images': [
     ],
@@ -68,18 +78,17 @@ This connector is built on a very solid basis, but still requires deep knowledge
     'data': [
         'data/cron.xml',
         'data/product_decimal_precision.xml',
-
-        'prestashop_model_view.xml',
-        'product_view.xml',
-        'delivery_view.xml',
-        'prestashoperpconnect_menu.xml',
-        'partner_view.xml',
-        'sale_view.xml',
-        'setting_view.xml',
-
+        'data/ecommerce_data.xml',
+        'views/prestashop_model_view.xml',
+        'views/product_view.xml',
+        'views/delivery_view.xml',
+        'views/prestashoperpconnect_menu.xml',
+        'views/partner_view.xml',
+        'views/sale_view.xml',
+        'views/setting_view.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
-        'ecommerce_data.xml',
+
     ],
     "active": False,
     "installable": True,

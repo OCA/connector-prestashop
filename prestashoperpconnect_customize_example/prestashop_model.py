@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_customize_example for OpenERP 
+#   prestashoperpconnect_customize_example for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
@@ -22,6 +22,7 @@
 
 from openerp.osv import orm, fields
 
+
 class prestashop_backend(orm.Model):
     _inherit = 'prestashop.backend'
 
@@ -30,7 +31,8 @@ class prestashop_backend(orm.Model):
 
         Can be inherited to add custom versions.
         """
-        versions = super(prestashop_backend, self)._select_versions(cr, uid, context=context)
+        versions = super(prestashop_backend, self)._select_versions(
+            cr, uid, context=context)
         versions.append(('1.5-myversion', '1.5 My Version'))
         return versions
 

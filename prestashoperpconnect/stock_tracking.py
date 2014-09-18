@@ -23,9 +23,9 @@
 
 
 import logging
+from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.exception import FailedJobError, NoExternalId
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from .connector import get_environment
@@ -33,6 +33,7 @@ from .backend import prestashop
 from .unit.backend_adapter import PrestaShopCRUDAdapter
 
 _logger = logging.getLogger(__name__)
+
 
 @prestashop
 class PrestashopTrackingExport(ExportSynchronizer):
@@ -44,7 +45,6 @@ class PrestashopTrackingExport(ExportSynchronizer):
             if picking.carrier_tracking_ref:
                 trackings.append(picking.carrier_tracking_ref)
         return ';'.join(trackings) if trackings else None
-
 
     def run(self, binding_id):
         """ Export the tracking number of a picking to Magento """

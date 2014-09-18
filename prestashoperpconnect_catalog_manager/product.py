@@ -19,21 +19,21 @@
 #                                                                             #
 ###############################################################################
 
-from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
-from openerp.addons.connector.unit.mapper import ExportMapper, mapping
+from openerp.addons.connector.unit.mapper import mapping
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     TranslationPrestashopExporter,
     export_record
 )
 
-from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
-from openerp.addons.prestashoperpconnect.connector import get_environment
+from openerp.addons.prestashoperpconnect.unit.mapper \
+    import TranslationPrestashopExportMapper
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.product import INVENTORY_FIELDS
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
+
 
 @on_record_create(model_names='prestashop.product.product')
 def prestashop_product_product_create(session, model_name, record_id):
@@ -41,23 +41,28 @@ def prestashop_product_product_create(session, model_name, record_id):
         return
     export_record.delay(session, model_name, record_id, priority=20)
 
+
 @on_record_write(model_names='prestashop.product.product')
 def prestashop_product_product_write(session, model_name, record_id, fields):
     if session.context.get('connector_no_export'):
         return
     fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
     if fields:
-        export_record.delay(session, model_name, record_id, fields, priority=20)
+        export_record.delay(
+            session, model_name, record_id, fields, priority=20)
+
 
 @on_record_write(model_names='product.product')
 def product_product_write(session, model_name, record_id, fields):
     if session.context.get('connector_no_export'):
         return
     model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                           record_id, context=session.context)
+    record = model.browse(
+        session.cr, session.uid, record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.product.product', binding.id, fields, priority=20)
+        export_record.delay(
+            session, 'prestashop.product.product', binding.id, fields,
+            priority=20)
 
 
 class prestashop_product_product(orm.Model):
@@ -72,7 +77,7 @@ class prestashop_product_product(orm.Model):
             'Meta Description',
             translate=True,
         ),
-        'meta_keywords' : fields.char(
+        'meta_keywords': fields.char(
             'Meta Keywords',
             translate=True,
         ),
@@ -114,30 +119,38 @@ class prestashop_product_product(orm.Model):
         'minimal_quantity': 1,
     }
 
+
 @prestashop
 class ProductExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.product'
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
-        #TODO add export of category
-        attribute_binder = self.get_binder_for_model('prestashop.product.attribute')
-        option_binder = self.get_binder_for_model('prestashop.attribute.option')
+        # TODO add export of category
+        attribute_binder = self.get_binder_for_model(
+            'prestashop.product.attribute')
+        option_binder = self.get_binder_for_model(
+            'prestashop.attribute.option')
         for group in self.erp_record.attribute_group_ids:
             for attribute in group.attribute_ids:
-                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, unwrap=True)
-                if attribute_ext_id and attribute.ttype == 'many2one':
-                    option = self.erp_record[attribute.name]
-                    if option and not option_binder.to_backend(option.id, unwrap=True):
-                        ctx = self.session.context.copy()
-                        ctx['connector_no_export'] = True
-                        binding_id = self.session.pool['prestashop.attribute.option'].create(
-                                                self.session.cr, self.session.uid,{
-                                                'backend_id': self.backend_record.id,
-                                                'openerp_id': option.id,
-                                                }, context=ctx)
-                        export_record(self.session, 'prestashop.attribute.option', binding_id)
-      
+                attribute_ext_id = attribute_binder.to_backend(
+                    attribute.attribute_id.id, unwrap=True)
+                if not(attribute_ext_id and attribute.ttype == 'many2one'):
+                    break
+                option = self.erp_record[attribute.name]
+                if not (option and not option_binder.to_backend(
+                        option.id, unwrap=True)):
+                    break
+                ctx = self.session.context.copy()
+                ctx['connector_no_export'] = True
+                pao_obj = self.session.pool['prestashop.attribute.option']
+                binding_id = pao_obj.create(
+                    self.session.cr, self.session.uid, {
+                        'backend_id': self.backend_record.id,
+                        'openerp_id': option.id,
+                    }, context=ctx)
+                export_record(
+                    self.session, 'prestashop.attribute.option', binding_id)
 
 
 @prestashop
@@ -174,11 +187,14 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
 
     def _get_product_feature(self, record):
         product_feature = []
-        attribute_binder = self.get_binder_for_model('prestashop.product.attribute')
-        option_binder = self.get_binder_for_model('prestashop.attribute.option')
+        attribute_binder = self.get_binder_for_model(
+            'prestashop.product.attribute')
+        option_binder = self.get_binder_for_model(
+            'prestashop.attribute.option')
         for group in record.attribute_group_ids:
             for attribute in group.attribute_ids:
-                attribute_ext_id = attribute_binder.to_backend(attribute.attribute_id.id, unwrap=True)
+                attribute_ext_id = attribute_binder.to_backend(
+                    attribute.attribute_id.id, unwrap=True)
                 if not attribute_ext_id:
                     continue
                 feature_dict = {'id': attribute_ext_id}
@@ -192,7 +208,8 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
                 else:
                     feature_dict['id_feature_value'] = 0
                     if attribute.translate:
-                        res = self.convert_languages([(attribute.name, 'custom_feature_value')])
+                        res = self.convert_languages(
+                            [(attribute.name, 'custom_feature_value')])
                     else:
                         res = {'custom_feature_value': record[attribute.name]}
                     feature_dict.update(res)
@@ -205,16 +222,18 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
         categories = record.categ_ids + [record.categ_id]
         for category in categories:
             ext_categ_ids.append(
-                    {'id' : binder.to_backend(category.id, unwrap=True)}
-                    )
+                {'id': binder.to_backend(category.id, unwrap=True)}
+                )
         return ext_categ_ids
 
     @mapping
     def associations(self, record):
         return {
-            'associations':{
-                'categories': {'category_id': self._get_product_category(record)},
-                'product_features': {'product_feature': self._get_product_feature(record)},
+            'associations': {
+                'categories': {
+                    'category_id': self._get_product_category(record)},
+                'product_features': {
+                    'product_feature': self._get_product_feature(record)},
                 }
             }
 
@@ -228,11 +247,10 @@ class ProductExportMapper(TranslationPrestashopExportMapper):
     def tax_ids(self, record):
         binder = self.get_binder_for_model('prestashop.account.tax.group')
         ext_id = binder.to_backend(record.tax_group_id.id, unwrap=True)
-        return {'id_tax_rules_group' : ext_id}
+        return {'id_tax_rules_group': ext_id}
 
     @mapping
     def available_date(self, record):
         if record.available_date:
             return {'available_date': record.available_date}
         return {}
-

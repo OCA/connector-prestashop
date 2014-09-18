@@ -12,10 +12,6 @@ the main product.
 
 from openerp.osv import fields, orm
 
-from openerp.addons.connector.session import ConnectorSession
-
-from ..unit.import_synchronizer import import_record
-
 
 class product_product(orm.Model):
     _inherit = 'product.product'
@@ -137,6 +133,7 @@ class mrp_bom(orm.Model):
             string='PrestaShop Bindings'
         ),
     }
+
 
 class prestashop_combination_mrp_bom(orm.Model):
     _name = 'prestashop.combination.mrp.bom'

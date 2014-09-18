@@ -21,10 +21,8 @@
 
 import datetime
 import mimetypes
-import json
 
 from openerp import SUPERUSER_ID
-from openerp.osv import fields, orm
 
 from openerp.addons.product.product import check_ean
 
@@ -35,11 +33,7 @@ from .unit.import_synchronizer import DelayedBatchImport
 from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import import_record
 from openerp.addons.connector.unit.mapper import mapping
-
-from prestapyt import PrestaShopWebServiceError
-
-from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
-
+from .unit.backend_adapter import GenericAdapter
 from .connector import get_environment
 from .unit.mapper import PrestashopImportMapper
 from backend import prestashop
@@ -52,7 +46,7 @@ except ImportError, e:
     from xml.etree import ElementTree
 
 
-##########  product category ##########
+# Product Category Mapper
 @prestashop
 class ProductCategoryMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.category'
@@ -99,7 +93,7 @@ class ProductCategoryMapper(PrestashopImportMapper):
         return {'date_upd': record['date_upd']}
 
 
-# Product image connector parts
+# Product Image Mapper
 @prestashop
 class ProductImageMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.image'
@@ -128,7 +122,7 @@ class ProductImageMapper(PrestashopImportMapper):
         return {"extension": mimetypes.guess_extension(record['type'])}
 
 
-########  product  ########
+# Product Mapper
 @prestashop
 class ProductMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.product'
@@ -203,8 +197,8 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def sale_ok(self, record):
-        # if this product has combinations, we do not want to sell this product,
-        # but its combinations (so sale_ok = False in that case).
+        # if this product has combinations, we do not want to sell this
+        # product, but its combinations (so sale_ok = False in that case).
         sale_ok = (record['available_for_order'] == '1'
                    and not self.has_combinations(record))
         return {'sale_ok': sale_ok}
@@ -235,7 +229,6 @@ class ProductMapper(PrestashopImportMapper):
             categories[0]['id']
         )
         return {'categ_id': category_id}
-
 
     @mapping
     def categ_ids(self, record):
@@ -289,8 +282,8 @@ class ProductMapper(PrestashopImportMapper):
     @mapping
     def type(self, record):
         # If the product has combinations, this main product is not a real
-        # product. So it is set to a 'service' kind of product. Should better be
-        # a 'virtual' product... but it does not exist...
+        # product. So it is set to a 'service' kind of product. Should better
+        # be a 'virtual' product... but it does not exist...
         # The same if the product is a virtual one in prestashop.
         if ((record['type']['value'] and record['type']['value'] == 'virtual')
                 or self.has_combinations(record)):
@@ -390,9 +383,12 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
         return binder.to_openerp(record['id_product_attribute'], unwrap=True)
 
     def run(self, record):
-        self._check_dependency(record['id_product'], 'prestashop.product.product')
+        self._check_dependency(
+            record['id_product'], 'prestashop.product.product')
         if record['id_product_attribute'] != '0':
-            self._check_dependency(record['id_product_attribute'], 'prestashop.product.combination')
+            self._check_dependency(
+                record['id_product_attribute'],
+                'prestashop.product.combination')
 
         qty = self._get_quantity(record)
         if qty < 0:
@@ -405,7 +401,7 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
             'product_id': product_id,
             'new_quantity': qty,
         }
-        
+
         product_qty_id = self.session.create("stock.change.product.qty", vals)
         context = {'active_id': product_id}
         product_qty_obj.change_product_qty(
@@ -491,6 +487,7 @@ def export_inventory(session, model_name, record_id, fields=None):
     env = get_environment(session, model_name, backend_id)
     inventory_exporter = env.get_connector_unit(ProductInventoryExport)
     return inventory_exporter.run(record_id, fields)
+
 
 @job
 def import_inventory(session, backend_id):

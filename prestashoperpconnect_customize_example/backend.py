@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_customize_example for OpenERP 
+#   prestashoperpconnect_customize_example for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
@@ -24,5 +24,5 @@
 import openerp.addons.connector.backend as backend
 import openerp.addons.prestashoperpconnect.backend as prestashop_backend
 
-prestashop_myversion = backend.Backend(parent=prestashop_backend.prestashop1500,
-                                    version='1.5-myversion')
+prestashop_myversion = backend.Backend(
+    parent=prestashop_backend.prestashop1500, version='1.5-myversion')

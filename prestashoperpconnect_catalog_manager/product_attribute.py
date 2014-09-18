@@ -2,7 +2,8 @@
 ###############################################################################
 #
 #   Prestashop_catalog_manager for OpenERP
-#   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>. All Rights Reserved
+#   Copyright (C) 2012-TODAY Akretion <http://www.akretion.com>.
+#   All Rights Reserved
 #   @author : Sébastien BEAU <sebastien.beau@akretion.com>
 #             Benoît GUILLOT <benoit.guillot@akretion.com>
 #
@@ -27,10 +28,13 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     export_record,
     TranslationPrestashopExporter,
     )
-from openerp.addons.prestashoperpconnect.unit.binder import PrestashopModelBinder
-from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
+from openerp.addons.prestashoperpconnect.unit.binder \
+    import PrestashopModelBinder
+from openerp.addons.prestashoperpconnect.unit.mapper \
+    import TranslationPrestashopExportMapper
 from openerp.addons.prestashoperpconnect.backend import prestashop
-from openerp.addons.prestashoperpconnect.unit.backend_adapter import GenericAdapter
+from openerp.addons.prestashoperpconnect.unit.backend_adapter \
+    import GenericAdapter
 from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.connector.unit.mapper import mapping
 
@@ -38,7 +42,7 @@ from openerp.addons.connector.unit.mapper import mapping
 class product_attribute(orm.Model):
     _inherit = 'attribute.attribute'
 
-    _columns ={
+    _columns = {
         'prestashop_bind_ids': fields.one2many(
             'prestashop.product.attribute',
             'openerp_id',
@@ -63,16 +67,16 @@ class prestashop_product_attribute(orm.Model):
             'Prestashop Position'),
     }
 
-    #has to be different than 0 because of prestashop
+    # has to be different than 0 because of prestashop
     _defaults = {
-        'prestashop_position' : 1
+        'prestashop_position': 1,
     }
 
 
 class attribute_option(orm.Model):
     _inherit = 'attribute.option'
 
-    _columns ={
+    _columns = {
         'prestashop_bind_ids': fields.one2many(
             'prestashop.attribute.option',
             'openerp_id',
@@ -112,11 +116,13 @@ class prestashop_attribute_option(orm.Model):
                           ('openerp_id', '=', option['attribute_id'][0])],
                 context=context)
             if prestashop_attribute_ids:
-                vals['prestashop_product_attribute_id'] = prestashop_attribute_ids[0]
+                vals['prestashop_product_attribute_id'] = \
+                    prestashop_attribute_ids[0]
                 return super(prestashop_attribute_option, self).create(
                     cr, uid, vals, context=context)
-        raise InvalidDataError("You have to export the product attribute before "
-                               "the attribute option !")
+        raise InvalidDataError(
+            "You have to export the product attribute before the attribute"
+            " option !")
         return True
 
 
@@ -133,37 +139,47 @@ def prestashop_attribute_option_created(session, model_name, record_id):
         return
     export_record.delay(session, model_name, record_id, priority=20)
 
+
 @on_record_write(model_names='prestashop.product.attribute')
-def prestashop_product_attribute_written(session, model_name, record_id, fields=None):
+def prestashop_product_attribute_written(
+        session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     export_record.delay(session, model_name, record_id, priority=20)
 
+
 @on_record_write(model_names='prestashop.attribute.option')
-def prestashop_attribute_option_written(session, model_name, record_id, fields=None):
+def prestashop_attribute_option_written(
+        session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     export_record.delay(session, model_name, record_id, priority=20)
+
 
 @on_record_write(model_names='attribute.attribute')
 def product_attribute_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                           record_id, context=session.context)
+    record = model.browse(
+        session.cr, session.uid, record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.product.attribute', binding.id, fields, priority=20)
+        export_record.delay(
+            session, 'prestashop.product.attribute', binding.id, fields,
+            priority=20)
+
 
 @on_record_write(model_names='attribute.option')
 def attribute_option_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
     model = session.pool.get(model_name)
-    record = model.browse(session.cr, session.uid,
-                           record_id, context=session.context)
+    record = model.browse(
+        session.cr, session.uid, record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.attribute.option', binding.id, fields, priority=20)
+        export_record.delay(
+            session, 'prestashop.attribute.option', binding.id, fields,
+            priority=20)
 
 
 @prestashop
@@ -205,8 +221,8 @@ class AttributeOptionExport(TranslationPrestashopExporter):
         # export product attribute
         binder = self.get_binder_for_model('prestashop.product.attribute')
         if not binder.to_backend(prest_attribute_id):
-            exporter = self.get_connector_unit_for_model(TranslationPrestashopExporter,
-                                                         'prestashop.product.attribute')
+            exporter = self.get_connector_unit_for_model(
+                TranslationPrestashopExporter, 'prestashop.product.attribute')
             exporter.run(prest_attribute_id)
         return
 
@@ -232,7 +248,8 @@ class AttributeOptionExportMapper(TranslationPrestashopExportMapper):
 
     @mapping
     def prestashop_product_attribute_id(self, record):
-        return {'id_feature': record.prestashop_product_attribute_id.prestashop_id}
+        return {
+            'id_feature': record.prestashop_product_attribute_id.prestashop_id}
 
     translatable_fields = [
         ('name', 'value'),

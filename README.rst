@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=7.0)](https://travis-ci.org/OCA/connector-prestashop)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=7.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=7.0)
+
 prestashoperpconnect
 ====================
 
@@ -6,16 +9,9 @@ A module that permits OpenERP to connect to Prestashop.
 Requirements
 ------------
 
-You should install prestapyt (akretion branch) and python-requests :
+You should install python libraries and other OCA repositories.
+Please refer to the travis.yml file.
 
-.. code-block:: shell
-
-   pip install -r requirements.txt
-
-This module is based on other modules :
- - `connector <https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0>`_
- - `e-commerce-addons <https://code.launchpad.net/~openerp-connector-core-editors/openerp-connector/7.0-e-commerce-addons>`_ (use `this branch <https://code.launchpad.net/~arthru/openerp-connector/7.0-e-commerce-addons-fix-workflow>`_ while `this merge has not been approved <https://code.launchpad.net/~arthru/openerp-connector/7.0-e-commerce-addons-fix-workflow/+merge/160350>`_)
- - openerp-product-attributes
 
 Getting started
 ---------------
