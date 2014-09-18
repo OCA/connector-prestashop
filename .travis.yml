@@ -17,7 +17,7 @@ before_install:
   - git clone https://github.com/OCA/product-attribute.git $HOME/product-attribute -b 7.0
   - git clone https://github.com/OCA/sale-workflow.git $HOME/sale-workflow -b 7.0
   - sudo pip install unidecode
-  - sudo pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt requests==0.14.2
+  - sudo pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
 
 install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
