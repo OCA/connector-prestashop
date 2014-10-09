@@ -11,22 +11,21 @@ virtualenv:
   system_site_packages: true
 
 before_install:
-  - sudo pip freeze
   - git clone https://github.com/OCA/connector.git $HOME/connector -b 7.0
   - git clone https://github.com/OCA/connector-ecommerce.git $HOME/connector-ecommerce -b 7.0
   - git clone https://github.com/OCA/e-commerce.git $HOME/e-commerce -b 7.0
   - git clone https://github.com/OCA/product-attribute.git $HOME/product-attribute -b 7.0
   - git clone https://github.com/OCA/sale-workflow.git $HOME/sale-workflow -b 7.0
-  - sudo pip install unidecode
-  - sudo pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
+  - pip install unidecode
+  - pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
 
 install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
+  - pip freeze
 
 script:
-  - travis_run_flake8
   - travis_run_tests
 
 after_success:
