@@ -23,11 +23,9 @@ install:
   - travis_install_nightly
   - pip install unidecode
   - pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
-  - pip freeze
 
 script:
   - travis_run_tests
 
 after_success:
   coveralls
-
