@@ -16,13 +16,13 @@ before_install:
   - git clone https://github.com/OCA/e-commerce.git $HOME/e-commerce -b 7.0
   - git clone https://github.com/OCA/product-attribute.git $HOME/product-attribute -b 7.0
   - git clone https://github.com/OCA/sale-workflow.git $HOME/sale-workflow -b 7.0
-  - pip install unidecode
-  - pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
 
 install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
+  - pip install unidecode
+  - pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
   - pip freeze
 
 script:
