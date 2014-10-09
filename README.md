@@ -1,10 +1,5 @@
-.. image:: https://travis-ci.org/OCA/connector-prestashop.svg?branch=7.0
-    :target: https://travis-ci.org/OCA/connector-prestashop
-    :alt: Build Status
-
-.. image:: https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=7.0
-    :target: https://coveralls.io/r/OCA/connector-prestashop?branch=7.0
-    :alt: Coverage Status
+[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=8.0)](https://travis-ci.org/OCA/connector-prestashop)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=7.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=7.0)
 
 prestashoperpconnect
 ====================
@@ -16,16 +11,16 @@ Requirements
 
 You should install prestapyt (akretion branch) and python-requests :
 
-.. code-block:: shell
-
-   pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 This module is based on modules in other repositories :
- - https://github.com/OCA/connector.git
- - https://github.com/OCA/connector-ecommerce.git
- - https://github.com/OCA/product-attribute.git
- - https://github.com/OCA/e-commerce.git
- - https://github.com/OCA/sale-workflow.git
+- https://github.com/OCA/connector.git
+- https://github.com/OCA/connector-ecommerce.git
+- https://github.com/OCA/product-attribute.git
+- https://github.com/OCA/e-commerce.git
+- https://github.com/OCA/sale-workflow.git
  
 
 Getting started
