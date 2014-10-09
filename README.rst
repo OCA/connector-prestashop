@@ -1,3 +1,11 @@
+.. image:: https://travis-ci.org/OCA/connector-prestashop.svg?branch=7.0
+    :target: https://travis-ci.org/OCA/connector-prestashop
+    :alt: Build Status
+
+.. image:: https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=7.0
+    :target: https://coveralls.io/r/OCA/connector-prestashop?branch=7.0
+    :alt: Coverage Status
+
 prestashoperpconnect
 ====================
 
