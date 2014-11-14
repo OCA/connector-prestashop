@@ -1,4 +1,4 @@
-## -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   PrestashopERPconnect for OpenERP
@@ -29,11 +29,13 @@ from ..backend import prestashop
 
 
 class PrestashopBinder(Binder):
+
     """ Generic Binder for Prestshop """
 
 
 @prestashop
 class PrestashopModelBinder(PrestashopBinder):
+
     """
     Bindings are done directly on the model
     """

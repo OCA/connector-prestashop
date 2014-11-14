@@ -23,10 +23,10 @@
 ###############################################################################
 
 # ConnectorUnit needs to be registered
-import mapper
-import binder
-import import_synchronizer
+from . import mapper
+from . import binder
+from . import import_synchronizer
 #import export_synchronizer
-import delete_synchronizer
-import backend_adapter
-import exception
+from . import delete_synchronizer
+from . import backend_adapter
+from . import exception

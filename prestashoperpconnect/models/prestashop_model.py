@@ -100,7 +100,7 @@ class prestashop_backend(orm.Model):
     }
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'prestashop.backend', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'prestashop.backend', context=c),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -171,7 +171,8 @@ class prestashop_backend(orm.Model):
             since_date = self._date_as_user_tz(
                 cr, uid, backend_record.import_products_since
             )
-            import_products.delay(session, backend_record.id, since_date, priority=10)
+            import_products.delay(
+                session, backend_record.id, since_date, priority=10)
         return True
 
     def import_carriers(self, cr, uid, ids, context=None):
@@ -339,7 +340,7 @@ class prestashop_shop_group(orm.Model):
             'shop_group_id',
             string="Shops",
             readonly=True),
-        'company_id': fields.related('backend_id', 'company_id', type="many2one", relation="res.company",string='Company', store=False),
+        'company_id': fields.related('backend_id', 'company_id', type="many2one", relation="res.company", string='Company', store=False),
     }
 
     _sql_constraints = [

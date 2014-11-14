@@ -21,7 +21,6 @@
 ##############################################################################
 
 import logging
-from openerp.osv import fields, orm
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
@@ -106,6 +105,7 @@ class CarrierImportMapper(PrestashopImportMapper):
 
 @prestashop
 class DeliveryCarrierBatchImport(DelayedBatchImport):
+
     """ Import the Prestashop Carriers.
     """
     _model_name = ['prestashop.delivery.carrier']

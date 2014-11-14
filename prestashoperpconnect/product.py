@@ -21,10 +21,8 @@
 
 import datetime
 import mimetypes
-import json
 
 from openerp import SUPERUSER_ID
-from openerp.osv import fields, orm
 
 from openerp.addons.product.product import check_ean
 
@@ -36,13 +34,12 @@ from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import import_record
 from openerp.addons.connector.unit.mapper import mapping
 
-from prestapyt import PrestaShopWebServiceError
 
-from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
+from .unit.backend_adapter import GenericAdapter
 
 from .connector import get_environment
 from .unit.mapper import PrestashopImportMapper
-from backend import prestashop
+from .backend import prestashop
 
 from prestapyt import PrestaShopWebServiceDict
 
@@ -117,7 +114,7 @@ class ProductImageMapper(PrestashopImportMapper):
 
     @mapping
     def name(self, record):
-        return {'name': record['id_product']+'_'+record['id_image']}
+        return {'name': record['id_product'] + '_' + record['id_image']}
 
     @mapping
     def backend_id(self, record):
@@ -235,7 +232,6 @@ class ProductMapper(PrestashopImportMapper):
             categories[0]['id']
         )
         return {'categ_id': category_id}
-
 
     @mapping
     def categ_ids(self, record):
@@ -390,9 +386,11 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
         return binder.to_openerp(record['id_product_attribute'], unwrap=True)
 
     def run(self, record):
-        self._check_dependency(record['id_product'], 'prestashop.product.product')
+        self._check_dependency(
+            record['id_product'], 'prestashop.product.product')
         if record['id_product_attribute'] != '0':
-            self._check_dependency(record['id_product_attribute'], 'prestashop.product.combination')
+            self._check_dependency(
+                record['id_product_attribute'], 'prestashop.product.combination')
 
         qty = self._get_quantity(record)
         if qty < 0:
@@ -405,7 +403,7 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
             'product_id': product_id,
             'new_quantity': qty,
         }
-        
+
         product_qty_id = self.session.create("stock.change.product.qty", vals)
         context = {'active_id': product_id}
         product_qty_obj.change_product_qty(
@@ -491,6 +489,7 @@ def export_inventory(session, model_name, record_id, fields=None):
     env = get_environment(session, model_name, backend_id)
     inventory_exporter = env.get_connector_unit(ProductInventoryExport)
     return inventory_exporter.run(record_id, fields)
+
 
 @job
 def import_inventory(session, backend_id):

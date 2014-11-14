@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_customize_exemple for OpenERP 
+#   prestashoperpconnect_customize_exemple for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
@@ -34,18 +34,18 @@ class prestashop_res_partner(orm.Model):
             'PrestaShop create date',
             readonly=True
         ),
-        }
+    }
 
 
 @prestashop_myversion
 class MyPartnerImportMapper(PartnerImportMapper):
     _model_name = 'prestashop.res.partner'
 
-    direct = PartnerImportMapper.direct + [('prestashop_created_date', 'date_add')]
+    direct = PartnerImportMapper.direct + \
+        [('prestashop_created_date', 'date_add')]
 
     @mapping
     def name(self, record):
         res = super(MyPartnerImportMapper, self).name(record)
-        res['name'] = "Il est pit ton nom : %s"%res['name']
+        res['name'] = "Il est pit ton nom : %s" % res['name']
         return res
-

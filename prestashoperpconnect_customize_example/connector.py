@@ -23,6 +23,7 @@ from openerp.osv import orm
 
 
 class customize_example_installed(orm.AbstractModel):
+
     """Empty model used to know if the module is installed on the
     database.
 

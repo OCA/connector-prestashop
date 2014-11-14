@@ -20,8 +20,6 @@
 ###############################################################################
 from prestapyt import PrestaShopWebServiceDict
 
-from openerp.osv import fields, orm
-import openerp.addons.decimal_precision as dp
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
@@ -30,7 +28,7 @@ from .unit.backend_adapter import GenericAdapter
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
 from .connector import get_environment
-from backend import prestashop
+from .backend import prestashop
 
 
 @prestashop
@@ -71,19 +69,20 @@ class SaleOrderAdapter(GenericAdapter):
             result += api.search(self._prestashop_model, filters)
         return result
 
+
 @prestashop
 class OrderCarriers(GenericAdapter):
     _model_name = '__not_exit_prestashop.order_carrier'
     _prestashop_model = 'order_carriers'
     _export_node_name = 'order_carrier'
- 
+
 
 @prestashop
 class PaymentMethodAdapter(GenericAdapter):
     _model_name = 'payment.method'
     _prestashop_model = 'orders'
     _export_node_name = 'order'
-    
+
     def search(self, filters=None):
         api = self.connect()
         res = api.get(self._prestashop_model, options=filters)
@@ -91,6 +90,7 @@ class PaymentMethodAdapter(GenericAdapter):
         if isinstance(methods, dict):
             return [methods]
         return methods
+
 
 @prestashop
 class SaleOrderLineAdapter(GenericAdapter):

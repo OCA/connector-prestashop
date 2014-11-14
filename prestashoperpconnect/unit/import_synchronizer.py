@@ -32,11 +32,11 @@ from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
 from openerp.addons.connector.connector import ConnectorUnit
 from ..backend import prestashop
 from ..connector import get_environment
-from backend_adapter import GenericAdapter
+from .backend_adapter import GenericAdapter
 from .exception import OrderImportRuleRetry
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.exception import NothingToDoJob
-from backend_adapter import PrestaShopCRUDAdapter
+from .backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector.connector import Binder
 
 from prestapyt import PrestaShopWebServiceError
@@ -47,6 +47,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PrestashopImportSynchronizer(ImportSynchronizer):
+
     """ Base importer for Prestashop """
 
     def __init__(self, environment):
@@ -164,6 +165,7 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
 
 
 class BatchImportSynchronizer(ImportSynchronizer):
+
     """ The role of a BatchImportSynchronizer is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
@@ -189,7 +191,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
 
     def _run_page(self, filters, **kwargs):
         record_ids = self.backend_adapter.search(filters)
-        
+
         for record_id in record_ids:
             self._import_record(record_id, **kwargs)
         return record_ids
@@ -201,6 +203,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
 
 @prestashop
 class AddCheckpoint(ConnectorUnit):
+
     """ Add a connector.checkpoint on the underlying model
     (not the prestashop.* but the _inherits'ed model) """
 
@@ -243,6 +246,7 @@ class PaymentMethodsImportSynchronizer(BatchImportSynchronizer):
 
 @prestashop
 class DirectBatchImport(BatchImportSynchronizer):
+
     """ Import the PrestaShop Shop Groups + Shops
 
     They are imported directly because this is a rare and fast operation,
@@ -267,6 +271,7 @@ class DirectBatchImport(BatchImportSynchronizer):
 
 @prestashop
 class DelayedBatchImport(BatchImportSynchronizer):
+
     """ Delay import of the records """
     _model_name = [
         'prestashop.res.partner.category',
@@ -319,6 +324,7 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
 
 @prestashop
 class SimpleRecordImport(PrestashopImportSynchronizer):
+
     """ Import one simple record """
     _model_name = [
         'prestashop.shop.group',
@@ -385,6 +391,7 @@ class CombinationMrpBomImport(MrpBomImport):
 
 @prestashop
 class MailMessageRecordImport(PrestashopImportSynchronizer):
+
     """ Import one simple record """
     _model_name = 'prestashop.mail.message'
 
@@ -405,6 +412,7 @@ class MailMessageRecordImport(PrestashopImportSynchronizer):
 
 @prestashop
 class SupplierRecordImport(PrestashopImportSynchronizer):
+
     """ Import one simple record """
     _model_name = 'prestashop.supplier'
 
@@ -585,6 +593,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
 
 @prestashop
 class TranslatableRecordImport(PrestashopImportSynchronizer):
+
     """ Import one translatable record """
     _model_name = []
 
@@ -697,6 +706,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
 @prestashop
 class PartnerCategoryRecordImport(PrestashopImportSynchronizer):
+
     """ Import one translatable record """
     _model_name = [
         'prestashop.res.partner.category',
@@ -746,6 +756,7 @@ class ProductCategoryImport(TranslatableRecordImport):
 
 @prestashop
 class ProductRecordImport(TranslatableRecordImport):
+
     """ Import one translatable record """
     _model_name = [
         'prestashop.product.product',
@@ -924,6 +935,7 @@ class ProductRecordImport(TranslatableRecordImport):
 
 @prestashop
 class SaleOrderStateImport(TranslatableRecordImport):
+
     """ Import one translatable record """
     _model_name = [
         'prestashop.sale.order.state',

@@ -28,6 +28,7 @@ from ..connector import get_environment
 
 
 class PrestashopDeleteSynchronizer(DeleteSynchronizer):
+
     """ Base deleter for Prestashop """
 
     def run(self, external_id):
