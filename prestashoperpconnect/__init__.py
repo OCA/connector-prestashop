@@ -22,13 +22,13 @@
 #
 ###############################################################################
 
-import backend
-import connector
-import product
-import product_combination
-import sale
-import delivery
-import consumer
-import account
-import models
-import stock_tracking
+from . import backend
+from . import connector
+from . import product
+from . import product_combination
+from . import sale
+from . import delivery
+from . import consumer
+from . import account
+from . import models
+from . import stock_tracking

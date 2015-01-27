@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
 from openerp.addons.connector.connector import Environment
 from openerp.addons.connector.checkpoint import checkpoint
 
@@ -40,6 +39,7 @@ def add_checkpoint(session, model_name, record_id, backend_id):
     """
     return checkpoint.add_checkpoint(session, model_name, record_id,
                                      'prestashop.backend', backend_id)
+
 
 def get_environment(session, model_name, backend_id):
     model = session.pool.get('prestashop.backend')

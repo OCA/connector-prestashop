@@ -24,6 +24,7 @@ from openerp.osv import orm
 
 
 class prestashoperpconnect_installed(orm.AbstractModel):
+
     """Empty model used to know if the module is installed in the
     database.
 

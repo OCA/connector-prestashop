@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   prestashoperpconnect_customize_example for OpenERP 
+#   prestashoperpconnect_customize_example for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
@@ -40,5 +40,4 @@ Example of customizations:
  'data': [],
  'installable': True,
  'application': False,
-}
-
+ }

@@ -32,19 +32,18 @@ from openerp.addons.connector.unit.mapper import (
 )
 from ..backend import prestashop
 from ..connector import add_checkpoint
-from backend_adapter import GenericAdapter
-from backend_adapter import PrestaShopCRUDAdapter
+from .backend_adapter import GenericAdapter
+from .backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import only_create
 
 
-
 class PrestashopImportMapper(ImportMapper):
-    
-    #get_openerp_id is deprecated use the binder intead
-    #we should have only 1 way to map the field to avoid error
+
+    # get_openerp_id is deprecated use the binder intead
+    # we should have only 1 way to map the field to avoid error
     def get_openerp_id(self, model, prestashop_id):
         '''
         Returns an openerp id from a model name and a prestashop_id.
@@ -146,8 +145,10 @@ class PartnerImportMapper(PrestashopImportMapper):
 
     @mapping
     def pricelist(self, record):
-        binder = self.get_connector_unit_for_model(Binder, 'prestashop.groups.pricelist')
-        pricelist_id = binder.to_openerp(record['id_default_group'], unwrap=True)
+        binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.groups.pricelist')
+        pricelist_id = binder.to_openerp(
+            record['id_default_group'], unwrap=True)
         if not pricelist_id:
             return {}
         return {'property_product_pricelist': pricelist_id}
@@ -171,7 +172,8 @@ class PartnerImportMapper(PrestashopImportMapper):
 
     @mapping
     def groups(self, record):
-        groups = record.get('associations', {}).get('groups', {}).get('group', [])
+        groups = record.get('associations', {}).get(
+            'groups', {}).get('group', [])
         if not isinstance(groups, list):
             groups = [groups]
         partner_categories = []
@@ -324,24 +326,26 @@ class AddressImportMapper(PrestashopImportMapper):
         if record['alias']:
             if name:
                 name += " "
-            name += '('+record['alias']+')'
+            name += '(' + record['alias'] + ')'
         return {'name': name}
 
     @mapping
     def customer(self, record):
         return {'customer': True}
-    
+
     @mapping
     def country(self, record):
         if record.get('id_country'):
             binder = self.get_binder_for_model('prestashop.res.country')
-            erp_country_id = binder.to_openerp(record['id_country'], unwrap=True)
+            erp_country_id = binder.to_openerp(
+                record['id_country'], unwrap=True)
             return {'country_id': erp_country_id}
         return {}
 
     @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
+
 
 @prestashop
 class SaleOrderStateMapper(PrestashopImportMapper):
@@ -366,13 +370,14 @@ class SaleOrderMapper(PrestashopImportMapper):
 
     direct = [
         ('date_add', 'date_order'),
-        ('invoice_number','prestashop_invoice_number'),
-        ('delivery_number','prestashop_delivery_number'),
+        ('invoice_number', 'prestashop_invoice_number'),
+        ('delivery_number', 'prestashop_delivery_number'),
         ('total_paid', 'total_amount'),
     ]
 
     def _get_sale_order_lines(self, record):
-        orders = record['associations'].get('order_rows', {}).get('order_row', [])
+        orders = record['associations'].get(
+            'order_rows', {}).get('order_row', [])
         if isinstance(orders, dict):
             return [orders]
         return orders
@@ -458,7 +463,8 @@ class SaleOrderMapper(PrestashopImportMapper):
             shop_ids = self.session.search('prestashop.shop', [
                 ('backend_id', '=', self.backend_record.id)
             ])
-            shop = self.session.read('prestashop.shop', shop_ids[0], ['openerp_id'])
+            shop = self.session.read(
+                'prestashop.shop', shop_ids[0], ['openerp_id'])
             return {'shop_id': shop['openerp_id'][0]}
         return {'shop_id': self.get_openerp_id(
             'prestashop.shop',
@@ -522,7 +528,7 @@ class SaleOrderMapper(PrestashopImportMapper):
     @mapping
     def total_tax_amount(self, record):
         tax = float(record['total_paid_tax_incl'])\
-                - float(record['total_paid_tax_excl'])
+            - float(record['total_paid_tax_excl'])
         return {'total_amount_tax': tax}
 
     def _after_mapping(self, result):
@@ -571,7 +577,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
         if record['reduction_percent']:
             reduction = Decimal(record['reduction_percent'])
             price = Decimal(record[key])
-            price_unit = price / ((100 - reduction) / 100) 
+            price_unit = price / ((100 - reduction) / 100)
         else:
             price_unit = record[key]
         return {'price_unit': price_unit}
@@ -598,11 +604,12 @@ class SaleOrderLineMapper(PrestashopImportMapper):
     def _find_tax(self, ps_tax_id):
         binder = self.get_binder_for_model('prestashop.account.tax')
         openerp_id = binder.to_openerp(ps_tax_id, unwrap=True)
-        tax = self.session.read('account.tax', openerp_id, ['price_include', 'related_inc_tax_id'])
+        tax = self.session.read(
+            'account.tax', openerp_id, ['price_include', 'related_inc_tax_id'])
         if self.backend_record.taxes_included and not tax['price_include'] and tax['related_inc_tax_id']:
             return tax['related_inc_tax_id'][0]
         return openerp_id
-        
+
     def tax_id(self, record):
         taxes = record.get('associations', {}).get('taxes', {}).get('tax', [])
         if not isinstance(taxes, list):
@@ -624,7 +631,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
 @prestashop
 class SaleOrderLineDiscount(PrestashopImportMapper):
     _model_name = 'prestashop.sale.order.line.discount'
-    
+
     direct = []
 
     @mapping
@@ -697,21 +704,25 @@ class SupplierInfoMapper(PrestashopImportMapper):
 
     @mapping
     def name(self, record):
-        binder = self.get_connector_unit_for_model(Binder, 'prestashop.supplier')
+        binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.supplier')
         partner_id = binder.to_openerp(record['id_supplier'], unwrap=True)
         return {'name': partner_id}
 
     @mapping
     def product_id(self, record):
         if record['id_product_attribute'] != '0':
-            binder = self.get_connector_unit_for_model(Binder, 'prestashop.product.combination')
+            binder = self.get_connector_unit_for_model(
+                Binder, 'prestashop.product.combination')
             return {'product_id': binder.to_openerp(record['id_product_attribute'], unwrap=True)}
-        binder = self.get_connector_unit_for_model(Binder, 'prestashop.product.product')
+        binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.product.product')
         return {'product_id': binder.to_openerp(record['id_product'], unwrap=True)}
 
     @mapping
     def required(self, record):
         return {'min_qty': 0.0, 'delay': 1}
+
 
 class PrestashopExportMapper(ExportMapper):
 
@@ -776,7 +787,8 @@ class MailMessageMapper(PrestashopImportMapper):
     @mapping
     def author_id(self, record):
         if record['id_customer'] != '0':
-            binder = self.get_connector_unit_for_model(Binder, 'prestashop.res.partner')
+            binder = self.get_connector_unit_for_model(
+                Binder, 'prestashop.res.partner')
             partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
             return {'author_id': partner_id}
         return {}
@@ -805,7 +817,8 @@ class MrpBomMapper(PrestashopImportMapper):
 
     @mapping
     def product_id(self, record):
-        binder = self.get_connector_unit_for_model(Binder, 'prestashop.product.product')
+        binder = self.get_connector_unit_for_model(
+            Binder, 'prestashop.product.product')
         product_id = binder.to_openerp(record['id'], unwrap=True)
 
         product = self.session.browse('product.product', product_id)
@@ -829,7 +842,8 @@ class MrpBomMapper(PrestashopImportMapper):
             products = [products]
         for product in products:
             product_oerp_id = binder.to_openerp(product['id'], unwrap=True)
-            product_oerp = self.session.browse('product.product', product_oerp_id)
+            product_oerp = self.session.browse(
+                'product.product', product_oerp_id)
             lines.append((0, 0, {
                 'product_id': product_oerp_id,
                 'product_qty': int(product['quantity']) or 1,

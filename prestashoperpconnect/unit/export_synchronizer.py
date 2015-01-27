@@ -22,17 +22,11 @@
 ##############################################################################
 
 import logging
-from datetime import datetime
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
-from openerp.addons.connector.exception import IDMissingInBackend
-from .import_synchronizer import import_record
 from ..connector import get_environment
-
-from openerp.addons.prestashoperpconnect.backend import prestashop
 
 
 _logger = logging.getLogger(__name__)
@@ -52,6 +46,7 @@ In addition to its export job, an exporter has to:
 
 
 class PrestashopBaseExporter(ExportSynchronizer):
+
     """ Base exporter for Prestashop """
 
     def __init__(self, environment):
@@ -87,6 +82,7 @@ class PrestashopBaseExporter(ExportSynchronizer):
 
 
 class PrestashopExporter(PrestashopBaseExporter):
+
     """ A common flow for the exports to Prestashop """
 
     def __init__(self, environment):
@@ -167,7 +163,8 @@ class TranslationPrestashopExporter(PrestashopExporter):
     @property
     def mapper(self):
         if self._mapper is None:
-            self._mapper = self.environment.get_connector_unit(TranslationPrestashopExportMapper)
+            self._mapper = self.environment.get_connector_unit(
+                TranslationPrestashopExportMapper)
         return self._mapper
 
     def _map_data(self, fields=None):
@@ -195,8 +192,8 @@ class TranslationPrestashopExporter(PrestashopExporter):
 @job
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Prestashop """
-    #TODO FIX PRESTASHOP
-    #prestashop do not support partial edit
+    # TODO FIX PRESTASHOP
+    # prestashop do not support partial edit
     fields = None
 
     record = session.browse(model_name, binding_id)
