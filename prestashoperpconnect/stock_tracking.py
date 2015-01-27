@@ -84,12 +84,12 @@ def delay_export_tracking_number(session, model_name, record_id):
     # buggy virtual models... Anyway the ID is the same
     picking = session.browse('stock.picking', record_id)
     if picking.sale_id and picking.sale_id.prestashop_bind_ids:
-            for binding in picking.sale_id.prestashop_bind_ids:
-                export_tracking_number.delay(
-                    session,
-                    binding._model._name,
-                    binding.id,
-                    priority=20)
+        for binding in picking.sale_id.prestashop_bind_ids:
+            export_tracking_number.delay(
+                session,
+                binding._model._name,
+                binding.id,
+                priority=20)
 
 
 @job
