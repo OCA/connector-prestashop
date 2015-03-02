@@ -38,7 +38,7 @@
     "external_dependencies": {
         'python': ["unidecode"],
     },
-    "author": "PrestashopERPconnect Core Editors",
+    "author": "PrestashopERPconnect Core Editors,Odoo Community Association (OCA)",
     "description": """This module connects OpenERP and Prestashop.
 
 Prestashop (http://www.prestashop.com/) is a popular e-commerce plateform written in PHP/MySQL and published under the Open Software licence v3.0.

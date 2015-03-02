@@ -26,7 +26,7 @@
  'category': 'Connector',
  'depends': ['prestashoperpconnect',
              ],
- 'author': 'Akretion',
+ 'author': "Akretion,Odoo Community Association (OCA)",
  'license': 'AGPL-3',
  'description': """
 Prestashop Connector Customization Example
