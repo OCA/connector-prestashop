@@ -27,7 +27,7 @@
     'category': 'Generic Modules/Others',
     'license': 'AGPL-3',
     'description': """empty""",
-    'author': 'Akretion',
+    'author': "Akretion,Odoo Community Association (OCA)",
     'website': 'http://www.akretion.com/',
     'depends': ['prestashoperpconnect'], 
     'init_xml': [],

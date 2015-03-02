@@ -31,7 +31,7 @@
                  "product_images_sync",
                  "product_links",
                 ],
-    "author" : "PrestashopERPconnect Core Editors",
+    "author" : "PrestashopERPconnect Core Editors,Odoo Community Association (OCA)",
     "description": """This module is an extention for PrestashopERPconnect.
 
 With this module you will be able to manage your catalog directly from OpenERP. You can :

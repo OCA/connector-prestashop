@@ -32,7 +32,7 @@ The use of this module requires the support for product packs in the PrestaShop 
 
 This module has been developped by Akretion (http://www.akretion.com), who is part of the PrestashopERPconnect Core Editors.
     """,
-    'author': 'Akretion',
+    'author': "Akretion,Odoo Community Association (OCA)",
     'website': 'https://launchpad.net/prestashoperpconnect/',
     'depends': [
         'prestashoperpconnect',

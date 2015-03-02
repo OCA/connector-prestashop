@@ -30,7 +30,7 @@
 
 This module has been developped by the PrestashopERPconnect Core Editors, which is composed of Akretion (http://www.akretion.com) and Camptocamp (http://www.camptocamp.com).
     """,
-    'author': 'PrestashopERPconnect Core Editors',
+    'author': "PrestashopERPconnect Core Editors,Odoo Community Association (OCA)",
     'website': 'https://launchpad.net/prestashoperpconnect/',
     'depends': [
         'base_sale_export_partner',
