@@ -82,6 +82,6 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'ecommerce_data.xml',
     ],
     "active": False,
-    "installable": True,
+    "installable": False,
     "application": True,
 }

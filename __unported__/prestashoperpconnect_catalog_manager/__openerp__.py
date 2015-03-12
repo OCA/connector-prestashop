@@ -51,6 +51,6 @@ TODO :
         'product_view.xml',
         ],
     "active": False,
-    "installable": True,
+    "installable": False,
     "application": True,
 }

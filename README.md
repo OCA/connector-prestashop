@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=7.0)](https://travis-ci.org/OCA/connector-prestashop)
-[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=7.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=7.0)
+[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=8.0)](https://travis-ci.org/OCA/connector-prestashop)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=8.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=8.0)
 
 prestashoperpconnect
 ====================
 
-A module that permits OpenERP to connect to Prestashop.
+A module that allows Odoo to connect to Prestashop.
 
 Requirements
 ------------
