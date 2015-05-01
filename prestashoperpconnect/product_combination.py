@@ -10,7 +10,11 @@ We map that in OpenERP to a product.product with an attribute.set defined for
 the main product.
 '''
 
-from unidecode import unidecode
+try:
+    from unidecode import unidecode
+except ImportError:
+    unidecode = None
+
 import json
 
 from openerp import SUPERUSER_ID
