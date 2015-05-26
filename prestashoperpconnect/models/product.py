@@ -171,6 +171,9 @@ class prestashop_product_template(orm.Model):
             translate=True,
             required=False,
         ),
+        'available_for_order': fields.boolean(
+            'Available For Order'
+        ),
         'combinations_ids': fields.one2many(
             'prestashop.product.combination',
             'main_template_id',

@@ -22,6 +22,25 @@
 ##############################################################################
 
 from openerp import models, fields, api
+import unicodedata
+import re
+try:
+    import slugify as slugify_lib
+except ImportError:
+    slugify_lib = None
+
+
+def get_slug(name):
+    if slugify_lib:
+        try:
+            return slugify_lib.slugify(name)
+        except TypeError:
+            pass
+    uni = unicodedata.normalize('NFKD', name).encode(
+        'ascii', 'ignore').decode('ascii')
+    slug = re.sub(r'[\W_]', ' ', uni).strip().lower()
+    slug = re.sub(r'[-\s]+', '-', slug)
+    return slug
 
 
 class ExportMultipleProducts(models.TransientModel):
@@ -36,13 +55,17 @@ class ExportMultipleProducts(models.TransientModel):
         product_obj = self.env['product.template']
         presta_tmpl_obj = self.env['prestashop.product.template']
         for product in product_obj.browse(self.env.context['active_ids']):
-            presta_tmpl = presta_tmpl_obj.search([('openerp_id','=',product.id), ('backend_id','=',self.name), ('default_shop_id','=',self.shop)])
+            presta_tmpl = presta_tmpl_obj.search(
+                [('openerp_id', '=', product.id),
+                 ('backend_id', '=', self.name.id),
+                 ('default_shop_id', '=', self.shop.id)])
             if not presta_tmpl:
-                presta_tmpl_obj.create({'backend_id': self.name.id,
-                                        'default_shop_id': self.shop.id,
-                                        'link_rewrite': product.name.replace(' ','-').replace(',','').replace('.','').replace('/',''),
-                                        'openerp_id': product.id})
+                presta_tmpl_obj.create(
+                    {'backend_id': self.name.id,
+                     'default_shop_id': self.shop.id,
+                     'link_rewrite': get_slug(product.name),
+                     'openerp_id': product.id})
             else:
                 for tmpl in presta_tmpl:
                     if ' ' in tmpl.link_rewrite:
-                        tmpl.link_rewrite = tmpl.link_rewrite.replace(' ','-').replace(',','').replace('.','').replace('/','')
+                        tmpl.link_rewrite = get_slug(tmpl.link_rewrite)

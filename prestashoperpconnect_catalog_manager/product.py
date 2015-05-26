@@ -44,7 +44,8 @@ from openerp.addons.prestashoperpconnect.unit.mapper import \
 from openerp.addons.prestashoperpconnect.connector import get_environment
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.product import INVENTORY_FIELDS
-from openerp.addons.prestashoperpconnect_catalog_manager.product_combination import product_product_write
+from openerp.addons.prestashoperpconnect_catalog_manager.product_combination \
+    import product_product_write
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
 
@@ -75,8 +76,8 @@ def prestashop_product_template_write(session, model_name, record_id, fields):
 #    record = model.browse(session.cr, session.uid,
 #                          record_id, context=session.context)
 #    for binding in record.prestashop_bind_ids:
-#        export_record.delay(session, 'prestashop.product.template', binding.id,
-#                            fields, priority=20)
+#        export_record.delay(session, 'prestashop.product.template',
+#                            binding.id, fields, priority=20)
 
 
 @on_record_write(model_names='product.template')
@@ -98,8 +99,8 @@ def product_template_write(session, model_name, record_id, fields):
 #    record = model.browse(session.cr, session.uid,
 #                          record_id, context=session.context)
 #    for binding in record.product_tmpl_id.prestashop_bind_ids:
-#        export_record.delay(session, 'prestashop.product.template', binding.id,
-#                            fields, priority=20)
+#        export_record.delay(session, 'prestashop.product.template',
+#                            binding.id, fields, priority=20)
 
 
 class prestashop_product_template(orm.Model):
@@ -122,9 +123,9 @@ class prestashop_product_template(orm.Model):
             'Tags',
             translate=True
         ),
-        'available_for_order': fields.boolean(
-            'Available For Order'
-        ),
+        # 'available_for_order': fields.boolean(
+        #     'Available For Order'
+        # ),
         'show_price': fields.boolean(
             'Show Price'
         ),
@@ -212,6 +213,8 @@ class ProductTemplateExport(PrestashopExporter):
 #        #Comprobamos si las combinaciones estan creadas
         if self.erp_record.product_variant_ids:
             for product in self.erp_record.product_variant_ids:
+                if not product.attribute_value_ids:
+                    continue
                 combination_ext_id = combination_binder.to_backend(
                     product.id, unwrap=True)
                 if not combination_ext_id:
@@ -235,7 +238,10 @@ class ProductTemplateExport(PrestashopExporter):
                 combination_ext_id = combination_binder.to_backend(
                     product.id, unwrap=True)
                 if combination_ext_id:
-                    product_product_write(self.session,'product.product',product.id,{})
+                    product_product_write(self.session, 'product.product',
+                                          product.id, {})
+
+
 @prestashop
 class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
     _model_name = 'prestashop.product.template'
@@ -247,7 +253,7 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('online_only', 'online_only'),
         ('weight', 'weight'),
         ('standard_price', 'wholesale_price'),
-        ('default_code', 'reference'),
+        ('reference', 'reference'),
         ('default_shop_id', 'id_shop_default'),
         ('active', 'active'),
         ('ean13', 'ean13'),
@@ -345,7 +351,10 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('description_html', 'description'),
         ('available_now', 'available_now'),
         ('available_later', 'available_later'),
+        ("description_sale", "description"),
+        ('description', 'description_short'),
                               ]
         trans = TranslationPrestashopExporter(self.environment)
-        translated_fields = self.convert_languages(trans.get_record_by_lang(record.id),translatable_fields)
+        translated_fields = self.convert_languages(
+            trans.get_record_by_lang(record.id), translatable_fields)
         return translated_fields

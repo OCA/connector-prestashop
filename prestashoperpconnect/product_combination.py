@@ -218,7 +218,10 @@ class ProductCombinationMapper(PrestashopImportMapper):
     @mapping
     def ean13(self, record):
         if record['ean13'] in ['', '0']:
-            return {}
+            backend_adapter = self.get_connector_unit_for_model(
+            GenericAdapter, 'prestashop.product.template')
+            template = backend_adapter.read(record['id_product'])
+            return template['ean13'] and {'ean13': template['ean13']} or {}
         if check_ean(record['ean13']):
             return {'ean13': record['ean13']}
         return {}

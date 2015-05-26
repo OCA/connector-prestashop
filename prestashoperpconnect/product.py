@@ -142,6 +142,7 @@ class TemplateMapper(PrestashopImportMapper):
         ('id_shop_default', 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
         ('reference', 'reference'),
+        ('available_for_order', 'available_for_order'),
     ]
 
     @mapping
