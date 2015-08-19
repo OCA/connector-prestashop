@@ -22,39 +22,8 @@
 #
 ###############################################################################
 
-{
-    "name": "Prestashop-OpenERP Catalog Manager",
-    "version": "0.2",
-    "license": "AGPL-3",
-    "depends": [
-        "prestashoperpconnect"
-    ],
-    "author": "PrestashopERPconnect Core Editors",
-    "description": """This module is an extention for PrestashopERPconnect.
-
-With this module you will be able to manage your catalog directly from OpenERP.
-  You can :
-- create/modify attributtes and values in Odoo and push then in
-  pretashop.
-- create/modify products and push then in prestashop.
-- create/modify products variant and push the in prestashop (combinations).
-
-TODO :
-- create/modify category and push then in prestashop.
-- create/modify image and push then in prestashop.
-""",
-    'images': [
-    ],
-    "website": "https://launchpad.net/prestashoperpconnect",
-    "category": "Generic Modules",
-    "complexity": "expert",
-    "demo": [],
-    "data": [
-        'views/product_attribute_view.xml',
-        'views/product_view.xml',
-        'wizard/export_multiple_products_view.xml'
-    ],
-    "active": False,
-    "installable": True,
-    "application": True,
-}
+from . import connector
+from . import product
+from . import product_attribute
+from . import product_combination
+from . import wizard
