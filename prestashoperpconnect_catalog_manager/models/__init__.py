@@ -26,4 +26,3 @@ from . import connector
 from . import product
 from . import product_attribute
 from . import product_combination
-from . import wizard
