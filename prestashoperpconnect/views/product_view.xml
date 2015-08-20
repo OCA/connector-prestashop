@@ -36,7 +36,11 @@
         </record>
         
         <!--This is a product inherited form that will be dynamically populated-->
-        <record id="product_normal_form_view" model="ir.ui.view">
+<!--        TODO: Find why this is an inherited view as it seems there is no product_template_common_form in the connector_base_product.
+            Does it comes from a specific PR?
+        -->
+            
+<!--        <record id="product_normal_form_view" model="ir.ui.view">
            <field name="model">product.template</field>
            <field name="inherit_id" ref="connector_base_product.product_template_common_form" />
            <field name="arch" type="xml">
@@ -52,7 +56,7 @@
                     </group>
                </page>
            </field>
-        </record>
+        </record>-->
 
         <record id="product_connector_presta_form_view" model="ir.ui.view">
            <field name="model">prestashop.product.template</field>
