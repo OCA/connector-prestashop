@@ -20,5 +20,18 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from . import export_multiple_products
-from . import sync_products
+
+from openerp import models, fields, api
+
+
+class SyncProducts(models.TransientModel):
+    _name = 'sync.products'
+    #_inherit = 'prestashop.binding'
+
+    @api.multi
+    def sync_products(self):
+        products = self.env['product.template'].browse(
+            self.env.context['active_ids'])
+        for product in products:
+            for bind in product.prestashop_bind_ids:
+                bind.resync()

@@ -31,8 +31,7 @@
         "product",
         "product_m2mcategories",
         "connector_ecommerce",
-        "product_images", #TODO: Replace this one by the following above once the PR https://github.com/OCA/product-attribute/pull/57 will be validate
-        #"product_multi_image", 
+        "product_multi_image",
         "purchase",
     ],
     "external_dependencies": {
@@ -68,20 +67,18 @@ This connector is built on a very solid basis, but still requires deep knowledge
     'data': [
         'data/cron.xml',
         'data/product_decimal_precision.xml',
-        'data/ecommerce_data.xml',
-        
-        'views/prestashop_model_view.xml',
-        'views/product_view.xml',
-        'views/delivery_view.xml',
-        'views/partner_view.xml',
-        'views/prestashoperpconnect_menu.xml',
-        'views/sale_view.xml',
-        'views/setting_view.xml',
-        
-        
+
+        'prestashop_model_view.xml',
+        'product_view.xml',
+        'delivery_view.xml',
+        'prestashoperpconnect_menu.xml',
+        'partner_view.xml',
+        'sale_view.xml',
+        'setting_view.xml',
+
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
-        
+        'ecommerce_data.xml',
     ],
     "active": False,
     "installable": True,

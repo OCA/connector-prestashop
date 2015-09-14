@@ -273,7 +273,6 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.res.partner',
         'prestashop.address',
         'prestashop.product.category',
-        'prestashop.product.product',
         'prestashop.product.template',
         'prestashop.sale.order',
         'prestashop.refund',
@@ -748,6 +747,9 @@ class TemplateRecordImport(TranslatableRecordImport):
     def attribute_line(self, erp_id):
 
         template = self.session.browse('prestashop.product.template', erp_id)
+        attr_line_value_ids = []
+        for attr_line in template.attribute_line_ids:
+            attr_line_value_ids.extend(attr_line.value_ids.ids)
         template_id = template.openerp_id.id
         product_ids = self.session.search('product.product', [
             ('product_tmpl_id', '=', template_id)]
@@ -765,13 +767,17 @@ class TemplateRecordImport(TranslatableRecordImport):
                     value_ids = []
                     for product in products:
                         for attribute_value in product.attribute_value_ids:
-                            if attribute_value.attribute_id.id == attribute_id:
+                            if (attribute_value.attribute_id.id == attribute_id
+                                and attribute_value.id not in
+                                    attr_line_value_ids):
                                 value_ids.append(attribute_value.id)
-                self.session.create('product.attribute.line', {
-                    'attribute_id': attribute_id,
-                    'product_tmpl_id': template_id,
-                    'value_ids': [(6, 0, set(value_ids))]}
-                )
+                    if value_ids:
+                        self.session.create('product.attribute.line', {
+                                            'attribute_id': attribute_id,
+                                            'product_tmpl_id': template_id,
+                                            'value_ids': [(6, 0, set(value_ids)
+                                                           )]}
+                                            )
 
     def import_combinations(self):
         prestashop_record = self._get_prestashop_data()
@@ -847,11 +853,19 @@ class TemplateRecordImport(TranslatableRecordImport):
         try:
             image = adapter.read(record['id'],
                                  record['id_default_image']['value'])
-            self.session.write(
-                'prestashop.product.template',
-                [template_id],
-                {"image": image['content']}
-            )
+            ctx = self.session.context.copy()
+            ctx['connector_no_export'] = True
+            self.session.pool['prestashop.product.template'].write(
+                self.session.cr, self.session.uid, [template_id],
+                {"image": image['content']},
+                context=ctx
+                )
+            #self.session.write(
+            #    'prestashop.product.template',
+            #    [template_id],
+            #    {"image": image['content']},
+                #context=ctx
+            #   )
         except PrestaShopWebServiceError:
             pass
         except IOError:
