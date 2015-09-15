@@ -22,4 +22,7 @@
 #
 ###############################################################################
 
-from . import models
+from . import backend
+from . import connector
+from . import partner
+from . import prestashop_model
