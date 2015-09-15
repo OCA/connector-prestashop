@@ -166,6 +166,9 @@ class PrestashopExporter(PrestashopBaseExporter):
         else:
             #record = self.mapper.data_for_create
             record = map_record.values(for_create=True)
+            if fields is None:
+                fields = {}
+            record.update(fields)
             if not record:
                 return _('Nothing to export.')
             # special check on data before export

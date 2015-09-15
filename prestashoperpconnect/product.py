@@ -65,6 +65,8 @@ class ProductCategoryMapper(PrestashopImportMapper):
         ('meta_keywords', 'meta_keywords'),
         ('meta_title', 'meta_title'),
         ('id_shop_default', 'default_shop_id'),
+        ('active', 'active'),
+        ('position', 'position')
     ]
 
     @mapping
@@ -105,12 +107,12 @@ class ProductImageMapper(PrestashopImportMapper):
     _model_name = 'prestashop.product.image'
 
     direct = [
-        ('content', 'file'),
+        ('content', 'file_db_store'),
     ]
 
     @mapping
     def template_id(self, record):
-        return {'product_tmpl_id': self.get_openerp_id(
+        return {'product_id': self.get_openerp_id(
             'prestashop.product.template',
             record['id_product']
         )}
@@ -212,8 +214,8 @@ class TemplateMapper(PrestashopImportMapper):
     def sale_ok(self, record):
         # if this product has combinations, we do not want to sell this product,
         # but its combinations (so sale_ok = False in that case).
-        #sale_ok = (record['available_for_order'] == '1'
-                   #and not self.has_combinations(record))
+        # sale_ok = (record['available_for_order'] == '1'
+        #            and not self.has_combinations(record))
         return {'sale_ok': True}
 
     @mapping
@@ -322,13 +324,11 @@ class TemplateAdapter(GenericAdapter):
     _prestashop_model = 'products'
     _export_node_name = 'product'
 
-
-#@prestashop
-#class ProductAdapter(GenericAdapter):
-#    _model_name = 'prestashop.product.product'
-#    _prestashop_model = 'products'
-#    _export_node_name = 'product'
-
+@prestashop
+class ProductCategoryAdapter(GenericAdapter):
+    _model_name = 'prestashop.product.category'
+    _prestashop_model = 'categories'
+    _export_node_name = 'category'
 
 
 @prestashop
@@ -422,7 +422,7 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
             'product_id': template_id,
             'new_quantity': qty,
         }
-        
+
         template_qty_id = self.session.create("stock.change.product.qty",
                                               vals)
         context = {'active_id': template_id}
@@ -474,7 +474,7 @@ class ProductInventoryAdapter(GenericAdapter):
             stock = res[first_key]
             stock['quantity'] = int(quantity)
             try:
-                api.edit(self._prestashop_model, stock['id'], {
+                api.edit(self._prestashop_model, {
                     self._export_node_name: stock
                 })
             except ElementTree.ParseError:

@@ -26,8 +26,22 @@ class product_product(orm.Model):
             'openerp_id',
             string='PrestaShop Bindings (combinations)'
         ),
+        'default_on': fields.boolean('Default On'),
     }
 
+    def _check_default_on(self, cr, uid, ids, context=None):
+        for product in self.browse(cr, uid, ids, context=context):
+            product_ids = self.search(cr, uid, [("default_on", "=", 1),
+                                                ("product_tmpl_id", "=",
+                                                 product.product_tmpl_id.id)])
+            if len(product_ids) > 1:
+                return False
+        return True
+
+    _constraints = [
+                    (_check_default_on,
+                     'Error! Only one variant can be default', ['default_on'])
+                    ]
 
 class prestashop_product_combination(orm.Model):
     _name = 'prestashop.product.combination'
@@ -52,7 +66,6 @@ class prestashop_product_combination(orm.Model):
             help="Last computed quantity to send on Prestashop."
         ),
         'reference': fields.char('Original reference'),
-        'default_on': fields.boolean('Available For Order'),
     }
 
     def recompute_prestashop_qty(self, cr, uid, ids, context=None):

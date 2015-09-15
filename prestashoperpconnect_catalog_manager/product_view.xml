@@ -15,8 +15,6 @@
                         <field name="meta_description"/>
                         <field name="meta_keywords"/>
                         <field name="tags"/>
-                        <field name="available_for_order"/>
-                        <field name="show_price"/>
                         <field name="online_only"/>
                         <field name="additional_shipping_cost"/>
                         <field name="available_now"/>

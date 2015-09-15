@@ -50,9 +50,10 @@ TODO :
     "complexity": "expert",
     "demo": [],
     "data": [
-        'views/product_attribute_view.xml',
-        'views/product_view.xml',
-        'wizard/export_multiple_products_view.xml'
+        'product_attribute_view.xml',
+        'product_view.xml',
+        'wizard/export_multiple_products_view.xml',
+        'wizard/sync_products_view.xml'
     ],
     "active": False,
     "installable": True,

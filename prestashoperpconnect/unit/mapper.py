@@ -599,7 +599,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
 
     @mapping
     def product_id(self, record):
-        if 'product_attribute_id' in record:
+        if int(record.get('product_attribute_id', 0)):
             combination_binder = self.get_binder_for_model(
                 'prestashop.product.combination')
             product_id = combination_binder.to_openerp(
@@ -612,7 +612,7 @@ class SaleOrderLineMapper(PrestashopImportMapper):
                 record['product_id'])
             product_id = self.session.search('product.product', [
                 ('product_tmpl_id', '=', template_id),
-                ('company_id', '=', self.backend_record.company_id.id)])
+                ('company_id', '=', self.backend_record.company_id.id)])[0]
             if product_id is None:
                 return self.tax_id(record)
         return {'product_id': product_id}
