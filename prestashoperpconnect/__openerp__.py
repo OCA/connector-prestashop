@@ -60,7 +60,7 @@ This connector is built on a very solid basis, but still requires deep knowledge
 """,
     'images': [
     ],
-    "website": "https://launchpad.net/prestashoperpconnect",
+    "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
     "complexity": "expert",
     "demo": [],
