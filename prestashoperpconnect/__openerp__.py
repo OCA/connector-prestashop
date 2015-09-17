@@ -68,16 +68,14 @@ This connector is built on a very solid basis, but still requires deep knowledge
         'data/cron.xml',
         'data/product_decimal_precision.xml',
         'data/ecommerce_data.xml',
-        
         'views/prestashop_model_view.xml',
         'views/product_view.xml',
         'views/delivery_view.xml',
-        'views/partner_view.xml',
         'views/prestashoperpconnect_menu.xml',
+        'views/partner_view.xml',
         'views/sale_view.xml',
         'views/setting_view.xml',
-        
-        
+
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
         

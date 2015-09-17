@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+            <record id="product_normal_form_view_default_check" model="ir.ui.view">
+           <field name="model">product.product</field>
+           <field name="inherit_id" ref="product.product_normal_form_view" />
+           <field name="arch" type="xml">
+               <field name="default_code" position="after">
+                    <field name="default_on"/>
+               </field>
+               
+           </field>
+        </record>
 
         <!--This is a product inherited form that will be dynamically populated-->
         <record id="product_normal_form_view" model="ir.ui.view">
@@ -71,6 +81,8 @@
                         <field name="sale_ok"/>
                         <field name="quantity" string="qty"/>
                         <field name="always_available"/>
+                        <field name="available_for_order"/>
+                        <field name="show_price"/>
                     </group>
                 </form>
            </field>
@@ -79,7 +91,7 @@
         <record id="product_connector_presta_tree_view" model="ir.ui.view">
             <field name="model">prestashop.product.template</field>
             <field name="arch" type="xml">
-                <tree string="prestashop product">
+                <tree string="prestashop product" create="0">
                     <field name="backend_id" string="Backend"/>
                     <field name="date_add"/>
                     <field name="date_upd"/>
