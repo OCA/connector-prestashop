@@ -3,8 +3,10 @@
 #
 #   Module for OpenERP
 #   Copyright (C) 2014 Akretion (http://www.akretion.com).
+#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Guewen Baconnier
+#   @author Parthiv Patel <parthiv@techreceptives.com>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
@@ -21,18 +23,17 @@
 #
 ###############################################################################
 
-
 import logging
-from openerp.tools.translate import _
+from openerp.osv import orm
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.exception import FailedJobError, NoExternalId
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
-from .connector import get_environment
+from openerp.tools.translate import _
 from .backend import prestashop
+from .connector import get_environment
 from .unit.backend_adapter import PrestaShopCRUDAdapter
-
 _logger = logging.getLogger(__name__)
+
 
 @prestashop
 class PrestashopTrackingExport(ExportSynchronizer):
@@ -45,10 +46,9 @@ class PrestashopTrackingExport(ExportSynchronizer):
                 trackings.append(picking.carrier_tracking_ref)
         return ';'.join(trackings) if trackings else None
 
-
     def run(self, binding_id):
-        """ Export the tracking number of a picking to Magento """
-        # verify the picking is done + magento id exists
+        """ Export the tracking number of a picking to PrestaShop """
+        # verify the picking is done + Prestashop id exists
         tracking_adapter = self.get_connector_unit_for_model(
             PrestaShopCRUDAdapter, '__not_exit_prestashop.order_carrier')
 
@@ -98,3 +98,5 @@ def export_tracking_number(session, model_name, record_id):
     env = get_environment(session, model_name, backend_id)
     tracking_exporter = env.get_connector_unit(PrestashopTrackingExport)
     return tracking_exporter.run(record_id)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
