@@ -4,10 +4,12 @@
 #    Prestashoperpconnect : OpenERP-PrestaShop connector
 #    Copyright 2013 Camptocamp SA
 #    Copyright (C) 2013 Akretion (http://www.akretion.com/)
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #    @author: Guewen Baconnier
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
 #    @author Sébastien BEAU <sebastien.beau@akretion.com>
 #    @author Arthur Vuillard
+#    @author Parthiv Patel <parthiv@techreceptives.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,9 +26,9 @@
 #
 ##############################################################################
 
+from prestapyt import PrestaShopWebServiceDict
 import base64
 import logging
-from prestapyt import PrestaShopWebServiceDict
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import prestashop
 
@@ -46,11 +48,12 @@ class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
             self._validate_query_options(options)
             full_url += "?%s" % (self._options_to_querystring(options),)
         response = self._execute(full_url, 'GET')
-
-        image_content = base64.b64encode(response.content)
-
+        if response:
+            image_content = base64.b64encode(response[2])
+        else:
+            image_content = ''
         return {
-            'type': response.headers['content-type'],
+            'type': response[1].get('content-type'),
             'content': image_content,
             'id_' + resource[:-1]: resource_id,
             'id_image': image_id
@@ -66,6 +69,7 @@ class PrestaShopLocation(object):
 
 
 class PrestaShopCRUDAdapter(CRUDAdapter):
+
     """ External Records Adapter for PrestaShop """
 
     def __init__(self, environment):
@@ -130,7 +134,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: dict
         """
-        #TODO rename attributes in something better
+        # TODO rename attributes in something better
         api = self.connect()
         res = api.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
@@ -188,9 +192,21 @@ class ResCurrencyAdapter(GenericAdapter):
 
 
 @prestashop
+class PConfigurationAdapter(GenericAdapter):
+    _model_name = 'prestashop.configuration'
+    _prestashop_model = 'configurations'
+
+
+@prestashop
 class AccountTaxAdapter(GenericAdapter):
     _model_name = 'prestashop.account.tax'
     _prestashop_model = 'taxes'
+
+
+@prestashop
+class TaxRuleAdapter(GenericAdapter):
+    _model_name = 'prestashop.tax.rule'
+    _prestashop_model = 'tax_rules'
 
 
 @prestashop
@@ -222,15 +238,16 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
     _model_name = 'prestashop.product.image'
     _prestashop_image_model = 'products'
 
-    def read(self, product_id, image_id, options=None):
+    def read(self, product_tmpl_id, image_id, options=None):
         api = PrestaShopWebServiceImage(self.prestashop.api_url,
                                         self.prestashop.webservice_key)
         return api.get_image(
             self._prestashop_image_model,
-            product_id,
+            product_tmpl_id,
             image_id,
             options=options
         )
+
 
 @prestashop
 class SupplierImageAdapter(PrestaShopCRUDAdapter):
@@ -277,6 +294,7 @@ class SupplierInfoAdapter(GenericAdapter):
     _model_name = 'prestashop.product.supplierinfo'
     _prestashop_model = 'product_suppliers'
 
+
 @prestashop
 class MailMessageAdapter(GenericAdapter):
     _model_name = 'prestashop.mail.message'
@@ -284,12 +302,8 @@ class MailMessageAdapter(GenericAdapter):
 
 
 @prestashop
-class BundleAdapter(GenericAdapter):
-    _model_name = ['prestashop.mrp.bom', 'prestashop.combination.mrp.bom']
-    _prestashop_model = 'products'
-
-
-@prestashop
 class PricelistAdapter(GenericAdapter):
     _model_name = 'prestashop.groups.pricelist'
     _prestashop_model = 'groups'
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

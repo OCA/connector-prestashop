@@ -4,8 +4,10 @@
 #   PrestashopERPconnect for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
+#   @author Parthiv Patel <parthiv@techreceptives.com>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
@@ -22,11 +24,13 @@
 #
 ###############################################################################
 
+
 # ConnectorUnit needs to be registered
-import mapper
-import binder
-import import_synchronizer
-#import export_synchronizer
-import delete_synchronizer
-import backend_adapter
-import exception
+from . import mapper
+from . import binder
+from . import import_synchronizer
+from . import delete_synchronizer
+from . import backend_adapter
+from . import exception
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
