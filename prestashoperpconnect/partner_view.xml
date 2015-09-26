@@ -105,7 +105,7 @@
         </record>
 
         <!--<record id="res_partner_view_form" model="ir.ui.view">-->
-        <!--    <field name="name">prestashop.res_partner_view_form</field>-->
+        <!--   <field name="name">prestashop.res_partner_view_form</field>-->
         <!--    <field name="model">res.partner</field>-->
         <!--    <field name="inherit_id" ref="base.view_partner_form" />-->
         <!--    <field eval="24" name="priority"/>-->
