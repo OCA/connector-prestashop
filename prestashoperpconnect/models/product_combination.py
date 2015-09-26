@@ -1,3 +1,30 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    Prestashoperpconnect : OpenERP-PrestaShop connector
+#    Copyright (C) 2013 Akretion (http://www.akretion.com/)
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
+#    Copyright 2013 Camptocamp SA
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
+#    @author: Guewen Baconnier
+#    @author Parthiv Patel <parthiv@techreceptives.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 '''
 A product combination is a product with different attributes in prestashop.
 In prestashop, we can sell a product or a combination of a product with some
@@ -11,10 +38,6 @@ the main product.
 '''
 
 from openerp.osv import fields, orm
-
-from openerp.addons.connector.session import ConnectorSession
-
-from ..unit.import_synchronizer import import_record
 
 
 class product_product(orm.Model):
@@ -41,9 +64,9 @@ class prestashop_product_combination(orm.Model):
             required=True,
             ondelete='cascade'
         ),
-        'main_product_id': fields.many2one(
-            'prestashop.product.product',
-            string='Main product',
+        'main_template_id': fields.many2one(
+            'prestashop.product.template',
+            string='Main Template',
             required=True,
             ondelete='cascade'
         ),
@@ -52,10 +75,7 @@ class prestashop_product_combination(orm.Model):
             help="Last computed quantity to send on Prestashop."
         ),
         'reference': fields.char('Original reference'),
-        'prestashop_bundle_id': fields.many2one(
-            'prestashop.combination.mrp.bom',
-            'Prestashop bundle',
-        ),
+        'default_on': fields.boolean('Available For Order'),
     }
 
     def recompute_prestashop_qty(self, cr, uid, ids, context=None):
@@ -73,8 +93,8 @@ class prestashop_product_combination(orm.Model):
         return product.qty_available
 
 
-class attribute_attribute(orm.Model):
-    _inherit = 'attribute.attribute'
+class product_attribute(orm.Model):
+    _inherit = 'product.attribute'
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
@@ -88,20 +108,33 @@ class attribute_attribute(orm.Model):
 class prestashop_product_combination_option(orm.Model):
     _name = 'prestashop.product.combination.option'
     _inherit = 'prestashop.binding'
-    _inherits = {'attribute.attribute': 'openerp_id'}
+    _inherits = {'product.attribute': 'openerp_id'}
 
     _columns = {
         'openerp_id': fields.many2one(
-            'attribute.attribute',
+            'product.attribute',
             string='Attribute',
             required=True,
             ondelete='cascade'
         ),
+        'prestashop_position': fields.integer('Prestashop Position'),
+        'group_type': fields.selection([('color', 'Color'),
+                                        ('radio', 'Radio'),
+                                        ('select', 'Select')], 'Type'),
+        'public_name': fields.char(
+            'Public Name',
+            translate=True
+        ),
+
+    }
+
+    _defaults = {
+        'group_type': 'select',
     }
 
 
-class attribute_option(orm.Model):
-    _inherit = 'attribute.option'
+class product_attribute_value(orm.Model):
+    _inherit = 'product.attribute.value'
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
@@ -115,39 +148,22 @@ class attribute_option(orm.Model):
 class prestashop_product_combination_option_value(orm.Model):
     _name = 'prestashop.product.combination.option.value'
     _inherit = 'prestashop.binding'
-    _inherits = {'attribute.option': 'openerp_id'}
+    _inherits = {'product.attribute.value': 'openerp_id'}
 
     _columns = {
         'openerp_id': fields.many2one(
-            'attribute.option',
+            'product.attribute.value',
             string='Attribute',
             required=True,
             ondelete='cascade'
         ),
+        'prestashop_position': fields.integer('Prestashop Position'),
+        'id_attribute_group': fields.many2one(
+            'prestashop.product.combination.option')
     }
 
-
-class mrp_bom(orm.Model):
-    _inherit = 'mrp.bom'
-
-    _columns = {
-        'prestashop_combintaion_bind_ids': fields.one2many(
-            'prestashop.combination_mrp.bom',
-            'openerp_id',
-            string='PrestaShop Bindings'
-        ),
+    _defaults = {
+        'prestashop_position': 1
     }
 
-class prestashop_combination_mrp_bom(orm.Model):
-    _name = 'prestashop.combination.mrp.bom'
-    _inherit = 'prestashop.binding'
-    _inherits = {'mrp.bom': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one(
-            'mrp.bom',
-            string='Openerp BOM',
-            required=True,
-            ondelete='cascade'
-        ),
-    }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
