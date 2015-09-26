@@ -41,12 +41,12 @@
             </field>
         </record>
 
-        <record id="view_shop_form" model="ir.ui.view">
-            <field name="model">sale.shop</field>
-            <field name="inherit_id" ref="sale.view_shop_form"/>
+       <record id="view_stock_form" model="ir.ui.view">
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
             <field name="arch" type="xml">
-                <field name="pricelist_id" position="after">
-                    <group colspan="5" string="PrestaShop">
+                <xpath expr='//notebook' position='before'>
+                    <group string="PrestaShop">
                         <field name="prestashop_bind_ids" nolabel="1">
                             <tree name="prestashop_binding">
                                 <field name="openerp_id" />
@@ -55,7 +55,7 @@
                             </tree>
                         </field>
                     </group>
-                </field>
+                </xpath>
             </field>
         </record>
 

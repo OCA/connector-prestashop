@@ -15,22 +15,31 @@
                         <field
                             name="prestashop_bind_ids"
                             nolabel="1"
-                            attrs="{'invisible': [('prestashop_bind_ids', '=', [])]}"
                         />
                         <field
                             name="prestashop_combinations_bind_ids"
                             nolabel="1"
-                            attrs="{'invisible': [('prestashop_combinations_bind_ids', '=', [])]}"
                         />
                     </group>
                </page>
            </field>
         </record>
+        
+<!--         <record id="product_template_only_form_view_inherit1" model="ir.ui.view"> -->
+<!--            <field name="model">product.template</field> -->
+<!--            <field name="inherit_id" ref="product.product_template_only_form_view"/> -->
+<!--            <field name="arch" type="xml"> -->
+<!--                <field name="list_price" position="after"> -->
+<!--                     <field name="list_price_tax"/> -->
+<!--                     <field name="final_price"/> -->
+<!--                </field> -->
+<!--            </field> -->
+<!--         </record> -->
 
         <record id="product_connector_presta_form_view" model="ir.ui.view">
-           <field name="model">prestashop.product.product</field>
+           <field name="model">prestashop.product.template</field>
            <field name="arch" type="xml">
-                <form string="prestashop fields" version="7.0">
+                <form string="prestashop fields">
                     <group col="1">
                         <field name="backend_id"/>
                         <field name="default_shop_id"/>
@@ -50,9 +59,9 @@
         </record>
 
         <record id="product_connector_presta_tree_view" model="ir.ui.view">
-            <field name="model">prestashop.product.product</field>
+            <field name="model">prestashop.product.template</field>
             <field name="arch" type="xml">
-                <tree string="prestashop product" version="7.0">
+                <tree string="prestashop product">
                     <field name="backend_id" string="Backend"/>
                     <field name="date_add"/>
                     <field name="date_upd"/>
@@ -73,7 +82,7 @@
         <record id="combination_connector_presta_form_view" model="ir.ui.view">
            <field name="model">prestashop.product.combination</field>
            <field name="arch" type="xml">
-                <form string="prestashop fields" version="7.0">
+                <form string="prestashop fields">
                     <group col="2">
                         <field name="backend_id"/>
                         <field name="quantity"/>
@@ -85,7 +94,7 @@
         <record id="combination_connector_presta_tree_view" model="ir.ui.view">
             <field name="model">prestashop.product.combination</field>
             <field name="arch" type="xml">
-                <tree string="prestashop product" version="7.0">
+                <tree string="prestashop product">
                     <field name="backend_id" string="Backend"/>
                     <field name="quantity"/>
                     <field name="prestashop_id"/>
