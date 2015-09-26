@@ -4,8 +4,10 @@
 #   PrestashopERPconnect for OpenERP
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
+#   @author Parthiv Patel <parthiv@techreceptives.com> 
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
@@ -22,18 +24,22 @@
 #
 ###############################################################################
 
+
 from datetime import datetime
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.connector import Binder
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import openerp
 from ..backend import prestashop
 
 
 class PrestashopBinder(Binder):
+
     """ Generic Binder for Prestshop """
 
 
 @prestashop
 class PrestashopModelBinder(PrestashopBinder):
+
     """
     Bindings are done directly on the model
     """
@@ -46,6 +52,8 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.res.lang',
         'prestashop.res.country',
         'prestashop.res.currency',
+        'prestashop.configuration',
+        'prestashop.tax.rule',
         'prestashop.account.tax',
         'prestashop.account.tax.group',
         'prestashop.product.category',
@@ -75,25 +83,18 @@ class PrestashopModelBinder(PrestashopBinder):
                  or None if the external_id is not mapped
         :rtype: int
         """
-        openerp_ids = self.environment.model.search(
-            self.session.cr,
-            self.session.uid,
-            [
-                ('prestashop_id', '=', external_id),
-                ('backend_id', '=', self.backend_record.id)
-            ],
-            limit=1,
-            context=self.session.context
+
+        bindings = self.model.with_context(active_test=False).search(
+            [('prestashop_id', '=', str(external_id)),
+             ('backend_id', '=', self.backend_record.id)]
         )
-        if not openerp_ids:
-            return None
-        openerp_id = openerp_ids[0]
+        if not bindings:
+            return self.model.browse()
+        assert len(bindings) == 1, "Several records found: %s" % (bindings,)
         if unwrap:
-            return self.session.read(self.environment.model._name,
-                                     openerp_id,
-                                     ['openerp_id'])['openerp_id'][0]
+            return bindings.openerp_id
         else:
-            return openerp_id
+            return bindings
 
     def to_backend(self, local_id, unwrap=False, wrap=False):
         """ Give the external ID for an OpenERP ID
@@ -106,22 +107,26 @@ class PrestashopModelBinder(PrestashopBinder):
                        (erp_ps_id) and then the external id for this record
         :return: backend identifier of the record
         """
-        if unwrap:
-            erp_ps_id = self.session.search(self.model._name, [
-                ['openerp_id', '=', local_id],
-                ['backend_id', '=', self.backend_record.id]
-            ])
-            if erp_ps_id:
-                erp_ps_id = erp_ps_id[0]
+        record = self.model.browse()
+        if isinstance(local_id, openerp.models.BaseModel):
+            local_id.ensure_one()
+            record = local_id
+            local_id = local_id.id
+        if wrap:
+            binding = self.model.with_context(active_test=False).search(
+                [('openerp_id', '=', local_id),
+                 ('backend_id', '=', self.backend_record.id),
+                 ]
+            )
+            if binding:
+                binding.ensure_one()
+                return binding.prestashop_id
             else:
                 return None
-        else:
-            erp_ps_id = local_id
-
-        prestashop_id = self.session.read(
-            self.model._name,
-            erp_ps_id, ['prestashop_id'])['prestashop_id']
-        return prestashop_id
+        if not record:
+            record = self.model.browse(local_id)
+        assert record
+        return record.prestashop_id
 
     def bind(self, external_id, openerp_id):
         """ Create the link between an external ID and an OpenERP ID
@@ -131,14 +136,14 @@ class PrestashopModelBinder(PrestashopBinder):
         :type openerp_id: int
         """
         # avoid to trigger the export when we modify the `prestashop_id`
-        context = dict(self.session.context, connector_no_export=True)
         now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        self.environment.model.write(
-            self.session.cr,
-            self.session.uid,
-            openerp_id,
+
+        if not isinstance(openerp_id, openerp.models.BaseModel):
+            openerp_id = self.model.browse(openerp_id)
+
+        openerp_id.with_context(connector_no_export=True).write(
             {'prestashop_id': str(external_id),
-             'sync_date': now_fmt},
-            #{'prestashop_id': external_id},
-            context=context
-        )
+             'sync_date': now_fmt,
+             })
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

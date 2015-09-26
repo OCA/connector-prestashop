@@ -3,9 +3,10 @@
 #
 #   Copyright (C) 2013 Akretion (http://www.akretion.com).
 #   Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
-#
+#   @author Parthiv Patel <parthiv@techreceptives.com>
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -28,6 +29,7 @@ from ..connector import get_environment
 
 
 class PrestashopDeleteSynchronizer(DeleteSynchronizer):
+
     """ Base deleter for Prestashop """
 
     def run(self, external_id):
@@ -45,3 +47,5 @@ def export_delete_record(session, model_name, backend_id, external_id):
     env = get_environment(session, model_name, backend_id)
     deleter = env.get_connector_unit(PrestashopDeleteSynchronizer)
     return deleter.run(external_id)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
