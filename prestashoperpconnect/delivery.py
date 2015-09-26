@@ -21,10 +21,8 @@
 ##############################################################################
 
 import logging
-from openerp.osv import fields, orm
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper,
-                                                  )
+from openerp.addons.connector.unit.mapper import mapping
+
 from .unit.backend_adapter import GenericAdapter
 from .unit.mapper import PrestashopImportMapper
 from .unit.import_synchronizer import (DelayedBatchImport,
@@ -106,6 +104,7 @@ class CarrierImportMapper(PrestashopImportMapper):
 
 @prestashop
 class DeliveryCarrierBatchImport(DelayedBatchImport):
+
     """ Import the Prestashop Carriers.
     """
     _model_name = ['prestashop.delivery.carrier']
@@ -117,3 +116,5 @@ class DeliveryCarrierBatchImport(DelayedBatchImport):
                      filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id, **kwargs)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

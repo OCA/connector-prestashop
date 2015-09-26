@@ -2,6 +2,19 @@
 <openerp>
     <data noupdate="1">
 
+        <record forcecreate="True" id="ir_cron_confirm_sale_orders" model="ir.cron">
+            <field name="name">Prestashop - Confirm Sales Orders</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_confirm_sale_orders'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+        
         <record forcecreate="True" id="ir_cron_import_sale_orders" model="ir.cron">
             <field name="name">Prestashop - Import Sales Orders</field>
             <field name="active" eval="False"/>
@@ -79,6 +92,19 @@
             <field name="function" eval="'_scheduler_import_carriers'"/>
             <field name="args" eval="'()'"/>
         </record>
+        
+       <!--  <record forcecreate="True" id="ir_cron_import_inventory" model="ir.cron">
+            <field name="name">Prestashop -  Import Product Stock</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_import_inventory'"/>
+            <field name="args" eval="'()'"/>
+        </record> -->
 
         <record forcecreate="True" id="ir_cron_import_payment_methods" model="ir.cron">
             <field name="name">Prestashop - Payment methods</field>
