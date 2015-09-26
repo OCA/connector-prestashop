@@ -1,21 +1,40 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    Prestashoperpconnect : OpenERP-PrestaShop connector
+#    Copyright (C) 2013 Akretion (http://www.akretion.com/)
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
+#    Copyright 2013 Camptocamp SA
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
+#    @author: Guewen Baconnier
+#    @author Parthiv Patel <parthiv@techreceptives.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 from datetime import date
 from datetime import datetime
-from decimal import Decimal
-
 from openerp import netsvc
-from openerp.osv import fields
-from openerp.osv import orm
-
 from openerp.addons.connector.unit.mapper import mapping
 from openerp.addons.connector.unit.mapper import only_create
-
 from .backend import prestashop
-from .unit.backend_adapter import GenericAdapter
-from .unit.mapper import PrestashopImportMapper
-from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .connector import add_checkpoint
+from .unit.backend_adapter import GenericAdapter
+from .unit.import_synchronizer import PrestashopImportSynchronizer
+from .unit.mapper import PrestashopImportMapper
 
 
 @prestashop
@@ -82,7 +101,7 @@ class RefundMapper(PrestashopImportMapper):
     def _get_order(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'])
-        return self.session.browse('prestashop.sale.order', sale_order_id)
+        return self.session.browse('prestashop.sale.order', sale_order_id.id)
 
     @mapping
     def from_sale_order(self, record):
@@ -102,7 +121,8 @@ class RefundMapper(PrestashopImportMapper):
     @mapping
     @only_create
     def invoice_lines(self, record):
-        slip_details = record.get('associations', {}).get('order_slip_details', []).get('order_slip_detail', [])
+        slip_details = record.get('associations', {}).get(
+            'order_slip_details', []).get('order_slip_detail', [])
         if isinstance(slip_details, dict):
             slip_details = [slip_details]
         lines = []
@@ -156,7 +176,8 @@ class RefundMapper(PrestashopImportMapper):
     def _get_shipping_order_line(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'])
-        sale_order = self.session.browse('prestashop.sale.order', sale_order_id)
+        sale_order = self.session.browse(
+            'prestashop.sale.order', sale_order_id)
 
         if not sale_order.carrier_id:
             return None
@@ -243,16 +264,19 @@ class RefundMapper(PrestashopImportMapper):
     def partner_id(self, record):
         binder = self.get_binder_for_model('prestashop.res.partner')
         partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
-        return {'partner_id': partner_id}
+        return {'partner_id': partner_id.id}
 
     @mapping
     def account_id(self, record):
         binder = self.get_binder_for_model('prestashop.sale.order')
         sale_order_id = binder.to_openerp(record['id_order'], unwrap=True)
-        sale_order = self.session.browse('prestashop.sale.order', sale_order_id)
-        date_invoice = datetime.strptime(record['date_upd'], '%Y-%m-%d %H:%M:%S')
+        sale_order = self.session.browse(
+            'prestashop.sale.order', sale_order_id)
+        date_invoice = datetime.strptime(
+            record['date_upd'], '%Y-%m-%d %H:%M:%S')
         if date(2014, 1, 1) > date_invoice.date() and \
-            sale_order.payment_method_id and sale_order.payment_method_id.account_id:
+                sale_order.payment_method_id and \
+                sale_order.payment_method_id.account_id:
             return {'account_id': sale_order.payment_method_id.account_id.id}
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id
@@ -274,3 +298,4 @@ class RefundMapper(PrestashopImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
