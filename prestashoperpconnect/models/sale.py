@@ -3,7 +3,8 @@
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
 #   Copyright (C) 2013 Akretion                                               #
-#                                                                             #
+#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
+#   @author Parthiv Patel <parthiv@techreceptives.com>                                       #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #
 #   published by the Free Software Foundation, either version 3 of the        #
@@ -19,9 +20,8 @@
 #                                                                             #
 ###############################################################################
 
-import openerp.addons.decimal_precision as dp
-
 from openerp.osv import fields, orm
+import openerp.addons.decimal_precision as dp
 
 
 class sale_order_state(orm.Model):
@@ -227,3 +227,5 @@ class prestashop_sale_order_line_discount(orm.Model):
             select=True
         ),
     }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
