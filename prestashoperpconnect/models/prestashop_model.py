@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-#############################################################################
+##############################################################################
 #
 #    Prestashoperpconnect : OpenERP-PrestaShop connector
 #    Copyright (C) 2013 Akretion (http://www.akretion.com/)
-#    Copyright (C) 2013 Camptocamp SA
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
+#    Copyright 2013 Camptocamp SA
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
 #    @author Sébastien BEAU <sebastien.beau@akretion.com>
 #    @author: Guewen Baconnier
+#    @author Parthiv Patel <parthiv@techreceptives.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,24 +17,23 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-
+from datetime import datetime
 import logging
 import pytz
-from datetime import datetime
-
-from openerp.osv import fields, orm
-
-
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.prestashoperpconnect.product import import_inventory
+from openerp.osv import fields, orm
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from ..connector import get_environment
+from ..unit.direct_binder import DirectBinder
 from ..unit.import_synchronizer import (
     import_batch,
     import_customers_since,
@@ -44,10 +45,6 @@ from ..unit.import_synchronizer import (
     import_record,
     export_product_quantities,
 )
-from ..unit.direct_binder import DirectBinder
-from ..connector import get_environment
-
-from openerp.addons.prestashoperpconnect.product import import_inventory
 
 _logger = logging.getLogger(__name__)
 
@@ -71,11 +68,12 @@ class prestashop_backend(orm.Model):
             _select_versions,
             string='Version',
             required=True),
-        'location': fields.char('Location'),
+        'location': fields.char('Location', required=True),
         'webservice_key': fields.char(
             'Webservice key',
+            required=True,
             help="You have to put it in 'username' of the PrestaShop "
-                 "Webservice api path invite"
+            "Webservice api path invite"
         ),
         'warehouse_id': fields.many2one(
             'stock.warehouse',
@@ -83,7 +81,8 @@ class prestashop_backend(orm.Model):
             required=True,
             help='Warehouse used to compute the stock quantities.'
         ),
-        'taxes_included': fields.boolean("Use tax included prices"),
+        'taxes_included': fields.boolean("Use tax included prices",
+                                         readonly=True),
         'import_partners_since': fields.datetime('Import partners since'),
         'import_orders_since': fields.datetime('Import Orders since'),
         'import_products_since': fields.datetime('Import Products since'),
@@ -94,13 +93,21 @@ class prestashop_backend(orm.Model):
             'backend_id',
             'Languages'
         ),
-        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
-        'discount_product_id': fields.many2one('product.product', 'Dicount Product', select=1, required=False),
-        'shipping_product_id': fields.many2one('product.product', 'Shipping Product', select=1, required=False),
+        'company_id': fields.many2one('res.company', 'Company', select=1,
+                                      required=True),
+        'discount_product_id': fields.many2one('product.product',
+                                               'Discount Product', select=1,
+                                               required=False),
+        'shipping_product_id': fields.many2one('product.product',
+                                               'Shipping Product', select=1,
+                                               required=False),
     }
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'prestashop.backend', context=c),
+        'company_id': lambda s, cr, uid,
+        c: s.pool.get('res.company')._company_default_get(cr, uid,
+                                                          'prestashop.backend',
+                                                          context=c),
     }
 
     def synchronize_metadata(self, cr, uid, ids, context=None):
@@ -125,13 +132,15 @@ class prestashop_backend(orm.Model):
                 'prestashop.res.lang',
                 'prestashop.res.country',
                 'prestashop.res.currency',
-                'prestashop.account.tax',
             ]:
                 env = get_environment(session, model_name, backend_id)
                 directBinder = env.get_connector_unit(DirectBinder)
                 directBinder.run()
 
+            import_batch(session, 'prestashop.configuration', backend_id)
             import_batch(session, 'prestashop.account.tax.group', backend_id)
+            import_batch(session, 'prestashop.account.tax', backend_id)
+            import_batch(session, 'prestashop.tax.rule', backend_id)
             import_batch(session, 'prestashop.sale.order.state', backend_id)
         return True
 
@@ -171,7 +180,8 @@ class prestashop_backend(orm.Model):
             since_date = self._date_as_user_tz(
                 cr, uid, backend_record.import_products_since
             )
-            import_products.delay(session, backend_record.id, since_date, priority=10)
+            import_products.delay(session, backend_record.id, since_date,
+                                  priority=10)
         return True
 
     def import_carriers(self, cr, uid, ids, context=None):
@@ -250,16 +260,28 @@ class prestashop_backend(orm.Model):
         if ids:
             callback(cr, uid, ids, context=context)
 
+    def _scheduler_confirm_sale_orders(self, cr, uid, domain=None,
+                                       context=None):
+        sale_obj = self.pool.get('sale.order')
+        ids = sale_obj.search(cr, uid,
+                              [('state', 'in', ['draft']),
+                               ('prestashop_bind_ids', '!=', False)],
+                              context=context)
+        for id in ids:
+            sale_obj.action_button_confirm(cr, uid, id, context=context)
+
     def _scheduler_update_product_stock_qty(self, cr, uid, domain=None,
                                             context=None):
         self._scheduler_launch(cr, uid, self.update_product_stock_qty,
                                domain=domain, context=context)
 
-    def _scheduler_import_sale_orders(self, cr, uid, domain=None, context=None):
-        self._scheduler_launch(cr, uid, self.import_sale_orders, domain=domain,
-                               context=context)
+    def _scheduler_import_sale_orders(self, cr, uid, domain=None,
+                                      context=None):
+        self._scheduler_launch(cr, uid, self.import_sale_orders,
+                               domain=domain, context=context)
 
-    def _scheduler_import_customers(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_customers(self, cr, uid, domain=None,
+                                    context=None):
         self._scheduler_launch(cr, uid, self.import_customers_since,
                                domain=domain, context=context)
 
@@ -271,11 +293,11 @@ class prestashop_backend(orm.Model):
         self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
                                context=context)
 
-    def _scheduler_import_payment_methods(self, cr, uid, domain=None, context=None):
+    def _scheduler_import_payment_methods(self, cr, uid, domain=None,
+                                          context=None):
         self._scheduler_launch(cr, uid, self.import_payment_methods,
                                domain=domain, context=context)
 
-    def _scheduler_import_refunds(self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_refunds,
                                domain=domain, context=context)
 
@@ -305,7 +327,6 @@ class prestashop_binding(orm.AbstractModel):
         # TODO : do I keep the char like in Magento, or do I put a PrestaShop ?
         'prestashop_id': fields.integer('ID on PrestaShop'),
     }
-
     # the _sql_contraints cannot be there due to this bug:
     # https://bugs.launchpad.net/openobject-server/+bug/1151703
 
@@ -339,7 +360,11 @@ class prestashop_shop_group(orm.Model):
             'shop_group_id',
             string="Shops",
             readonly=True),
-        'company_id': fields.related('backend_id', 'company_id', type="many2one", relation="res.company",string='Company', store=False),
+        'company_id': fields.related('backend_id', 'company_id',
+                                     type="many2one",
+                                     relation="res.company",
+                                     string='Company',
+                                     store=False),
     }
 
     _sql_constraints = [
@@ -354,8 +379,6 @@ class prestashop_shop(orm.Model):
     _inherit = 'prestashop.binding'
     _description = 'PrestaShop Shop'
 
-    _inherits = {'sale.shop': 'openerp_id'}
-
     def _get_shop_from_shopgroup(self, cr, uid, ids, context=None):
         return self.pool.get('prestashop.shop').search(
             cr,
@@ -365,6 +388,10 @@ class prestashop_shop(orm.Model):
         )
 
     _columns = {
+        'name': fields.char('Name',
+                            help="The name of the method on the backend",
+                            required=True),
+
         'shop_group_id': fields.many2one(
             'prestashop.shop.group',
             'PrestaShop Shop Group',
@@ -372,8 +399,8 @@ class prestashop_shop(orm.Model):
             ondelete='cascade'
         ),
         'openerp_id': fields.many2one(
-            'sale.shop',
-            string='Sale Shop',
+            'stock.warehouse',
+            string='WareHouse',
             required=True,
             readonly=True,
             ondelete='cascade'
@@ -414,8 +441,8 @@ class prestashop_shop(orm.Model):
     ]
 
 
-class sale_shop(orm.Model):
-    _inherit = 'sale.shop'
+class stock_location(orm.Model):
+    _inherit = 'stock.warehouse'
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
@@ -441,7 +468,6 @@ class prestashop_res_lang(orm.Model):
     }
 
     _defaults = {
-        #'active': lambda *a: False,
         'active': False,
     }
 
@@ -541,6 +567,11 @@ class prestashop_account_tax(orm.Model):
             required=True,
             ondelete='cascade'
         ),
+        'prestashop_tax_group_id': fields.many2one(
+            'prestashop.account.tax.group',
+            string='Tax Group',
+            ondelete='cascade'
+        ),
     }
 
     _sql_constraints = [
@@ -558,6 +589,56 @@ class account_tax(orm.Model):
             'openerp_id',
             string='prestashop Bindings',
             readonly=True
+        ),
+    }
+
+
+class prestashop_tax_rule(orm.Model):
+    _name = 'prestashop.tax.rule'
+    _inherit = 'prestashop.binding'
+    _inherits = {'tax.rule': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'tax.rule',
+            string='Tax rule',
+            required=True,
+            ondelete='cascade'
+        ),
+        'tax_group_id': fields.many2one(
+            'prestashop.account.tax.group',
+            string='Tax group',
+            ondelete='cascade'
+        ),
+        'tax_id': fields.many2one(
+            'prestashop.account.tax',
+            string='Tax',
+            ondelete='cascade'
+        ),
+    }
+
+
+class tax_rule(orm.Model):
+    _name = 'tax.rule'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.tax.rule',
+            'openerp_id',
+            string='prestashop Bindings',
+            readonly=True
+        ),
+        'tax_id': fields.many2one(
+            'account.tax',
+            string='Tax',
+            #             required = True,
+            ondelete='cascade'
+        ),
+        'tax_group_id': fields.many2one(
+            'account.tax.group',
+            string='Tax Group',
+            #             required = True,
+            ondelete='cascade'
         ),
     }
 
@@ -592,5 +673,9 @@ class account_tax_group(orm.Model):
             string='Prestashop Bindings',
             readonly=True
         ),
-        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
+        'company_id': fields.many2one(
+            'res.company', 'Company', select=1,
+            required=True),
     }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
