@@ -21,10 +21,12 @@
 ###############################################################################
 
 import logging
-
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from ..backend import prestashop
+from openerp.osv import osv
+from openerp.tools.translate import _
+
 
 _logger = logging.getLogger(__name__)
 
@@ -144,12 +146,6 @@ class CarrierDirectBinder(DirectBinder):
     _erp_field = 'name'
     _ps_field = 'name_ext'
 
-    #def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-    #    if len(erp_val) >= 2 and len(ps_val) >= 2 and \
-    #            erp_val[0:2].lower() == ps_val[0:2].lower():
-    #        return True
-    #    return False
-
 
 @prestashop
 class LangDirectBinder(DirectBinder):
@@ -192,18 +188,4 @@ class ResCurrencyDirectBinder(DirectBinder):
             return True
         return False
 
-
-@prestashop
-class AccountTaxDirectBinder(DirectBinder):
-    _model_name = 'prestashop.account.tax'
-    _erp_field = 'amount'
-    _ps_field = 'rate'
-
-    def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        taxes_inclusion_test = self.backend_record.taxes_included and \
-            erp_dict['price_include'] or not erp_dict['price_include']
-        if taxes_inclusion_test and erp_dict['type_tax_use'] == 'sale' and \
-                abs(erp_val*100 - float(ps_val)) < 0.01 and \
-                self.backend_record.company_id.id == erp_dict['company_id'][0]:
-            return True
-        return False
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
