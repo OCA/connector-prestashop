@@ -54,7 +54,6 @@ class ExportMultipleProducts(models.TransientModel):
         self.ensure_one()
         product_obj = self.env['product.template']
         presta_tmpl_obj = self.env['prestashop.product.template']
-        presta_attrs_obj = self.env['prestashop.product.combination.option']
         for product in product_obj.browse(self.env.context['active_ids']):
             for attribute in product.attribute_line_ids.mapped('attribute_id'):
                 presta_attrs = attribute.prestashop_bind_ids.filtered(

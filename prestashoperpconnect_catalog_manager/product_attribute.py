@@ -21,7 +21,6 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-from openerp.osv import fields, orm
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     export_record,
@@ -29,7 +28,6 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
 )
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
-    export_record,
     PrestashopExporter,
 )
 
@@ -38,15 +36,7 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
 from openerp.addons.prestashoperpconnect.unit.mapper import \
     TranslationPrestashopExportMapper
 
-
-from openerp.addons.prestashoperpconnect.unit.mapper import \
-    PrestashopExportMapper
-
-
 from openerp.addons.prestashoperpconnect.backend import prestashop
-from openerp.addons.prestashoperpconnect.unit.backend_adapter import \
-    GenericAdapter
-from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.connector.unit.mapper import mapping
 
 

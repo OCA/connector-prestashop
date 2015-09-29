@@ -21,12 +21,8 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
-from openerp.addons.connector.unit.mapper import ExportMapper, mapping
-from openerp.addons.prestashoperpconnect.unit.backend_adapter import \
-    PrestaShopCRUDAdapter
-
+from openerp.addons.connector.unit.mapper import mapping
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     TranslationPrestashopExporter,
@@ -34,8 +30,7 @@ from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
 )
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
-    PrestashopExporter,
-    export_record
+    PrestashopExporter
 )
 
 from openerp.addons.prestashoperpconnect.unit.mapper import \
@@ -44,20 +39,13 @@ from openerp.addons.prestashoperpconnect.unit.mapper import \
 from openerp.addons.prestashoperpconnect.unit.mapper import \
     PrestashopExportMapper
 
-from openerp.addons.prestashoperpconnect.connector import get_environment
 from openerp.addons.prestashoperpconnect.backend import prestashop
 from openerp.addons.prestashoperpconnect.product import INVENTORY_FIELDS
-from openerp.addons.prestashoperpconnect_catalog_manager.product_combination \
-    import product_product_write
 from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
-from openerp.addons.prestashoperpconnect.unit.backend_adapter \
-    import GenericAdapter
 from openerp.tools.translate import _
 import unicodedata
 import re
-import base64
-import imghdr
 
 try:
     import slugify as slugify_lib
@@ -434,8 +422,8 @@ class ProductImageExport(PrestashopExporter):
         assert self.binding_id
         assert self.erp_record
 
-        if not self.prestashop_id:
-            fields = None  # should be created with all the fields
+#         if not self.prestashop_id:
+#             fields = None  # should be created with all the fields
 
         if self._has_to_skip():
             return
