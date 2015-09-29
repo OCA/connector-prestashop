@@ -1,10 +1,10 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #                                                                             #
 #   Prestashoperpconnect for OpenERP                                          #
-#   Copyright (C) 2013 Akretion
-#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
-#   @author Parthiv Patel <parthiv@techreceptives.com>                                          #
+#   Copyright (C) 2013 Akretion                                               #
+#   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)      #
+#   @author Parthiv Patel <parthiv@techreceptives.com>                        #
 #                                                                             #
 #   This program is free software: you can redistribute it and/or modify      #
 #   it under the terms of the GNU Affero General Public License as            #

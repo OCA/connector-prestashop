@@ -1,4 +1,4 @@
-## -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   PrestashopERPconnect for OpenERP
@@ -7,7 +7,7 @@
 #   Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
-#   @author Parthiv Patel <parthiv@techreceptives.com> 
+#   @author Parthiv Patel <parthiv@techreceptives.com>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as

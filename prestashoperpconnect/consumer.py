@@ -85,4 +85,3 @@ def delay_unlink_all_bindings(session, model_name, record_id):
         if ext_id:
             export_delete_record.delay(session, prestashop_model_name,
                                        bind_record.backend_id.id, ext_id)
-
