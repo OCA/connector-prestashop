@@ -156,8 +156,8 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         })
 
     def delete(self, ids):
-        api = self.connect()
         """ Delete a record(s) on the external system """
+        api = self.connect()
         return api.delete(self._prestashop_model, ids)
 
 

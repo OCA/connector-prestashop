@@ -22,7 +22,7 @@
 ###############################################################################
 
 from prestapyt import PrestaShopWebServiceDict
-from backend import prestashop
+from .backend import prestashop
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)

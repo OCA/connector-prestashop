@@ -32,7 +32,7 @@ class account_invoice(orm.Model):
                 if invoice.partner_id.parent_id:
                     partner_id = invoice.partner_id.parent_id.id
                 else:
-                    invoice.partner_id.id
+                    partner_id = invoice.partner_id.id
                 refund_id = self._find_refund(
                     cr, uid, -1 * amount, partner_id,
                     context=context)

@@ -27,8 +27,8 @@
 
 
 from decimal import Decimal
-from backend_adapter import GenericAdapter
-from backend_adapter import PrestaShopCRUDAdapter
+from .backend_adapter import GenericAdapter
+from .backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import (
     mapping,

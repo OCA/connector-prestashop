@@ -38,7 +38,7 @@ the main product.
 '''
 
 from prestapyt import PrestaShopWebServiceError
-from backend import prestashop
+from .backend import prestashop
 from openerp import SUPERUSER_ID
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import mapping
@@ -84,8 +84,8 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
                 'prestashop.product.combination.option.value'
             )
 
-    def _after_import(self, erp_id):
-        self.prestashop_record
+#     def _after_import(self, erp_id):
+#         self.prestashop_record
 
 
 @prestashop

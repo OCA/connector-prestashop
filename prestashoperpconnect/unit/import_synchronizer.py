@@ -28,8 +28,8 @@ from datetime import datetime
 from datetime import timedelta
 from prestapyt import PrestaShopWebServiceError
 import logging
-from backend_adapter import GenericAdapter
-from backend_adapter import PrestaShopCRUDAdapter
+from .backend_adapter import GenericAdapter
+from .backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.exception import NothingToDoJob

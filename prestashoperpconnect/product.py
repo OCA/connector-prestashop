@@ -23,7 +23,7 @@
 from prestapyt import PrestaShopWebServiceDict
 import datetime
 import mimetypes
-from backend import prestashop
+from .backend import prestashop
 from openerp import SUPERUSER_ID
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.connector import ConnectorEnvironment
