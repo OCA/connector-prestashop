@@ -35,7 +35,7 @@
         "product",
         "product_m2mcategories",
         "connector_ecommerce",
-        "product_images",
+#         "product_images",
         "purchase",
     ],
     "external_dependencies": {
