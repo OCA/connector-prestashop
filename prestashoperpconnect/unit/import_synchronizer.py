@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-/
-# #############################################################################
+##############################################################################
 #
 #    Prestashoperpconnect : OpenERP-PrestaShop connector
 #    Copyright (C) 2013 Akretion (http://www.akretion.com/)
 #    Copyright 2013 Camptocamp SA
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #    @author: Guewen Baconnier
 #    @author: Alexis de Lattre <alexis.delattre@akretion.com>
 #    @author Sébastien BEAU <sebastien.beau@akretion.com>
-#
+#    @author Parthiv Patel <parthiv@techreceptives.com>
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -23,30 +24,27 @@
 #
 ##############################################################################
 
-import logging
 from datetime import datetime
 from datetime import timedelta
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
-from openerp.addons.connector.connector import ConnectorUnit
-from ..backend import prestashop
-from ..connector import get_environment
+from prestapyt import PrestaShopWebServiceError
+import logging
 from backend_adapter import GenericAdapter
-from .exception import OrderImportRuleRetry
+from backend_adapter import PrestaShopCRUDAdapter
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.exception import NothingToDoJob
-from backend_adapter import PrestaShopCRUDAdapter
-from openerp.addons.connector.connector import Binder
-
-from prestapyt import PrestaShopWebServiceError
+from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.unit.synchronizer import ImportSynchronizer
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from ..backend import prestashop
 from ..connector import add_checkpoint
-
-
+from ..connector import get_environment
+from .exception import OrderImportRuleRetry
 _logger = logging.getLogger(__name__)
 
 
 class PrestashopImportSynchronizer(ImportSynchronizer):
+
     """ Base importer for Prestashop """
 
     def __init__(self, environment):
@@ -89,29 +87,22 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
 
     def _create(self, data, context=None):
         """ Create the ERP record """
-        if context is None:
-            context = self._context()
-        erp_id = self.model.create(
-            self.session.cr,
-            self.session.uid,
-            data,
-            context=context
-        )
-        _logger.debug('%s %d created from prestashop %s',
-                      self.model._name, erp_id, self.prestashop_id)
-        return erp_id
 
-    def _update(self, erp_id, data, context=None):
-        """ Update an ERP record """
-        if context is None:
-            context = self._context()
-        self.model.write(self.session.cr,
-                         self.session.uid,
-                         erp_id,
-                         data,
-                         context=context)
-        _logger.debug('%s %d updated from prestashop %s',
-                      self.model._name, erp_id, self.prestashop_id)
+        self._validate_data(data)
+
+        model = self.model.with_context(connector_no_export=True)
+        openerp_id = model.create(data)
+        _logger.debug(
+            '%d created from prestashop %s', openerp_id, self.prestashop_id)
+        return openerp_id
+
+    def _update(self, openerp_id, data):
+        """ Update an OpenERP record """
+        # special check on data before import
+        self._validate_data(data)
+        openerp_id.with_context(connector_no_export=True).write(data)
+        _logger.debug(
+            '%d updated from prestashop %s', openerp_id, self.prestashop_id)
         return
 
     def _after_import(self, erp_id):
@@ -154,7 +145,8 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
 
     def _check_dependency(self, ext_id, model_name):
         ext_id = int(ext_id)
-        if not self.get_binder_for_model(model_name).to_openerp(ext_id):
+        binder = self.get_binder_for_model(model_name)
+        if not binder.to_openerp(ext_id):
             import_record(
                 self.session,
                 model_name,
@@ -164,6 +156,7 @@ class PrestashopImportSynchronizer(ImportSynchronizer):
 
 
 class BatchImportSynchronizer(ImportSynchronizer):
+
     """ The role of a BatchImportSynchronizer is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
@@ -201,6 +194,7 @@ class BatchImportSynchronizer(ImportSynchronizer):
 
 @prestashop
 class AddCheckpoint(ConnectorUnit):
+
     """ Add a connector.checkpoint on the underlying model
     (not the prestashop.* but the _inherits'ed model) """
 
@@ -243,6 +237,7 @@ class PaymentMethodsImportSynchronizer(BatchImportSynchronizer):
 
 @prestashop
 class DirectBatchImport(BatchImportSynchronizer):
+
     """ Import the PrestaShop Shop Groups + Shops
 
     They are imported directly because this is a rare and fast operation,
@@ -251,6 +246,9 @@ class DirectBatchImport(BatchImportSynchronizer):
     _model_name = [
         'prestashop.shop.group',
         'prestashop.shop',
+        'prestashop.configuration',
+        'prestashop.tax.rule',
+        'prestashop.account.tax',
         'prestashop.account.tax.group',
         'prestashop.sale.order.state',
     ]
@@ -267,12 +265,14 @@ class DirectBatchImport(BatchImportSynchronizer):
 
 @prestashop
 class DelayedBatchImport(BatchImportSynchronizer):
+
     """ Delay import of the records """
     _model_name = [
         'prestashop.res.partner.category',
         'prestashop.res.partner',
         'prestashop.address',
         'prestashop.product.category',
+        'prestashop.product.product',
         'prestashop.product.template',
         'prestashop.sale.order',
         'prestashop.refund',
@@ -307,29 +307,34 @@ class ResPartnerRecordImport(PrestashopImportSynchronizer):
 
     def _after_import(self, erp_id):
         binder = self.get_binder_for_model(self._model_name)
-        ps_id = binder.to_backend(erp_id)
+        ps_id = binder.to_backend(erp_id.id)
         import_batch.delay(
             self.session,
             'prestashop.address',
             self.backend_record.id,
-            filters={'filter[id_customer]': '[%d]' % (ps_id)},
-            priority=10,
+            filters={'filter[id_customer]': '%d' % (ps_id)},
+            priority=20,
         )
 
 
 @prestashop
 class SimpleRecordImport(PrestashopImportSynchronizer):
+
     """ Import one simple record """
     _model_name = [
         'prestashop.shop.group',
         'prestashop.shop',
         'prestashop.address',
+        'prestashop.configuration',
+        'prestashop.tax.rule',
+        'prestashop.account.tax',
         'prestashop.account.tax.group',
     ]
 
 
 @prestashop
 class MailMessageRecordImport(PrestashopImportSynchronizer):
+
     """ Import one simple record """
     _model_name = 'prestashop.mail.message'
 
@@ -350,6 +355,7 @@ class MailMessageRecordImport(PrestashopImportSynchronizer):
 
 @prestashop
 class SupplierRecordImport(PrestashopImportSynchronizer):
+
     """ Import one simple record """
     _model_name = 'prestashop.supplier'
 
@@ -433,7 +439,7 @@ class SaleImportRule(ConnectorUnit):
               'paid': _rule_paid,
               'authorized': _rule_paid,
               'never': _rule_never,
-    }
+              }
 
     def check(self, record):
         """ Check whether the current sale order should be imported
@@ -513,7 +519,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         erp_order = model.browse(
             self.session.cr,
             self.session.uid,
-            erp_id,
+            erp_id.id,
         )
         shipping_total = erp_order.total_shipping_tax_included \
             if self.backend_record.taxes_included \
@@ -527,7 +533,9 @@ class SaleOrderImport(PrestashopImportSynchronizer):
                 {'order_id': erp_order.openerp_id.id,
                  'product_id': erp_order.openerp_id.carrier_id.product_id.id,
                  'price_unit':  shipping_total,
-                 'is_delivery': True})
+                 'is_delivery': True
+                 },
+                context=self.session.context)
         erp_order.openerp_id.recompute()
         return True
 
@@ -535,7 +543,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         backend_adapter = self.get_connector_unit_for_model(
             GenericAdapter, 'prestashop.refund'
         )
-        filters = {'filter[id_customer]': id_customer}
+        filters = {'filter[id_customer]': id_customer[0]}
         refund_ids = backend_adapter.search(filters=filters)
         for refund_id in refund_ids:
             refund = backend_adapter.read(refund_id)
@@ -553,6 +561,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
 
 @prestashop
 class TranslatableRecordImport(PrestashopImportSynchronizer):
+
     """ Import one translatable record """
     _model_name = []
 
@@ -569,7 +578,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         erp_lang = model.read(
             self.session.cr,
             self.session.uid,
-            erp_language_id,
+            erp_language_id.id,
         )
         return erp_lang
 
@@ -656,15 +665,16 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         context = self._context()
         context['lang'] = lang_code
         if erp_id:
-            self._update(erp_id, record, context)
+            self._update(erp_id, record)
         else:
-            erp_id = self._create(record, context)
+            erp_id = self._create(record)
 
         return erp_id
 
 
 @prestashop
 class PartnerCategoryRecordImport(PrestashopImportSynchronizer):
+
     """ Import one translatable record """
     _model_name = [
         'prestashop.res.partner.category',
@@ -714,6 +724,7 @@ class ProductCategoryImport(TranslatableRecordImport):
 
 @prestashop
 class TemplateRecordImport(TranslatableRecordImport):
+
     """ Import one translatable record """
     _model_name = [
         'prestashop.product.template',
@@ -729,15 +740,16 @@ class TemplateRecordImport(TranslatableRecordImport):
     }
 
     def _after_import(self, erp_id):
-        self.import_images(erp_id)
-        self.import_default_image(erp_id)
-        self.import_supplierinfo(erp_id)
+        self.import_images(erp_id.id)
+        self.import_default_image(erp_id.id)
+        self.import_supplierinfo(erp_id.id)
         self.import_combinations()
-        self.attribute_line(erp_id)
-        self.deactivate_default_product(erp_id)
+        self.attribute_line(erp_id.id)
+        self.deactivate_default_product(erp_id.id)
 
     def deactivate_default_product(self, erp_id):
-        template = self.session.browse('prestashop.product.template', erp_id)
+        template = self.session.browse(
+            'prestashop.product.template', erp_id)
         if template.product_variant_count != 1:
             for product in template.product_variant_ids:
                 if not product.attribute_value_ids:
@@ -745,39 +757,32 @@ class TemplateRecordImport(TranslatableRecordImport):
                                        {'active': False})
 
     def attribute_line(self, erp_id):
-
-        template = self.session.browse('prestashop.product.template', erp_id)
-        attr_line_value_ids = []
-        for attr_line in template.attribute_line_ids:
-            attr_line_value_ids.extend(attr_line.value_ids.ids)
+        template = self.session.browse(
+            'prestashop.product.template', erp_id)
         template_id = template.openerp_id.id
         product_ids = self.session.search('product.product', [
             ('product_tmpl_id', '=', template_id)]
         )
         if product_ids:
             products = self.session.browse('product.product',
-                                       product_ids)
+                                           product_ids)
             attribute_ids = []
             for product in products:
                 for attribute_value in product.attribute_value_ids:
                     attribute_ids.append(attribute_value.attribute_id.id)
-                    #filter unique id for create relation
+                    # filter unique id for create relation
             if attribute_ids:
                 for attribute_id in set(attribute_ids):
                     value_ids = []
                     for product in products:
                         for attribute_value in product.attribute_value_ids:
-                            if (attribute_value.attribute_id.id == attribute_id
-                                and attribute_value.id not in
-                                    attr_line_value_ids):
+                            if attribute_value.attribute_id.id == attribute_id:
                                 value_ids.append(attribute_value.id)
-                    if value_ids:
-                        self.session.create('product.attribute.line', {
-                                            'attribute_id': attribute_id,
-                                            'product_tmpl_id': template_id,
-                                            'value_ids': [(6, 0, set(value_ids)
-                                                           )]}
-                                            )
+                self.session.create('product.attribute.line', {
+                    'attribute_id': attribute_id,
+                    'product_tmpl_id': template_id,
+                    'value_ids': [(6, 0, set(value_ids))]}
+                )
 
     def import_combinations(self):
         prestashop_record = self._get_prestashop_data()
@@ -825,7 +830,8 @@ class TemplateRecordImport(TranslatableRecordImport):
             self.backend_record.id,
             filters=filters
         )
-        template = self.session.browse('prestashop.product.template', erp_id)
+        template = self.session.browse(
+            'prestashop.product.template', erp_id)
         template_id = template.openerp_id.id
         ps_supplierinfo_ids = self.session.search(
             'prestashop.product.supplierinfo',
@@ -853,19 +859,11 @@ class TemplateRecordImport(TranslatableRecordImport):
         try:
             image = adapter.read(record['id'],
                                  record['id_default_image']['value'])
-            ctx = self.session.context.copy()
-            ctx['connector_no_export'] = True
-            self.session.pool['prestashop.product.template'].write(
-                self.session.cr, self.session.uid, [template_id],
-                {"image": image['content']},
-                context=ctx
-                )
-            #self.session.write(
-            #    'prestashop.product.template',
-            #    [template_id],
-            #    {"image": image['content']},
-                #context=ctx
-            #   )
+            self.session.write(
+                'prestashop.product.template',
+                [template_id.id],
+                {"image": image['content']}
+            )
         except PrestaShopWebServiceError:
             pass
         except IOError:
@@ -904,6 +902,7 @@ class TemplateRecordImport(TranslatableRecordImport):
 
 @prestashop
 class SaleOrderStateImport(TranslatableRecordImport):
+
     """ Import one translatable record """
     _model_name = [
         'prestashop.sale.order.state',
@@ -1023,6 +1022,9 @@ def import_customers_since(session, backend_id, since_date=None):
     import_batch(
         session, 'prestashop.res.partner', backend_id, filters, priority=15
     )
+#     import_batch(
+#         session, 'prestashop.address', backend_id, filters, priority = 20
+#     )
 
     session.pool.get('prestashop.backend').write(
         session.cr,
@@ -1152,3 +1154,24 @@ def export_product_quantities(session, ids):
         model_obj.recompute_prestashop_qty(
             session.cr, session.uid, model_ids, context=session.context
         )
+
+
+@job
+def export_sale_order_status(session, ids):
+    model_obj = session.pool['prestashop.sale.order']
+    model_ids = model_obj.search(
+        session.cr,
+        session.uid,
+        [('backend_id', 'in', ids)],
+        context=session.context
+    )
+    model_obj.recompute_prestashop_qty(
+        session.cr, session.uid, model_ids, context=session.context
+    )
+
+
+@job
+def import_inventory(session, backend_id):
+    import_batch(session, 'prestashop.product.template', backend_id)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

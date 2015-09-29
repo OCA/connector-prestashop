@@ -3,8 +3,10 @@
 #
 #    Copyright (C) 2013 Akretion (http://www.akretion.com).
 #    Copyright (C) 2013 Camptocamp (http://www.camptocamp.com)
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
 #    @author Sébastien BEAU <sebastien.beau@akretion.com>
 #    @author Guewen Baconnier <guewen.baconnier@camptocamp.com>
+#    @author Parthiv Patel <parthiv@techreceptives.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,17 +24,12 @@
 ##############################################################################
 
 import logging
-from datetime import datetime
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
-from openerp.addons.prestashoperpconnect.unit.mapper import TranslationPrestashopExportMapper
-from openerp.addons.connector.exception import IDMissingInBackend
-from .import_synchronizer import import_record
+from openerp.addons.prestashoperpconnect.unit.mapper \
+    import TranslationPrestashopExportMapper
 from ..connector import get_environment
-
-from openerp.addons.prestashoperpconnect.backend import prestashop
 
 
 _logger = logging.getLogger(__name__)
@@ -52,6 +49,7 @@ In addition to its export job, an exporter has to:
 
 
 class PrestashopBaseExporter(ExportSynchronizer):
+
     """ Base exporter for Prestashop """
 
     def __init__(self, environment):
@@ -87,6 +85,7 @@ class PrestashopBaseExporter(ExportSynchronizer):
 
 
 class PrestashopExporter(PrestashopBaseExporter):
+
     """ A common flow for the exports to Prestashop """
 
     def __init__(self, environment):
@@ -107,11 +106,11 @@ class PrestashopExporter(PrestashopBaseExporter):
 
     def _map_data(self, fields=None):
         """ Convert the external record to OpenERP """
-        #mappper.convert is deprecate using mapper.map_record
-        #self.mapper.convert(self.erp_record, fields=fields)
-        map_record = self.mapper.map_record(self.erp_record)
-        #record = map_record.values(for_create=True)
-        #self._validate_data(record)
+        # mappper.convert is deprecate using mapper.map_record
+        # self.mapper.convert(self.erp_record, fields=fields)
+        self.mapper.map_record(self.erp_record)
+        # record = map_record.values(for_create=True)
+        # self._validate_data(record)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -141,22 +140,19 @@ class PrestashopExporter(PrestashopBaseExporter):
         assert self.binding_id
         assert self.erp_record
 
-        if not self.prestashop_id:
-            fields = None  # should be created with all the fields
-
         if self._has_to_skip():
             return
 
         # export the missing linked resources
         self._export_dependencies()
         map_record = self.mapper.map_record(self.erp_record)
-        #a = self.get_record_by_lang()
-        #map_record = self.mapper.map_record(fields)
-        #a = self.mapper.convert_languages(self.mapper.translatable_fields)
-        #self._map_data(fields=fields)
+        # a = self.get_record_by_lang()
+        # map_record = self.mapper.map_record(fields)
+        # a = self.mapper.convert_languages(self.mapper.translatable_fields)
+        # self._map_data(fields=fields)
 
         if self.prestashop_id:
-            #record = self.mapper.data
+            # record = self.mapper.data
             record = map_record.values()
             if not record:
                 return _('Nothing to export.')
@@ -164,11 +160,8 @@ class PrestashopExporter(PrestashopBaseExporter):
             self._validate_data(record)
             self._update(record)
         else:
-            #record = self.mapper.data_for_create
+            # record = self.mapper.data_for_create
             record = map_record.values(for_create=True)
-            if fields is None:
-                fields = {}
-            record.update(fields)
             if not record:
                 return _('Nothing to export.')
             # special check on data before export
@@ -184,7 +177,8 @@ class TranslationPrestashopExporter(PrestashopExporter):
     @property
     def mapper(self):
         if self._mapper is None:
-            self._mapper = self.environment.get_connector_unit(TranslationPrestashopExportMapper)
+            self._mapper = self.environment.get_connector_unit(
+                TranslationPrestashopExportMapper)
         return self._mapper
 
     def _map_data(self, fields=None):
@@ -212,11 +206,13 @@ class TranslationPrestashopExporter(PrestashopExporter):
 @job
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on Prestashop """
-    #TODO FIX PRESTASHOP
-    #prestashop do not support partial edit
+    # TODO FIX PRESTASHOP
+    # prestashop do not support partial edit
     fields = None
 
     record = session.browse(model_name, binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
     exporter = env.get_connector_unit(PrestashopExporter)
     return exporter.run(binding_id, fields=fields)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

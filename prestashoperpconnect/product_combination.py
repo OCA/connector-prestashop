@@ -1,3 +1,30 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    Prestashoperpconnect : OpenERP-PrestaShop connector
+#    Copyright (C) 2013 Akretion (http://www.akretion.com/)
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
+#    Copyright 2013 Camptocamp SA
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
+#    @author: Guewen Baconnier
+#    @author Parthiv Patel <parthiv@techreceptives.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 '''
 A product combination is a product with different attributes in prestashop.
 In prestashop, we can sell a product or a combination of a product with some
@@ -10,33 +37,19 @@ We map that in OpenERP to a product.product with an attribute.set defined for
 the main product.
 '''
 
-from unidecode import unidecode
-import json
-
-from openerp import SUPERUSER_ID
-from openerp.osv import fields, orm
+from prestapyt import PrestaShopWebServiceError
 from backend import prestashop
-from .unit.backend_adapter import GenericAdapter
-from .unit.import_synchronizer import PrestashopImportSynchronizer
-from .unit.import_synchronizer import TranslatableRecordImport
-from .unit.import_synchronizer import import_batch
-from .unit.mapper import PrestashopImportMapper
-from .unit.import_synchronizer import import_record
+from openerp import SUPERUSER_ID
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import mapping
-from openerp.osv.orm import browse_record_list
-
 from openerp.addons.product.product import check_ean
-from .unit.backend_adapter import PrestaShopCRUDAdapter
-
+from openerp.osv.orm import browse_record_list
 from .product import ProductInventoryExport
-
-from prestapyt import PrestaShopWebServiceError
-
-try:
-    from xml.etree import cElementTree as ElementTree
-except ImportError, e:
-    from xml.etree import ElementTree
+from .unit.backend_adapter import GenericAdapter
+from .unit.backend_adapter import PrestaShopCRUDAdapter
+from .unit.import_synchronizer import PrestashopImportSynchronizer
+from .unit.import_synchronizer import TranslatableRecordImport
+from .unit.mapper import PrestashopImportMapper
 
 
 @prestashop
@@ -72,7 +85,7 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
             )
 
     def _after_import(self, erp_id):
-        record = self.prestashop_record
+        self.prestashop_record
 
 
 @prestashop
@@ -95,9 +108,9 @@ class ProductCombinationMapper(PrestashopImportMapper):
             binder = self.get_binder_for_model('prestashop.product.image')
             image_id = binder.to_openerp(images[0].get('id'))
             variant_image = self.session.browse('prestashop.product.image',
-                                                image_id)
+                                                image_id.id)
             if variant_image:
-                if variant_image.type == 'db':
+                if not variant_image.link:
                     return {'image_variant': variant_image.file_db_store}
                 else:
                     adapter = self.get_connector_unit_for_model(
@@ -141,7 +154,7 @@ class ProductCombinationMapper(PrestashopImportMapper):
         template_id = self.get_main_template_id(record)
         self._main_template = self.session.browse(
             'prestashop.product.template',
-            template_id)
+            template_id.id)
         return self._main_template
 
     def get_main_template_id(self, record):
@@ -160,10 +173,9 @@ class ProductCombinationMapper(PrestashopImportMapper):
                 'prestashop.product.combination.option.value')
             option_value_openerp_id = option_value_binder.to_openerp(
                 option_value['id'])
-
             option_value_object = self.session.browse(
                 'prestashop.product.combination.option.value',
-                option_value_openerp_id
+                option_value_openerp_id.id
             )
             yield option_value_object
 
@@ -187,17 +199,15 @@ class ProductCombinationMapper(PrestashopImportMapper):
 
     @mapping
     def main_template_id(self, record):
-        return {'main_template_id': self.get_main_template_id(record)}
+        return {'main_template_id': self.get_main_template_id(record).id}
 
     def _template_code_exists(self, code):
-        model = self.session.pool.get('product.product')
-        combination_binder = self.get_binder_for_model('prestashop.product.combination')
+        model = self.session.pool.get('product.template')
         template_ids = model.search(self.session.cr, SUPERUSER_ID, [
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
         ])
-        return template_ids and not combination_binder.to_backend(template_ids,
-                                                                  unwrap=True)
+        return len(template_ids) > 0
 
     @mapping
     def default_code(self, record):
@@ -221,9 +231,9 @@ class ProductCombinationMapper(PrestashopImportMapper):
     def ean13(self, record):
         if record['ean13'] in ['', '0']:
             backend_adapter = self.get_connector_unit_for_model(
-            GenericAdapter, 'prestashop.product.template')
+                GenericAdapter, 'prestashop.product.template')
             template = backend_adapter.read(record['id_product'])
-            return template['ean13'] and {'ean13': template['ean13']} or {}
+            return template['ean13'] and {}
         if check_ean(record['ean13']):
             return {'ean13': record['ean13']}
         return {}
@@ -264,13 +274,11 @@ class ProductCombinationOptionRecordImport(PrestashopImportSynchronizer):
             super(ProductCombinationOptionRecordImport, self).run(ext_id)
         else:
             # else, we create only a prestashop.product.combination.option
-            context = self._context()
             data = {
                 'openerp_id': attribute_ids[0],
                 'backend_id': self.backend_record.id,
             }
-            erp_id = self.model.create(self.session.cr, self.session.uid,
-                                       data, context)
+            erp_id = self.model.create(data)
             self.binder.bind(self.prestashop_id, erp_id)
 
         self._import_values()
@@ -301,7 +309,7 @@ class ProductCombinationOptionMapper(PrestashopImportMapper):
                     continue
                 erp_lang = self.session.read(
                     'prestashop.res.lang',
-                    erp_language_id,
+                    erp_language_id.id,
                     []
                 )
                 if erp_lang['code'] == 'en_US':
@@ -354,7 +362,8 @@ class ProductCombinationOptionValueMapper(PrestashopImportMapper):
             'prestashop.product.combination.option')
         attribute_id = binder.to_openerp(record['id_attribute_group'],
                                          unwrap=True)
-        return {'attribute_id': attribute_id}
+
+        return {'attribute_id': attribute_id.id}
 
     @mapping
     def backend_id(self, record):
@@ -367,6 +376,8 @@ class CombinationInventoryExport(ProductInventoryExport):
 
     def get_filter(self, template):
         return {
-            'filter[id_product]': template.main_template_id.prestashop_id,
+            'filter[id_template': template.main_template_id.prestashop_id,
             'filter[id_product_attribute]': template.prestashop_id,
         }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

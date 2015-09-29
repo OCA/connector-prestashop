@@ -1,3 +1,30 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    Prestashoperpconnect : OpenERP-PrestaShop connector
+#    Copyright (C) 2013 Akretion (http://www.akretion.com/)
+#    Copyright (C) 2015 Tech-Receptives(<http://www.tech-receptives.com>)
+#    Copyright 2013 Camptocamp SA
+#    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+#    @author Sébastien BEAU <sebastien.beau@akretion.com>
+#    @author: Guewen Baconnier
+#    @author Parthiv Patel <parthiv@techreceptives.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 '''
 A product combination is a product with different attributes in prestashop.
 In prestashop, we can sell a product or a combination of a product with some
@@ -12,10 +39,6 @@ the main product.
 
 from openerp.osv import fields, orm
 
-from openerp.addons.connector.session import ConnectorSession
-
-from ..unit.import_synchronizer import import_record
-
 
 class product_product(orm.Model):
     _inherit = 'product.product'
@@ -26,22 +49,8 @@ class product_product(orm.Model):
             'openerp_id',
             string='PrestaShop Bindings (combinations)'
         ),
-        'default_on': fields.boolean('Default On'),
     }
 
-    def _check_default_on(self, cr, uid, ids, context=None):
-        for product in self.browse(cr, uid, ids, context=context):
-            product_ids = self.search(cr, uid, [("default_on", "=", 1),
-                                                ("product_tmpl_id", "=",
-                                                 product.product_tmpl_id.id)])
-            if len(product_ids) > 1:
-                return False
-        return True
-
-    _constraints = [
-                    (_check_default_on,
-                     'Error! Only one variant can be default', ['default_on'])
-                    ]
 
 class prestashop_product_combination(orm.Model):
     _name = 'prestashop.product.combination'
@@ -66,6 +75,7 @@ class prestashop_product_combination(orm.Model):
             help="Last computed quantity to send on Prestashop."
         ),
         'reference': fields.char('Original reference'),
+        'default_on': fields.boolean('Available For Order'),
     }
 
     def recompute_prestashop_qty(self, cr, uid, ids, context=None):
@@ -108,19 +118,19 @@ class prestashop_product_combination_option(orm.Model):
             ondelete='cascade'
         ),
         'prestashop_position': fields.integer('Prestashop Position'),
-        'group_type': fields.selection([('color','Color'),
+        'group_type': fields.selection([('color', 'Color'),
                                         ('radio', 'Radio'),
-                                        ('select', 'Select')],'Type'),
+                                        ('select', 'Select')], 'Type'),
         'public_name': fields.char(
             'Public Name',
             translate=True
         ),
 
     }
-    
+
     _defaults = {
-                 'group_type': 'select',
-                 }
+        'group_type': 'select',
+    }
 
 
 class product_attribute_value(orm.Model):
@@ -148,9 +158,12 @@ class prestashop_product_combination_option_value(orm.Model):
             ondelete='cascade'
         ),
         'prestashop_position': fields.integer('Prestashop Position'),
-        'id_attribute_group': fields.many2one('prestashop.product.combination.option')
+        'id_attribute_group': fields.many2one(
+            'prestashop.product.combination.option')
     }
 
     _defaults = {
         'prestashop_position': 1
     }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
