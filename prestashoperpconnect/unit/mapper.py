@@ -26,6 +26,7 @@
 ##############################################################################
 
 
+import logging
 from decimal import Decimal
 from .backend_adapter import GenericAdapter
 from .backend_adapter import PrestaShopCRUDAdapter
@@ -41,6 +42,8 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
 from openerp.tools.translate import _
 from ..backend import prestashop
 from ..connector import add_checkpoint
+
+_logger = logging.getLogger(__name__)
 
 
 class PrestashopImportMapper(ImportMapper):
@@ -868,7 +871,7 @@ class ConfigurationMapper(PrestashopImportMapper):
     def backend_id(self, record):
         currency_ids = self.session.search('prestashop.res.currency', [])
         currency_binder = self.get_binder_for_model(
-            'prestashop.res.currency')
+            'prestashop.res.currency')        
         for c_id in currency_ids:
             currency_id = currency_binder.to_openerp(
                 c_id,
@@ -876,8 +879,8 @@ class ConfigurationMapper(PrestashopImportMapper):
             )
             pricelist_id = self.session.search(
                 'product.pricelist', [('currency_id', '=', currency_id.id),
-                                      ('type', '=', 'sale')])
-            if not pricelist_id:
+                                      ('type', '=', 'sale')])            
+            if pricelist_id and len(pricelist_id) == 1:
                 item = {
                     'min_quantity': 0,
                     'sequence': 5,
