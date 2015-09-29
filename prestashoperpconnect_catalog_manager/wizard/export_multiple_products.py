@@ -58,12 +58,13 @@ class ExportMultipleProducts(models.TransientModel):
         for product in product_obj.browse(self.env.context['active_ids']):
             for attribute in product.attribute_line_ids.mapped('attribute_id'):
                 presta_attrs = attribute.prestashop_bind_ids.filtered(
-                    lambda x: x.backend_id.id == self.name.id) 
+                    lambda x: x.backend_id.id == self.name.id)
                 if not presta_attrs:
                     attribute.write(
-			{'prestashop_bind_ids': [(0, 0, {'backend_id': self.name.id,
-            		     'default_shop_id': self.shop.id,
-            		     'public_name': get_slug(attribute.name)})]})
+                        {'prestashop_bind_ids': [(
+                            0, 0, {'backend_id': self.name.id,
+                                   'default_shop_id': self.shop.id,
+                                   'public_name': get_slug(attribute.name)})]})
 
             presta_tmpl = presta_tmpl_obj.search(
                 [('openerp_id', '=', product.id),

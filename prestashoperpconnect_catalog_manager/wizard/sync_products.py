@@ -1,4 +1,3 @@
-
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -26,7 +25,7 @@ from openerp import models, fields, api
 
 class SyncProducts(models.TransientModel):
     _name = 'sync.products'
-    #_inherit = 'prestashop.binding'
+    # _inherit = 'prestashop.binding'
 
     @api.multi
     def sync_products(self):

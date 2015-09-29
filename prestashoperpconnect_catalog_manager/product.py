@@ -24,7 +24,8 @@
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import ExportMapper, mapping
-from openerp.addons.prestashoperpconnect.unit.backend_adapter import PrestaShopCRUDAdapter
+from openerp.addons.prestashoperpconnect.unit.backend_adapter import \
+    PrestaShopCRUDAdapter
 
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
@@ -158,9 +159,9 @@ class prestashop_product_template(orm.Model):
         # 'available_for_order': fields.boolean(
         #     'Available For Order'
         # ),
-#        'show_price': fields.boolean(
-#            'Show Price'
-#        ),
+        #        'show_price': fields.boolean(
+        #            'Show Price'
+        #        ),
         'online_only': fields.boolean(
             'Online Only'
         ),
@@ -213,9 +214,9 @@ class ProductCategoryExportMapper(TranslationPrestashopExportMapper):
     @mapping
     def translatable_fields(self, record):
         translatable_fields = [
-        ('name', 'name'),
-        ('link_rewrite', 'link_rewrite')
-                              ]
+            ('name', 'name'),
+            ('link_rewrite', 'link_rewrite')
+        ]
         trans = TranslationPrestashopExporter(self.environment)
         translated_fields = self.convert_languages(
             trans.get_record_by_lang(record.id), translatable_fields)
@@ -228,7 +229,7 @@ class ProductCategoryExportMapper(TranslationPrestashopExportMapper):
         category_binder = self.get_binder_for_model(
             'prestashop.product.category')
         ext_categ_id = category_binder.to_backend(record['parent_id']['id'],
-            unwrap=True)
+                                                  unwrap=True)
         return {'id_parent': ext_categ_id}
 
 
@@ -240,7 +241,7 @@ class ProductImageExportMapper(PrestashopExportMapper):
         ('file_db_store', 'content'),
         ('name', 'name'),
         ('extension', 'extension')
-        #('product_tmpl_id', 'id_product')
+        # ('product_tmpl_id', 'id_product')
     ]
 
     @mapping
@@ -274,11 +275,11 @@ class ProductTemplateExport(PrestashopExporter):
         obj_position = obj.browse(self.session.cr, self.session.uid,
                                   porition_cat_id).position + 1
         res = {
-                    'backend_id': self.backend_record.id,
-                    'openerp_id': category.id,
-                    'link_rewrite': get_slug(category.name),
-                    'position': obj_position
-                }
+            'backend_id': self.backend_record.id,
+            'openerp_id': category.id,
+            'link_rewrite': get_slug(category.name),
+            'position': obj_position
+        }
         ctx = self.session.context.copy()
         ctx['connector_no_export'] = True
         category_ext_id = obj.create(self.session.cr, self.session.uid, res,
@@ -356,8 +357,8 @@ class ProductTemplateExport(PrestashopExporter):
                     value_ext_id = self.session.pool[
                         'prestashop.product.combination.option.value'].create(
                         self.session.cr, self.session.uid, {
-                        'backend_id': self.backend_record.id,
-                        'openerp_id': value.id}, context=ctx)
+                            'backend_id': self.backend_record.id,
+                            'openerp_id': value.id}, context=ctx)
                     export_record(
                         self.session,
                         'prestashop.product.combination.option.value',
@@ -385,30 +386,30 @@ class ProductTemplateExport(PrestashopExporter):
                             'openerp_id': product.id,
                             'main_template_id': self.binding_id}, context=ctx)
                     export_record.delay(self.session,
-                                  'prestashop.product.combination',
-                                  combination_ext_id)
+                                        'prestashop.product.combination',
+                                        combination_ext_id)
 
     def check_images(self):
         ctx = self.session.context.copy()
         ctx['connector_no_export'] = True
-        #self.check_front_image(ctx)
+        # self.check_front_image(ctx)
         if self.erp_record.image_ids:
             image_binder = self.get_binder_for_model(
                 'prestashop.product.image')
             for image_line in self.erp_record.image_ids:
                 image_ext_id = image_binder.to_backend(image_line.id,
-                    unwrap=True)
+                                                       unwrap=True)
                 if not image_ext_id:
                     image_ext_id = self.session.pool[
                         'prestashop.product.image'].create(
                         self.session.cr, self.session.uid, {
-                        'backend_id': self.backend_record.id,
-                        'openerp_id': image_line.id},
+                            'backend_id': self.backend_record.id,
+                            'openerp_id': image_line.id},
                         context=ctx)
                     export_record.delay(self.session,
-                        'prestashop.product.image',
-                        image_ext_id, image_line.file_db_store)
-                #api.add('/images/products/xx', image_base64,
+                                        'prestashop.product.image',
+                                        image_ext_id, image_line.file_db_store)
+                # api.add('/images/products/xx', image_base64,
                 #        img_filename='xxxxx')
 
     def update_quantities(self):
@@ -451,7 +452,7 @@ class ProductImageExport(PrestashopExporter):
             self._validate_data(record)
             self._update(record)
         else:
-            #record = self.mapper.data_for_create
+            # record = self.mapper.data_for_create
             record = map_record.values(for_create=True)
             if not record:
                 return _('Nothing to export.')
@@ -488,7 +489,8 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
             return {'price': record.lst_price}
 
     def _get_template_feature(self, record):
-        #Buscar las product.attribute y sus valores para asociarlos al producto
+        # Buscar las product.attribute y sus valores para asociarlos al
+        # producto
         template_feature = []
         attribute_binder = self.get_binder_for_model(
             'prestashop.product.combination.option')
@@ -561,19 +563,19 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
     @mapping
     def translatable_fields(self, record):
         translatable_fields = [
-        ('name', 'name'),
-        ('link_rewrite', 'link_rewrite'),
-        ('meta_title', 'meta_title'),
-        ('meta_description', 'meta_description'),
-        ('meta_keywords', 'meta_keywords'),
-        ('tags', 'tags'),
-        ('description_short_html', 'description_short'),
-        ('description_html', 'description'),
-        ('available_now', 'available_now'),
-        ('available_later', 'available_later'),
-        ("description_sale", "description"),
-        ('description', 'description_short'),
-                              ]
+            ('name', 'name'),
+            ('link_rewrite', 'link_rewrite'),
+            ('meta_title', 'meta_title'),
+            ('meta_description', 'meta_description'),
+            ('meta_keywords', 'meta_keywords'),
+            ('tags', 'tags'),
+            ('description_short_html', 'description_short'),
+            ('description_html', 'description'),
+            ('available_now', 'available_now'),
+            ('available_later', 'available_later'),
+            ("description_sale", "description"),
+            ('description', 'description_short'),
+        ]
         trans = TranslationPrestashopExporter(self.environment)
         translated_fields = self.convert_languages(
             trans.get_record_by_lang(record.id), translatable_fields)

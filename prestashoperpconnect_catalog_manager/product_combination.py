@@ -77,8 +77,8 @@ def product_product_write(session, model_name, record_id, fields):
 class prestashop_product_combination(orm.Model):
     _inherit = 'prestashop.product.combination'
     _columns = {
-                'minimal_quantity': fields.integer(
-                    'Minimal Quantity', help='Minimal Sale quantity')}
+        'minimal_quantity': fields.integer(
+            'Minimal Quantity', help='Minimal Sale quantity')}
     _defaults = {
         'minimal_quantity': 1,
     }
@@ -90,7 +90,7 @@ class ProductCombinationExport(TranslationPrestashopExporter):
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
-        #TODO add export of category
+        # TODO add export of category
         attribute_binder = self.get_binder_for_model(
             'prestashop.product.combination.option')
         option_binder = self.get_binder_for_model(
@@ -141,7 +141,8 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
 
     direct = [
         ('default_code', 'reference'),
-        ('active', 'active'),# TODO agregar el campo de default caracteristica
+        # TODO agregar el campo de default caracteristica
+        ('active', 'active'),
         ('ean13', 'ean13'),
         ('default_on', 'default_on'),
         ('minimal_quantity', 'minimal_quantity')
@@ -154,9 +155,9 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
         ctx = self.session.context.copy()
         ctx['connector_no_export'] = True
         combination_ext_id = product_obj.search(
-                    self.session.cr, self.session.uid,
-                    [('product_tmpl_id', '=', record.product_tmpl_id.id),
-                     ('default_on', '=', 1)], context=ctx)
+            self.session.cr, self.session.uid,
+            [('product_tmpl_id', '=', record.product_tmpl_id.id),
+             ('default_on', '=', 1)], context=ctx)
         len_defaults = len(combination_ext_id)
         if len_defaults != 1:
             if len_defaults == 0:
@@ -202,7 +203,7 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
     @mapping
     def associations(self, record):
         associations = OrderedDict([('product_option_values', {
-                    'product_option_value':
-                    self._get_product_option_value(record)}), ('images', {
-                    'image': self._get_combination_image(record)})])
+            'product_option_value':
+            self._get_product_option_value(record)}), ('images', {
+                'image': self._get_combination_image(record)})])
         return {'associations': associations}

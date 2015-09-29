@@ -26,22 +26,21 @@ from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     export_record,
     TranslationPrestashopExporter,
-    )
+)
 
 from openerp.addons.prestashoperpconnect.unit.export_synchronizer import (
     export_record,
     PrestashopExporter,
-    )
+)
 
-#from openerp.addons.prestashoperpconnect.unit.binder import \
-    #PrestashopModelBinder
+# from openerp.addons.prestashoperpconnect.unit.binder import \
+# PrestashopModelBinder
 from openerp.addons.prestashoperpconnect.unit.mapper import \
     TranslationPrestashopExportMapper
 
 
 from openerp.addons.prestashoperpconnect.unit.mapper import \
     PrestashopExportMapper
-
 
 
 from openerp.addons.prestashoperpconnect.backend import prestashop
@@ -51,7 +50,7 @@ from openerp.addons.connector.exception import InvalidDataError
 from openerp.addons.connector.unit.mapper import mapping
 
 
-#class prestashop_product_combination_option_value(orm.Model):
+# class prestashop_product_combination_option_value(orm.Model):
 #    _name = 'prestashop.product.combination.option.value'
 #
 #
@@ -78,14 +77,16 @@ from openerp.addons.connector.unit.mapper import mapping
 
 
 @on_record_create(model_names='prestashop.product.combination.option')
-def prestashop_product_attribute_created(session, model_name, record_id, fields=None):
+def prestashop_product_attribute_created(session, model_name, record_id,
+                                         fields=None):
     if session.context.get('connector_no_export'):
         return
     export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_create(model_names='prestashop.product.combination.option.value')
-def prestashop_product_atrribute_value_created(session, model_name, record_id, fields=None):
+def prestashop_product_atrribute_value_created(session, model_name, record_id,
+                                               fields=None):
     if session.context.get('connector_no_export'):
         return
     export_record.delay(session, model_name, record_id, priority=20)
@@ -131,28 +132,27 @@ def attribute_option_written(session, model_name, record_id, fields=None):
                             'prestashop.product.combination.option.value',
                             binding.id, fields, priority=20)
 
-
-#@prestashop
-#class ProductAttributeAdapter(GenericAdapter):
+# @prestashop
+# class ProductAttributeAdapter(GenericAdapter):
 #    _model_name = 'prestashop.product.combination.option'
 #    _prestashop_model = 'product_features'
 #    _export_node_name = 'product_feature'
 #
 #
-#@prestashop
-#class AttributeOptionAdapter(GenericAdapter):
+# @prestashop
+# class AttributeOptionAdapter(GenericAdapter):
 #    _model_name = 'prestashop.product.combination.option.value'
 #    _prestashop_model = 'product_feature_values'
 #    _export_node_name = 'product_feature_value'
 
 
-#@prestashop
-#class PrestashopProductAttributeBinder(PrestashopModelBinder):
+# @prestashop
+# class PrestashopProductAttributeBinder(PrestashopModelBinder):
 #    _model_name = 'prestashop.product.combination.option'
 
 
-#@prestashop
-#class PrestashopAttributeOptionBinder(PrestashopModelBinder):
+# @prestashop
+# class PrestashopAttributeOptionBinder(PrestashopModelBinder):
 #    _model_name = 'prestashop.product.combination.option.value'
 
 @prestashop
@@ -166,18 +166,21 @@ class ProductCombinationOptionExportMapper(TranslationPrestashopExportMapper):
 
     direct = [
         ('prestashop_position', 'position'),
-        ('group_type','group_type')
-        #('name', 'name'),
+        ('group_type', 'group_type')
+        # ('name', 'name'),
     ]
+
     @mapping
     def translatable_fields(self, record):
         translatable_fields = [
-        ('name', 'name'),
-        ('public_name', 'public_name')
-                              ]
+            ('name', 'name'),
+            ('public_name', 'public_name')
+        ]
         trans = TranslationPrestashopExporter(self.environment)
-        translated_fields = self.convert_languages(trans.get_record_by_lang(record.id),translatable_fields)
+        translated_fields = self.convert_languages(
+            trans.get_record_by_lang(record.id), translatable_fields)
         return translated_fields
+
 
 @prestashop
 class ProductCombinationOptionValueExport(PrestashopExporter):
@@ -198,11 +201,12 @@ class ProductCombinationOptionValueExport(PrestashopExporter):
 
 
 @prestashop
-class ProductCombinationOptionValueExportMapper(TranslationPrestashopExportMapper):
+class ProductCombinationOptionValueExportMapper(
+        TranslationPrestashopExportMapper):
     _model_name = 'prestashop.product.combination.option.value'
 
     direct = [('name', 'value')]
-    #translatable_fields = [('name', 'value')]
+    # translatable_fields = [('name', 'value')]
 
     @mapping
     def prestashop_product_attribute_id(self, record):
@@ -218,14 +222,17 @@ class ProductCombinationOptionValueExportMapper(TranslationPrestashopExportMappe
         attribute_binder = self.get_binder_for_model(
             'prestashop.product.combination.option')
         return {
-            'id_attribute_group': attribute_binder.to_backend(record.attribute_id.id,
-                                                      unwrap=True)
+            'id_attribute_group': attribute_binder.to_backend(
+                record.attribute_id.id,
+                unwrap=True)
         }
+
     @mapping
     def translatable_fields(self, record):
         translatable_fields = [
-        ('name', 'name'),
-                              ]
+            ('name', 'name'),
+        ]
         trans = TranslationPrestashopExporter(self.environment)
-        translated_fields = self.convert_languages(trans.get_record_by_lang(record.id),translatable_fields)
+        translated_fields = self.convert_languages(
+            trans.get_record_by_lang(record.id), translatable_fields)
         return translated_fields
