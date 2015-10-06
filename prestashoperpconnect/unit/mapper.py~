@@ -815,18 +815,10 @@ class MrpBomMapper(PrestashopImportMapper):
         }
 
     @mapping
+    @only_create
     def bom_lines(self, record):
         lines = []
         bundle = record.get('associations', {}).get('product_bundle', {})
-
-        binder_bom = self.get_connector_unit_for_model(
-            Binder, self.model._name,
-        )
-        bom_id = binder_bom.to_openerp(record['id'], unwrap=True)
-        if bom_id:
-            bom = self.session.browse('mrp.bom', bom_id)
-            line_ids = [l.id for l in bom.bom_lines]
-            self.session.unlink('mrp.bom', line_ids)
         if 'products' not in bundle:
             return {}
         binder = self.get_connector_unit_for_model(
