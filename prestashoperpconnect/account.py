@@ -162,7 +162,7 @@ class RefundMapper(PrestashopImportMapper):
             return None
 
         sale_order_line_ids = self.session.search('sale.order.line', [
-            ('order_id', '=', sale_order_id),
+            ('order_id', '=', sale_order.openerp_id.id),
             ('product_id', '=', sale_order.carrier_id.product_id.id),
         ])
         if not sale_order_line_ids:
