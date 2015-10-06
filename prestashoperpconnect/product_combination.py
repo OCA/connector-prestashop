@@ -46,6 +46,7 @@ except ImportError, e:
 class ProductCombinationAdapter(GenericAdapter):
     _model_name = 'prestashop.product.combination'
     _prestashop_model = 'combinations'
+    _export_node_name = 'combination'
 
 
 @prestashop
