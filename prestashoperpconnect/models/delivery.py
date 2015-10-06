@@ -29,15 +29,18 @@ _logger = logging.getLogger(__name__)
 class prestashop_delivery_carrier(orm.Model):
     _name = 'prestashop.delivery.carrier'
     _inherit = 'prestashop.binding'
-    _inherits = {'delivery.carrier': 'openerp_id'}
     _description = 'Prestashop Carrier'
+    _rec_name = 'name_ext'
 
     _columns = {
         'openerp_id': fields.many2one(
             'delivery.carrier',
             string='Delivery carrier',
-            required=True,
             ondelete='cascade'
+        ),
+        'company_id': fields.many2one(
+            'res.company',
+            string='Company',
         ),
         'id_reference': fields.integer(
             'Id reference',
@@ -48,20 +51,14 @@ class prestashop_delivery_carrier(orm.Model):
         ),
         'name_ext': fields.char(
             'External name',
-            size=64
+            size=64,
+            required=True
         ),
         'active_ext': fields.boolean(
             'External active', help="... in prestashop"
         ),
-        'export_tracking': fields.boolean(
-            'Export tracking numbers',
-            help=" ... in prestashop"
-        ),
     }
 
-    _defaults = {
-        'export_tracking': False,
-    }
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
@@ -77,6 +74,6 @@ class delivery_carrier(orm.Model):
             'openerp_id',
             string='PrestaShop Bindings',),
         'company_id': fields.many2one(
-            'res.company', 'Company', select=1, required=True
+            'res.company', 'Company', select=1
         ),
     }
