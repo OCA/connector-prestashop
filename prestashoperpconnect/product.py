@@ -38,7 +38,7 @@ from openerp.addons.connector.unit.mapper import mapping
 
 from prestapyt import PrestaShopWebServiceError
 
-from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
+from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter, retryable_error
 
 from .connector import get_environment
 from .unit.mapper import PrestashopImportMapper
@@ -452,6 +452,7 @@ class ProductInventoryAdapter(GenericAdapter):
                 quantity
             )
 
+    @retryable_error
     def export_quantity_url(self, url, key, filters, quantity):
         api = PrestaShopWebServiceDict(url, key)
         response = api.search(self._prestashop_model, filters)
