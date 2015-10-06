@@ -562,6 +562,12 @@ class SaleOrderImport(PrestashopImportSynchronizer):
                                        'prestashop.product.product')
             except PrestaShopWebServiceError:
                 pass
+            if order.get('product_attribute_id', '0') != '0':
+                try:
+                    self._check_dependency(order['product_attribute_id'],
+                                           'prestashop.product.combination')
+                except PrestaShopWebServiceError:
+                    pass
 
     def _check_refunds(self, id_customer, id_order):
         backend_adapter = self.get_connector_unit_for_model(
