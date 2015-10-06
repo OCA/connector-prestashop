@@ -175,10 +175,12 @@ class ProductMapper(PrestashopImportMapper):
 
     def _product_code_exists(self, code):
         model = self.session.pool.get('product.product')
+        ctx = self.session.context.copy()
+        ctx['active_test'] = False
         product_ids = model.search(self.session.cr, SUPERUSER_ID, [
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
-        ])
+        ], context=ctx)
         return len(product_ids) > 0
 
     @mapping
