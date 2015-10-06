@@ -286,7 +286,7 @@ class prestashop_backend(orm.Model):
     def import_record(self, cr, uid, backend_id, model_name, ext_id,
                       context=None):
         session = ConnectorSession(cr, uid, context=context)
-        import_record(session, model_name, backend_id, ext_id)
+        import_record.delay(session, model_name, backend_id, ext_id)
         return True
 
 
