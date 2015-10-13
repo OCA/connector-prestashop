@@ -58,8 +58,8 @@ Unported addons
 ---------------
 addon | version | summary
 --- | --- | ---
-[prestashoperpconnect](__unported__/prestashoperpconnect/) | 0.3 (unported) | Prestashop-OpenERP connector New Generation
-[prestashoperpconnect_catalog_manager](__unported__/prestashoperpconnect_catalog_manager/) | 0.2 (unported) | Prestashop-OpenERP Catalog Manager
-[prestashoperpconnect_customize_example](__unported__/prestashoperpconnect_customize_example/) | 1.0.0 (unported) | Prestashop Connector Customization Example
+[prestashoperpconnect](prestashoperpconnect/) | 0.3 (unported) | Prestashop-OpenERP connector New Generation
+[prestashoperpconnect_catalog_manager](prestashoperpconnect_catalog_manager/) | 0.2 (unported) | Prestashop-OpenERP Catalog Manager
+[prestashoperpconnect_customize_example](prestashoperpconnect_customize_example/) | 1.0.0 (unported) | Prestashop Connector Customization Example
 
 [//]: # (end addons)
