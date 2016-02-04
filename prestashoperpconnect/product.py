@@ -462,7 +462,7 @@ class ProductInventoryAdapter(GenericAdapter):
             stock = res[first_key]
             stock['quantity'] = int(quantity)
             try:
-                api.edit(self._prestashop_model, {
+                api.edit(self._prestashop_model, stock['id'], {
                     self._export_node_name: stock
                 })
             except ElementTree.ParseError:
