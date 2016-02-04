@@ -58,38 +58,12 @@ class CarrierImportMapper(PrestashopImportMapper):
     _model_name = 'prestashop.delivery.carrier'
     direct = [
         ('name', 'name_ext'),
-        ('name', 'name'),
         ('id_reference', 'id_reference'),
     ]
 
     @mapping
     def active(self, record):
         return {'active_ext': record['active'] == '1'}
-
-    @mapping
-    def product_id(self, record):
-        if self.backend_record.shipping_product_id:
-            return {'product_id': self.backend_record.shipping_product_id.id}
-        prod_mod = self.session.pool['product.product']
-        default_ship_product = prod_mod.search(
-            self.session.cr,
-            self.session.uid,
-            [('default_code', '=', 'SHIP'),
-             ('company_id', '=', self.backend_record.company_id.id)],
-        )
-        if default_ship_product:
-            return {'product_id': default_ship_product[0]}
-        return {}
-
-    @mapping
-    def partner_id(self, record):
-        partner_pool = self.session.pool['res.partner']
-        default_partner = partner_pool.search(
-            self.session.cr,
-            self.session.uid,
-            [],
-        )[0]
-        return {'partner_id': default_partner}
 
     @mapping
     def prestashop_id(self, record):
@@ -102,6 +76,48 @@ class CarrierImportMapper(PrestashopImportMapper):
     @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
+
+    @mapping
+    def openerp_id(self, record):
+        res = {}
+        prestashop_carrier_obj = self.session.pool['prestashop.delivery.carrier']
+        existing_carrier_ids = prestashop_carrier_obj.search(
+            self.session.cr,
+            self.session.uid,
+            [('id_reference', '=', record['id_reference']),
+             ('backend_id', '=', self.backend_record.id)],
+        )
+        same_presta_ids_carrier = prestashop_carrier_obj.search(
+            self.session.cr,
+            self.session.uid,
+            [('id_reference', '=', record['id_reference']),
+             ('backend_id', '=', self.backend_record.id),
+             ('prestashop_id', '=', int(record['id']))],
+        )
+        #case it is an update
+        if same_presta_ids_carrier:
+            existing_carrier = prestashop_carrier_obj.browse(
+                self.session.cr,
+                self.session.uid,
+                same_presta_ids_carrier)[0]
+            res['openerp_id'] = existing_carrier.openerp_id.id
+        #case new carrier in prestashop but exists in OE
+        elif existing_carrier_ids:
+            existing_carrier = prestashop_carrier_obj.browse(
+                self.session.cr,
+                self.session.uid,
+                existing_carrier_ids)[-1]
+            if existing_carrier.openerp_id:
+                res['openerp_id'] = existing_carrier.openerp_id.id
+            else:
+                res['openerp_id'] = False
+            prestashop_carrier_obj.unlink(
+                self.session.cr,
+                self.session.uid,
+                existing_carrier_ids)
+        else:
+            res['openerp_id'] = False
+        return res
 
 
 @prestashop

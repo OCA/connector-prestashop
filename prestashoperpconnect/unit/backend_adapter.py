@@ -29,8 +29,26 @@ import logging
 from prestapyt import PrestaShopWebServiceDict
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import prestashop
+from openerp.addons.connector.exception import NetworkRetryableError, RetryableJobError
+from requests.exceptions import (ConnectionError,
+    Timeout,
+    HTTPError,
+    SSLError
+)
 
 _logger = logging.getLogger(__name__)
+
+def retryable_error(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except (ConnectionError, Timeout, HTTPError, SSLError)  as err:
+            raise NetworkRetryableError(
+                'A network error caused the failure of the job: '
+                '%s' % err)
+        except Exception as e:
+            raise e
+    return wrapper
 
 
 class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
@@ -116,6 +134,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         return PrestaShopWebServiceDict(self.prestashop.api_url,
                                         self.prestashop.webservice_key)
 
+    @retryable_error
     def search(self, filters=None):
         """ Search records according to some criterias
         and returns a list of ids
@@ -125,6 +144,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         api = self.connect()
         return api.search(self._prestashop_model, filters)
 
+    @retryable_error
     def read(self, id, attributes=None):
         """ Returns the information of a record
 
@@ -147,9 +167,8 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         """ Update records on the external system """
         api = self.connect()
         attributes['id'] = id
-        return api.edit(self._prestashop_model, {
-            self._export_node_name: attributes
-        })
+        return api.edit(
+            self._prestashop_model, id, {self._export_node_name: attributes})
 
     def delete(self, ids):
         api = self.connect()

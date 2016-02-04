@@ -38,7 +38,6 @@ from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange)
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import only_create
-from openerp.addons.connector_ecommerce.sale import ShippingLineBuilder
 
 
 
@@ -322,6 +321,10 @@ class AddressImportMapper(PrestashopImportMapper):
             if name:
                 name += " "
             name += record['lastname']
+        if record['alias']:
+            if name:
+                name += " "
+            name += '('+record['alias']+')'
         return {'name': name}
 
     @mapping
@@ -415,11 +418,10 @@ class SaleOrderMapper(PrestashopImportMapper):
         discount_mappers = []
         for discount_id in discount_ids:
             discount = adapter.read(discount_id)
-            mapper = self.get_connector_unit_for_model(
-                ImportMapper, 'prestashop.sale.order.line.discount')
-            map_record = mapper.map_record(discount, parent=record)
-            map_values = map_record.values()
-            discount_mappers.append((0, 0, map_values))
+            mapper = self._init_child_mapper(
+                'prestashop.sale.order.line.discount')
+            mapper.convert_child(discount, parent_values=record)
+            discount_mappers.append(mapper)
         return discount_mappers
 
     def _sale_order_exists(self, name):
@@ -523,31 +525,26 @@ class SaleOrderMapper(PrestashopImportMapper):
                 - float(record['total_paid_tax_excl'])
         return {'total_amount_tax': tax}
 
-    def _add_shipping_line(self, map_record, values):
-        record = map_record.source
-        amount_incl = float(record.get('total_shipping_tax_incl') or 0.0)
-        amount_excl = float(record.get('total_shipping_tax_excl') or 0.0)
-        if not (amount_incl or amount_excl):
-            return values
-        line_builder = self.get_connector_unit_for_model(PrestashopShippingLineBuilder)
-        if self.backend_record.taxes_included:
-            line_builder.price_unit = amount_incl
-        else:
-            line_builder.price_unit = amount_excl
-        if values.get('carrier_id'):
-            carrier = self.session.pool['delivery.carrier'].browse(
-                self.session.cr, self.session.uid, values['carrier_id'], context=self.session.context)
-            line_builder.product = carrier.product_id
-        line_builder.is_delivery = True
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
-        return values
-
-    def finalize(self, map_record, values):
-        values.setdefault('order_line', [])
-        values = self._add_shipping_line(map_record, values)
+    def _after_mapping(self, result):
+        sess = self.session
+        backend = self.backend_record
+        order_line_ids = []
+        if 'prestashop_order_line_ids' in result:
+            order_line_ids = result['prestashop_order_line_ids']
+        taxes_included = backend.taxes_included
+        with self.session.change_context({'is_tax_included': taxes_included}):
+            result = sess.pool['sale.order']._convert_special_fields(
+                sess.cr,
+                sess.uid,
+                result,
+                order_line_ids,
+                sess.context
+            )
         onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
-        return onchange.play(values, values['prestashop_order_line_ids'])
+        order_line_ids = []
+        if 'prestashop_order_line_ids' in result:
+            order_line_ids = result['prestashop_order_line_ids']
+        return onchange.play(result, order_line_ids)
 
 
 @prestashop
@@ -818,18 +815,10 @@ class MrpBomMapper(PrestashopImportMapper):
         }
 
     @mapping
+    @only_create
     def bom_lines(self, record):
         lines = []
         bundle = record.get('associations', {}).get('product_bundle', {})
-
-        binder_bom = self.get_connector_unit_for_model(
-            Binder, self.model._name,
-        )
-        bom_id = binder_bom.to_openerp(record['id'], unwrap=True)
-        if bom_id:
-            bom = self.session.browse('mrp.bom', bom_id)
-            line_ids = [l.id for l in bom.bom_lines]
-            self.session.unlink('mrp.bom', line_ids)
         if 'products' not in bundle:
             return {}
         binder = self.get_connector_unit_for_model(
@@ -884,13 +873,3 @@ class ProductPricelistMapper(PrestashopImportMapper):
             'items_id': [(0, 0, item)],
         }
         return {'version_id': [(0, 0, version)]}
-
-@prestashop
-class PrestashopShippingLineBuilder(ShippingLineBuilder):
-    _model_name = 'prestashop.sale.order'
-
-    def get_line(self):
-        vals = super(PrestashopShippingLineBuilder, self).get_line()
-        if self.is_delivery:
-            vals['is_delivery'] = True
-        return vals 

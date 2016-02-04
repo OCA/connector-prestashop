@@ -12,15 +12,11 @@
             <group>
                 <field name="active_ext"/>
                 <field name="id_reference" readonly="1"/>
-                <field name="export_tracking"/>
                 <field name="sync_date" readonly="1"/>
                 <field name="prestashop_id" readonly="1"/>
             </group>
             <hr></hr>
             <group>
-                <field name="partner_id" readonly="1"/>
-                <field name="product_id" readonly="1"/>
-                <field name="active" readonly="1"/>
                 <field name="openerp_id" string="Delivery method" />
             </group>
         </form>
@@ -33,11 +29,11 @@
         <tree string="Prestashop Carriers" version="7.0">
             <field name="name_ext"/>
             <field name="active_ext"/>
-            <field name="export_tracking" string="Export tracking"/>
             <field name="sync_date" string="Last synchro"/>
             <field name="prestashop_id"/>
             <field name="openerp_id" string="Delivery method" />
             <field name="id_reference" string="Id ref."/>
+            <field name="backend_id"/>
         </tree>
     </field>
 </record>

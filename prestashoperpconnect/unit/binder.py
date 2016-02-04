@@ -76,6 +76,8 @@ class PrestashopModelBinder(PrestashopBinder):
                  or None if the external_id is not mapped
         :rtype: int
         """
+        ctx = self.session.context.copy()
+        ctx['active_test'] = False
         openerp_ids = self.environment.model.search(
             self.session.cr,
             self.session.uid,
@@ -84,7 +86,7 @@ class PrestashopModelBinder(PrestashopBinder):
                 ('backend_id', '=', self.backend_record.id)
             ],
             limit=1,
-            context=self.session.context
+            context=ctx
         )
         if not openerp_ids:
             return None

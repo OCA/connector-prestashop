@@ -34,6 +34,7 @@
             <field name="model">prestashop.sale.order.state</field>
             <field name="arch" type="xml">
                 <tree string="Sale order State">
+                    <field name="openerp_id"/>
                     <field name="backend_id"/>
                     <field name="prestashop_id"/>
                     <field name="openerp_state_ids"/>

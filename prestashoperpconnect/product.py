@@ -38,7 +38,7 @@ from openerp.addons.connector.unit.mapper import mapping
 
 from prestapyt import PrestaShopWebServiceError
 
-from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
+from .unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter, retryable_error
 
 from .connector import get_environment
 from .unit.mapper import PrestashopImportMapper
@@ -175,10 +175,12 @@ class ProductMapper(PrestashopImportMapper):
 
     def _product_code_exists(self, code):
         model = self.session.pool.get('product.product')
+        ctx = self.session.context.copy()
+        ctx['active_test'] = False
         product_ids = model.search(self.session.cr, SUPERUSER_ID, [
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
-        ])
+        ], context=ctx)
         return len(product_ids) > 0
 
     @mapping
@@ -299,12 +301,15 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def procure_method(self, record):
-        if record['type'] == 'pack':
+        if record['type'].get('value', '') == 'pack' or record['type'] == 'pack':
             return {
                 'procure_method': 'make_to_order',
                 'supply_method': 'produce',
             }
-        return {}
+        return {
+            'procure_method': 'make_to_stock',
+            'supply_method': 'buy',
+        }
 
 
 @prestashop
@@ -447,6 +452,7 @@ class ProductInventoryAdapter(GenericAdapter):
                 quantity
             )
 
+    @retryable_error
     def export_quantity_url(self, url, key, filters, quantity):
         api = PrestaShopWebServiceDict(url, key)
         response = api.search(self._prestashop_model, filters)
@@ -456,7 +462,7 @@ class ProductInventoryAdapter(GenericAdapter):
             stock = res[first_key]
             stock['quantity'] = int(quantity)
             try:
-                api.edit(self._prestashop_model, {
+                api.edit(self._prestashop_model, stock['id'], {
                     self._export_node_name: stock
                 })
             except ElementTree.ParseError:

@@ -64,7 +64,8 @@ class prestashop_backend(orm.Model):
 
         Can be inherited to add custom versions.
         """
-        return [('1.5', '1.5')]
+        return [('1.5', '1.5'),
+                ('1.6', '1.6')]
 
     _columns = {
         'version': fields.selection(
@@ -286,7 +287,7 @@ class prestashop_backend(orm.Model):
     def import_record(self, cr, uid, backend_id, model_name, ext_id,
                       context=None):
         session = ConnectorSession(cr, uid, context=context)
-        import_record(session, model_name, backend_id, ext_id)
+        import_record.delay(session, model_name, backend_id, ext_id)
         return True
 
 

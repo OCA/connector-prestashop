@@ -132,7 +132,7 @@ class mrp_bom(orm.Model):
 
     _columns = {
         'prestashop_combination_bind_ids': fields.one2many(
-            'prestashop.combination.mrp.bom',
+            'prestashop.combination/mrp.bom',
             'openerp_id',
             string='PrestaShop Bindings'
         ),

@@ -19,15 +19,16 @@ class StockMove(Model):
             location_ids.append(warehouse.lot_stock_id.id)
         return location_ids
 
-    def create(self, cr, uid, vals, context=None):
-        stock_id = super(StockMove, self).create(
-            cr, uid, vals, context=context
+    def action_confirm(self, cr, uid, ids, context=None):
+        stock_id = super(StockMove, self).action_confirm(
+            cr, uid, ids, context=context
         )
         location_ids = self.get_stock_location_ids(cr, uid, context=context)
-        if vals['location_id'] in location_ids:
-            self.update_prestashop_quantities(
-                cr, uid, [stock_id], context=context
-            )
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.location_id.id in location_ids or move.location_dest_id.id in location_ids:
+                self.update_prestashop_quantities(
+                    cr, uid, [move.id], context=context
+                )
         return stock_id
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -36,7 +37,7 @@ class StockMove(Model):
         )
         location_ids = self.get_stock_location_ids(cr, uid, context=context)
         for move in self.browse(cr, uid, ids, context=context):
-            if move.location_id.id in location_ids:
+            if move.location_dest_id.id in location_ids or move.location_id.id in location_ids:
                 self.update_prestashop_quantities(
                     cr, uid, [move.id], context=context
                 )
@@ -46,7 +47,7 @@ class StockMove(Model):
         res = super(StockMove, self).action_done(cr, uid, ids, context=context)
         location_ids = self.get_stock_location_ids(cr, uid, context=context)
         for move in self.browse(cr, uid, ids, context=context):
-            if move.location_dest_id.id in location_ids:
+            if move.location_dest_id.id in location_ids or move.location_id.id in location_ids:
                 self.update_prestashop_quantities(
                     cr, uid, [move.id], context=context
                 )

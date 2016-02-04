@@ -46,6 +46,7 @@ except ImportError, e:
 class ProductCombinationAdapter(GenericAdapter):
     _model_name = 'prestashop.product.combination'
     _prestashop_model = 'combinations'
+    _export_node_name = 'combination'
 
 
 @prestashop
@@ -270,10 +271,12 @@ class ProductCombinationMapper(PrestashopImportMapper):
 
     def _product_code_exists(self, code):
         model = self.session.pool.get('product.product')
+        ctx = self.session.context.copy()
+        ctx['active_test'] = False
         product_ids = model.search(self.session.cr, SUPERUSER_ID, [
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
-        ])
+        ], context=ctx)
         return len(product_ids) > 0
 
     @mapping
