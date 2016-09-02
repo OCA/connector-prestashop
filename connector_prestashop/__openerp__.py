@@ -7,17 +7,18 @@
 
 {
     "name": "PrestaShop-Odoo connector",
-    "version": "8.0.1.0.3",
+    "version": "9.0.1.0.3",
     "license": "AGPL-3",
     "depends": [
         "base_vat",
         "product",
-        "product_m2mcategories",
-        "connector_ecommerce",
-        "product_multi_image",
+        "product_multi_category",  # oca/product-attribute
+        "connector_ecommerce",  # oca/connector-ecommerce
+        "product_multi_image",  # oca/product-attribute
         "purchase",
-        "product_variant_supplierinfo",
-        "product_variant_cost_price",
+        "product_variant_supplierinfo",  # oca/product-variant
+        # TODO: perhaps not needed:
+        # "product_variant_cost_price",  # oca/product-variant
     ],
     "external_dependencies": {
         'python': [
