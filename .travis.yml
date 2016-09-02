@@ -13,29 +13,20 @@ python:
   - "2.7"
 
 env:
-  - VERSION="8.0" LINT_CHECK="1"
-  - VERSION="8.0" ODOO_REPO="odoo/odoo" LINT_CHECK="0"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
+  - VERSION="9.0" LINT_CHECK="1"
+  - VERSION="9.0" ODOO_REPO="odoo/odoo" LINT_CHECK="0"
+  - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
 
 virtualenv:
   system_site_packages: true
 
-before_install:
-  - git clone https://github.com/OCA/connector.git $HOME/connector -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/connector-ecommerce.git $HOME/connector-ecommerce -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/e-commerce.git $HOME/e-commerce -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/product-attribute.git $HOME/product-attribute -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/sale-workflow.git $HOME/sale-workflow -b ${VERSION} --depth=1
-
 install:
-  - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
-  - pip install unidecode
-  - pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
 
 script:
   - travis_run_tests
 
 after_success:
-  coveralls
+  - travis_after_test_success
