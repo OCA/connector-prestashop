@@ -45,7 +45,6 @@
         'views/connector_prestashop_menu.xml',
         'views/partner_view.xml',
         'views/sale_view.xml',
-        'views/setting_view.xml',
         'views/account_view.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',

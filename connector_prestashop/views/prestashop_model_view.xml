@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
 <!--
     Copyright (C) 2013 Akretion (http://www.akretion.com/)
@@ -12,7 +11,7 @@
     <field name="name">prestashop.backend.form</field>
     <field name="model">prestashop.backend</field>
     <field name="arch" type="xml">
-        <form string="PrestaShop Backend" version="7.0">
+        <form string="PrestaShop Backend">
             <header>
                 <button name="synchronize_metadata"
                         type="object"
@@ -177,7 +176,7 @@
     <field name="name">prestashop.backend.tree</field>
     <field name="model">prestashop.backend</field>
     <field name="arch" type="xml">
-        <tree string="PrestaShop Backend" version="7.0">
+        <tree string="PrestaShop Backend">
             <field name="name"/>
             <field name="location"/>
         </tree>
@@ -196,7 +195,7 @@
     <field name="name">prestashop.shop.group.form</field>
     <field name="model">prestashop.shop.group</field>
     <field name="arch" type="xml">
-        <form string="PrestaShop Shop Group" version="7.0">
+        <form string="PrestaShop Shop Group">
             <h1>
                 <field name="name" class="oe_inline"/>
             </h1>
@@ -211,7 +210,7 @@
     <field name="name">prestashop.shop.group.tree</field>
     <field name="model">prestashop.shop.group</field>
     <field name="arch" type="xml">
-        <tree string="PrestaShop Shop Group" version="7.0">
+        <tree string="PrestaShop Shop Group">
             <field name="name"/>
             <field name="backend_id"/>
         </tree>
@@ -230,7 +229,7 @@
     <field name="name">prestashop.shop.form</field>
     <field name="model">prestashop.shop</field>
     <field name="arch" type="xml">
-        <form string="PrestaShop Shop" version="7.0">
+        <form string="PrestaShop Shop">
             <h1>
                 <field name="name" class="oe_inline"/>
             </h1>
@@ -250,7 +249,7 @@
     <field name="name">prestashop.shop.tree</field>
     <field name="model">prestashop.shop</field>
     <field name="arch" type="xml">
-        <tree string="PrestaShop Shop" version="7.0">
+        <tree string="PrestaShop Shop">
             <field name="name"/>
             <field name="shop_group_id"/>
             <field name="openerp_id"/>
@@ -266,5 +265,4 @@
 </record>
 
 
-</data>
-</openerp>
+</odoo>
