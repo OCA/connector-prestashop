@@ -4,7 +4,7 @@
 # ConnectorUnit needs to be registered
 from . import mapper
 from . import binder
-from . import import_synchronizer
-from . import delete_synchronizer
+from . import importer
+from . import deleter
 from . import backend_adapter
 from . import exception
