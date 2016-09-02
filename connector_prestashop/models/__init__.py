@@ -3,6 +3,7 @@
 
 from . import prestashop_model
 from . import account
+from . import account_tax_group
 from . import connector
 from . import delivery
 from . import partner

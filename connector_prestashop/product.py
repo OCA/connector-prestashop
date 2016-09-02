@@ -6,7 +6,6 @@ import mimetypes
 import html2text
 
 from openerp import models
-from openerp.addons.product.product import check_ean
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
@@ -305,10 +304,10 @@ class TemplateMapper(ImportMapper):
     def ean13(self, record):
         if self.has_combinations(record):
             return {}
-        if record['ean13'] in ['', '0']:
+        if record['barcode'] in ['', '0']:
             return {}
-        if check_ean(record['ean13']):
-            return {'ean13': record['ean13']}
+        if self.env['barcode.nomenclature'].check_ean(record['ean13']):
+            return {'barcode': record['ean13']}
         return {}
 
     def _get_tax_ids(self, record):
