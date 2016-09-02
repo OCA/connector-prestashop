@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
 <record id="view_prestashop_delivery_carrier_form" model="ir.ui.view">
     <field name="model">prestashop.delivery.carrier</field>
     <field name="arch" type="xml">
-        <form string="PrestaShop Shop" version="7.0">
+        <form string="PrestaShop Shop">
             <h1>
                 <field name="name_ext" class="oe_inline"/>
             </h1>
@@ -30,7 +29,7 @@
 <record id="view_prestashop_delivery_carrier_tree" model="ir.ui.view">
     <field name="model">prestashop.delivery.carrier</field>
     <field name="arch" type="xml">
-        <tree string="PrestaShop Carriers" version="7.0">
+        <tree string="PrestaShop Carriers">
             <field name="name_ext"/>
             <field name="active_ext"/>
             <field name="export_tracking" string="Export tracking"/>
@@ -49,5 +48,4 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-    </data>
-</openerp>
+</odoo>

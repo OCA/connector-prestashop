@@ -5,8 +5,7 @@
   The licence is in the file __openerp__.py
 -->
 
-<openerp>
-    <data>
+<odoo>
 
     <menuitem id="menu_prestashop_root"
         parent="connector.menu_connector_root"
@@ -38,5 +37,4 @@
         sequence="40"
         action="action_prestashop_carrier"/>
 
-    </data>
-</openerp>
+</odoo>

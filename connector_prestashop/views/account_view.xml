@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
-<openerp>
-<data>
+<odoo>
 
     <record id="account_tax_group_connector_prestashop_tree_view"
             model="ir.ui.view">
@@ -15,19 +14,39 @@
         </field>
     </record>
 
+    <record id="view_tax_group_tree" model="ir.ui.view">
+        <field name="name">account.tax.group</field>
+        <field name="model">account.tax.group</field>
+        <field name="arch" type="xml">
+            <tree string="Account Tax Group">
+                <field name="name"/>
+                <field name="tax_ids"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="prestashop_binding_tax_group_form_view"
             model="ir.ui.view">
         <field name="model">account.tax.group</field>
-        <field name="inherit_id" ref="connector_ecommerce.view_tax_group_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='tax_ids']" position="after">
+            <form string="Account Tax Group">
+                <field name="name" colspan="4"/>
+                <field name="tax_ids" colspan="4"/>
                 <group string="PrestaShop Binding">
                     <field name="prestashop_bind_ids"
                            nolabel="1"/>
                 </group>
-            </xpath>
+            </form>
         </field>
     </record>
 
-</data>
-</openerp>
+    <record id="action_tax_group_form" model="ir.actions.act_window">
+        <field name="name">Tax Groups</field>
+        <field name="res_model">account.tax.group</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_tax_group_form" id="menu_action_tax_group_form" parent="account.account_account_menu"/>
+
+</odoo>
