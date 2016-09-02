@@ -9,7 +9,7 @@ from openerp import models
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from .unit.import_synchronizer import DelayedBatchImport
 from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import import_record
@@ -378,7 +378,7 @@ class ProductCategoryAdapter(GenericAdapter):
 
 
 @prestashop
-class ProductInventoryExport(ExportSynchronizer):
+class ProductInventoryExport(Exporter):
     _model_name = ['prestashop.product.template']
 
     def get_filter(self, template):
