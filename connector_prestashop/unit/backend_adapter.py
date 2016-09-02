@@ -8,12 +8,6 @@ from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import prestashop
 
 _logger = logging.getLogger(__name__)
-handler = logging.FileHandler('/opt/odoo/v8/adapter_log.log')
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-_logger.addHandler(handler)
 
 
 class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
