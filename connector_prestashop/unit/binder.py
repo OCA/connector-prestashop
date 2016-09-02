@@ -10,6 +10,7 @@ class PrestashopBinder(Binder):
     """ Generic Binder for Prestshop """
 
 
+# TODO: replace by the core mapper
 @prestashop
 class PrestashopModelBinder(PrestashopBinder):
     """
