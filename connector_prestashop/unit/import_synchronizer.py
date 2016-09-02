@@ -367,6 +367,8 @@ class SupplierInfoImport(PrestashopImportSynchronizer):
                     'prestashop.product.combination'
                 )
         except PrestaShopWebServiceError:
+            # TODO: raise another exception, this one would set
+            # the job as 'done' silently
             raise NothingToDoJob('Error fetching a dependency')
 
 
@@ -480,6 +482,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
                 self._check_dependency(order['product_id'],
                                        'prestashop.product.template')
             except PrestaShopWebServiceError:
+                # TODO check this silent error
                 pass
 
     def _after_import(self, erp_id):
@@ -674,6 +677,7 @@ class ProductCategoryImport(TranslatableRecordImport):
                 self._check_dependency(record['id_parent'],
                                        'prestashop.product.category')
             except PrestaShopWebServiceError:
+                # TODO check this silent error
                 pass
 
 
@@ -825,6 +829,7 @@ class TemplateRecordImport(TranslatableRecordImport):
                 self._check_dependency(record['id_category_default'],
                                        'prestashop.product.category')
             except PrestaShopWebServiceError:
+                # TODO check this silent error
                 pass
 
     def _import_categories(self):
@@ -870,6 +875,7 @@ class ProductImageImport(PrestashopImportSynchronizer):
         try:
             super(ProductImageImport, self).run(image_id)
         except PrestaShopWebServiceError:
+            # TODO Check this silent error
             pass
 
 
@@ -993,6 +999,7 @@ def import_orders_since(session, backend_id, since_date=None):
     try:
         import_batch(session, 'prestashop.mail.message', backend_id, filters)
     except:
+        # TODO Check this silent error
         pass
 
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
