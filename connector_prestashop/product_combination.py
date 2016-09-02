@@ -23,7 +23,6 @@ from .unit.import_synchronizer import (
 )
 from openerp.osv.orm import browse_record_list
 
-from openerp.addons.product.product import check_ean
 from .unit.backend_adapter import PrestaShopCRUDAdapter
 
 from .product import ProductInventoryExport
@@ -234,16 +233,19 @@ class ProductCombinationMapper(ImportMapper):
 
     @mapping
     def ean13(self, record):
+        barcode = None
+        check_ean = self.env['barcode.nomenclature'].check_ean
         if record['ean13'] in ['', '0']:
             backend_adapter = self.unit_for(
                 GenericAdapter, 'prestashop.product.template')
             template = backend_adapter.read(record['id_product'])
-            ean13 = template.get('ean13', {})
-            if ean13 == '0':
-                return {}
-            return template['ean13'] and {'ean13': template['ean13']} or {}
-        if check_ean(record['ean13']):
-            return {'ean13': record['ean13']}
+            ean13 = template.get('ean13')
+            if ean13 and ean13 != '0' and check_ean(template['ean13']):
+                barcode = ean13
+        elif self.env['barcode.nomenclature'].check_ean(record['ean13']):
+            barcode = record['ean13']
+        if barcode:
+            return {'barcode': ean13}
         return {}
 
     def _get_tax_ids(self, record):
