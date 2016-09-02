@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
-<openerp>
-<data>
+<odoo>
 
 <record id="image_prestashop_binding_form_view" model="ir.ui.view">
     <field name="name">Multi image prestashop binding form</field>
@@ -18,5 +17,4 @@
     </field>
 </record>
 
-</data>
-</openerp>
+</odoo>
