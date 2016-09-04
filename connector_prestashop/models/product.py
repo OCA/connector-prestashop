@@ -145,8 +145,13 @@ class ProductProduct(models.Model):
     @api.multi
     def update_prestashop_qty(self):
         for product in self:
-            for combination_binding in product.prestashop_bind_ids:
-                combination_binding.recompute_prestashop_qty()
+            if product.product_variant_count > 1:
+                for combination_binding in product.prestashop_bind_ids:
+                    combination_binding.recompute_prestashop_qty()
+            else:
+                for prestashop_product in \
+                        product.product_tmpl_id.prestashop_bind_ids:
+                    prestashop_product.recompute_prestashop_qty()
 
     @api.multi
     def update_prestashop_quantities(self):
