@@ -893,9 +893,9 @@ class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
         # import the missing linked resources
         self._import_dependencies()
 
-        self.mapper.convert(self.prestashop_record)
-        record = self.mapper.data
-        record['order_id'] = order_id
+        map_record = self.mapper.map_record(self.prestashop_record)
+        record = map_record.values(for_create=True)
+        record.order_id = order_id
 
         # special check on data before import
         self._validate_data(record)
