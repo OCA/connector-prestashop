@@ -3,7 +3,7 @@
 
 import logging
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector_ecommerce.models.event import (
@@ -48,9 +48,7 @@ class PrestashopTrackingExporter(ExportSynchronizer):
                 tracking_adapter.write(order_carrier_id, vals)
                 return "Tracking %s exported" % tracking
             else:
-                raise Warning(
-                    _('PrestaShop Error'),
-                    _('No carrier found on sale order'))
+                raise UserError(_('No carrier found on sale order'))
         else:
             return "No tracking to export"
 

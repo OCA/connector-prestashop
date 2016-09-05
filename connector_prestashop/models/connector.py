@@ -4,7 +4,7 @@
 from openerp import models
 
 
-class connector_prestashop_installed(models.AbstractModel):
+class ConnectorPrestashopInstalled(models.AbstractModel):
     """Empty model used to know if the module is installed in the
     database.
 
