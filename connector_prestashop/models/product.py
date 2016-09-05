@@ -9,27 +9,23 @@ class ProductImage(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.image',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
 
 
 class PrestashopProductImage(models.Model):
     _name = 'prestashop.product.image'
-    _inherit = 'prestashop.binding'
-    _inherits = {'base_multi_image.image': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'base_multi_image.image': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='base_multi_image.image',
         required=True,
         ondelete='cascade',
         string='Product image',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with same ID already exists on PrestaShop.'),
-    ]
 
 
 class ProductTemplate(models.Model):
@@ -37,7 +33,7 @@ class ProductTemplate(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.template',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         copy=False,
         string='PrestaShop Bindings',
     )
@@ -55,14 +51,15 @@ class ProductTemplate(models.Model):
 
 class PrestashopProductTemplate(models.Model):
     _name = 'prestashop.product.template'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.template': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'product.template': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.template',
         required=True,
         ondelete='cascade',
         string='Template',
+        oldname='openerp_id',
     )
     # TODO FIXME what name give to field present in
     # prestashop_product_product and product_product
@@ -113,11 +110,6 @@ class PrestashopProductTemplate(models.Model):
     reference = fields.Char(string='Original reference')
     on_sale = fields.Boolean(string='Show on sale icon')
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
-
     @api.multi
     def recompute_prestashop_qty(self):
         for product in self:
@@ -137,7 +129,7 @@ class ProductProduct(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.combination',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         copy=False,
         string='PrestaShop Bindings',
     )
@@ -176,24 +168,20 @@ class ProductPricelist(models.Model):
 
     prestashop_groups_bind_ids = fields.One2many(
         comodel_name='prestashop.groups.pricelist',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop user groups',
     )
 
 
 class PrestashopGroupsPricelist(models.Model):
     _name = 'prestashop.groups.pricelist'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.pricelist': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'product.pricelist': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.pricelist',
         required=True,
         ondelete='cascade',
         string='Odoo Pricelist',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]

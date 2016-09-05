@@ -9,7 +9,7 @@ class AccountInvoice(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.refund',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings'
     )
 
@@ -74,17 +74,13 @@ class AccountInvoice(models.Model):
 
 class PrestashopRefund(models.Model):
     _name = 'prestashop.refund'
-    _inherit = 'prestashop.binding'
-    _inherits = {'account.invoice': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'account.invoice': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='account.invoice',
         required=True,
         ondelete='cascade',
         string='Invoice',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with same ID on PrestaShop already exists.'),
-    ]

@@ -44,7 +44,7 @@ class PrestashopModelBinder(PrestashopBinder):
         # 'prestashop.product.specificprice',
     ]
 
-    def to_openerp(self, external_id, unwrap=False, browse=False):
+    def to_odoo(self, external_id, unwrap=False, browse=False):
         """ Give the OpenERP ID for an external ID
 
         :param external_id: external ID for which we want the OpenERP ID
@@ -63,7 +63,7 @@ class PrestashopModelBinder(PrestashopBinder):
             return self.model.browse() if browse else None
         assert len(bindings) == 1, "Several records found: %s" % (bindings,)
         if unwrap:
-            return bindings.openerp_id if browse else bindings.openerp_id.id
+            return bindings.odoo_id if browse else bindings.odoo_id.id
         else:
             return bindings if browse else bindings.id
 
@@ -85,7 +85,7 @@ class PrestashopModelBinder(PrestashopBinder):
             record_id = record_id.id
         if wrap:
             binding = self.model.with_context(active_test=False).search([
-                ('openerp_id', '=', record_id),
+                ('odoo_id', '=', record_id),
                 ('backend_id', '=', self.backend_record.id),
             ])
             if binding:
@@ -98,18 +98,18 @@ class PrestashopModelBinder(PrestashopBinder):
         assert record
         return record.prestashop_id
 
-    def bind(self, external_id, openerp_id):
+    def bind(self, external_id, odoo_id):
         """ Create the link between an external ID and an OpenERP ID
 
         :param external_id: External ID to bind
-        :param openerp_id: OpenERP ID to bind
-        :type openerp_id: int
+        :param odoo_id: Odoo ID to bind
+        :type odoo_id: int
         """
         # avoid to trigger the export when we modify the `prestashop_id`
         now_fmt = openerp.fields.Datetime.now()
-        if not isinstance(openerp_id, openerp.models.BaseModel):
-            openerp_id = self.model.browse(openerp_id)
-        openerp_id.with_context(connector_no_export=True).write({
+        if not isinstance(odoo_id, openerp.models.BaseModel):
+            odoo_id = self.model.browse(odoo_id)
+        odoo_id.with_context(connector_no_export=True).write({
             'prestashop_id': str(external_id),
             'sync_date': now_fmt,
         })
