@@ -80,7 +80,7 @@ class SaleOrderLineAdapter(GenericAdapter):
 
 
 @prestashop
-class SaleStateExport(Exporter):
+class SaleStateExporter(ExportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
     def run(self, prestashop_id, state):
@@ -135,5 +135,5 @@ def export_sale_state(session, record_id):
         if new_state is None:
             continue
         env = get_environment(session, inherit_model, backend_id)
-        sale_exporter = env.get_connector_unit(SaleStateExport)
+        sale_exporter = env.get_connector_unit(SaleStateExporter)
         sale_exporter.run(sale.prestashop_id, new_state)
