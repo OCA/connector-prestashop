@@ -37,7 +37,7 @@ class RefundImport(PrestashopImportSynchronizer):
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id
         refund = self.env['prestashop.refund'].browse(refund_id)
-        erp_id = refund.openerp_id.id
+        erp_id = refund.odoo_id.id
         invoice_obj = self.env['account.invoice']
         invoice_obj.button_reset_taxes([erp_id])
 
@@ -74,7 +74,7 @@ class RefundMapper(ImportMapper):
 
     def _get_order(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_openerp(record['id_order'])
+        sale_order_id = binder.to_odoo(record['id_order'])
         return self.env['prestashop.sale.order'].browse(sale_order_id)
 
     @mapping
@@ -150,7 +150,7 @@ class RefundMapper(ImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_openerp(record['id_order'])
+        sale_order_id = binder.to_odoo(record['id_order'])
         sale_order = self.env['prestashop.sale.order'].browse(sale_order_id)
 
         if not sale_order.carrier_id:
@@ -232,13 +232,13 @@ class RefundMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
+        partner_id = binder.to_odoo(record['id_customer'], unwrap=True)
         return {'partner_id': partner_id}
 
     @mapping
     def account_id(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_openerp(record['id_order'], unwrap=True)
+        sale_order_id = binder.to_odoo(record['id_order'], unwrap=True)
         sale_order = self.env['prestashop.sale.order'].browse(sale_order_id)
         date_invoice = datetime.strptime(
             record['date_upd'], '%Y-%m-%d %H:%M:%S')
@@ -247,7 +247,7 @@ class RefundMapper(ImportMapper):
                 sale_order.payment_method_id.account_id:
             return {'account_id': sale_order.payment_method_id.account_id.id}
         binder = self.binder_for('prestashop.res.partner')
-        partner_id = binder.to_openerp(record['id_customer'])
+        partner_id = binder.to_odoo(record['id_customer'])
         partner = self.env['prestashop.res.partner'].with_context(
             company_id=self.backend_record.company_id.id).browse(partner_id)
         return {'account_id': partner.property_account_receivable.id}

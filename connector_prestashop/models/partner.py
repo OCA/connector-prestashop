@@ -9,28 +9,29 @@ class ResPartner(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.partner',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
     prestashop_address_bind_ids = fields.One2many(
         comodel_name='prestashop.address',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Address Bindings',
     )
 
 
 class PrestashopResRartner(models.Model):
     _name = 'prestashop.res.partner'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.partner': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.partner': 'odoo_id'}
 
     _rec_name = 'shop_group_id'
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     backend_id = fields.Many2one(
         related='shop_group_id.backend_id',
@@ -75,20 +76,15 @@ class PrestashopResRartner(models.Model):
     company = fields.Char(string='Company')
     prestashop_address_bind_ids = fields.One2many(
         comodel_name='prestashop.address',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Address Bindings',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
 
 
 class PrestashopAddress(models.Model):
     _name = 'prestashop.address'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.partner': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.partner': 'odoo_id'}
 
     _rec_name = 'backend_id'
 
@@ -110,11 +106,12 @@ class PrestashopAddress(models.Model):
             address.shop_group_id = (
                 address.prestashop_partner_id.shop_group_id.id)
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     date_add = fields.Datetime(
         string='Created At (on PrestaShop)',
@@ -144,18 +141,13 @@ class PrestashopAddress(models.Model):
     )
     vat_number = fields.Char('PrestaShop VAT')
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
-
 
 class ResPartnerCategory(models.Model):
     _inherit = 'res.partner.category'
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.partner.category',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
         readonly=True,
     )
@@ -163,14 +155,15 @@ class ResPartnerCategory(models.Model):
 
 class PrestashopResPartnerCategory(models.Model):
     _name = 'prestashop.res.partner.category'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.partner.category': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.partner.category': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.partner.category',
         string='Partner Category',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     date_add = fields.Datetime(
         string='Created At (on PrestaShop)',
@@ -181,10 +174,6 @@ class PrestashopResPartnerCategory(models.Model):
         readonly=True,
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
     # TODO add prestashop shop when the field will be available in the api.
     # we have reported the bug for it
     # see http://forge.prestashop.com/browse/PSCFV-8284

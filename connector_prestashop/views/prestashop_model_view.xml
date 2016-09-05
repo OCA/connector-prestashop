@@ -236,7 +236,7 @@
             </h1>
             <group>
                 <field name="shop_group_id"/>
-                <field name="openerp_id"/>
+                <field name="odoo_id"/>
             </group>
             <group>
                 <field name="default_url"/>
@@ -252,7 +252,7 @@
         <tree string="PrestaShop Shop" version="7.0">
             <field name="name"/>
             <field name="shop_group_id"/>
-            <field name="openerp_id"/>
+            <field name="odoo_id"/>
         </tree>
     </field>
 </record>

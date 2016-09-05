@@ -8,15 +8,16 @@ _logger = logging.getLogger(__name__)
 
 class PrestashopDeliveryCarrier(models.Model):
     _name = 'prestashop.delivery.carrier'
-    _inherit = 'prestashop.binding'
-    _inherits = {'delivery.carrier': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'delivery.carrier': 'odoo_id'}
     _description = 'PrestaShop Carrier'
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='delivery.carrier',
         string='Delivery carrier',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        oldname='openerp_id',
     )
     id_reference = fields.Integer(
         string='Reference ID',
@@ -34,18 +35,13 @@ class PrestashopDeliveryCarrier(models.Model):
         string='Export tracking numbers to PrestaShop',
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with same ID on PrestaShop already exists.'),
-    ]
-
 
 class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.delivery.carrier',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
     company_id = fields.Many2one(
