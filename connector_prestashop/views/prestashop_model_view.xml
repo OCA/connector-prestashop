@@ -238,7 +238,6 @@
                 <field name="openerp_id"/>
             </group>
             <group>
-                <field name="default_category_id"/>
                 <field name="default_url"/>
             </group>
         </form>

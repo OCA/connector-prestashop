@@ -120,7 +120,7 @@ class PrestashopProductCombination(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -154,7 +154,7 @@ class PrestashopProductCombinationOption(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -188,5 +188,5 @@ class PrestashopProductCombinationOptionValue(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
