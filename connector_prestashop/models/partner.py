@@ -81,7 +81,7 @@ class PrestashopResRartner(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -146,7 +146,7 @@ class PrestashopAddress(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -183,7 +183,7 @@ class PrestashopResPartnerCategory(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
     # TODO add prestashop shop when the field will be available in the api.
     # we have reported the bug for it
