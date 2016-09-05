@@ -25,18 +25,18 @@ class MailMessageMapper(ImportMapper):
     @mapping
     def object_ref(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        order_id = binder.to_openerp(record['id_order'], unwrap=True)
+        order = binder.to_openerp(record['id_order'], unwrap=True)
         return {
             'model': 'sale.order',
-            'res_id': order_id,
+            'res_id': order.id,
         }
 
     @mapping
     def author_id(self, record):
         if record['id_customer'] != '0':
             binder = self.binder_for('prestashop.res.partner')
-            partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
-            return {'author_id': partner_id}
+            partner = binder.to_openerp(record['id_customer'], unwrap=True)
+            return {'author_id': partner.id}
         return {}
 
 
@@ -56,8 +56,8 @@ class MailMessageImporter(PrestashopImporter):
     def _has_to_skip(self):
         record = self.prestashop_record
         binder = self.binder_for('prestashop.sale.order')
-        ps_so_id = binder.to_openerp(record['id_order'])
-        return record['id_order'] == '0' or not ps_so_id
+        order_binding = binder.to_openerp(record['id_order'])
+        return record['id_order'] == '0' or not order_binding
 
 
 @prestashop

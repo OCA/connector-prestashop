@@ -24,7 +24,7 @@ class ProductInventoryExporter(Exporter):
 
     def run(self, binding_id, fields):
         """ Export the product inventory to PrestaShop """
-        template = self.env[self.model._name].browse(binding_id)
+        template = self.model.browse(binding_id)
         adapter = self.unit_for(GenericAdapter, '_import_stock_available')
         filter = self.get_filter(template)
         adapter.export_quantity(filter, int(template.quantity))

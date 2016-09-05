@@ -27,25 +27,23 @@ class PrestashopBaseExporter(Exporter):
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
         super(PrestashopBaseExporter, self).__init__(environment)
-        self.binding_id = None
         self.prestashop_id = None
 
-    def _get_openerp_data(self):
-        """ Return the raw OpenERP data for ``self.binding_id`` """
-        return self.env[self.model._name].browse(self.binding_id)
+    def _get_binding(self, binding_id):
+        """ Return the raw Odoo data for ``self.binding_id`` """
+        return self.model.browse(self.binding_id)
 
     def run(self, binding_id, *args, **kwargs):
         """ Run the synchronization
 
         :param binding_id: identifier of the binding record to export
         """
-        self.binding_id = binding_id
-        self.erp_record = self._get_openerp_data()
+        self.binding = self._get_binding()
 
-        self.prestashop_id = self.binder.to_backend(self.binding_id)
+        self.prestashop_id = self.binder.to_backend(self.binding)
         result = self._run(*args, **kwargs)
 
-        self.binder.bind(self.prestashop_id, self.binding_id)
+        self.binder.bind(self.prestashop_id, self.binding)
         return result
 
     def _run(self):
@@ -62,7 +60,7 @@ class PrestashopExporter(PrestashopBaseExporter):
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
         super(PrestashopExporter, self).__init__(environment)
-        self.erp_record = None
+        self.binding = None
 
     def _has_to_skip(self):
         """ Return True if the export can be skipped """
@@ -72,9 +70,9 @@ class PrestashopExporter(PrestashopBaseExporter):
         """ Export the dependencies for the record"""
         return
 
-    def _map_data(self, fields=None):
+    def _map_data(self):
         """ Convert the external record to Odoo """
-        self.mapper.map_record(self.erp_record)
+        return self.mapper.map_record(self.binding)
 
     def _validate_data(self, data):
         """ Check if the values to import are correct
@@ -102,18 +100,14 @@ class PrestashopExporter(PrestashopBaseExporter):
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""
         assert self.binding_id
-        assert self.erp_record
-
-        # should be created with all the fields
-        if not self.prestashop_id:
-            fields = None
+        assert self.binding
 
         if self._has_to_skip():
             return
 
         # export the missing linked resources
         self._export_dependencies()
-        map_record = self.mapper.map_record(self.erp_record)
+        map_record = self._map_data()
 
         if self.prestashop_id:
             record = map_record.values()
@@ -124,9 +118,6 @@ class PrestashopExporter(PrestashopBaseExporter):
             self._update(record)
         else:
             record = map_record.values(for_create=True)
-            if fields is None:
-                fields = {}
-            record.update(fields)
             if not record:
                 return _('Nothing to export.')
             # special check on data before export
