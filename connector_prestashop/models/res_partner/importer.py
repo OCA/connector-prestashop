@@ -12,6 +12,7 @@ from ...unit.importer import (
     DelayedBatchImporter,
 )
 from ...backend import prestashop
+from ...unit.mapper import backend_to_m2o
 from ...connector import add_checkpoint
 
 
@@ -27,19 +28,18 @@ class PartnerImportMapper(ImportMapper):
         ('company', 'company'),
         ('active', 'active'),
         ('note', 'comment'),
-        ('id_shop_group', 'shop_group_id'),
-        ('id_shop', 'shop_id'),
-        ('id_default_group', 'default_category_id'),
+        (backend_to_m2o('id_shop_group'), 'shop_group_id'),
+        (backend_to_m2o('id_shop'), 'shop_id'),
+        (backend_to_m2o('id_default_group'), 'default_category_id'),
     ]
 
     @mapping
     def pricelist(self, record):
         binder = self.binder_for('prestashop.groups.pricelist')
-        pricelist_id = binder.to_openerp(
-            record['id_default_group'], unwrap=True)
-        if not pricelist_id:
+        pricelist = binder.to_openerp(record['id_default_group'], unwrap=True)
+        if not pricelist:
             return {}
-        return {'property_product_pricelist': pricelist_id}
+        return {'property_product_pricelist': pricelist.id}
 
     @mapping
     def birthday(self, record):
@@ -67,11 +67,9 @@ class PartnerImportMapper(ImportMapper):
             groups = [groups]
         partner_categories = []
         for group in groups:
-            binder = self.binder_for(
-                'prestashop.res.partner.category'
-            )
-            category_id = binder.to_openerp(group['id'])
-            partner_categories.append(category_id)
+            binder = self.binder_for('prestashop.res.partner.category')
+            category = binder.to_openerp(group['id'])
+            partner_categories.append(category.id)
 
         return {'group_ids': [(6, 0, partner_categories)]}
 
@@ -84,11 +82,9 @@ class PartnerImportMapper(ImportMapper):
         binder = self.binder_for('prestashop.res.lang')
         erp_lang = None
         if record.get('id_lang'):
-            erp_lang = binder.to_openerp(record['id_lang'], browse=True)
+            erp_lang = binder.to_openerp(record['id_lang'])
         if not erp_lang:
             erp_lang = self.env.ref('base.lang_en')
-        model = self.session.env['prestashop.res.lang']
-        erp_lang = model.search([('id', '=', erp_lang.id)], limit=1)
         return {'lang': erp_lang.code}
 
     @mapping
@@ -125,13 +121,13 @@ class ResPartnerImporter(PrestashopImporter):
                                    'prestashop.res.partner.category')
 
     def _after_import(self, erp_id):
-        binder = self.binder_for(self._model_name)
+        binder = self.binder_for()
         ps_id = binder.to_backend(erp_id)
         import_batch.delay(
             self.session,
             'prestashop.address',
             self.backend_record.id,
-            filters={'filter[id_customer]': '%d' % (ps_id)},
+            filters={'filter[id_customer]': '%d' % (ps_id,)},
             priority=10,
         )
 
@@ -164,8 +160,8 @@ class AddressImportMapper(ImportMapper):
 
     @mapping
     def parent_id(self, record):
-        parent_id = self.binder_for('prestashop.res.partner').to_openerp(
-            record['id_customer'], unwrap=True)
+        binder = self.binder_for('prestashop.res.partner')
+        parent = binder.to_openerp(record['id_customer'], unwrap=True)
         if record['vat_number']:
             vat_number = record['vat_number'].replace('.', '').replace(' ', '')
             # TODO: move to custom module
@@ -173,41 +169,41 @@ class AddressImportMapper(ImportMapper):
             if not regexp.match(vat_number):
                 vat_number = 'ES' + vat_number
             if self._check_vat(vat_number):
-                self.session.env['res.partner'].browse(parent_id).write({
-                    'vat': vat_number,
-                })
+                # FIXME a mapper should never have side effect!
+                # the logic should be done in the importer
+                parent.write({'vat': vat_number})
             else:
                 add_checkpoint(
                     self.session,
                     'res.partner',
-                    parent_id,
+                    parent.id,
                     self.backend_record.id
                 )
-        return {'parent_id': parent_id}
+        return {'parent_id': parent.id}
 
     # TODO move to custom localization module
     @mapping
     def dni(self, record):
-        parent_id = self.binder_for('prestashop.res.partner').to_openerp(
-            record['id_customer'], unwrap=True)
+        binder = self.binder_for('prestashop.res.partner')
+        parent = binder.to_openerp(record['id_customer'], unwrap=True)
         if not record['vat_number'] and record.get('dni'):
             vat_number = record['dni'].replace('.', '').replace(
                 ' ', '').replace('-', '')
             regexp = re.compile('^[a-zA-Z]{2}')
             if not regexp.match(vat_number):
                 vat_number = 'ES' + vat_number
+            # FIXME a mapper should never have side effect!
+            # the logic should be done in the importer
             if self._check_vat(vat_number):
-                self.session.env['res.partner'].browse(parent_id).write({
-                    'vat': vat_number,
-                })
+                parent.write({'vat': vat_number})
             else:
                 add_checkpoint(
                     self.session,
                     'res.partner',
-                    parent_id,
+                    parent.id,
                     self.backend_record.id
                 )
-        return {'parent_id': parent_id}
+        return {'parent_id': parent.id}
 
     def _check_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:]
@@ -242,9 +238,8 @@ class AddressImportMapper(ImportMapper):
     def country(self, record):
         if record.get('id_country'):
             binder = self.binder_for('prestashop.res.country')
-            erp_country_id = binder.to_openerp(
-                record['id_country'], unwrap=True)
-            return {'country_id': erp_country_id}
+            country = binder.to_openerp(record['id_country'], unwrap=True)
+            return {'country_id': country.id}
         return {}
 
     @mapping

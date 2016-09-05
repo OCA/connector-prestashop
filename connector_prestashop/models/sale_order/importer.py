@@ -191,21 +191,22 @@ class SaleOrderMapper(ImportMapper):
 
     @mapping
     def partner_id(self, record):
-        partner_id = self.binder_for('prestashop.res.partner').to_openerp(
-            record['id_customer'], unwrap=True)
-        return {'partner_id': partner_id}
+        binder = self.binder_for('prestashop.res.partner')
+        partner = binder.to_openerp(record['id_customer'], unwrap=True)
+        return {'partner_id': partner.id}
 
     @mapping
     def partner_invoice_id(self, record):
-        address = self.binder_for('prestashop.address').to_openerp(
-            record['id_address_invoice'], unwrap=True)
-        return {'partner_invoice_id': address}
+        binder = self.binder_for('prestashop.address')
+        address = binder.to_openerp(record['id_address_invoice'], unwrap=True)
+        return {'partner_invoice_id': address.id}
 
     @mapping
     def partner_shipping_id(self, record):
-        shipping_id = self.binder_for('prestashop.address').to_openerp(
-            record['id_address_delivery'], unwrap=True)
-        return {'partner_shipping_id': shipping_id}
+        binder = self.binder_for('prestashop.address')
+        shipping = binder.to_openerp(record['id_address_delivery'],
+                                     unwrap=True)
+        return {'partner_shipping_id': shipping.id}
 
     @mapping
     def pricelist_id(self, record):
@@ -231,9 +232,9 @@ class SaleOrderMapper(ImportMapper):
     def carrier_id(self, record):
         if record['id_carrier'] == '0':
             return {}
-        carrier_id = self.binder_for('prestashop.delivery.carrier').to_openerp(
-            record['id_carrier'], unwrap=True)
-        return {'carrier_id': carrier_id}
+        binder = self.binder_for('prestashop.delivery.carrier')
+        carrier = binder.to_openerp(record['id_carrier'], unwrap=True)
+        return {'carrier_id': carrier.id}
 
     @mapping
     def total_tax_amount(self, record):
@@ -326,7 +327,7 @@ class SaleOrderImporter(PrestashopImporter):
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
-        if self._get_openerp_id():
+        if self._get_binding():
             return True
         rules = self.unit_for(SaleImportRule)
         return rules.check(self.prestashop_record)
@@ -355,12 +356,15 @@ class SaleOrderLineMapper(ImportMapper):
     def none_product(self, record):
         product_id = True
         if 'product_attribute_id' not in record:
-            template_id = self.binder_for(
-                'prestashop.product.template').to_openerp(
-                    record['product_id'], unwrap=True)
+            binder = self.binder_for('prestashop.product.template')
+            template = binder.to_openerp(
+                record['product_id'],
+                unwrap=True,
+            )
             product_id = self.env['product.product'].search([
-                ('product_tmpl_id', '=', template_id),
-                ('company_id', '=', self.backend_record.company_id.id)])
+                ('product_tmpl_id', '=', template.id),
+                ('company_id', '=', self.backend_record.company_id.id)]
+            )
         return not product_id
 
     @mapping
@@ -381,37 +385,27 @@ class SaleOrderLineMapper(ImportMapper):
     def product_id(self, record):
         if int(record.get('product_attribute_id', 0)):
             combination_binder = self.binder_for(
-                'prestashop.product.combination')
-            product_id = combination_binder.to_openerp(
+                'prestashop.product.combination'
+            )
+            product = combination_binder.to_openerp(
                 record['product_attribute_id'],
                 unwrap=True,
-                browse=True
             )
         else:
-            template_id = self.binder_for(
-                'prestashop.product.template').to_openerp(
-                    record['product_id'], unwrap=True)
-            product_id = self.env['product.product'].search([
-                ('product_tmpl_id', '=', template_id),
+            binder = self.binder_for('prestashop.product.template')
+            template = binder.to_openerp(record['product_id'], unwrap=True)
+            product = self.env['product.product'].search([
+                ('product_tmpl_id', '=', template.id),
                 ('company_id', '=', self.backend_record.company_id.id)],
                 limit=1,
             )
-            if not product_id:
+            if not product:
                 return self.tax_id(record)
-        return {'product_id': product_id.id}
+        return {'product_id': product.id}
 
     def _find_tax(self, ps_tax_id):
         binder = self.binder_for('prestashop.account.tax')
-        # TODO: review
-        # openerp_id = binder.to_openerp(ps_tax_id, unwrap=True)
-        # tax = self.session.read(
-        #     'account.tax', openerp_id, ['price_include'])
-        # if self.backend_record.taxes_included and \
-        #         not tax['price_include']:
-        #     return tax['id']
-        # return openerp_id
-        oe_tax = binder.to_openerp(ps_tax_id, unwrap=True, browse=True)
-        return oe_tax.id
+        return binder.to_openerp(ps_tax_id, unwrap=True)
 
     @mapping
     def tax_id(self, record):
@@ -419,13 +413,11 @@ class SaleOrderLineMapper(ImportMapper):
             self.backend_record.get_version_ps_key('tax'), [])
         if not isinstance(taxes, list):
             taxes = [taxes]
-        result = []
-        for tax in taxes:
-            openerp_id = self._find_tax(tax['id'])
-            if openerp_id:
-                result.append(openerp_id)
+        result = self.env['account.tax'].browse()
+        for ps_tax in taxes:
+            result |= self._find_tax(ps_tax['id'])
         if result:
-            return {'tax_id': [(6, 0, result)]}
+            return {'tax_id': [(6, 0, result.ids)]}
         return {}
 
     @mapping

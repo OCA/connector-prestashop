@@ -8,6 +8,7 @@ from prestapyt import PrestaShopWebServiceError
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
 from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
+from ...unit.mapper import backend_to_m2o
 from ...backend import prestashop
 
 
@@ -22,7 +23,7 @@ class ProductCategoryMapper(ImportMapper):
         ('meta_description', 'meta_description'),
         ('meta_keywords', 'meta_keywords'),
         ('meta_title', 'meta_title'),
-        ('id_shop_default', 'default_shop_id'),
+        (backend_to_m2o('id_shop_default'), 'default_shop_id'),
         ('active', 'active'),
         ('position', 'position')
     ]
@@ -41,10 +42,8 @@ class ProductCategoryMapper(ImportMapper):
     def parent_id(self, record):
         if record['id_parent'] == '0':
             return {}
-        return {
-            'parent_id':
-                self.binder_for('prestashop.product.category').to_openerp(
-                    record['id_parent'], unwrap=True)}
+        parent = self.binder_for().to_openerp(record['id_parent'], unwrap=True)
+        return {'parent_id': parent.id}
 
     @mapping
     def data_add(self, record):

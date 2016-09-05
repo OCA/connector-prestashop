@@ -3,6 +3,7 @@
 
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.importer import PrestashopImporter, DirectBatchImporter
+from ...unit.mapper import backend_to_m2o
 from ...backend import prestashop
 
 
@@ -12,7 +13,7 @@ class ShopImportMapper(ImportMapper):
 
     direct = [
         ('name', 'name'),
-        ('id_shop_group', 'shop_group_id'),
+        (backend_to_m2o('id_shop_group'), 'shop_group_id'),
     ]
 
     @mapping
