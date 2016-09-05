@@ -5,7 +5,6 @@ import logging
 from openerp import _, exceptions
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Exporter
-from .mapper import TranslationPrestashopExportMapper
 from ..connector import get_environment
 
 
@@ -139,33 +138,6 @@ class PrestashopExporter(PrestashopBaseExporter):
             self._after_export()
         message = _('Record exported with ID %s on PrestaShop.')
         return message % self.prestashop_id
-
-
-class TranslationPrestashopExporter(PrestashopExporter):
-
-    @property
-    def mapper(self):
-        if self._mapper is None:
-            self._mapper = self.connector_env.get_connector_unit(
-                TranslationPrestashopExportMapper)
-        return self._mapper
-
-    def _map_data(self, fields=None):
-        """ Convert the external record to OpenERP """
-        self.mapper.convert(self.get_record_by_lang(), fields=fields)
-
-    def get_record_by_lang(self, record_id):
-        # get the backend's languages
-        languages = self.backend_record.language_ids
-        records = {}
-        # for each languages:
-        for language in languages:
-            # get the translated record
-            record = self.model.with_context(
-                lang=language['code']).browse(record_id)
-            # put it in the dict
-            records[language['prestashop_id']] = record
-        return records
 
 
 @job(default_channel='root.prestashop')
