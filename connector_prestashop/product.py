@@ -379,7 +379,7 @@ class ProductCategoryAdapter(GenericAdapter):
 
 
 @prestashop
-class ProductInventoryExport(ExportSynchronizer):
+class ProductInventoryExporter(ExportSynchronizer):
     _model_name = ['prestashop.product.template']
 
     def get_filter(self, template):
@@ -554,7 +554,7 @@ def export_inventory(session, model_name, record_id, fields=None):
     template = session.env[model_name].browse(record_id)
     backend_id = template.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    inventory_exporter = env.get_connector_unit(ProductInventoryExport)
+    inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
     return inventory_exporter.run(record_id, fields)
 
 

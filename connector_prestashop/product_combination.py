@@ -26,7 +26,7 @@ from openerp.osv.orm import browse_record_list
 from openerp.addons.product.product import check_ean
 from .unit.backend_adapter import PrestaShopCRUDAdapter
 
-from .product import ProductInventoryExport
+from .product import ProductInventoryExporter
 
 from prestapyt import PrestaShopWebServiceError
 
@@ -389,7 +389,7 @@ class ProductCombinationOptionValueMapper(ImportMapper):
 
 
 @prestashop
-class CombinationInventoryExport(ProductInventoryExport):
+class CombinationInventoryExport(ProductInventoryExporter):
     _model_name = ['prestashop.product.combination']
 
     def get_filter(self, template):
