@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from prestapyt import PrestaShopWebServiceDict
+try:
+    from prestapyt import PrestaShopWebServiceDict
+except ImportError:
+    PrestaShopWebServiceDict = False
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
