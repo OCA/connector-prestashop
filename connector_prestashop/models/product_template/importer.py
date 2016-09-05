@@ -18,6 +18,7 @@ from ...unit.importer import (
     PrestashopImporter,
     TranslatableRecordImporter,
 )
+from ...unit.mapper import backend_to_m2o
 from ...unit.backend_adapter import GenericAdapter
 from ...connector import get_environment
 from ...backend import prestashop
@@ -36,7 +37,7 @@ class TemplateMapper(ImportMapper):
         ('description_short', 'description_short_html'),
         ('weight', 'weight'),
         ('wholesale_price', 'standard_price'),
-        ('id_shop_default', 'default_shop_id'),
+        (backend_to_m2o('id_shop_default'), 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
         ('reference', 'reference'),
         ('available_for_order', 'available_for_order'),
@@ -152,12 +153,14 @@ class TemplateMapper(ImportMapper):
     def categ_id(self, record):
         if not int(record['id_category_default']):
             return
-        category_id = self.binder_for(
-            'prestashop.product.category').to_odoo(
-                record['id_category_default'], unwrap=True)
+        binder = self.binder_for('prestashop.product.category')
+        category = binder.to_openerp(
+            record['id_category_default'],
+            unwrap=True,
+        )
 
-        if category_id is not None:
-            return {'categ_id': category_id}
+        if category:
+            return {'categ_id': category.id}
 
         categories = record['associations'].get('categories', {}).get(
             self.backend_record.get_version_ps_key('category'), [])
@@ -165,10 +168,8 @@ class TemplateMapper(ImportMapper):
             categories = [categories]
         if not categories:
             return
-        category_id = self.binder_for(
-            'prestashop.product.category').to_odoo(
-                categories[0]['id'], unwrap=True)
-        return {'categ_id': category_id}
+        category = binder.to_openerp(categories[0]['id'], unwrap=True)
+        return {'categ_id': category.id}
 
     @mapping
     def categ_ids(self, record):
@@ -176,14 +177,15 @@ class TemplateMapper(ImportMapper):
             self.backend_record.get_version_ps_key('category'), [])
         if not isinstance(categories, list):
             categories = [categories]
-        product_categories = []
-        for category in categories:
-            category_id = self.binder_for(
-                'prestashop.product.category').to_odoo(
-                    category['id'], unwrap=True)
-            product_categories.append(category_id)
+        product_categories = self.env['product.category'].browse()
+        binder = self.binder_for('prestashop.product.category')
+        for ps_category in categories:
+            product_categories |= binder.to_openerp(
+                ps_category['id'],
+                unwrap=True,
+            )
 
-        return {'categ_ids': [(6, 0, product_categories)]}
+        return {'categ_ids': [(6, 0, product_categories.ids)]}
 
     @mapping
     def backend_id(self, record):
@@ -197,7 +199,7 @@ class TemplateMapper(ImportMapper):
     def ean13(self, record):
         if self.has_combinations(record):
             return {}
-        if record['barcode'] in ['', '0']:
+        if record['ean13'] in ['', '0']:
             return {}
         if self.env['barcode.nomenclature'].check_ean(record['ean13']):
             return {'barcode': record['ean13']}
@@ -206,8 +208,11 @@ class TemplateMapper(ImportMapper):
     def _get_tax_ids(self, record):
         # if record['id_tax_rules_group'] == '0':
         #     return {}
-        tax_group = self.binder_for('prestashop.account.tax.group').to_odoo(
-            record['id_tax_rules_group'], unwrap=True, browse=True)
+        binder = self.binder_for('prestashop.account.tax.group')
+        tax_group = binder.to_openerp(
+            record['id_tax_rules_group'],
+            unwrap=True,
+        )
         return tax_group.tax_ids
 
     @mapping
@@ -326,17 +331,23 @@ class ProductInventoryImporter(PrestashopImporter):
         qty = self._get_quantity(record)
         if qty < 0:
             qty = 0
-        template_id = self._get_template(record)
+        template = self._get_template(record)
+        if template._name == 'product.template':
+            products = template.product_variant_ids
+        else:
+            products = template
 
-        vals = {
-            'location_id': self.backend_record.warehouse_id.lot_stock_id.id,
-            'product_id': template_id,
-            'new_quantity': qty,
-        }
-        template_qty_id = self.session.env['stock.change.product.qty'].create(
-            vals)
-        template_qty_id.with_context(
-            active_id=template_id).change_product_qty()
+        location = self.backend_record.warehouse_id.lot_stock_id
+        for product in products:
+            vals = {
+                'location_id': location.id,
+                'product_id': product.id,
+                'new_quantity': qty,
+            }
+            template_qty = self.env['stock.change.product.qty'].create(vals)
+            template_qty.with_context(
+                active_id=product.id
+            ).change_product_qty()
 
 
 @prestashop

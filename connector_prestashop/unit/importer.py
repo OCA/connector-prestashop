@@ -5,7 +5,6 @@ import logging
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Importer
 from openerp.addons.connector.connector import ConnectorUnit
-from ..backend import prestashop
 from ..connector import get_environment
 from ..connector import add_checkpoint
 
@@ -47,9 +46,9 @@ class PrestashopImporter(Importer):
         """
         return
 
-    def _get_openerp_id(self):
+    def _get_binding(self):
         """Return the openerp id from the prestashop id"""
-        return self.binder.to_openerp(self.prestashop_id, browse=True)
+        return self.binder.to_openerp(self.prestashop_id)
 
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
@@ -58,10 +57,9 @@ class PrestashopImporter(Importer):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        model = self.model.with_context(connector_no_export=True)
-        model = str(model).split('()')[0]
-        binding = self.env[model].with_context(
-            connector_no_export=True).create(data)
+        binding = self.model.with_context(
+            connector_no_export=True
+        ).create(data)
         _logger.debug(
             '%d created from prestashop %s', binding, self.prestashop_id)
         return binding
@@ -80,7 +78,7 @@ class PrestashopImporter(Importer):
         data"""
         return
 
-    def _after_import(self, erp_id):
+    def _after_import(self, erp_record):
         """ Hook called at the end of the import """
         return
 
@@ -100,8 +98,8 @@ class PrestashopImporter(Importer):
         self._import_dependencies()
 
         map_record = self.mapper.map_record(self.prestashop_record)
-        erp_id = self._get_openerp_id()
-        if erp_id:
+        binding = self._get_binding()
+        if binding:
             record = map_record.values()
         else:
             record = map_record.values(for_create=True)
@@ -109,23 +107,23 @@ class PrestashopImporter(Importer):
         # special check on data before import
         self._validate_data(record)
 
-        if erp_id:
-            self._update(erp_id, record)
+        if binding:
+            self._update(binding, record)
         else:
-            erp_id = self._create(record)
+            binding = self._create(record)
 
-        self.binder.bind(self.prestashop_id, erp_id)
+        self.binder.bind(self.prestashop_id, binding)
 
-        self._after_import(erp_id)
+        self._after_import(binding)
 
-    def _check_dependency(self, ext_id, model_name):
-        ext_id = int(ext_id)
-        if not self.binder_for(model_name).to_openerp(ext_id):
+    def _check_dependency(self, external_id, model_name):
+        external_id = int(external_id)
+        if not self.binder_for(model_name).to_openerp(external_id):
             import_record(
                 self.session,
                 model_name,
                 self.backend_record.id,
-                ext_id
+                external_id
             )
 
 
@@ -171,9 +169,8 @@ class AddCheckpoint(ConnectorUnit):
 
     _model_name = []
 
-    def run(self, openerp_binding_id):
-        binding = self.env[self.model._name].browse(openerp_binding_id)
-        record = binding.openerp_id
+    def run(self, binding_id):
+        record = self.model.browse(binding_id)
         add_checkpoint(self.session,
                        record._model._name,
                        record.id,
@@ -223,11 +220,7 @@ class TranslatableRecordImporter(PrestashopImporter):
 
     def _get_oerp_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
-        erp_language = language_binder.to_openerp(prestashop_id, browse=True)
-        if erp_language is None:
-            return None
-        # model = self.env['prestashop.res.lang']
-        # erp_lang = model.read([erp_language_id])
+        erp_language = language_binder.to_openerp(prestashop_id)
         return erp_language
 
     def find_each_language(self, record):
@@ -240,7 +233,7 @@ class TranslatableRecordImporter(PrestashopImporter):
                 if not language or language['attrs']['id'] in languages:
                     continue
                 erp_lang = self._get_oerp_language(language['attrs']['id'])
-                if erp_lang is not None:
+                if erp_lang:
                     languages[language['attrs']['id']] = erp_lang.code
         return languages
 
@@ -276,33 +269,32 @@ class TranslatableRecordImporter(PrestashopImporter):
         # split prestashop data for every lang
         splitted_record = self._split_per_language(self.prestashop_record)
 
-        erp_id = None
-
+        binding = None
         if self._default_language in splitted_record:
-            erp_id = self._run_record(
+            binding = self._run_record(
                 splitted_record[self._default_language],
                 self._default_language
             )
             del splitted_record[self._default_language]
 
         for lang_code, prestashop_record in splitted_record.items():
-            erp_id = self._run_record(
+            binding = self._run_record(
                 prestashop_record,
                 lang_code,
-                erp_id
+                binding=binding
             )
 
-        self.binder.bind(self.prestashop_id, erp_id)
+        self.binder.bind(self.prestashop_id, binding)
 
-        self._after_import(erp_id)
+        self._after_import(binding)
 
-    def _run_record(self, prestashop_record, lang_code, erp_id=None):
+    def _run_record(self, prestashop_record, lang_code, binding=None):
         mapped = self.mapper.map_record(prestashop_record)
 
-        if erp_id is None:
-            erp_id = self._get_openerp_id()
+        if not binding:
+            binding = self._get_binding()
 
-        if erp_id:
+        if binding:
             record = mapped.values()
         else:
             record = mapped.values(for_create=True)
@@ -313,12 +305,12 @@ class TranslatableRecordImporter(PrestashopImporter):
         # TODO: Analyze lang in context
         context = self._context()
         context['lang'] = lang_code
-        if erp_id:
-            self._update(erp_id, record)
+        if binding:
+            self._update(binding, record)
         else:
-            erp_id = self._create(record)
+            binding = self._create(record)
 
-        return erp_id
+        return binding
 
 
 @job(default_channel='root.prestashop')
