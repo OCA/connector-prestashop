@@ -29,10 +29,10 @@ class PrestashopTrackingExporter(Exporter):
         tracking_adapter = self.unit_for(
             PrestaShopCRUDAdapter, '__not_exit_prestashop.order_carrier')
 
-        self.binding = self.env[self.model._name].browse(binding_id)
+        self.binding = self.model.browse(binding_id)
         tracking = self._get_tracking()
         if tracking:
-            prestashop_order_id = self.binder.to_backend(binding_id)
+            prestashop_order_id = self.binder.to_backend(self.binding)
             filters = {
                 'filter[id_order]': prestashop_order_id,
             }
@@ -54,7 +54,7 @@ class PrestashopTrackingExporter(Exporter):
 @job
 def export_tracking_number(session, model_name, record_id):
     """ Export the tracking number of a delivery order. """
-    order = session.browse(model_name, record_id)
+    order = session.env[model_name].browse(record_id)
     backend_id = order.backend_id.id
     env = get_environment(session, model_name, backend_id)
     tracking_exporter = env.get_connector_unit(PrestashopTrackingExporter)
