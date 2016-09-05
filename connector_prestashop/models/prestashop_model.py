@@ -306,19 +306,17 @@ class PrestashopBinding(models.AbstractModel):
     _inherit = 'external.binding'
     _description = 'PrestaShop Binding (abstract)'
 
-    # 'openerp_id': openerp-side id must be declared in concrete model
     backend_id = fields.Many2one(
         comodel_name='prestashop.backend',
         string='PrestaShop Backend',
         required=True,
         ondelete='restrict'
     )
-    # TODO : do I keep the char like in Magento, or do I put a PrestaShop ?
     prestashop_id = fields.Integer('ID on PrestaShop')
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
-         'An record with same ID already exists on PrestaShop.'),
+         'A record with same ID already exists on PrestaShop.'),
     ]
 
     @api.multi
@@ -332,6 +330,25 @@ class PrestashopBinding(models.AbstractModel):
             func(session, self._name, record.backend_id.id,
                  record.prestashop_id)
         return True
+
+
+class PrestashopBindingOdoo(models.AbstractModel):
+    _name = 'prestashop.binding.odoo'
+    _inherit = 'prestashop.binding'
+    _description = 'PrestaShop Binding with Odoo binding (abstract)'
+
+    # 'odoo_id': odoo-side id must be re-declared in concrete model
+    # for having a many2one instead of a reference field
+    odoo_id = fields.Reference(
+        required=True,
+        ondelete='cascade',
+        string='Odoo binding',
+    )
+
+    _sql_constraints = [
+        ('prestashop_erp_uniq', 'unique(backend_id, odoo_id)',
+         'An ERP record with same ID already exists on PrestaShop.'),
+    ]
 
 
 # TODO remove external.shop.group from connector_ecommerce
@@ -376,12 +393,13 @@ class PrestashopShop(models.Model):
         required=True,
         ondelete='cascade',
     )
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='stock.warehouse',
         string='WareHouse',
         required=True,
         readonly=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     backend_id = fields.Many2one(
         compute='_compute_backend_id',
@@ -397,7 +415,7 @@ class StockLocation(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.shop',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         readonly=True,
         string='PrestaShop Bindings',
     )
@@ -405,24 +423,20 @@ class StockLocation(models.Model):
 
 class PrestashopResLang(models.Model):
     _name = 'prestashop.res.lang'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.lang': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.lang': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.lang',
         required=True,
         ondelete='cascade',
         string='Language',
+        oldname='openerp_id',
     )
     active = fields.Boolean(
-        string='Active in prestashop',
+        string='Active in PrestaShop',
         default=False,
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
 
 
 class ResLang(models.Model):
@@ -430,7 +444,7 @@ class ResLang(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.lang',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         readonly=True,
         string='PrestaShop Bindings',
     )
@@ -438,20 +452,16 @@ class ResLang(models.Model):
 
 class PrestashopResCountry(models.Model):
     _name = 'prestashop.res.country'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.country': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.country': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.country',
         required=True,
         ondelete='cascade',
         string='Country',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
 
 
 class ResCountry(models.Model):
@@ -459,7 +469,7 @@ class ResCountry(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.country',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         readonly=True,
         string='prestashop Bindings',
     )
@@ -467,20 +477,16 @@ class ResCountry(models.Model):
 
 class PrestashopResCurrency(models.Model):
     _name = 'prestashop.res.currency'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.currency': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.currency': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.currency',
         string='Currency',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
 
 
 class ResCurrency(models.Model):
@@ -488,7 +494,7 @@ class ResCurrency(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.currency',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
         readonly=True
     )
@@ -496,14 +502,15 @@ class ResCurrency(models.Model):
 
 class PrestashopAccountTax(models.Model):
     _name = 'prestashop.account.tax'
-    _inherit = 'prestashop.binding'
-    _inherits = {'account.tax': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'account.tax': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='account.tax',
         string='Tax',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        oldname='openerp_id',
     )
 
 
@@ -512,7 +519,7 @@ class AccountTax(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.account.tax',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='prestashop Bindings',
         readonly=True,
     )
@@ -520,20 +527,16 @@ class AccountTax(models.Model):
 
 class PrestashopAccountTaxGroup(models.Model):
     _name = 'prestashop.account.tax.group'
-    _inherit = 'prestashop.binding'
-    _inherits = {'account.tax.group': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'account.tax.group': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='account.tax.group',
         string='Tax Group',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
 
 
 class AccountTaxGroup(models.Model):
@@ -541,7 +544,7 @@ class AccountTaxGroup(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.account.tax.group',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
         readonly=True
     )

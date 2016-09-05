@@ -49,7 +49,7 @@ class DirectBinder(ConnectorUnit):
         # Loop on all PS IDs
         for ps_id in ps_ids:
             # Check if the PS ID is already mapped to an OE ID
-            erp_id = binder.to_openerp(ps_id)
+            erp_id = binder.to_odoo(ps_id)
             if erp_id:
                 # Do nothing for the PS IDs that are already mapped
                 _logger.debug(
@@ -71,7 +71,7 @@ class DirectBinder(ConnectorUnit):
                             ps_val, erp_val, ps_dict, erp_dict):
                         # it matches, so I write the external ID
                         data = {
-                            'openerp_id': erp_dict['id'],
+                            'odoo_id': erp_dict['id'],
                             'backend_id': self.backend_record.id,
                         }
                         for oe_field, ps_field in self._copy_fields:

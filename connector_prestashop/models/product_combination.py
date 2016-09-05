@@ -11,7 +11,7 @@ class ProductProduct(models.Model):
 
     prestashop_combinations_bind_ids = fields.One2many(
         comodel_name='prestashop.product.combination',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings (combinations)',
     )
     default_on = fields.Boolean(string='Default On')
@@ -85,14 +85,15 @@ class ProductProduct(models.Model):
 
 class PrestashopProductCombination(models.Model):
     _name = 'prestashop.product.combination'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.product': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'product.product': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     main_template_id = fields.Many2one(
         comodel_name='prestashop.product.template',
@@ -118,32 +119,28 @@ class PrestashopProductCombination(models.Model):
     def _prestashop_qty(self, product):
         return product.qty_available
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
-
 
 class ProductAttribute(models.Model):
     _inherit = 'product.attribute'
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.combination.option',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings (combinations)',
     )
 
 
 class PrestashopProductCombinationOption(models.Model):
     _name = 'prestashop.product.combination.option'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.attribute': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'product.attribute': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.attribute',
         string='Attribute',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        oldname='openerp_id',
     )
     prestashop_position = fields.Integer('PrestaShop Position')
     group_type = fields.Selection([
@@ -152,18 +149,13 @@ class PrestashopProductCombinationOption(models.Model):
         ('select', 'Select')], string='Type', default='select')
     public_name = fields.Char(string='Public Name', translate=True)
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
-
 
 class ProductAttributeValue(models.Model):
     _inherit = 'product.attribute.value'
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.combination.option.value',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
 
@@ -171,13 +163,14 @@ class ProductAttributeValue(models.Model):
 class PrestashopProductCombinationOptionValue(models.Model):
     _name = 'prestashop.product.combination.option.value'
     _inherit = 'prestashop.binding'
-    _inherits = {'product.attribute.value': 'openerp_id'}
+    _inherits = {'product.attribute.value': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.attribute.value',
         string='Attribute',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     prestashop_position = fields.Integer(
         string='PrestaShop Position',
@@ -185,8 +178,3 @@ class PrestashopProductCombinationOptionValue(models.Model):
     )
     id_attribute_group = fields.Many2one(
         comodel_name='prestashop.product.combination.option')
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'An ERP record with the same ID already exists on PrestaShop.'),
-    ]
