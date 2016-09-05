@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="prestashop_product_image_form" model="ir.ui.view">
+        <field name="name">connector_prestashop.product.image.form</field>
+        <field name="model">base_multi_image.image</field>
+        <field name="inherit_id" ref="base_multi_image.image_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='extension']" position="after">
+                <field name="front_image"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</openerp>
