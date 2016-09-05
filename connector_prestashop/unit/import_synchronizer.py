@@ -55,9 +55,9 @@ class PrestashopImportSynchronizer(Importer):
         """
         return
 
-    def _get_openerp_id(self):
-        """Return the openerp id from the prestashop id"""
-        return self.binder.to_openerp(self.prestashop_id, browse=True)
+    def _get_odoo_id(self):
+        """Return the Odoo ID from the PrestaShop ID"""
+        return self.binder.to_odoo(self.prestashop_id, browse=True)
 
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
@@ -108,7 +108,7 @@ class PrestashopImportSynchronizer(Importer):
         self._import_dependencies()
 
         map_record = self.mapper.map_record(self.prestashop_record)
-        erp_id = self._get_openerp_id()
+        erp_id = self._get_odoo_id()
         if erp_id:
             record = map_record.values()
         else:
@@ -128,7 +128,7 @@ class PrestashopImportSynchronizer(Importer):
 
     def _check_dependency(self, ext_id, model_name):
         ext_id = int(ext_id)
-        if not self.binder_for(model_name).to_openerp(ext_id):
+        if not self.binder_for(model_name).to_odoo(ext_id):
             import_record(
                 self.session,
                 model_name,
@@ -182,7 +182,7 @@ class AddCheckpoint(ConnectorUnit):
 
     def run(self, openerp_binding_id):
         binding = self.env[self.model._name].browse(openerp_binding_id)
-        record = binding.openerp_id
+        record = binding.odoo_id
         add_checkpoint(self.session,
                        record._model._name,
                        record.id,
@@ -319,7 +319,7 @@ class MailMessageRecordImport(PrestashopImportSynchronizer):
     def _has_to_skip(self):
         record = self.prestashop_record
         binder = self.binder_for('prestashop.sale.order')
-        ps_so_id = binder.to_openerp(record['id_order'])
+        ps_so_id = binder.to_odoo(record['id_order'])
         return record['id_order'] == '0' or not ps_so_id
 
 
@@ -493,13 +493,13 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         if shipping_total:
             sale_line_obj = self.session.env['sale.order.line']
             sale_line_obj.create({
-                'order_id': erp_order.openerp_id.id,
+                'order_id': erp_order.odoo_id.id,
                 'product_id':
-                    erp_order.openerp_id.carrier_id.product_id.id,
+                    erp_order.odoo_id.carrier_id.product_id.id,
                 'price_unit':  shipping_total,
                 'is_delivery': True
             })
-        erp_order.openerp_id.recompute()
+        erp_order.odoo_id.recompute()
         return True
 
     def _check_refunds(self, id_customer, id_order):
@@ -516,7 +516,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
-        if self._get_openerp_id():
+        if self._get_odoo_id():
             return True
         rules = self.unit_for(SaleImportRule)
         return rules.check(self.prestashop_record)
@@ -533,7 +533,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
     def _get_oerp_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
-        erp_language = language_binder.to_openerp(prestashop_id, browse=True)
+        erp_language = language_binder.to_odoo(prestashop_id, browse=True)
         if erp_language is None:
             return None
         # model = self.env['prestashop.res.lang']
@@ -610,7 +610,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         mapped = self.mapper.map_record(prestashop_record)
 
         if erp_id is None:
-            erp_id = self._get_openerp_id()
+            erp_id = self._get_odoo_id()
 
         if erp_id:
             record = mapped.values()
@@ -720,7 +720,7 @@ class TemplateRecordImport(TranslatableRecordImport):
         attr_line_value_ids = []
         for attr_line in template.attribute_line_ids:
             attr_line_value_ids.extend(attr_line.value_ids.ids)
-        template_id = template.openerp_id.id
+        template_id = template.odoo_id.id
         products = self.env['product.product'].search([
             ('product_tmpl_id', '=', template_id)]
         )
@@ -810,7 +810,7 @@ class TemplateRecordImport(TranslatableRecordImport):
             try:
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
+                ps_supplierinfo.odoo_id.unlink()
 
     def _import_dependencies(self):
         self._import_default_category()
