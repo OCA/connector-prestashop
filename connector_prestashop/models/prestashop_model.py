@@ -24,7 +24,7 @@ from ..unit.import_synchronizer import (
 from ..unit.direct_binder import DirectBinder
 from ..connector import get_environment
 
-from openerp.addons.connector_prestashop.product import import_inventory
+from ..product import import_inventory
 
 _logger = logging.getLogger(__name__)
 
