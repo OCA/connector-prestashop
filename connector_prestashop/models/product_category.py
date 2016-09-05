@@ -9,21 +9,22 @@ class ProductCategory(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.category',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string="PrestaShop Bindings",
     )
 
 
 class PrestashopProductCategory(models.Model):
     _name = 'prestashop.product.category'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.category': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'product.category': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.category',
         required=True,
         ondelete='cascade',
         string='Product Category',
+        oldname='openerp_id',
     )
     default_shop_id = fields.Many2one(comodel_name='prestashop.shop')
     date_add = fields.Datetime(
@@ -41,8 +42,3 @@ class PrestashopProductCategory(models.Model):
     meta_title = fields.Char(string='Meta title', translate=True)
     active = fields.Boolean(string='Active', default=True)
     position = fields.Integer(string='Position')
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]

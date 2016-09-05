@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
+from openerp import api, fields, models
 
 
 class AccountInvoice(models.Model):
@@ -9,7 +9,7 @@ class AccountInvoice(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.refund',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings'
     )
 
@@ -22,69 +22,55 @@ class AccountInvoice(models.Model):
                 continue
             sale_order = sale_order[0]
             discount_product_id = sale_order.backend_id.discount_product_id.id
-
             for invoice_line in invoice.invoice_line:
                 if invoice_line.product_id.id != discount_product_id:
                     continue
                 amount = invoice_line.price_subtotal
-                partner_id = invoice.partner_id.commercial_partner_id.id
-                refund_id = self._find_refund(-1 * amount, partner_id)
-                if refund_id:
+                partner = invoice.partner_id.commercial_partner_id
+                refund = self._find_refund(-1 * amount, partner)
+                if refund:
                     invoice_line.unlink()
-                    line_replacement[invoice.id] = refund_id
+                    line_replacement[invoice] = refund
                     invoice.button_reset_taxes()
-
         result = super(AccountInvoice, self).action_move_create()
         # reconcile invoice with refund
-        for invoice_id, refund_id in line_replacement.items():
-            self._reconcile_invoice_refund(invoice_id, refund_id)
+        for invoice, refund in line_replacement.items():
+            self._reconcile_invoice_refund(invoice, refund)
         return result
 
-    def _reconcile_invoice_refund(self, cr, uid, invoice_id, refund_id,
-                                  context=None):
-        move_line_obj = self.pool.get('account.move.line')
-        invoice_obj = self.pool.get('account.invoice')
-
-        invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
-        refund = invoice_obj.browse(cr, uid, refund_id, context=context)
-
-        move_line_ids = move_line_obj.search(cr, uid, [
+    @api.model
+    def _reconcile_invoice_refund(self, invoice, refund):
+        move_line_obj = self.env['account.move.line']
+        move_lines = move_line_obj.search([
             ('move_id', '=', invoice.move_id.id),
             ('debit', '!=', 0.0),
-        ], context=context)
-        move_line_ids += move_line_obj.search(cr, uid, [
+        ])
+        move_lines += move_line_obj.search([
             ('move_id', '=', refund.move_id.id),
             ('credit', '!=', 0.0),
-        ], context=context)
-        move_line_obj.reconcile_partial(
-            cr, uid, move_line_ids, context=context
-        )
+        ])
+        move_lines.reconcile_partial()
 
-    def _find_refund(self, cr, uid, amount, partner_id, context=None):
-        ids = self.search(cr, uid, [
+    @api.model
+    def _find_refund(self, amount, partner):
+        records = self.search([
             ('amount_untaxed', '=', amount),
             ('type', '=', 'out_refund'),
             ('state', '=', 'open'),
-            ('partner_id', '=', partner_id),
+            ('partner_id', '=', partner.id),
         ])
-        if not ids:
-            return None
-        return ids[0]
+        return records[:1].id
 
 
 class PrestashopRefund(models.Model):
     _name = 'prestashop.refund'
-    _inherit = 'prestashop.binding'
-    _inherits = {'account.invoice': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'account.invoice': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='account.invoice',
         required=True,
         ondelete='cascade',
         string='Invoice',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]

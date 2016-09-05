@@ -3,7 +3,7 @@
 
 import logging
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 @prestashop
-class PrestashopTrackingExport(ExportSynchronizer):
+class PrestashopTrackingExporter(ExportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
     def _get_tracking(self):
@@ -46,9 +46,7 @@ class PrestashopTrackingExport(ExportSynchronizer):
                 tracking_adapter.write(order_carrier_id, vals)
                 return "Tracking %s exported" % tracking
             else:
-                raise Warning(
-                    _('PrestaShop Error'),
-                    _('No carrier found on sale order'))
+                raise UserError(_('No carrier found on sale order'))
         else:
             return "No tracking to export"
 
@@ -75,5 +73,5 @@ def export_tracking_number(session, model_name, record_id):
     order = session.browse(model_name, record_id)
     backend_id = order.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    tracking_exporter = env.get_connector_unit(PrestashopTrackingExport)
+    tracking_exporter = env.get_connector_unit(PrestashopTrackingExporter)
     return tracking_exporter.run(record_id)

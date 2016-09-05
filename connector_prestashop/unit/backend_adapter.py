@@ -3,17 +3,14 @@
 
 import base64
 import logging
-from prestapyt import PrestaShopWebServiceDict
+try:
+    from prestapyt import PrestaShopWebServiceDict
+except ImportError:
+    PrestaShopWebServiceDict = False
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import prestashop
 
 _logger = logging.getLogger(__name__)
-handler = logging.FileHandler('/opt/odoo/v8/adapter_log.log')
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-_logger.addHandler(handler)
 
 
 class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
@@ -107,7 +104,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: list
         """
-        _logger.info(
+        _logger.debug(
             'method search, model %s, filters %s',
             self._prestashop_model, unicode(filters))
         api = self.connect()
@@ -118,7 +115,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: dict
         """
-        _logger.info(
+        _logger.debug(
             'method read, model %s id %s, attributes %s',
             self._prestashop_model, str(id), unicode(attributes))
         # TODO rename attributes in something better
@@ -129,7 +126,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
     def create(self, attributes=None):
         """ Create a record on the external system """
-        _logger.info(
+        _logger.debug(
             'method create, model %s, attributes %s',
             self._prestashop_model, unicode(attributes))
         api = self.connect()
@@ -141,7 +138,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         """ Update records on the external system """
         api = self.connect()
         attributes['id'] = id
-        _logger.info(
+        _logger.debug(
             'method write, model %s, attributes %s',
             self._prestashop_model,
             unicode(attributes)
@@ -150,7 +147,8 @@ class GenericAdapter(PrestaShopCRUDAdapter):
             self._prestashop_model, id, {self._export_node_name: attributes})
 
     def delete(self, resource, ids):
-        _logger.info('method delete, model %s, ids %s', resource, unicode(ids))
+        _logger.debug(
+            'method delete, model %s, ids %s', resource, unicode(ids))
         api = self.connect()
         # Delete a record(s) on the external system
         return api.delete(resource, ids)

@@ -13,29 +13,29 @@ python:
   - "2.7"
 
 env:
-  - VERSION="8.0" LINT_CHECK="1"
-  - VERSION="8.0" ODOO_REPO="odoo/odoo" LINT_CHECK="0"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
+  global:
+  - VERSION="8.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
+  - TRANSIFEX_USER='transbot@odoo-community.org'
+  - secure: qZa/VxdAUmdN9+5WwaAnx2E8t6T+Yw5XmMjoUHRy8rA0tx1oA8uOzl4IPHXOyamMg3pEz67nScYSNLPAP2itK4Fc6wrsA7in/eFpAd93Gj1g4NoCxn9nnZqtLWIke9Tn4xyq1kJgsXXGLLBOlPBamvwOd/SxKJF6081dSH//6y8=
+
+  matrix:
+  - LINT_CHECK="1"
+  - TRANSIFEX="1"
+  - TESTS="1" ODOO_REPO="odoo/odoo"
+  - TESTS="1" ODOO_REPO="OCA/OCB"
 
 virtualenv:
   system_site_packages: true
 
-before_install:
-  - git clone https://github.com/OCA/connector.git $HOME/connector -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/connector-ecommerce.git $HOME/connector-ecommerce -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/e-commerce.git $HOME/e-commerce -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/product-attribute.git $HOME/product-attribute -b ${VERSION} --depth=1
-  - git clone https://github.com/OCA/sale-workflow.git $HOME/sale-workflow -b ${VERSION} --depth=1
-
 install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - pip install html2text
+  - pip install prestapyt
   - travis_install_nightly
-  - pip install unidecode
-  - pip install git+https://github.com/akretion/prestapyt.git#egg=prestapyt
 
 script:
   - travis_run_tests
 
 after_success:
-  coveralls
+  - travis_after_tests_success

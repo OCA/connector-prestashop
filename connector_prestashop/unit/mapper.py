@@ -7,16 +7,14 @@ from openerp.tools.translate import _
 from openerp.addons.connector.unit.mapper import (
     mapping,
     ImportMapper,
-    ExportMapper
+    ExportMapper,
+    only_create
 )
 from ..backend import prestashop
 from ..connector import add_checkpoint
 from .backend_adapter import GenericAdapter
 from .backend_adapter import PrestaShopCRUDAdapter
-from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
-    SaleOrderOnChange)
 from openerp.addons.connector.connector import Binder
-from openerp.addons.connector.unit.mapper import only_create, mapping
 import re
 
 
@@ -61,7 +59,7 @@ class ShopImportMapper(ImportMapper):
 
     @mapping
     def opener_id(self, record):
-        return {'openerp_id': self.backend_record.warehouse_id.id}
+        return {'odoo_id': self.backend_record.warehouse_id.id}
 
 
 @prestashop
@@ -103,7 +101,7 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def pricelist(self, record):
         binder = self.unit_for(Binder, 'prestashop.groups.pricelist')
-        pricelist_id = binder.to_openerp(
+        pricelist_id = binder.to_odoo(
             record['id_default_group'], unwrap=True)
         if not pricelist_id:
             return {}
@@ -138,7 +136,7 @@ class PartnerImportMapper(ImportMapper):
             binder = self.binder_for(
                 'prestashop.res.partner.category'
             )
-            category_id = binder.to_openerp(group['id'])
+            category_id = binder.to_odoo(group['id'])
             partner_categories.append(category_id)
 
         return {'group_ids': [(6, 0, partner_categories)]}
@@ -152,7 +150,7 @@ class PartnerImportMapper(ImportMapper):
         binder = self.binder_for('prestashop.res.lang')
         erp_lang = None
         if record.get('id_lang'):
-            erp_lang = binder.to_openerp(record['id_lang'], browse=True)
+            erp_lang = binder.to_odoo(record['id_lang'], browse=True)
         if erp_lang is None:
             erp_lang = self.env.ref('base.lang_en')
         model = self.session.env['prestashop.res.lang']
@@ -235,7 +233,7 @@ class AddressImportMapper(ImportMapper):
 
     @mapping
     def parent_id(self, record):
-        parent_id = self.binder_for('prestashop.res.partner').to_openerp(
+        parent_id = self.binder_for('prestashop.res.partner').to_odoo(
             record['id_customer'], unwrap=True)
         if record['vat_number']:
             vat_number = record['vat_number'].replace('.', '').replace(' ', '')
@@ -259,7 +257,7 @@ class AddressImportMapper(ImportMapper):
     # TODO move to custom localization module
     @mapping
     def dni(self, record):
-        parent_id = self.binder_for('prestashop.res.partner').to_openerp(
+        parent_id = self.binder_for('prestashop.res.partner').to_odoo(
             record['id_customer'], unwrap=True)
         if not record['vat_number'] and record.get('dni'):
             vat_number = record['dni'].replace('.', '').replace(
@@ -313,7 +311,7 @@ class AddressImportMapper(ImportMapper):
     def country(self, record):
         if record.get('id_country'):
             binder = self.binder_for('prestashop.res.country')
-            erp_country_id = binder.to_openerp(
+            erp_country_id = binder.to_odoo(
                 record['id_country'], unwrap=True)
             return {'country_id': erp_country_id}
         return {}
@@ -420,19 +418,19 @@ class SaleOrderMapper(ImportMapper):
 
     @mapping
     def partner_id(self, record):
-        partner_id = self.binder_for('prestashop.res.partner').to_openerp(
+        partner_id = self.binder_for('prestashop.res.partner').to_odoo(
             record['id_customer'], unwrap=True)
         return {'partner_id': partner_id}
 
     @mapping
     def partner_invoice_id(self, record):
-        address = self.binder_for('prestashop.address').to_openerp(
+        address = self.binder_for('prestashop.address').to_odoo(
             record['id_address_invoice'], unwrap=True)
         return {'partner_invoice_id': address}
 
     @mapping
     def partner_shipping_id(self, record):
-        shipping_id = self.binder_for('prestashop.address').to_openerp(
+        shipping_id = self.binder_for('prestashop.address').to_odoo(
             record['id_address_delivery'], unwrap=True)
         return {'partner_shipping_id': shipping_id}
 
@@ -460,7 +458,7 @@ class SaleOrderMapper(ImportMapper):
     def carrier_id(self, record):
         if record['id_carrier'] == '0':
             return {}
-        carrier_id = self.binder_for('prestashop.delivery.carrier').to_openerp(
+        carrier_id = self.binder_for('prestashop.delivery.carrier').to_odoo(
             record['id_carrier'], unwrap=True)
         return {'carrier_id': carrier_id}
 
@@ -469,27 +467,6 @@ class SaleOrderMapper(ImportMapper):
         tax = (float(record['total_paid_tax_incl']) -
                float(record['total_paid_tax_excl']))
         return {'total_amount_tax': tax}
-
-    def _after_mapping(self, result):
-        sess = self.session
-        backend = self.backend_record
-        order_line_ids = []
-        if 'prestashop_order_line_ids' in result:
-            order_line_ids = result['prestashop_order_line_ids']
-        taxes_included = backend.taxes_included
-        with self.session.change_context({'is_tax_included': taxes_included}):
-            result = sess.pool['sale.order']._convert_special_fields(
-                sess.cr,
-                sess.uid,
-                result,
-                order_line_ids,
-                sess.context
-            )
-        onchange = self.unit_for(SaleOrderOnChange)
-        order_line_ids = []
-        if 'prestashop_order_line_ids' in result:
-            order_line_ids = result['prestashop_order_line_ids']
-        return onchange.play(result, order_line_ids)
 
 
 @prestashop
@@ -511,7 +488,7 @@ class SaleOrderLineMapper(ImportMapper):
         product_id = True
         if 'product_attribute_id' not in record:
             template_id = self.binder_for(
-                'prestashop.product.template').to_openerp(
+                'prestashop.product.template').to_odoo(
                     record['product_id'], unwrap=True)
             product_id = self.env['product.product'].search([
                 ('product_tmpl_id', '=', template_id),
@@ -537,14 +514,14 @@ class SaleOrderLineMapper(ImportMapper):
         if int(record.get('product_attribute_id', 0)):
             combination_binder = self.binder_for(
                 'prestashop.product.combination')
-            product_id = combination_binder.to_openerp(
+            product_id = combination_binder.to_odoo(
                 record['product_attribute_id'],
                 unwrap=True,
                 browse=True
             )
         else:
             template_id = self.binder_for(
-                'prestashop.product.template').to_openerp(
+                'prestashop.product.template').to_odoo(
                     record['product_id'], unwrap=True)
             product_id = self.env['product.product'].search([
                 ('product_tmpl_id', '=', template_id),
@@ -557,15 +534,7 @@ class SaleOrderLineMapper(ImportMapper):
 
     def _find_tax(self, ps_tax_id):
         binder = self.binder_for('prestashop.account.tax')
-        # TODO: review
-        # openerp_id = binder.to_openerp(ps_tax_id, unwrap=True)
-        # tax = self.session.read(
-        #     'account.tax', openerp_id, ['price_include'])
-        # if self.backend_record.taxes_included and \
-        #         not tax['price_include']:
-        #     return tax['id']
-        # return openerp_id
-        oe_tax = binder.to_openerp(ps_tax_id, unwrap=True, browse=True)
+        oe_tax = binder.to_odoo(ps_tax_id, unwrap=True, browse=True)
         return oe_tax.id
 
     @mapping
@@ -576,9 +545,9 @@ class SaleOrderLineMapper(ImportMapper):
             taxes = [taxes]
         result = []
         for tax in taxes:
-            openerp_id = self._find_tax(tax['id'])
-            if openerp_id:
-                result.append(openerp_id)
+            odoo_id = self._find_tax(tax['id'])
+            if odoo_id:
+                result.append(odoo_id)
         if result:
             return {'tax_id': [(6, 0, result)]}
         return {}
@@ -670,18 +639,18 @@ class SupplierInfoMapper(ImportMapper):
     @mapping
     def name(self, record):
         binder = self.unit_for(Binder, 'prestashop.supplier')
-        partner_id = binder.to_openerp(record['id_supplier'], unwrap=True)
+        partner_id = binder.to_odoo(record['id_supplier'], unwrap=True)
         return {'name': partner_id}
 
     @mapping
     def product_id(self, record):
         if record['id_product_attribute'] != '0':
             binder = self.unit_for(Binder, 'prestashop.product.combination')
-            return {'product_id': binder.to_openerp(
+            return {'product_id': binder.to_odoo(
                 record['id_product_attribute'], unwrap=True)}
         binder = self.unit_for(Binder, 'prestashop.product.product')
         return {
-            'product_id': binder.to_openerp(record['id_product'], unwrap=True),
+            'product_id': binder.to_odoo(record['id_product'], unwrap=True),
         }
 
     @mapping
@@ -690,7 +659,7 @@ class SupplierInfoMapper(ImportMapper):
             Binder,
             'prestashop.product.template'
         )
-        erp_id = binder.to_openerp(record['id_product'], unwrap=True)
+        erp_id = binder.to_odoo(record['id_product'], unwrap=True)
         return {'product_tmpl_id': erp_id}
 
     @mapping
@@ -754,7 +723,7 @@ class MailMessageMapper(ImportMapper):
         binder = self.unit_for(
             Binder, 'prestashop.sale.order'
         )
-        order_id = binder.to_openerp(record['id_order'], unwrap=True)
+        order_id = binder.to_odoo(record['id_order'], unwrap=True)
         return {
             'model': 'sale.order',
             'res_id': order_id,
@@ -764,7 +733,7 @@ class MailMessageMapper(ImportMapper):
     def author_id(self, record):
         if record['id_customer'] != '0':
             binder = self.unit_for(Binder, 'prestashop.res.partner')
-            partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
+            partner_id = binder.to_odoo(record['id_customer'], unwrap=True)
             return {'author_id': partner_id}
         return {}
 

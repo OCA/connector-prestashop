@@ -3,7 +3,10 @@
 
 import datetime
 import mimetypes
-import html2text
+try:
+    import html2text
+except ImportError:
+    html2text = False
 
 from openerp import models
 from openerp.addons.product.product import check_ean
@@ -16,14 +19,18 @@ from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import import_record
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
-from prestapyt import PrestaShopWebServiceError
+try:
+    from prestapyt import PrestaShopWebServiceError
+    from prestapyt import PrestaShopWebServiceDict
+except ImportError:
+    PrestaShopWebServiceError = False
+    PrestaShopWebServiceDict = False
 
 from .unit.backend_adapter import GenericAdapter
 
 from .connector import get_environment
 from .backend import prestashop
 
-from prestapyt import PrestaShopWebServiceDict
 
 try:
     from xml.etree import cElementTree as ElementTree
@@ -63,7 +70,7 @@ class ProductCategoryMapper(ImportMapper):
             return {}
         return {
             'parent_id':
-                self.binder_for('prestashop.product.category').to_openerp(
+                self.binder_for('prestashop.product.category').to_odoo(
                     record['id_parent'], unwrap=True)}
 
     @mapping
@@ -92,13 +99,13 @@ class ProductImageMapper(ImportMapper):
     def owner_id(self, record):
         return {
             'owner_id': self.binder_for(
-                'prestashop.product.template').to_openerp(
+                'prestashop.product.template').to_odoo(
                 record['id_product'], unwrap=True)
         }
 
     @mapping
     def name(self, record):
-        product = self.binder_for('prestashop.product.template').to_openerp(
+        product = self.binder_for('prestashop.product.template').to_odoo(
             record['id_product'], unwrap=True, browse=True)
         return {'name': '%s_%s' % (product.name, record['id_image'])}
 
@@ -261,7 +268,7 @@ class TemplateMapper(ImportMapper):
         if not int(record['id_category_default']):
             return
         category_id = self.binder_for(
-            'prestashop.product.category').to_openerp(
+            'prestashop.product.category').to_odoo(
                 record['id_category_default'], unwrap=True)
 
         if category_id is not None:
@@ -274,7 +281,7 @@ class TemplateMapper(ImportMapper):
         if not categories:
             return
         category_id = self.binder_for(
-            'prestashop.product.category').to_openerp(
+            'prestashop.product.category').to_odoo(
                 categories[0]['id'], unwrap=True)
         return {'categ_id': category_id}
 
@@ -287,7 +294,7 @@ class TemplateMapper(ImportMapper):
         product_categories = []
         for category in categories:
             category_id = self.binder_for(
-                'prestashop.product.category').to_openerp(
+                'prestashop.product.category').to_odoo(
                     category['id'], unwrap=True)
             product_categories.append(category_id)
 
@@ -314,7 +321,7 @@ class TemplateMapper(ImportMapper):
     def _get_tax_ids(self, record):
         # if record['id_tax_rules_group'] == '0':
         #     return {}
-        tax_group = self.binder_for('prestashop.account.tax.group').to_openerp(
+        tax_group = self.binder_for('prestashop.account.tax.group').to_odoo(
             record['id_tax_rules_group'], unwrap=True, browse=True)
         return tax_group.tax_ids
 
@@ -379,7 +386,7 @@ class ProductCategoryAdapter(GenericAdapter):
 
 
 @prestashop
-class ProductInventoryExport(ExportSynchronizer):
+class ProductInventoryExporter(ExportSynchronizer):
     _model_name = ['prestashop.product.template']
 
     def get_filter(self, template):
@@ -452,9 +459,9 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
     def _get_template(self, record):
         if record['id_product_attribute'] == '0':
             binder = self.binder_for('prestashop.product.template')
-            return binder.to_openerp(record['id_product'], unwrap=True)
+            return binder.to_odoo(record['id_product'], unwrap=True)
         binder = self.binder_for('prestashop.product.combination')
-        return binder.to_openerp(record['id_product_attribute'], unwrap=True)
+        return binder.to_odoo(record['id_product_attribute'], unwrap=True)
 
     def run(self, record):
         self._check_dependency(
@@ -554,7 +561,7 @@ def export_inventory(session, model_name, record_id, fields=None):
     template = session.env[model_name].browse(record_id)
     backend_id = template.backend_id.id
     env = get_environment(session, model_name, backend_id)
-    inventory_exporter = env.get_connector_unit(ProductInventoryExport)
+    inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
     return inventory_exporter.run(record_id, fields)
 
 

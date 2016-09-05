@@ -8,40 +8,32 @@ _logger = logging.getLogger(__name__)
 
 class PrestashopDeliveryCarrier(models.Model):
     _name = 'prestashop.delivery.carrier'
-    _inherit = 'prestashop.binding'
-    _inherits = {'delivery.carrier': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'delivery.carrier': 'odoo_id'}
     _description = 'PrestaShop Carrier'
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='delivery.carrier',
         string='Delivery carrier',
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
+        oldname='openerp_id',
     )
     id_reference = fields.Integer(
-        string='Id reference',
-        help="In PrestaShop, carriers with the same 'id_reference' are "
-             "some copies from the first one id_reference (only the last "
-             "one copied is taken account ; and the only one which "
-             "synchronized with erp)"
+        string='Reference ID',
+        help="In PrestaShop, carriers can be copied with the same 'Reference "
+             "ID' (only the last copied carrier will be synchronized with the "
+             "ERP)"
     )
     name_ext = fields.Char(
-        string='External name',
+        string='Name in PrestaShop',
     )
     active_ext = fields.Boolean(
-        string='External active',
-        help="... in prestashop",
+        string='Active in PrestaShop',
     )
     export_tracking = fields.Boolean(
-        string='Export tracking numbers',
-        help=" ... in prestashop",
-        default=False
+        string='Export tracking numbers to PrestaShop',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class DeliveryCarrier(models.Model):
@@ -49,12 +41,11 @@ class DeliveryCarrier(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.delivery.carrier',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company',
         index=True,
-        required=True,
     )

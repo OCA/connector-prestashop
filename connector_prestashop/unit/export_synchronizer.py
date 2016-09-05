@@ -5,8 +5,7 @@ import logging
 from openerp import _, exceptions
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.addons.connector_prestashop.unit.mapper import \
-    TranslationPrestashopExportMapper
+from .mapper import TranslationPrestashopExportMapper
 from ..connector import get_environment
 
 

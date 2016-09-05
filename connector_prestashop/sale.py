@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from prestapyt import PrestaShopWebServiceDict
+try:
+    from prestapyt import PrestaShopWebServiceDict
+except ImportError:
+    PrestaShopWebServiceDict = False
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
@@ -80,7 +83,7 @@ class SaleOrderLineAdapter(GenericAdapter):
 
 
 @prestashop
-class SaleStateExport(ExportSynchronizer):
+class SaleStateExporter(ExportSynchronizer):
     _model_name = ['prestashop.sale.order']
 
     def run(self, prestashop_id, state):
@@ -126,7 +129,7 @@ def find_prestashop_state(session, sale_state, backend_id):
 @job
 def export_sale_state(session, record_id):
     inherit_model = 'prestashop.sale.order'
-    sale_ids = session.search(inherit_model, [('openerp_id', '=', record_id)])
+    sale_ids = session.search(inherit_model, [('odoo_id', '=', record_id)])
     if not isinstance(sale_ids, list):
         sale_ids = [sale_ids]
     for sale in session.browse(inherit_model, sale_ids):
@@ -135,5 +138,5 @@ def export_sale_state(session, record_id):
         if new_state is None:
             continue
         env = get_environment(session, inherit_model, backend_id)
-        sale_exporter = env.get_connector_unit(SaleStateExport)
+        sale_exporter = env.get_connector_unit(SaleStateExporter)
         sale_exporter.run(sale.prestashop_id, new_state)
