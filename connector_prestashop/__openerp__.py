@@ -10,7 +10,7 @@
     "version": "9.0.1.0.3",
     "license": "AGPL-3",
     "depends": [
-        "base_vat",
+        "account",
         "product",
         "product_multi_category",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
@@ -22,7 +22,6 @@
     ],
     "external_dependencies": {
         'python': [
-            "unidecode",
             "html2text",
             "prestapyt",
         ],

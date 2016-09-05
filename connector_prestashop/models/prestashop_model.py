@@ -337,12 +337,17 @@ class PrestashopBindingOdoo(models.AbstractModel):
     _inherit = 'prestashop.binding'
     _description = 'PrestaShop Binding with Odoo binding (abstract)'
 
+    def _get_selection(self):
+        records = self.env['ir.model'].search([])
+        return [(r.model, r.name) for r in records] + [('', '')]
+
     # 'odoo_id': odoo-side id must be re-declared in concrete model
     # for having a many2one instead of a reference field
     odoo_id = fields.Reference(
         required=True,
         ondelete='cascade',
         string='Odoo binding',
+        selection=_get_selection,
     )
 
     _sql_constraints = [

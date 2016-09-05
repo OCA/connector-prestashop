@@ -3,7 +3,10 @@
 
 import base64
 import logging
-from prestapyt import PrestaShopWebServiceDict
+try:
+    from prestapyt import PrestaShopWebServiceDict
+except ImportError:
+    PrestaShopWebServiceDict = False
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 from ..backend import prestashop
 

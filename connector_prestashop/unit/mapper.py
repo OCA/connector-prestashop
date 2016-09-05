@@ -13,8 +13,6 @@ from ..backend import prestashop
 from ..connector import add_checkpoint
 from .backend_adapter import GenericAdapter
 from .backend_adapter import PrestaShopCRUDAdapter
-from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
-    SaleOrderOnChange)
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import only_create, mapping
 import re
