@@ -150,12 +150,10 @@ class RefundMapper(ImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_odoo(record['id_order'])
+        sale_order_id = binder.to_odoo(record['id_order'], unwrap=True)
         sale_order = self.env['prestashop.sale.order'].browse(sale_order_id)
-
         if not sale_order.carrier_id:
             return None
-
         sale_order_line_ids = self.env['sale.order.line'].search([
             ('order_id', '=', sale_order_id),
             ('product_id', '=', sale_order.carrier_id.product_id.id),
