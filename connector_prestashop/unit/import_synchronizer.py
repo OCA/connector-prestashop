@@ -63,13 +63,12 @@ class PrestashopImportSynchronizer(Importer):
         return dict(self.session.context, connector_no_export=True, **kwargs)
 
     def _create(self, data):
-        """ Create the OpenERP record """
+        """ Create the Odoo record """
         # special check on data before import
         self._validate_data(data)
-        model = self.model.with_context(connector_no_export=True)
-        model = str(model).split('()')[0]
-        binding = self.env[model].with_context(
-            connector_no_export=True).create(data)
+        binding = self.model.with_context(
+            connector_no_export=True
+        ).create(data)
         _logger.debug(
             '%d created from prestashop %s', binding, self.prestashop_id)
         return binding
