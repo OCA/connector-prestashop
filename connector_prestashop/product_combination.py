@@ -155,16 +155,11 @@ class ProductCombinationMapper(ImportMapper):
         return result
 
     def main_template(self, record):
-        if hasattr(self, '_main_template'):
-            return self._main_template
         template_id = self.get_main_template_id(record)
-        self._main_template = self.env['prestashop.product.template'].browse(
-            template_id)
-        return self._main_template
+        return self.env['prestashop.product.template'].browse(template_id)
 
     def get_main_template_id(self, record):
-        template_binder = self.binder_for(
-            'prestashop.product.template')
+        template_binder = self.binder_for('prestashop.product.template')
         return template_binder.to_odoo(record['id_product'])
 
     def _get_option_value(self, record):
