@@ -143,7 +143,6 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession(
             self.env.cr, self.env.uid, context=self.env.context)
         for backend_record in self:
-            # from_string = fields.Datetime.from_string
             since_date = self._date_as_user_tz(
                 backend_record.import_partners_since)
             import_customers_since.delay(
@@ -319,7 +318,7 @@ class PrestashopBinding(models.AbstractModel):
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
-         'A record with same ID on PrestaShop already exists.'),
+         'An record with same ID already exists on PrestaShop.'),
     ]
 
     @api.multi
@@ -384,13 +383,6 @@ class PrestashopShop(models.Model):
         readonly=True,
         ondelete='cascade',
     )
-    # what is the exact purpose of this field?
-    default_category_id = fields.Many2one(
-        comodel_name='product.category',
-        string='Default Product Category',
-        help="The category set on products when?? TODO."
-        "\nOpenERP requires a main category on products for accounting."
-    )
     backend_id = fields.Many2one(
         compute='_compute_backend_id',
         comodel_name='prestashop.backend',
@@ -420,7 +412,7 @@ class PrestashopResLang(models.Model):
         comodel_name='res.lang',
         required=True,
         ondelete='cascade',
-        string='Lang',
+        string='Language',
     )
     active = fields.Boolean(
         string='Active in prestashop',
@@ -429,7 +421,7 @@ class PrestashopResLang(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -458,7 +450,7 @@ class PrestashopResCountry(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -487,7 +479,7 @@ class PrestashopResCurrency(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 
@@ -497,7 +489,7 @@ class ResCurrency(models.Model):
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.currency',
         inverse_name='openerp_id',
-        string='prestashop Bindings',
+        string='PrestaShop Bindings',
         readonly=True
     )
 
@@ -540,7 +532,7 @@ class PrestashopAccountTaxGroup(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
 

@@ -19,28 +19,24 @@ class PrestashopDeliveryCarrier(models.Model):
         ondelete='cascade'
     )
     id_reference = fields.Integer(
-        string='Id reference',
-        help="In PrestaShop, carriers with the same 'id_reference' are "
-             "some copies from the first one id_reference (only the last "
-             "one copied is taken account ; and the only one which "
-             "synchronized with erp)"
+        string='Reference ID',
+        help="In PrestaShop, carriers can be copied with the same 'Reference "
+             "ID' (only the last copied carrier will be synchronized with the "
+             "ERP)"
     )
     name_ext = fields.Char(
-        string='External name',
+        string='Name in PrestaShop',
     )
     active_ext = fields.Boolean(
-        string='External active',
-        help="... in prestashop",
+        string='Active in PrestaShop',
     )
     export_tracking = fields.Boolean(
-        string='Export tracking numbers',
-        help=" ... in prestashop",
-        default=False
+        string='Export tracking numbers to PrestaShop',
     )
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with same ID on PrestaShop already exists.'),
     ]
 
 
@@ -56,5 +52,4 @@ class DeliveryCarrier(models.Model):
         comodel_name='res.company',
         string='Company',
         index=True,
-        required=True,
     )
