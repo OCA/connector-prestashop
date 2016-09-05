@@ -10,7 +10,7 @@
     "version": "8.0.1.0.3",
     "license": "AGPL-3",
     "depends": [
-        "base_vat",
+        "account",
         "product",
         "product_m2mcategories",
         "connector_ecommerce",
@@ -21,7 +21,6 @@
     ],
     "external_dependencies": {
         'python': [
-            "unidecode",
             "html2text",
             "prestapyt",
         ],

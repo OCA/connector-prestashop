@@ -28,7 +28,10 @@ from .unit.backend_adapter import PrestaShopCRUDAdapter
 
 from .product import ProductInventoryExporter
 
-from prestapyt import PrestaShopWebServiceError
+try:
+    from prestapyt import PrestaShopWebServiceError
+except ImportError:
+    PrestaShopWebServiceError = False
 
 
 @prestashop
@@ -379,8 +382,8 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     @mapping
     def attribute_id(self, record):
         binder = self.binder_for('prestashop.product.combination.option')
-        attribute_id = binder.to_odoo(record['id_attribute_group'],
-                                         unwrap=True)
+        attribute_id = binder.to_odoo(
+            record['id_attribute_group'], unwrap=True)
         return {'attribute_id': attribute_id}
 
     @mapping

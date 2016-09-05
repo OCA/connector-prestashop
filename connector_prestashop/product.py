@@ -3,7 +3,10 @@
 
 import datetime
 import mimetypes
-import html2text
+try:
+    import html2text
+except ImportError:
+    html2text = False
 
 from openerp import models
 from openerp.addons.product.product import check_ean
@@ -16,14 +19,18 @@ from .unit.import_synchronizer import PrestashopImportSynchronizer
 from .unit.import_synchronizer import import_record
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
-from prestapyt import PrestaShopWebServiceError
+try:
+    from prestapyt import PrestaShopWebServiceError
+    from prestapyt import PrestaShopWebServiceDict
+except ImportError:
+    PrestaShopWebServiceError = False
+    PrestaShopWebServiceDict = False
 
 from .unit.backend_adapter import GenericAdapter
 
 from .connector import get_environment
 from .backend import prestashop
 
-from prestapyt import PrestaShopWebServiceDict
 
 try:
     from xml.etree import cElementTree as ElementTree
