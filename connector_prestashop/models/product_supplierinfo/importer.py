@@ -66,7 +66,7 @@ class SupplierImporter(PrestashopImporter):
             return super(SupplierImporter, self)._create(record)
 
     def _after_import(self, erp_id):
-        binder = self.binder_for(self._model_name)
+        binder = self.binder_for()
         ps_id = binder.to_backend(erp_id)
         import_batch(
             self.session,
@@ -101,25 +101,25 @@ class SupplierInfoMapper(ImportMapper):
     @mapping
     def name(self, record):
         binder = self.binder_for('prestashop.supplier')
-        partner_id = binder.to_openerp(record['id_supplier'], unwrap=True)
-        return {'name': partner_id}
+        partner = binder.to_openerp(record['id_supplier'], unwrap=True)
+        return {'name': partner.id}
 
     @mapping
     def product_id(self, record):
         if record['id_product_attribute'] != '0':
             binder = self.binder_for('prestashop.product.combination')
-            return {'product_id': binder.to_openerp(
-                record['id_product_attribute'], unwrap=True)}
-        binder = self.binder_for('prestashop.product.product')
-        return {
-            'product_id': binder.to_openerp(record['id_product'], unwrap=True),
-        }
+            product = binder.to_openerp(
+                record['id_product_attribute'],
+                unwrap=True,
+            )
+            return {'product_id': product.id}
+        return {}
 
     @mapping
     def product_tmpl_id(self, record):
         binder = self.binder_for('prestashop.product.template')
-        erp_id = binder.to_openerp(record['id_product'], unwrap=True)
-        return {'product_tmpl_id': erp_id}
+        template = binder.to_openerp(record['id_product'], unwrap=True)
+        return {'product_tmpl_id': template.id}
 
     @mapping
     def required(self, record):

@@ -23,18 +23,11 @@ class ProductImageMapper(ImportMapper):
     ]
 
     @mapping
-    def owner_id(self, record):
-        return {
-            'owner_id': self.binder_for(
-                'prestashop.product.template').to_openerp(
-                record['id_product'], unwrap=True)
-        }
-
-    @mapping
-    def name(self, record):
-        product = self.binder_for('prestashop.product.template').to_openerp(
-            record['id_product'], unwrap=True, browse=True)
-        return {'name': '%s_%s' % (product.name, record['id_image'])}
+    def from_template(self, record):
+        binder = self.binder_for('prestashop.product.template')
+        template = binder.to_openerp(record['id_product'], unwrap=True)
+        name = '%s_%s' % (template.name, record['id_image'])
+        return {'owner_id': template.id, 'name': name}
 
     @mapping
     def backend_id(self, record):

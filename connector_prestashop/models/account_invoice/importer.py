@@ -4,7 +4,7 @@
 from datetime import date
 from datetime import datetime
 
-from openerp import fields, netsvc
+from openerp import fields
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (
@@ -29,28 +29,26 @@ class RefundImporter(PrestashopImporter):
     def _import_dependencies(self):
         record = self.prestashop_record
         self._check_dependency(record['id_customer'], 'prestashop.res.partner')
+        # FIXME: context should be frozen
         self.session.context['so_refund_no_dep'] = True
         self._check_dependency(record['id_order'], 'prestashop.sale.order')
         del self.session.context['so_refund_no_dep']
 
-    def _after_import(self, refund_id):
+    def _after_import(self, binding):
+        # FIXME: context should be frozen
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id
-        refund = self.env['prestashop.refund'].browse(refund_id)
-        erp_id = refund.odoo_id.id
-        invoice_obj = self.env['account.invoice']
-        invoice_obj.button_reset_taxes([erp_id])
+        invoice = binding.openerp_id
+        # FIXME: this method does not exist
+        invoice.button_reset_taxes()
 
-        invoice = self.env['account.invoice'].browse(erp_id)
         if invoice.amount_total == float(self.prestashop_record['amount']):
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(self.session.uid, 'account.invoice',
-                                    erp_id, 'invoice_open', self.session.cr)
+            invoice.signal_workflow('invoice_open')
         else:
             add_checkpoint(
                 self.session,
                 'account.invoice',
-                erp_id,
+                invoice.id,
                 self.backend_record.id
             )
 
@@ -65,31 +63,20 @@ class RefundMapper(ImportMapper):
     ]
 
     @mapping
-    def journal_id(self, record):
-        journal_ids = self.env['account.journal'].search([
+    def journal(self, record):
+        journal = self.env['account.journal'].search([
             ('company_id', '=', self.backend_record.company_id.id),
             ('type', '=', 'sale_refund'),
-        ])
-        return {'journal_id': journal_ids[0]}
+        ], limit=1)
+        return {'journal_id': journal.id}
 
     def _get_order(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_odoo(record['id_order'])
-        return self.env['prestashop.sale.order'].browse(sale_order_id)
-
-    @mapping
-    def from_sale_order(self, record):
-        sale_order = self._get_order(record)
-        fiscal_position = None
-        if sale_order.fiscal_position:
-            fiscal_position = sale_order.fiscal_position.id
-        return {
-            'origin': sale_order['name'],
-            'fiscal_position': fiscal_position,
-        }
+        return binder.to_openerp(record['id_order'])
 
     @mapping
     def comment(self, record):
+        # FIXME: should be a translated text
         return {'comment': 'Montant dans prestashop : %s' % (record['amount'])}
 
     @mapping
@@ -102,12 +89,10 @@ class RefundMapper(ImportMapper):
         if isinstance(slip_details, dict):
             slip_details = [slip_details]
         lines = []
-        fpos_id = self.from_sale_order(record)['fiscal_position']
-        fpos = None
-        if fpos_id:
-            fpos = self.env['account.fiscal.position'].browse(fpos_id)
+        order_binding = self._get_order(record)
+        fpos = order_binding.fiscal_position_id
         shipping_line = self._invoice_line_shipping(record, fpos)
-        if shipping_line is not None:
+        if shipping_line:
             lines.append((0, 0, shipping_line))
         for slip_detail in slip_details:
             line = self._invoice_line(slip_detail, fpos)
@@ -116,7 +101,7 @@ class RefundMapper(ImportMapper):
 
     def _invoice_line_shipping(self, record, fpos):
         order_line = self._get_shipping_order_line(record)
-        if order_line is None:
+        if not order_line:
             return None
         if record['shipping_cost'] == '1':
             price_unit = order_line['price_unit']
@@ -150,18 +135,17 @@ class RefundMapper(ImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_odoo(record['id_order'], unwrap=True)
-        sale_order = self.env['prestashop.sale.order'].browse(sale_order_id)
+        sale_order = binder.to_openerp(record['id_order'], unwrap=True)
+
         if not sale_order.carrier_id:
             return None
         sale_order_line_ids = self.env['sale.order.line'].search([
-            ('order_id', '=', sale_order_id),
+            ('order_id', '=', sale_order.id),
             ('product_id', '=', sale_order.carrier_id.product_id.id),
         ])
         if not sale_order_line_ids:
             return None
-        return self.session.read(
-            'sale.order.line', sale_order_line_ids[0].id, [])
+        return sale_order_line_ids[0].read([])
 
     def _invoice_line(self, record, fpos):
         order_line = self._get_order_line(record['id_order_detail'])
@@ -178,7 +162,8 @@ class RefundMapper(ImportMapper):
                 tax_ids.append(tax.id)
             account_id = product.property_account_income.id
             if not account_id:
-                account_id = product.categ_id.property_account_income_categ.id
+                categ = product.categ_id
+                account_id = categ.property_account_income_categ_id.id
         if fpos and account_id:
             fpos_obj = self.session.pool['account.fiscal.position']
             account_id = fpos_obj.map_account(
@@ -230,14 +215,13 @@ class RefundMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner_id = binder.to_odoo(record['id_customer'], unwrap=True)
-        return {'partner_id': partner_id}
+        partner = binder.to_openerp(record['id_customer'], unwrap=True)
+        return {'partner_id': partner.id}
 
     @mapping
     def account_id(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order_id = binder.to_odoo(record['id_order'], unwrap=True)
-        sale_order = self.env['prestashop.sale.order'].browse(sale_order_id)
+        sale_order = binder.to_openerp(record['id_order'], unwrap=True)
         date_invoice = datetime.strptime(
             record['date_upd'], '%Y-%m-%d %H:%M:%S')
         if date(2014, 1, 1) > date_invoice.date() and \
@@ -245,9 +229,10 @@ class RefundMapper(ImportMapper):
                 sale_order.payment_method_id.account_id:
             return {'account_id': sale_order.payment_method_id.account_id.id}
         binder = self.binder_for('prestashop.res.partner')
-        partner_id = binder.to_odoo(record['id_customer'])
-        partner = self.env['prestashop.res.partner'].with_context(
-            company_id=self.backend_record.company_id.id).browse(partner_id)
+        partner = binder.to_openerp(record['id_customer'])
+        partner = partner.with_context(
+            company_id=self.backend_record.company_id.id,
+        )
         return {'account_id': partner.property_account_receivable.id}
 
     @mapping
