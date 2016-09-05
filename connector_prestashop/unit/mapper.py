@@ -470,27 +470,6 @@ class SaleOrderMapper(ImportMapper):
                float(record['total_paid_tax_excl']))
         return {'total_amount_tax': tax}
 
-    def _after_mapping(self, result):
-        sess = self.session
-        backend = self.backend_record
-        order_line_ids = []
-        if 'prestashop_order_line_ids' in result:
-            order_line_ids = result['prestashop_order_line_ids']
-        taxes_included = backend.taxes_included
-        with self.session.change_context({'is_tax_included': taxes_included}):
-            result = sess.pool['sale.order']._convert_special_fields(
-                sess.cr,
-                sess.uid,
-                result,
-                order_line_ids,
-                sess.context
-            )
-        onchange = self.unit_for(SaleOrderOnChange)
-        order_line_ids = []
-        if 'prestashop_order_line_ids' in result:
-            order_line_ids = result['prestashop_order_line_ids']
-        return onchange.play(result, order_line_ids)
-
 
 @prestashop
 class SaleOrderLineMapper(ImportMapper):
