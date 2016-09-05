@@ -28,7 +28,7 @@ class PrestashopProductImage(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with same ID already exists on PrestaShop.'),
     ]
 
 
@@ -69,26 +69,26 @@ class PrestashopProductTemplate(models.Model):
     always_available = fields.Boolean(
         string='Active',
         default=True,
-        help='if check, this object is always available')
+        help='If checked, this product is considered always available')
     quantity = fields.Float(
         string='Computed Quantity',
-        help="Last computed quantity to send on PrestaShop."
+        help="Last computed quantity to send to PrestaShop."
     )
     description_html = fields.Html(
         string='Description',
         translate=True,
-        help="Description html from PrestaShop",
+        help="HTML description from PrestaShop",
     )
     description_short_html = fields.Html(
         string='Short Description',
         translate=True,
     )
     date_add = fields.Datetime(
-        string='Created At (on PrestaShop)',
+        string='Created at (in PrestaShop)',
         readonly=True
     )
     date_upd = fields.Datetime(
-        string='Updated At (on PrestaShop)',
+        string='Updated at (in PrestaShop)',
         readonly=True
     )
     default_shop_id = fields.Many2one(
@@ -101,10 +101,10 @@ class PrestashopProductTemplate(models.Model):
         translate=True,
     )
     available_for_order = fields.Boolean(
-        string='Available For Order',
+        string='Available for Order Taking',
         default=True,
     )
-    show_price = fields.Boolean(string='Show Price', default=True)
+    show_price = fields.Boolean(string='Display Price', default=True)
     combinations_ids = fields.One2many(
         comodel_name='prestashop.product.combination',
         inverse_name='main_template_id',
@@ -115,7 +115,7 @@ class PrestashopProductTemplate(models.Model):
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
 
     @api.multi
@@ -190,10 +190,10 @@ class PrestashopGroupsPricelist(models.Model):
         comodel_name='product.pricelist',
         required=True,
         ondelete='cascade',
-        string='Openerp Pricelist',
+        string='Odoo Pricelist',
     )
 
     _sql_constraints = [
         ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
+         'An ERP record with the same ID already exists on PrestaShop.'),
     ]
