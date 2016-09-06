@@ -2,9 +2,15 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+from contextlib import contextmanager
+
+import psycopg2
+
+
 from openerp import _, exceptions
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Exporter
+from openerp.addons.connector.exception import RetryableJobError
 from ..connector import get_environment
 
 
@@ -44,6 +50,9 @@ class PrestashopBaseExporter(Exporter):
         result = self._run(*args, **kwargs)
 
         self.binder.bind(self.prestashop_id, self.binding)
+        # commit so we keep the external ID if several cascading exports
+        # are called and one of them fails
+        self.session.commit()
         return result
 
     def _run(self):
@@ -66,6 +75,115 @@ class PrestashopExporter(PrestashopBaseExporter):
         """ Return True if the export can be skipped """
         return False
 
+    @contextmanager
+    def _retry_unique_violation(self):
+        """ Context manager: catch Unique constraint error and retry the
+        job later.
+
+        When we execute several jobs workers concurrently, it happens
+        that 2 jobs are creating the same record at the same time (binding
+        record created by :meth:`_export_dependency`), resulting in:
+
+            IntegrityError: duplicate key value violates unique
+            constraint "prestashop_product_template_openerp_uniq"
+            DETAIL:  Key (backend_id, openerp_id)=(1, 4851) already exists.
+
+        In that case, we'll retry the import just later.
+
+        """
+        try:
+            yield
+        except psycopg2.IntegrityError as err:
+            if err.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                raise RetryableJobError(
+                    'A database error caused the failure of the job:\n'
+                    '%s\n\n'
+                    'Likely due to 2 concurrent jobs wanting to create '
+                    'the same record. The job will be retried later.' % err)
+            else:
+                raise
+
+    def _export_dependency(self, relation, binding_model,
+                           exporter_class=None,
+                           binding_field_name='prestashop_bind_ids'):
+        """
+        Export a dependency. The exporter class is a subclass of
+        ``PrestashopExporter``.  A more precise class can be defined.
+
+        When a binding does not exist yet, it is automatically created.
+
+        .. warning:: a commit is done at the end of the export of each
+                     dependency. The reason for that is that we pushed a record
+                     on the backend and we absolutely have to keep its ID.
+
+                     So you *must* take care to not modify the Odoo database
+                     except when writing back the external ID or eventual
+                     external data to keep on this side.
+
+                     You should call this method only in the beginning of the
+                     exporter synchronization (in `~._export_dependencies`)
+                     and do not write data which should be rollbacked in case
+                     of error.
+
+        :param relation: record to export if not already exported
+        :type relation: :py:class:`openerp.models.BaseModel`
+        :param binding_model: name of the binding model for the relation
+        :type binding_model: str | unicode
+        :param exporter_cls: :py:class:`openerp.addons.connector.\
+                                        connector.ConnectorUnit`
+                             class or parent class to use for the export.
+                             By default: PrestashopExporter
+        :type exporter_cls: :py:class:`openerp.addons.connector.\
+                                       connector.MetaConnectorUnit`
+        :param binding_field_name: name of the one2many towards the bindings
+                                   default is 'prestashop_bind_ids'
+        :type binding_field_name: str | unicode
+        """
+        if not relation:
+            return
+        if exporter_class is None:
+            exporter_class = PrestashopExporter
+        rel_binder = self.binder_for(binding_model)
+        # wrap is typically True if the relation is a 'product.product'
+        # record but the binding model is 'prestashop.product.product'
+        wrap = relation._model._name != binding_model
+
+        if wrap and hasattr(relation, binding_field_name):
+            domain = [('openerp_id', '=', relation.id),
+                      ('backend_id', '=', self.backend_record.id)]
+            model = self.env[binding_model].with_context(active_test=False)
+            binding = model.search(domain)
+            if binding:
+                binding.ensure_one()
+            else:
+                # we are working with a unwrapped record (e.g.
+                # product.template) and the binding does not exist yet.
+                # Example: I created a product.product and its binding
+                # prestashop.product.product, it is exported, but we need to
+                # create the binding for the template.
+                bind_values = {'backend_id': self.backend_record.id,
+                               'openerp_id': relation.id}
+                # If 2 jobs create it at the same time, retry
+                # one later. A unique constraint (backend_id,
+                # openerp_id) should exist on the binding model
+                with self._retry_unique_violation():
+                    model_c = self.env[binding_model].sudo().with_context(
+                        connector_no_export=True
+                    )
+                    binding = model_c.create(bind_values)
+                    # Eager commit to avoid having 2 jobs
+                    # exporting at the same time.
+                    self.session.commit()
+        else:
+            # If prestashop_bind_ids does not exist we are typically in a
+            # "direct" binding (the binding record is the same record).
+            # If wrap is True, relation is already a binding record.
+            binding = relation
+
+        if not rel_binder.to_backend(binding):
+            exporter = self.unit_for(exporter_class, binding_model)
+            exporter.run(binding.id)
+
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
         return
@@ -84,10 +202,6 @@ class PrestashopExporter(PrestashopBaseExporter):
         """
         return
 
-    def _after_export(self):
-        """Create records of dependants prestashop objects"""
-        return
-
     def _create(self, data):
         """ Create the PrestaShop record """
         return self.backend_adapter.create(data)
@@ -97,16 +211,56 @@ class PrestashopExporter(PrestashopBaseExporter):
         assert self.prestashop_id
         return self.backend_adapter.write(self.prestashop_id, data)
 
+    def _lock(self):
+        """ Lock the binding record.
+
+        Lock the binding record so we are sure that only one export
+        job is running for this record if concurrent jobs have to export the
+        same record.
+
+        When concurrent jobs try to export the same record, the first one
+        will lock and proceed, the others will fail to lock and will be
+        retried later.
+
+        This behavior works also when the export becomes multilevel
+        with :meth:`_export_dependencies`. Each level will set its own lock
+        on the binding record it has to export.
+
+        Uses "NO KEY UPDATE", to avoid FK accesses
+        being blocked in PSQL > 9.3.
+        """
+        sql = ("SELECT id FROM %s WHERE ID = %%s FOR NO KEY UPDATE NOWAIT" %
+               self.model._table)
+        try:
+            self.env.cr.execute(sql, (self.binding_id,),
+                                log_exceptions=False)
+        except psycopg2.OperationalError:
+            _logger.info('A concurrent job is already exporting the same '
+                         'record (%s with id %s). Job delayed later.',
+                         self.model._name, self.binding_id)
+            raise RetryableJobError(
+                'A concurrent job is already exporting the same record '
+                '(%s with id %s). The job will be retried later.' %
+                (self.model._name, self.binding_id))
+
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""
         assert self.binding_id
         assert self.binding
+
+        if not self.binding.exists():
+            return _('Record to export does no longer exist.')
 
         if self._has_to_skip():
             return
 
         # export the missing linked resources
         self._export_dependencies()
+
+        # prevent other jobs to export the same record
+        # will be released on commit (or rollback)
+        self._lock()
+
         map_record = self._map_data()
 
         if self.prestashop_id:
@@ -126,7 +280,7 @@ class PrestashopExporter(PrestashopBaseExporter):
             if self.prestashop_id == 0:
                 raise exceptions.Warning(
                     _("Record on PrestaShop have not been created"))
-            self._after_export()
+
         message = _('Record exported with ID %s on PrestaShop.')
         return message % self.prestashop_id
 

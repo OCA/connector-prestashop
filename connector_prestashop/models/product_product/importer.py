@@ -33,11 +33,11 @@ class ProductCombinationImporter(PrestashopImporter):
             BackendAdapter, 'prestashop.product.combination.option.value')
         for option_value in option_values:
             option_value = backend_adapter.read(option_value['id'])
-            self._check_dependency(
+            self._import_dependency(
                 option_value['id_attribute_group'],
                 'prestashop.product.combination.option',
             )
-            self._check_dependency(
+            self._import_dependency(
                 option_value['id'],
                 'prestashop.product.combination.option.value'
             )
@@ -260,7 +260,7 @@ class ProductCombinationOptionImporter(PrestashopImporter):
         if not isinstance(option_values, list):
             option_values = [option_values]
         for option_value in option_values:
-            self._check_dependency(
+            self._import_dependency(
                 option_value['id'],
                 'prestashop.product.combination.option.value'
             )
