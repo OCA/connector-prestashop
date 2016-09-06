@@ -6,7 +6,7 @@ from decimal import Decimal
 
 from prestapyt import PrestaShopWebServiceError
 
-from openerp import fields
+from openerp import _, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.exception import FailedJobError, NothingToDoJob
@@ -33,17 +33,18 @@ class PrestaShopSaleOrderOnChange(SaleOrderOnChange):
 class SaleImportRule(ConnectorUnit):
     _model_name = ['prestashop.sale.order']
 
-    def _rule_always(self, record, method):
+    def _rule_always(self, record, mode):
         """ Always import the order """
         return True
 
-    def _rule_never(self, record, method):
+    def _rule_never(self, record, mode):
         """ Never import the order """
-        raise NothingToDoJob('Orders with payment method %s '
+        # TODO: do never use NothingToDoJob
+        raise NothingToDoJob('Orders with payment modes %s '
                              'are never imported.' %
                              record['payment']['method'])
 
-    def _rule_paid(self, record, method):
+    def _rule_paid(self, record, mode):
         """ Import the order only if it has received a payment """
         if self._get_paid_amount(record) == 0.0:
             raise OrderImportRuleRetry('The order has not been paid.\n'
@@ -72,33 +73,35 @@ class SaleImportRule(ConnectorUnit):
 
     def check(self, record):
         """ Check whether the current sale order should be imported
-        or not. It will actually use the payment method configuration
+        or not. It will actually use the payment mode configuration
         and see if the chosen rule is fullfilled.
 
         :returns: True if the sale order should be imported
         :rtype: boolean
         """
-        session = self.session
-        payment_method = record['payment']
-        method = session.env['payment.method'].search(
-            [('name', '=', payment_method)])
-        if not method:
-            raise FailedJobError(
-                "The configuration is missing for the Payment Method '%s'.\n\n"
+        ps_payment_method = record['payment']
+        mode_binder = self.binder_for('account.payment.mode')
+        payment_mode = mode_binder.to_openerp(ps_payment_method)
+        if not payment_mode:
+            raise FailedJobError(_(
+                "The configuration is missing for the Payment Mode '%s'.\n\n"
                 "Resolution:\n"
-                "- Go to 'Sales > Configuration > Sales > Customer Payment "
-                "Method'\n"
-                "- Create a new Payment Method with name '%s'\n"
+                " - Use the automatic import in 'Connectors > PrestaShop "
+                "Backends', button 'Import payment modes', or:\n"
+                "\n"
+                "- Go to 'Invoicing > Configuration > Management "
+                "> Payment Modes'\n"
+                "- Create a new Payment Mode with name '%s'\n"
                 "-Eventually  link the Payment Method to an existing Workflow "
-                "Process or create a new one." % (payment_method,
-                                                  payment_method))
-        self._rule_global(record, method)
-        self._rules[method.import_rule](self, record, method)
+                "Process or create a new one.") % (ps_payment_method,
+                                                   ps_payment_method))
+        self._rule_global(record, payment_mode)
+        self._rules[payment_mode.import_rule](self, record, payment_mode)
 
-    def _rule_global(self, record, method):
+    def _rule_global(self, record, mode):
         """ Rule always executed, whichever is the selected rule """
         order_id = record['id']
-        max_days = method.days_before_cancel
+        max_days = mode.days_before_cancel
         if not max_days:
             return
         if self._get_paid_amount(record) != 0.0:
@@ -218,15 +221,11 @@ class SaleOrderMapper(ImportMapper):
 
     @mapping
     def payment(self, record):
-        method = self.env['payment.method'].search([
-            ('name', '=', record['payment']),
-            ('company_id', '=', self.backend_record.company_id.id),
-        ], limit=1)
-        assert method, ("Payment method '%s' has not been found ; "
-                        "you should create it manually (in Sales->"
-                        "Configuration->Sales->Payment Methods" %
-                        record['payment'])
-        return {'payment_method_id': method.id}
+        binder = self.binder_for('account.payment.mode')
+        mode = binder.to_openerp(record['payment'])
+        assert mode, ("import of error fail in SaleImportRule.check "
+                      "when the payment mode is missing")
+        return {'payment_method_id': mode.id}
 
     @mapping
     def carrier_id(self, record):
