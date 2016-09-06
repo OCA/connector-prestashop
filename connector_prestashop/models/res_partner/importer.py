@@ -65,13 +65,16 @@ class PartnerImportMapper(ImportMapper):
             self.backend_record.get_version_ps_key('group'), [])
         if not isinstance(groups, list):
             groups = [groups]
-        partner_categories = []
+        model_name = 'prestashop.res.partner.category'
+        partner_category_bindings = self.env[model_name].browse()
+        binder = self.binder_for(model_name)
         for group in groups:
-            binder = self.binder_for('prestashop.res.partner.category')
-            category = binder.to_openerp(group['id'])
-            partner_categories.append(category.id)
+            partner_category_bindings |= binder.to_openerp(group['id'])
 
-        return {'group_ids': [(6, 0, partner_categories)]}
+        result = {'group_ids': [(6, 0, partner_category_bindings.ids)],
+                  'category_id': [(4, b.openerp_id.id)
+                                  for b in partner_category_bindings]}
+        return result
 
     @mapping
     def backend_id(self, record):
@@ -90,16 +93,6 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def customer(self, record):
         return {'customer': True}
-
-    @mapping
-    def is_company(self, record):
-        # TODO: the comment below is no longer true, stop storing them
-        # as 'is_company=True'
-
-        # This is sad because we _have_ to have a company partner if we want to
-        # store multiple adresses... but... well... we have customers who want
-        # to be billed at home and be delivered at work... (...)...
-        return {'is_company': True}
 
     @mapping
     def company_id(self, record):
@@ -151,7 +144,7 @@ class AddressImportMapper(ImportMapper):
         ('postcode', 'zip'),
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
-        ('id_customer', 'prestashop_partner_id'),
+        (backend_to_m2o('id_customer'), 'prestashop_partner_id'),
     ]
 
     @mapping
@@ -162,58 +155,7 @@ class AddressImportMapper(ImportMapper):
     def parent_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
         parent = binder.to_openerp(record['id_customer'], unwrap=True)
-        if record['vat_number']:
-            vat_number = record['vat_number'].replace('.', '').replace(' ', '')
-            # TODO: move to custom module
-            regexp = re.compile('^[a-zA-Z]{2}')
-            if not regexp.match(vat_number):
-                vat_number = 'ES' + vat_number
-            if self._check_vat(vat_number):
-                # FIXME a mapper should never have side effect!
-                # the logic should be done in the importer
-                parent.write({'vat': vat_number})
-            else:
-                add_checkpoint(
-                    self.session,
-                    'res.partner',
-                    parent.id,
-                    self.backend_record.id
-                )
         return {'parent_id': parent.id}
-
-    # TODO move to custom localization module
-    @mapping
-    def dni(self, record):
-        binder = self.binder_for('prestashop.res.partner')
-        parent = binder.to_openerp(record['id_customer'], unwrap=True)
-        if not record['vat_number'] and record.get('dni'):
-            vat_number = record['dni'].replace('.', '').replace(
-                ' ', '').replace('-', '')
-            regexp = re.compile('^[a-zA-Z]{2}')
-            if not regexp.match(vat_number):
-                vat_number = 'ES' + vat_number
-            # FIXME a mapper should never have side effect!
-            # the logic should be done in the importer
-            if self._check_vat(vat_number):
-                parent.write({'vat': vat_number})
-            else:
-                add_checkpoint(
-                    self.session,
-                    'res.partner',
-                    parent.id,
-                    self.backend_record.id
-                )
-        return {'parent_id': parent.id}
-
-    def _check_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:]
-        return self.session.pool['res.partner'].simple_vat_check(
-            self.session.cr,
-            self.session.uid,
-            vat_country,
-            vat_number,
-            context=self.session.context
-        )
 
     @mapping
     def name(self, record):
@@ -250,6 +192,35 @@ class AddressImportMapper(ImportMapper):
 @prestashop
 class AddressImporter(PrestashopImporter):
     _model_name = 'prestashop.address'
+
+    def _check_vat(self, vat):
+        vat_country, vat_number = vat[:2].lower(), vat[2:]
+        partner_model = self.env['res.partner']
+        return partner_model.simple_vat_check(vat_country, vat_number)
+
+    def _after_import(self, binding):
+        record = self.prestashop_record
+        vat_number = None
+        if record['vat_number']:
+            vat_number = record['vat_number'].replace('.', '').replace(' ', '')
+        # TODO move to custom localization module
+        elif not record['vat_number'] and record.get('dni'):
+            vat_number = record['dni'].replace('.', '').replace(
+                ' ', '').replace('-', '')
+        if vat_number:
+            # TODO: move to custom module
+            regexp = re.compile('^[a-zA-Z]{2}')
+            if not regexp.match(vat_number):
+                vat_number = 'ES' + vat_number
+            if self._check_vat(vat_number):
+                binding.parent_id.write({'vat': vat_number})
+            else:
+                add_checkpoint(
+                    self.session,
+                    'res.partner',
+                    binding.parent_id.id,
+                    self.backend_record.id
+                )
 
 
 @prestashop

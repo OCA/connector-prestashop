@@ -3,7 +3,7 @@
 
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.importer import (
-    PrestashopImporter,
+    TranslatableRecordImporter,
     import_record,
     DelayedBatchImporter,
 )
@@ -30,7 +30,7 @@ class PartnerCategoryImportMapper(ImportMapper):
 
 
 @prestashop
-class PartnerCategoryImporter(PrestashopImporter):
+class PartnerCategoryImporter(TranslatableRecordImporter):
     """ Import one translatable record """
     _model_name = [
         'prestashop.res.partner.category',

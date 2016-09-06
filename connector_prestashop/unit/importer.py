@@ -78,7 +78,7 @@ class PrestashopImporter(Importer):
         data"""
         return
 
-    def _after_import(self, erp_record):
+    def _after_import(self, binding):
         """ Hook called at the end of the import """
         return
 
