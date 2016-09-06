@@ -22,29 +22,26 @@ class SaleStateExporter(Exporter):
         self.backend_adapter.update_sale_state(prestashop_id, datas)
 
 
-def find_prestashop_state(session, sale_state, backend_id):
-    state_list_model = 'sale.order.state.list'
-    state_list_ids = session.search(
-        state_list_model,
+def find_prestashop_state(session, sale_state, backend):
+    state_list_model = session.env['sale.order.state.list']
+    state_lists = state_list_model.search(
         [('name', '=', sale_state)]
     )
-    for state_list in session.browse(state_list_model, state_list_ids):
-        if state_list.prestashop_state_id.backend_id.id == backend_id:
+    for state_list in state_lists:
+        if state_list.prestashop_state_id.backend_id == backend:
             return state_list.prestashop_state_id.prestashop_id
     return None
 
 
 @job
-def export_sale_state(session, record_id):
-    inherit_model = 'prestashop.sale.order'
-    sale_ids = session.search(inherit_model, [('openerp_id', '=', record_id)])
-    if not isinstance(sale_ids, list):
-        sale_ids = [sale_ids]
-    for sale in session.browse(inherit_model, sale_ids):
-        backend_id = sale.backend_id.id
-        new_state = find_prestashop_state(session, sale.state, backend_id)
-        if new_state is None:
+def export_sale_state(session, model_name, record_id):
+    binding_model = session.env[model_name]
+    sales = binding_model.search([('openerp_id', '=', record_id)])
+    for sale in sales:
+        backend = sale.backend_id
+        new_state = find_prestashop_state(session, sale.state, backend)
+        if not new_state:
             continue
-        env = get_environment(session, inherit_model, backend_id)
+        env = get_environment(session, binding_model._name, backend.id)
         sale_exporter = env.get_connector_unit(SaleStateExporter)
         sale_exporter.run(sale.prestashop_id, new_state)
