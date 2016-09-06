@@ -206,11 +206,12 @@ class PrestashopBackend(models.Model):
         return True
 
     @api.multi
-    def import_payment_methods(self):
+    def import_payment_modes(self):
         session = ConnectorSession(
             self.env.cr, self.env.uid, context=self.env.context)
         for backend_record in self:
-            import_batch.delay(session, 'payment.method', backend_record.id)
+            import_batch.delay(session, 'account.payment.mode',
+                               backend_record.id)
         return True
 
     @api.multi
@@ -251,6 +252,7 @@ class PrestashopBackend(models.Model):
             key = keys_conversion[self.version][key]
         return key
 
+    # TODO: new API
     def _scheduler_launch(self, cr, uid, callback, domain=None,
                           context=None):
         if domain is None:
@@ -282,9 +284,9 @@ class PrestashopBackend(models.Model):
         self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
                                context=context)
 
-    def _scheduler_import_payment_methods(self, cr, uid, domain=None,
-                                          context=None):
-        self._scheduler_launch(cr, uid, self.import_payment_methods,
+    def _scheduler_import_payment_modes(self, cr, uid, domain=None,
+                                        context=None):
+        self._scheduler_launch(cr, uid, self.import_payment_modes,
                                domain=domain, context=context)
 
         self._scheduler_launch(cr, uid, self.import_refunds,
@@ -299,8 +301,6 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession(cr, uid, context=context)
         import_record(session, model_name, backend_id, ext_id)
         return True
-
-
 
 
 class PrestashopShopGroup(models.Model):
