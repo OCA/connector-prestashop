@@ -346,7 +346,8 @@ class ProductInventoryImporter(PrestashopImporter):
             }
             template_qty = self.env['stock.change.product.qty'].create(vals)
             template_qty.with_context(
-                active_id=product.id
+                active_id=product.id,
+                connector_no_export=True,
             ).change_product_qty()
 
 
