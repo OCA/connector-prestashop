@@ -109,6 +109,7 @@ class SaleImportRule(ConnectorUnit):
         fmt = '%Y-%m-%d %H:%M:%S'
         order_date = datetime.strptime(record['date_add'], fmt)
         if order_date + timedelta(days=max_days) < datetime.now():
+            # TODO NothingToDoJob is unsafe, remove
             raise NothingToDoJob('Import of the order %s canceled '
                                  'because it has not been paid since %d '
                                  'days' % (order_id, max_days))
@@ -213,6 +214,7 @@ class SaleOrderMapper(ImportMapper):
 
     @mapping
     def pricelist_id(self, record):
+        # TODO: configure on the backend
         return {'pricelist_id': 1}
 
     @mapping
@@ -241,27 +243,9 @@ class SaleOrderMapper(ImportMapper):
                float(record['total_paid_tax_excl']))
         return {'total_amount_tax': tax}
 
-    # TODO: never called!, use 'finalize'
-    def _after_mapping(self, result):
-        sess = self.session
-        backend = self.backend_record
-        order_line_ids = []
-        if 'prestashop_order_line_ids' in result:
-            order_line_ids = result['prestashop_order_line_ids']
-        taxes_included = backend.taxes_included
-        with self.session.change_context({'is_tax_included': taxes_included}):
-            result = sess.pool['sale.order']._convert_special_fields(
-                sess.cr,
-                sess.uid,
-                result,
-                order_line_ids,
-                sess.context
-            )
+    def finalize(self, map_record, values):
         onchange = self.unit_for(SaleOrderOnChange)
-        order_line_ids = []
-        if 'prestashop_order_line_ids' in result:
-            order_line_ids = result['prestashop_order_line_ids']
-        return onchange.play(result, order_line_ids)
+        return onchange.play(values, values['prestashop_order_line_ids'])
 
 
 @prestashop
@@ -297,23 +281,24 @@ class SaleOrderImporter(PrestashopImporter):
                 # TODO check this silent error
                 pass
 
-    def _after_import(self, erp_id):
-        erp_order = erp_id
-        shipping_total = erp_order.total_shipping_tax_included \
-            if self.backend_record.taxes_included \
-            else erp_order.total_shipping_tax_excluded
+    def _add_shipping_line(self, binding):
+        shipping_total = (binding.total_shipping_tax_included
+                          if self.backend_record.taxes_included
+                          else binding.total_shipping_tax_excluded)
         if shipping_total:
             sale_line_obj = self.session.env['sale.order.line']
             sale_line_obj.create({
-                'order_id': erp_order.openerp_id.id,
-                'product_id':
-                    erp_order.openerp_id.carrier_id.product_id.id,
+                'order_id': binding.openerp_id.id,
+                'product_id': binding.openerp_id.carrier_id.product_id.id,
                 'price_unit':  shipping_total,
                 'is_delivery': True
             })
-        erp_order.openerp_id.recompute()
-        return True
+        binding.openerp_id.recompute()
 
+    def _after_import(self, binding):
+        self._add_shipping_line(binding)
+
+    # TODO: this method is unreachable
     def _check_refunds(self, id_customer, id_order):
         backend_adapter = self.unit_for(
             GenericAdapter, 'prestashop.refund'
@@ -470,38 +455,6 @@ class SaleOrderLineDiscountImporter(ImportMapper):
     @mapping
     def prestashop_id(self, record):
         return {'prestashop_id': record['id']}
-
-
-@prestashop
-class SaleOrderLineImporter(PrestashopImporter):
-    _model_name = [
-        'prestashop.sale.order.line',
-    ]
-
-    def run(self, prestashop_record, order_id):
-        """ Run the synchronization
-
-        :param prestashop_record: record from PrestaShop sale order
-        """
-        self.prestashop_record = prestashop_record
-
-        skip = self._has_to_skip()
-        if skip:
-            return skip
-
-        # import the missing linked resources
-        self._import_dependencies()
-
-        # FIXME: the mapper API is the old one
-        self.mapper.convert(self.prestashop_record)
-        record = self.mapper.data
-        record['order_id'] = order_id
-
-        # special check on data before import
-        self._validate_data(record)
-
-        erp_id = self._create(record)
-        self._after_import(erp_id)
 
 
 @job(default_channel='root.prestashop')
