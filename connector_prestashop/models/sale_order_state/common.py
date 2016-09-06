@@ -50,16 +50,13 @@ class SaleOrderStateList(models.Model):
 
     name = fields.Selection(
         [
-            ('draft', 'Draft Quotation'),
+            ('draft', 'Quotation'),
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('invoice_except', 'Invoice Exception'),
+            ('sale', 'Sale Order'),
             ('done', 'Done')
         ],
-        string='OpenERP State',
+        string='Odoo Sales State',
         required=True,
     )
     prestashop_state_id = fields.Many2one(
