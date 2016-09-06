@@ -43,7 +43,11 @@ class PrestaShopLocation(object):
     def __init__(self, location, webservice_key):
         self.location = location
         self.webservice_key = webservice_key
-        self.api_url = '%s/api' % location
+        if not location.endswith('/api'):
+            location = location + '/api'
+        if not location.startswith('http'):
+            location = 'http://' + location
+        self.api_url = location
 
 
 class PrestaShopCRUDAdapter(CRUDAdapter):
@@ -59,6 +63,10 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
         self.prestashop = PrestaShopLocation(
             self.backend_record.location.encode(),
             self.backend_record.webservice_key
+        )
+        self.client = PrestaShopWebServiceDict(
+            self.prestashop.api_url,
+            self.prestashop.webservice_key,
         )
 
     def search(self, filters=None):
@@ -93,10 +101,6 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     _model_name = None
     _prestashop_model = None
 
-    def connect(self):
-        return PrestaShopWebServiceDict(self.prestashop.api_url,
-                                        self.prestashop.webservice_key)
-
     def search(self, filters=None):
         """ Search records according to some criterias
         and returns a list of ids
@@ -106,8 +110,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         _logger.debug(
             'method search, model %s, filters %s',
             self._prestashop_model, unicode(filters))
-        api = self.connect()
-        return api.search(self._prestashop_model, filters)
+        return self.client.search(self._prestashop_model, filters)
 
     def read(self, id, attributes=None):
         """ Returns the information of a record
@@ -117,9 +120,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         _logger.debug(
             'method read, model %s id %s, attributes %s',
             self._prestashop_model, str(id), unicode(attributes))
-        # TODO rename attributes in something better
-        api = self.connect()
-        res = api.get(self._prestashop_model, id, options=attributes)
+        res = self.client.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
         return res[first_key]
 
@@ -128,26 +129,22 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         _logger.debug(
             'method create, model %s, attributes %s',
             self._prestashop_model, unicode(attributes))
-        api = self.connect()
-        return api.add(self._prestashop_model, {
+        return self.client.add(self._prestashop_model, {
             self._export_node_name: attributes
         })
 
     def write(self, id, attributes=None):
         """ Update records on the external system """
-        api = self.connect()
         attributes['id'] = id
         _logger.debug(
             'method write, model %s, attributes %s',
             self._prestashop_model,
             unicode(attributes)
         )
-        return api.edit(
+        return self.client.edit(
             self._prestashop_model, id, {self._export_node_name: attributes})
 
     def delete(self, resource, ids):
-        _logger.debug(
-            'method delete, model %s, ids %s', resource, unicode(ids))
-        api = self.connect()
+        _logger.info('method delete, model %s, ids %s', resource, unicode(ids))
         # Delete a record(s) on the external system
-        return api.delete(resource, ids)
+        return self.client.delete(resource, ids)
