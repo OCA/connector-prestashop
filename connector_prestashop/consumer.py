@@ -30,22 +30,20 @@ def prestashop_product_stock_updated(
                                priority=20)
 
 
-# TODO improve me, don't try to export state if the sale order does not come
-#      from a prestashop connector
-# TODO improve me, make the search on the sale order backend only
 @on_record_write(model_names='sale.order')
 def prestashop_sale_state_modified(session, model_name, record_id,
                                    fields=None):
     if 'state' in fields:
-        sale = session.browse(model_name, record_id)
+        sale = session.env[model_name].browse(record_id)
+        if not sale.prestashop_bind_ids:
+            return
         # a quick test to see if it is worth trying to export sale state
-        states = session.search(
-            'sale.order.state.list',
+        states = session.env['sale.order.state.list'].search(
             [('name', '=', sale.state)]
         )
         if states:
-            export_sale_state.delay(session, record_id, priority=20)
-    return True
+            export_sale_state.delay(session, 'prestashop.sale.order',
+                                    record_id, priority=20)
 
 
 @on_tracking_number_added
