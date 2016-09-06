@@ -125,15 +125,12 @@ class ProductInventoryAdapter(GenericAdapter):
     _export_node_name = 'stock_available'
 
     def get(self, options=None):
-        api = self.connect()
-        return api.get(self._prestashop_model, options=options)
+        return self.client.get(self._prestashop_model, options=options)
 
     def export_quantity(self, filters, quantity):
         self.export_quantity_url(
-            self.backend_record.location,
-            self.backend_record.webservice_key,
             filters,
-            quantity
+            quantity,
         )
 
         shops = self.env['prestashop.shop'].search([
@@ -141,23 +138,22 @@ class ProductInventoryAdapter(GenericAdapter):
             ('default_url', '!=', False),
         ])
         for shop in shops:
-            self.export_quantity_url(
-                '%s/api' % shop.default_url,
-                self.backend_record.webservice_key,
-                filters,
-                quantity
-            )
+            url = '%s/api' % shop.default_url
+            key = self.backend_record.webservice_key
+            client = PrestaShopWebServiceDict(url, key)
+            self.export_quantity_url(filters, quantity, client=client)
 
-    def export_quantity_url(self, url, key, filters, quantity):
-        api = PrestaShopWebServiceDict(url, key)
-        response = api.search(self._prestashop_model, filters)
+    def export_quantity_url(self, filters, quantity, client=None):
+        if client is None:
+            client = self.client
+        response = client.search(self._prestashop_model, filters)
         for stock_id in response:
-            res = api.get(self._prestashop_model, stock_id)
+            res = client.get(self._prestashop_model, stock_id)
             first_key = res.keys()[0]
             stock = res[first_key]
             stock['quantity'] = int(quantity)
             try:
-                api.edit(self._prestashop_model, stock['id'], {
+                client.edit(self._prestashop_model, stock['id'], {
                     self._export_node_name: stock
                 })
             # TODO: investigate the silent errors

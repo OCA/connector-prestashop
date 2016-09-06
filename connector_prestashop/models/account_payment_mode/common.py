@@ -13,8 +13,7 @@ class PaymentModeAdapter(GenericAdapter):
     _export_node_name = 'order'
 
     def search(self, filters=None):
-        api = self.connect()
-        res = api.get(self._prestashop_model, options=filters)
+        res = self.client.get(self._prestashop_model, options=filters)
         methods = res[self._prestashop_model][self._export_node_name]
         if isinstance(methods, dict):
             return [methods]
