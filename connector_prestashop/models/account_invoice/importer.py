@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import date
-from datetime import datetime
-
 from openerp import fields
 
 from openerp.addons.connector.queue.job import job
@@ -28,11 +25,10 @@ class RefundImporter(PrestashopImporter):
 
     def _import_dependencies(self):
         record = self.prestashop_record
-        self._check_dependency(record['id_customer'], 'prestashop.res.partner')
-        # FIXME: context should be frozen
-        self.session.context['so_refund_no_dep'] = True
-        self._check_dependency(record['id_order'], 'prestashop.sale.order')
-        del self.session.context['so_refund_no_dep']
+        self._import_dependency(
+            record['id_customer'], 'prestashop.res.partner'
+        )
+        self._import_dependency(record['id_order'], 'prestashop.sale.order')
 
     def _after_import(self, binding):
         # FIXME: context should be frozen
