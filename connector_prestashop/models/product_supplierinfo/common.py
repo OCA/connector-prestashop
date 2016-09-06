@@ -73,9 +73,9 @@ class SupplierImageAdapter(PrestaShopCRUDAdapter):
     _prestashop_image_model = 'suppliers'
 
     def read(self, supplier_id, options=None):
-        api = PrestaShopWebServiceImage(self.prestashop.api_url,
-                                        self.prestashop.webservice_key)
-        res = api.get_image(
+        client = PrestaShopWebServiceImage(self.prestashop.api_url,
+                                           self.prestashop.webservice_key)
+        res = client.get_image(
             self._prestashop_image_model,
             supplier_id,
             options=options

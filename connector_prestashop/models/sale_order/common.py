@@ -159,8 +159,7 @@ class SaleOrderAdapter(GenericAdapter):
     _export_node_name = 'order'
 
     def update_sale_state(self, prestashop_id, datas):
-        api = self.connect()
-        return api.add('order_histories', datas)
+        return self.client.add('order_histories', datas)
 
     def search(self, filters=None):
         result = super(SaleOrderAdapter, self).search(filters=filters)
