@@ -222,13 +222,6 @@ class RefundMapper(ImportMapper):
     @mapping
     def account_id(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order = binder.to_openerp(record['id_order'], unwrap=True)
-        date_invoice = datetime.strptime(
-            record['date_upd'], '%Y-%m-%d %H:%M:%S')
-        if date(2014, 1, 1) > date_invoice.date() and \
-            sale_order.payment_method_id and\
-                sale_order.payment_method_id.account_id:
-            return {'account_id': sale_order.payment_method_id.account_id.id}
         binder = self.binder_for('prestashop.res.partner')
         partner = binder.to_openerp(record['id_customer'])
         partner = partner.with_context(

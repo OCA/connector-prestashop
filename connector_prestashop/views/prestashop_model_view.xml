@@ -90,9 +90,9 @@
                         </group>
                         <group>
                             <div>
-                                <label string="Import payment methods" class="oe_inline"/>
+                                <label string="Import payment modes" class="oe_inline"/>
                             </div>
-                            <button name="import_payment_methods"
+                            <button name="import_payment_modes"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"/>
