@@ -21,7 +21,7 @@ INVENTORY_FIELDS = ('quantity',)
 ])
 def prestashop_product_stock_updated(
         session, model_name, record_id, fields=None):
-    if session.context.get('connector_no_export'):
+    if session.env.context.get('connector_no_export'):
         return
     inventory_fields = list(set(fields).intersection(INVENTORY_FIELDS))
     if inventory_fields:
@@ -54,7 +54,7 @@ def delay_export_tracking_number(session, model_name, record_id):
     """
     # browse on stock.picking because we cant read on stock.picking.out
     # buggy virtual models... Anyway the ID is the same
-    picking = session.browse('stock.picking', record_id)
+    picking = session.env['stock.picking'].browse(record_id)
     for binding in picking.sale_id.prestashop_bind_ids:
         export_tracking_number.delay(session,
                                      binding._model._name,
