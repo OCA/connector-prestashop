@@ -7,7 +7,7 @@
 
 {
     "name": "PrestaShop-Odoo connector",
-    "version": "8.0.1.0.3",
+    "version": "8.0.1.0.4",
     "license": "AGPL-3",
     "depends": [
         "account",
@@ -32,7 +32,7 @@
               "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
-    'data': [
+    "data": [
         'data/cron.xml',
         'data/product_decimal_precision.xml',
         'views/prestashop_model_view.xml',
@@ -40,11 +40,11 @@
         'views/product_category_view.xml',
         'views/image_view.xml',
         'views/delivery_view.xml',
-        'views/connector_prestashop_menu.xml',
         'views/partner_view.xml',
         'views/sale_view.xml',
-        'views/setting_view.xml',
         'views/account_view.xml',
+        'views/stock_view.xml',
+        'views/connector_prestashop_menu.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
         'data/ecommerce_data.xml',

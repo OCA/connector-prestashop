@@ -92,5 +92,6 @@
             <field name="function" eval="'_scheduler_import_payment_methods'"/>
             <field name="args" eval="'()'"/>
         </record>
+
     </data>
 </openerp>

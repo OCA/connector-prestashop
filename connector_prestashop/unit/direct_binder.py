@@ -49,7 +49,7 @@ class DirectBinder(ConnectorUnit):
         # Loop on all PS IDs
         for ps_id in ps_ids:
             # Check if the PS ID is already mapped to an OE ID
-            erp_id = binder.to_odoo(ps_id)
+            erp_id = binder.to_odoo(ps_id).id
             if erp_id:
                 # Do nothing for the PS IDs that are already mapped
                 _logger.debug(
@@ -124,61 +124,3 @@ class CarrierDirectBinder(DirectBinder):
     _model_name = 'prestashop.delivery.carrier'
     _erp_field = 'name'
     _ps_field = 'name_ext'
-
-
-@prestashop
-class LangDirectBinder(DirectBinder):
-    _model_name = 'prestashop.res.lang'
-    _erp_field = 'code'
-    _ps_field = 'language_code'
-    _copy_fields = [
-        ('active', 'active'),
-    ]
-
-    def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        if len(erp_val) >= 2 and len(ps_val) >= 2 and \
-                erp_val[0:2].lower() == ps_val[0:2].lower():
-            return True
-        return False
-
-
-@prestashop
-class CountryDirectBinder(DirectBinder):
-    _model_name = 'prestashop.res.country'
-    _erp_field = 'code'
-    _ps_field = 'iso_code'
-
-    def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        if len(erp_val) >= 2 and len(ps_val) >= 2 and \
-                erp_val[0:2].lower() == ps_val[0:2].lower():
-            return True
-        return False
-
-
-@prestashop
-class ResCurrencyDirectBinder(DirectBinder):
-    _model_name = 'prestashop.res.currency'
-    _erp_field = 'name'
-    _ps_field = 'iso_code'
-
-    def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        if len(erp_val) == 3 and len(ps_val) == 3 and \
-                erp_val[0:3].lower() == ps_val[0:3].lower():
-            return True
-        return False
-
-
-@prestashop
-class AccountTaxDirectBinder(DirectBinder):
-    _model_name = 'prestashop.account.tax'
-    _erp_field = 'amount'
-    _ps_field = 'rate'
-
-    def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        taxes_inclusion_test = self.backend_record.taxes_included and \
-            erp_dict['price_include'] or not erp_dict['price_include']
-        if taxes_inclusion_test and erp_dict['type_tax_use'] == 'sale' and \
-                abs(erp_val*100 - float(ps_val)) < 0.01 and \
-                self.backend_record.company_id.id == erp_dict['company_id'][0]:
-            return True
-        return False
