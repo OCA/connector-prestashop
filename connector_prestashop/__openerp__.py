@@ -45,6 +45,7 @@
         'views/sale_view.xml',
         'views/setting_view.xml',
         'views/account_view.xml',
+        'views/stock_view.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
         'data/ecommerce_data.xml',

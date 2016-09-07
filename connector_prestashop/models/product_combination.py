@@ -109,10 +109,9 @@ class PrestashopProductCombination(models.Model):
 
     @api.multi
     def recompute_prestashop_qty(self):
-        for product in self:
-            product.write({
-                'quantity': product.qty_available
-            })
+        for product_binding in self:
+            if product_binding.quantity != product_binding.qty_available:
+                product_binding.quantity = product_binding.qty_available
         return True
 
     @api.model
