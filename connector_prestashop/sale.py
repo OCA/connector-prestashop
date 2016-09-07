@@ -103,24 +103,20 @@ class SaleStateExporter(ExportSynchronizer):
 def prestashop_sale_state_modified(session, model_name, record_id,
                                    fields=None):
     if 'state' in fields:
-        sale = session.browse(model_name, record_id)
+        sale = session.env[model_name].browse(record_id)
         # a quick test to see if it is worth trying to export sale state
-        states = session.search(
-            'sale.order.state.list',
-            [('name', '=', sale.state)]
-        )
+        states = session.env['sale.order.state.list'].search([
+            ('name', '=', sale.state),
+        ])
         if states:
             export_sale_state.delay(session, record_id, priority=20)
     return True
 
 
 def find_prestashop_state(session, sale_state, backend_id):
-    state_list_model = 'sale.order.state.list'
-    state_list_ids = session.search(
-        state_list_model,
-        [('name', '=', sale_state)]
-    )
-    for state_list in session.browse(state_list_model, state_list_ids):
+    state_list_obj = session.env['sale.order.state.list']
+    states_list = state_list_obj.search([('name', '=', sale_state)])
+    for state_list in states_list:
         if state_list.prestashop_state_id.backend_id.id == backend_id:
             return state_list.prestashop_state_id.prestashop_id
     return None
@@ -129,14 +125,12 @@ def find_prestashop_state(session, sale_state, backend_id):
 @job
 def export_sale_state(session, record_id):
     inherit_model = 'prestashop.sale.order'
-    sale_ids = session.search(inherit_model, [('odoo_id', '=', record_id)])
-    if not isinstance(sale_ids, list):
-        sale_ids = [sale_ids]
-    for sale in session.browse(inherit_model, sale_ids):
+    sales = session.env[inherit_model].search([('odoo_id', '=', record_id)])
+    for sale in sales:
         backend_id = sale.backend_id.id
         new_state = find_prestashop_state(session, sale.state, backend_id)
         if new_state is None:
             continue
         env = get_environment(session, inherit_model, backend_id)
-        sale_exporter = env.get_connector_unit(SaleStateExporter)
+        sale_exporter = env.unit_for(SaleStateExporter)
         sale_exporter.run(sale.prestashop_id, new_state)
