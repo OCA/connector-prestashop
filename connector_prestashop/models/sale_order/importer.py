@@ -39,7 +39,6 @@ class SaleImportRule(ConnectorUnit):
 
     def _rule_never(self, record, mode):
         """ Never import the order """
-        # TODO: do never use NothingToDoJob
         raise NothingToDoJob('Orders with payment modes %s '
                              'are never imported.' %
                              record['payment']['method'])
@@ -109,7 +108,6 @@ class SaleImportRule(ConnectorUnit):
         fmt = '%Y-%m-%d %H:%M:%S'
         order_date = datetime.strptime(record['date_add'], fmt)
         if order_date + timedelta(days=max_days) < datetime.now():
-            # TODO NothingToDoJob is unsafe, remove
             raise NothingToDoJob('Import of the order %s canceled '
                                  'because it has not been paid since %d '
                                  'days' % (order_id, max_days))
@@ -316,7 +314,13 @@ class SaleOrderImporter(PrestashopImporter):
         if self._get_binding():
             return True
         rules = self.unit_for(SaleImportRule)
-        return rules.check(self.prestashop_record)
+        try:
+            return rules.check(self.prestashop_record)
+        except NothingToDoJob as err:
+            # we don't let the NothingToDoJob exception let go out, because if
+            # we are in a cascaded import, it would stop the whole
+            # synchronization and set the whole job to done
+            return err.message
 
 
 @prestashop

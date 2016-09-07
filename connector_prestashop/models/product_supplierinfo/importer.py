@@ -3,7 +3,7 @@
 from prestapyt import PrestaShopWebServiceError
 
 from openerp import fields
-from openerp.addons.connector.exception import NothingToDoJob
+from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 
@@ -146,9 +146,7 @@ class SupplierInfoImporter(PrestashopImporter):
                     'prestashop.product.combination'
                 )
         except PrestaShopWebServiceError:
-            # TODO: raise another exception, this one would set
-            # the job as 'done' silently
-            raise NothingToDoJob('Error fetching a dependency')
+            raise FailedJobError('Error fetching a dependency')
 
 
 @prestashop
