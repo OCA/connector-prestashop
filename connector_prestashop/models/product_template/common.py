@@ -99,16 +99,19 @@ class PrestashopProductTemplate(models.Model):
 
     @api.multi
     def recompute_prestashop_qty(self):
-        for product in self:
-            new_qty = product._prestashop_qty()
-            product.write({
-                'quantity': new_qty,
-            })
+        for product_binding in self:
+            new_qty = product_binding._prestashop_qty()
+            if product_binding.quantity != new_qty:
+                product_binding.quantity = new_qty
         return True
 
     def _prestashop_qty(self):
-        location_id = self.backend_id.warehouse_id.lot_stock_id.id
-        return self.with_context(location=location_id).qty_available
+        locations = self.env['stock.location'].search([
+            ('id', 'child_of', self.backend_id.warehouse_id.lot_stock_id.id),
+            ('prestashop_synchronized', '=', True),
+            ('usage', '=', 'internal'),
+        ])
+        return self.with_context(location=locations.ids).qty_available
 
 
 @prestashop
