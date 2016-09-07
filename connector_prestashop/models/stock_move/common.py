@@ -1,7 +1,23 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, models
+from openerp import api, fields, models
+
+
+class StockLocation(models.Model):
+    _inherit = 'stock.location'
+    
+    prestashop_synchronized = fields.Boolean(
+       string='Sync with PrestaShop',
+       help='Check this option to synchronize this location with PrestaShop')
+    
+    @api.model
+    def get_prestashop_stock_locations(self):
+        prestashop_locations = self.search([
+           ('prestashop_synchronized', '=', True),
+           ('usage', '=', 'internal'),
+        ])
+        return prestashop_locations
 
 
 class StockMove(models.Model):
@@ -12,36 +28,23 @@ class StockMove(models.Model):
         for move in self:
             move.product_id.update_prestashop_qty()
 
-    @api.model
-    def get_stock_locations(self):
-        warehouses = self.env['stock.warehouse'].search([])
-        locations = warehouses.mapped('lot_stock_id.child_ids').filtered(
-            lambda x: x.usage == 'internal') + warehouses.mapped(
-            'lot_stock_id')
-        return locations
-
-    @api.model
-    def create(self, vals):
-        stock_move = super(StockMove, self).create(vals)
-        locations = self.get_stock_locations()
-        if vals['location_id'] in locations.ids:
-            stock_move.update_prestashop_quantities()
-        return stock_move
+    def _recompute(self):
+        locations = self.location_id.get_prestashop_stock_locations()
+        self.filtered(
+            lambda x: (x.location_dest_id.id in locations.ids or
+                       x.location_id.id in locations.ids)
+        ).update_prestashop_quantities()
 
     @api.multi
     def action_cancel(self):
         res = super(StockMove, self).action_cancel()
-        locations = self.get_stock_locations()
-        for move in self:
-            if move.location_id.id in locations.ids:
-                move.update_prestashop_quantities()
+        if res:
+            self._recompute()
         return res
 
     @api.multi
     def action_done(self):
         res = super(StockMove, self).action_done()
-        locations = self.get_stock_locations()
-        for move in self:
-            if move.location_dest_id.id in locations.ids:
-                move.update_prestashop_quantities()
+        if res:
+            self._recompute()
         return res
