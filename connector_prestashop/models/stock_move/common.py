@@ -28,12 +28,13 @@ class StockMove(models.Model):
         for move in self:
             move.product_id.update_prestashop_qty()
 
+    @api.multi
     def _recompute(self):
-        locations = self.location_id.get_prestashop_stock_locations()
-        self.filtered(
-            lambda x: (x.location_dest_id.id in locations.ids or
-                       x.location_id.id in locations.ids)
-        ).update_prestashop_quantities()
+        locations = self.env['stock.location'].get_prestashop_stock_locations()
+        for stock_move in self:
+            if stock_move.location_dest_id.id in locations.ids or \
+                            stock_move.location_id.id in locations.ids:
+                stock_move.update_prestashop_quantities()
 
     @api.multi
     def action_cancel(self):
