@@ -114,6 +114,20 @@ class ProductProduct(models.Model):
             raise ValidationError(_('Error! Only one variant can be default '
                                     'and one is required as default'))
 
+    @api.multi
+    def open_product_template(self):
+        """
+        Utility method used to add an "Open Product Template"
+        button in product.product views
+        """
+        self.ensure_one()
+        return {'type': 'ir.actions.act_window',
+                'res_model': 'product.template',
+                'view_mode': 'form',
+                'res_id': self.product_tmpl_id.id,
+                'target': 'new',
+                'flags': {'form': {'action_buttons': True}}}
+
 
 class PrestashopProductCombination(models.Model):
     _name = 'prestashop.product.combination'
