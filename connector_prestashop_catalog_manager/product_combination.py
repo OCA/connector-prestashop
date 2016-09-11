@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
+
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import mapping
 
-from openerp.addons.connector_prestashop.unit.export_synchronizer import (
+from openerp.addons.connector_prestashop.unit.exporter import (
     TranslationPrestashopExporter,
     export_record
 )
 from openerp.addons.connector_prestashop.unit.mapper import \
     TranslationPrestashopExportMapper
-from openerp.addons.connector_prestashop.unit.delete_synchronizer import (
+from openerp.addons.connector_prestashop.unit.deleter import (
     export_delete_record
 )
 from openerp.addons.connector_prestashop.backend import prestashop
-from openerp.addons.connector_prestashop.product import INVENTORY_FIELDS
+from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
 from openerp import models, fields
 from collections import OrderedDict
-import logging
 
 EXCLUDE_FIELDS = ['list_price', 'margin']
 
@@ -62,14 +63,23 @@ def product_product_write(session, model_name, record_id, fields):
         return
 
     if fields:
-        for binding in record.prestashop_bind_ids:
-            export_record.delay(
-                session,
-                'prestashop.product.combination',
-                binding.id,
-                fields,
-                priority=20
+        # If user modify any variant we delay template export but before
+        # check if the template have a queued job
+        template = record.mapped('prestashop_bind_ids.product_tmpl_id')
+        for binding in template.prestashop_bind_ids:
+            # check if there is other queued job
+            func = "openerp.addons.connector_prestashop.unit.exporter." \
+                   "export_record('prestashop.product.template', %s," \
+                   % binding.id
+            jobs = session.env['queue.job'].sudo().search(
+                [('func_string', 'like', "%s%%" % func),
+                 ('state', '!=', 'done')]
             )
+            if not jobs:
+                export_record.delay(
+                    session, 'prestashop.product.template', binding.id,
+                    fields,
+                )
 
 
 def prestashop_product_combination_unlink(session, record_id):

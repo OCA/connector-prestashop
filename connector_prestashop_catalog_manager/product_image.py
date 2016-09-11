@@ -3,13 +3,13 @@
 
 import os.path
 from openerp.addons.connector.event import on_record_write, on_record_unlink
-from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import mapping
 
-from openerp.addons.connector_prestashop.unit.export_synchronizer import (
+from openerp.addons.connector_prestashop.unit.binder import PrestashopBinder
+from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter,
     export_record)
-from openerp.addons.connector_prestashop.unit.delete_synchronizer import (
+from openerp.addons.connector_prestashop.unit.deleter import (
     export_delete_record
 )
 
@@ -48,21 +48,23 @@ def product_image_unlink(session, model_name, record_id):
         if product.exists():
             product_template = product.prestashop_bind_ids.filtered(
                 lambda x: x.backend_id == binding.backend_id)
-            env_product = get_environment(
-                session, 'prestashop.product.template', binding.backend_id.id)
-            binder_product = env_product.get_connector_unit(Binder)
-            external_product_id = binder_product.to_backend(
-                product_template.id)
-
-            env = get_environment(
-                session, binding._name, binding.backend_id.id)
-            binder = env.get_connector_unit(Binder)
-            external_id = binder.to_backend(binding.id)
-            resource = 'images/products/%s' % (external_product_id)
-            if external_id:
-                export_delete_record.delay(
-                    session, binding._name, binding.backend_id.id,
-                    external_id, resource)
+            if product_template:
+                env_product = get_environment(
+                    session, 'prestashop.product.template',
+                    binding.backend_id.id)
+                binder_product = env_product.get_connector_unit(
+                    PrestashopBinder)
+                external_product_id = binder_product.to_backend(
+                    product_template.id)
+                env = get_environment(
+                    session, binding._name, binding.backend_id.id)
+                binder = env.get_connector_unit(PrestashopBinder)
+                external_id = binder.to_backend(binding.id)
+                resource = 'images/products/%s' % (external_product_id)
+                if external_id:
+                    export_delete_record.delay(
+                        session, binding._name, binding.backend_id.id,
+                        external_id, resource)
 
 
 class ProductImage(models.Model):
