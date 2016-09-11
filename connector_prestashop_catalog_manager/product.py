@@ -10,14 +10,13 @@ from openerp.addons.connector_prestashop.unit.import_synchronizer import \
     TemplateRecordImport
 
 from openerp.addons.connector_prestashop.unit.export_synchronizer import (
-    PrestashopExporter,
     export_record,
     TranslationPrestashopExporter
 )
 from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
-
+from openerp.addons.connector_prestashop.consumer import delay_export
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.product import INVENTORY_FIELDS
 
@@ -47,9 +46,7 @@ def get_slug(name):
 
 @on_record_create(model_names='prestashop.product.template')
 def prestashop_product_template_create(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    export_record.delay(session, model_name, record_id, priority=20)
+    delay_export(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.template')
@@ -120,52 +117,6 @@ class PrestashopProductTemplate(models.Model):
         help='Minimal Sale quantity',
         default=1,
     )
-
-
-@prestashop
-class ProductCategoryExporter(PrestashopExporter):
-    _model_name = 'prestashop.product.category'
-
-    def _create(self, record):
-        res = super(ProductCategoryExporter, self)._create(record)
-        return res['prestashop']['category']['id']
-
-
-@prestashop
-class ProductCategoryExportMapper(TranslationPrestashopExportMapper):
-    _model_name = 'prestashop.product.category'
-
-    direct = [
-        ('sequence', 'position'),
-        ('description', 'description'),
-        ('meta_description', 'meta_description'),
-        ('meta_keywords', 'meta_keywords'),
-        ('meta_title', 'meta_title'),
-        ('default_shop_id', 'id_shop_default'),
-        ('active', 'active'),
-        ('position', 'position')
-    ]
-
-    @mapping
-    def translatable_fields(self, record):
-        translatable_fields = [
-            ('name', 'name'),
-            ('link_rewrite', 'link_rewrite')
-        ]
-        trans = TranslationPrestashopExporter(self.environment)
-        translated_fields = self.convert_languages(
-            trans.get_record_by_lang(record.id), translatable_fields)
-        return translated_fields
-
-    @mapping
-    def parent_id(self, record):
-        if not record['parent_id']:
-            return {'id_parent': 2}
-        category_binder = self.binder_for(
-            'prestashop.product.category')
-        ext_categ_id = category_binder.to_backend(
-            record['parent_id']['id'], wrap=True)
-        return {'id_parent': ext_categ_id}
 
 
 @prestashop
@@ -306,11 +257,13 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                         'odoo_id': product.id,
                         'main_template_id': self.binding_id,
                     })
-                export_record.delay(
-                    self.session,
-                    'prestashop.product.combination',
-                    combination_ext_id.id, priority=50,
-                    eta=timedelta(seconds=20))
+            # If a template has been modified then always update PrestaShop
+            # combinations
+            export_record.delay(
+                self.session,
+                'prestashop.product.combination',
+                combination_ext_id.id, priority=50,
+                eta=timedelta(seconds=20))
 
     def _not_in_variant_images(self, image):
         images = []
@@ -432,11 +385,6 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
             ('description_short_html', 'description_short'),
             ('description_html', 'description'),
         ]
-
-        if not record.description_short_html:
-            translatable_fields.append(("description_sale", "description"))
-        if not record.description_html:
-            translatable_fields.append(('description', 'description_short'))
 
         trans = TranslationPrestashopExporter(self.connector_env)
         translated_fields = self.convert_languages(
