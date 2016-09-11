@@ -4,11 +4,8 @@
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector_prestashop.unit.export_synchronizer import (
     export_record,
-    TranslationPrestashopExporter,
-)
-from openerp.addons.connector_prestashop.unit.export_synchronizer import (
-    export_record,
     PrestashopExporter,
+    TranslationPrestashopExporter,
 )
 from openerp.addons.connector_prestashop.unit.mapper import \
     TranslationPrestashopExportMapper
