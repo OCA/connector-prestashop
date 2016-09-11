@@ -94,8 +94,8 @@ class ExportMultipleProducts(models.TransientModel):
     def _check_variants(self, product):
         if len(product.product_variant_ids) == 1:
             return True
-        if (len(product.product_variant_ids) > 1
-                and not product.attribute_line_ids):
+        if (len(product.product_variant_ids) > 1 and
+                not product.attribute_line_ids):
             check_count = reduce(
                 lambda x, y: x * y, map(lambda x: len(x.value_ids),
                                         product.attribute_line_ids))
