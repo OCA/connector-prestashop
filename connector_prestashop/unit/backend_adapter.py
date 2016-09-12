@@ -3,13 +3,46 @@
 
 import base64
 import logging
-try:
-    from prestapyt import PrestaShopWebServiceDict
-except ImportError:
-    PrestaShopWebServiceDict = False
+from contextlib import contextmanager
+from requests.exceptions import HTTPError, RequestException, ConnectionError
+from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
+from openerp import exceptions, _
+from openerp.addons.connector.exception import NetworkRetryableError
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 
 _logger = logging.getLogger(__name__)
+
+
+@contextmanager
+def api_handle_errors(message=''):
+    """ Handle error when calling the API
+
+    It is meant to be used when a model does a direct
+    call to a job using the API (not using job.delay()).
+    Avoid to have unhandled errors raising on front of the user,
+    instead, they are presented as :class:`openerp.exceptions.UserError`.
+    """
+    if message:
+        message = message + u'\n\n'
+    try:
+        yield
+    except NetworkRetryableError as err:
+        raise exceptions.UserError(
+            _(u'{}Network Error:\n\n{}').format(message, err)
+        )
+    except (HTTPError, RequestException, ConnectionError) as err:
+        raise exceptions.UserError(
+            _(u'{}API / Network Error:\n\n{}').format(message, err)
+        )
+    except PrestaShopWebServiceError as err:
+        raise exceptions.UserError(
+            _(u'{}Authentication Error:\n\n{}').format(message, err)
+        )
+    except PrestaShopWebServiceError as err:
+        raise exceptions.UserError(
+            _(u'{}Error during synchronization with '
+                'PrestaShop:\n\n{}').format(message, unicode(err))
+        )
 
 
 class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
@@ -95,6 +128,10 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
+    def head(self):
+        """ HEAD """
+        raise NotImplementedError
+
 
 class GenericAdapter(PrestaShopCRUDAdapter):
 
@@ -145,6 +182,11 @@ class GenericAdapter(PrestaShopCRUDAdapter):
             self._prestashop_model, id, {self._export_node_name: attributes})
 
     def delete(self, resource, ids):
-        _logger.info('method delete, model %s, ids %s', resource, unicode(ids))
+        _logger.debug('method delete, model %s, ids %s',
+                      resource, unicode(ids))
         # Delete a record(s) on the external system
         return self.client.delete(resource, ids)
+
+    def head(self, id=None):
+        """ HEAD """
+        return self.client.head(self._prestashop_model, resource_id=id)

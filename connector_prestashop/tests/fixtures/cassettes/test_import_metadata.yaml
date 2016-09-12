@@ -1,0 +1,133 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+    method: GET
+    uri: http://172.24.0.3/api/shop_groups?limit=0%2C1000
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA1WOQQ6CMBBF95yimb0dCiZaQmHnCXRtiFRowLZpq+X4VhYqy8n/7/2p2+Uxk5d0
+        XhktgNEciNQ30ys9CLicT7sjtE1WWyd96PxoLEmA9tUyKz0JGEOwFWKMkcaSGjcg45zjmkLiPsR1
+        cOZp/eYiqk9rQNZiNTp5/7rYoaDFnua0xM4q/DMgA0wW3Erx91uTvQH5YHiK0AAAAA==
+    headers:
+      access-time: ['1473689287']
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['163']
+      content-sha1: [0f090b5d7569487fd9bef70d0b65d1a4abb856ce]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Mon, 12 Sep 2016 14:08:07 GMT']
+      execution-time: ['0.002']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.6]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkaUchF1H7aEIIbjIeFpLrDnR6iZhQShuIcgX12%2BlpVip%2FTLnzvJ%2Fo7yaJaslhwSu5JbF2YLoU4bsY%2BmOKWc965Q%3D000078;
+          expires=Sun, 02-Oct-2016 14:08:07 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+    method: GET
+    uri: http://172.24.0.3/api/shop_groups/1
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA3WQyw6CMBBF1/IV2L1U4kZMqTEav0BXhpCGjtAALWmL8PkWfJAQ3d5z7k1myL6v
+        K/8B2gglYxQGa+SDzBQXMo/R9XJebdGeeqTRYCwzhWp8V5Bm11dCljEqrG12GHddF3SbQOkch1EU
+        4ZEi1xsaaa5V21BvQQSnZHk7ng6Xwy1MEkqwS1wuWQ0TOcGdtZUd+UicYQqmIc1aY1UNenLXozWj
+        X19p/k9+oa/pmln523whZ7LMigfML3injnOowAKfr3xibxicvkHw9FPqPQHrXtjpiAEAAA==
+    headers:
+      access-time: ['1473689287']
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['223']
+      content-sha1: [642ab8bb0e0a7a5e3ab2c97cdfd2f17b6a373774]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Mon, 12 Sep 2016 14:08:07 GMT']
+      execution-time: ['0.002']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.6]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkaUchF1H7aEIIbjIeFpLrDnR6iZhQShuIcgX12%2BlpVip%2FTLnzvJ%2Fo7yaJaslhwSu5JbF2YLoU4bsY%2BmOKWc965Q%3D000078;
+          expires=Sun, 02-Oct-2016 14:08:07 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+    method: GET
+    uri: http://172.24.0.3/api/shops?limit=0%2C1000
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA0XOTQ7CIBAF4H1PQWYvU1oTpSntzhPoARqLhViBAJEeXyT+rGbx8r03/bg9VvKU
+        PmhrBDBaA5HmamdtFgGX82l3hHGoeudliFNQ1pEMTOi2VZu7ABWj6xBTSjS11PoFGeccSwrZvUX4
+        XKLnvACkhJ3y8vbz7NDQZk9r2uLkNBaFDDBL/Fbg/4ehegEhBuOluAAAAA==
+    headers:
+      access-time: ['1473689287']
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['157']
+      content-sha1: [cfe7ba62d5e3d94c7e193f34b99da1531a46bee8]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Mon, 12 Sep 2016 14:08:07 GMT']
+      execution-time: ['0.002']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.6]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkaUchF1H7aEIIbjIeFpLrDnR6iZhQShuIcgX12%2BlpVip%2FTLnzvJ%2Fo7yaJaslhwSu5JbF2YLoU4bsY%2BmOKWc965Q%3D000078;
+          expires=Sun, 02-Oct-2016 14:08:07 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+    method: GET
+    uri: http://172.24.0.3/api/shops/1
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA22QUW+DIBSFn+evsLwPxC7ZNEjTbNnzknVPTdMQvVNSCwZY7f79ENtq0r2e850D
+        97DV+djGJzBWalUgihMUgyp1JVVdoK/N++MLWvGIdQasE7bRXewDyubnVqpDgRrnupyQvu9xv8Ta
+        1IRmWUaCi3xuSPDogcmKs8X29W29WW/pbscZ8UrQ9wOyr43+8dVDLG8MfN+a6XOK0yec4CURnSQT
+        bAlF952ztkt9KRzU2vxObHplb9ZIugaO8E/lqHtGlE6e7oiL6v0KWnAwuzQJwFX2hBLzFz7CqJ/+
+        x4ELZsTIuBkj0+Y8+gNJ/cqpqAEAAA==
+    headers:
+      access-time: ['1473689287']
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['250']
+      content-sha1: [ee0abcbb07dbe84a8f2c50e593702622a3ffd57e]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Mon, 12 Sep 2016 14:08:07 GMT']
+      execution-time: ['0.002']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.6]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkaUchF1H7aEIIbjIeFpLrDnR6iZhQShuIcgX12%2BlpVip%2FTLnzvJ%2Fo7yaJaslhwSu5JbF2YLoU4bsY%2BmOKWc965Q%3D000078;
+          expires=Sun, 02-Oct-2016 14:08:07 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1
