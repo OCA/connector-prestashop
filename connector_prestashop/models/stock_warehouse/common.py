@@ -7,7 +7,7 @@ from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
 
 
-class StockLocation(models.Model):
+class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     prestashop_bind_ids = fields.One2many(
