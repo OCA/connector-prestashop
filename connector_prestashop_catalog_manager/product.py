@@ -384,11 +384,6 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
             ('description_html', 'description'),
         ]
 
-        if not record.description_short_html:
-            translatable_fields.append(("description_sale", "description"))
-        if not record.description_html:
-            translatable_fields.append(('description', 'description_short'))
-
         trans = TranslationPrestashopExporter(self.connector_env)
         translated_fields = self.convert_languages(
             trans.get_record_by_lang(record.id), translatable_fields)
