@@ -35,7 +35,9 @@ class PrestashopProductCategory(models.Model):
         string='Updated At (on PrestaShop)',
         readonly=True
     )
-    description = fields.Char(string='Description', translate=True)
+    description = fields.Html(
+        string='Description', translate=True,
+        help='HTML description from PrestaShop')
     link_rewrite = fields.Char(string='Friendly URL', translate=True)
     meta_description = fields.Char('Meta description', translate=True)
     meta_keywords = fields.Char(string='Meta keywords', translate=True)
