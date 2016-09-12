@@ -33,6 +33,9 @@
               "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
+    'demo': [
+        'demo/backend.xml',
+    ],
     'data': [
         'data/cron.xml',
         'data/product_decimal_precision.xml',
