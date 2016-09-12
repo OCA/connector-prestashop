@@ -100,7 +100,7 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def pricelist(self, record):
-        binder = self.unit_for(Binder, 'prestashop.groups.pricelist')
+        binder = self.binder_for('prestashop.groups.pricelist')
         pricelist_id = binder.to_odoo(
             record['id_default_group'], unwrap=True)
         if not pricelist_id:
@@ -638,27 +638,23 @@ class SupplierInfoMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        binder = self.unit_for(Binder, 'prestashop.supplier')
+        binder = self.binder_for('prestashop.supplier')
         partner_id = binder.to_odoo(record['id_supplier'], unwrap=True)
         return {'name': partner_id}
 
     @mapping
     def product_id(self, record):
+        binder = self.binder_for('prestashop.product.combination')
         if record['id_product_attribute'] != '0':
-            binder = self.unit_for(Binder, 'prestashop.product.combination')
             return {'product_id': binder.to_odoo(
                 record['id_product_attribute'], unwrap=True)}
-        binder = self.unit_for(Binder, 'prestashop.product.product')
         return {
             'product_id': binder.to_odoo(record['id_product'], unwrap=True),
         }
 
     @mapping
     def product_tmpl_id(self, record):
-        binder = self.unit_for(
-            Binder,
-            'prestashop.product.template'
-        )
+        binder = self.binder_for('prestashop.product.template')
         erp_id = binder.to_odoo(record['id_product'], unwrap=True)
         return {'product_tmpl_id': erp_id}
 
@@ -720,9 +716,7 @@ class MailMessageMapper(ImportMapper):
 
     @mapping
     def object_ref(self, record):
-        binder = self.unit_for(
-            Binder, 'prestashop.sale.order'
-        )
+        binder = self.binder_for('prestashop.sale.order')
         order_id = binder.to_odoo(record['id_order'], unwrap=True)
         return {
             'model': 'sale.order',
@@ -732,7 +726,7 @@ class MailMessageMapper(ImportMapper):
     @mapping
     def author_id(self, record):
         if record['id_customer'] != '0':
-            binder = self.unit_for(Binder, 'prestashop.res.partner')
+            binder = self.binder_for('prestashop.res.partner')
             partner_id = binder.to_odoo(record['id_customer'], unwrap=True)
             return {'author_id': partner_id}
         return {}
