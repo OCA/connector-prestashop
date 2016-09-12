@@ -6,16 +6,16 @@ from openerp import api, fields, models
 
 class StockLocation(models.Model):
     _inherit = 'stock.location'
-    
+
     prestashop_synchronized = fields.Boolean(
-       string='Sync with PrestaShop',
-       help='Check this option to synchronize this location with PrestaShop')
-    
+        string='Sync with PrestaShop',
+        help='Check this option to synchronize this location with PrestaShop')
+
     @api.model
     def get_prestashop_stock_locations(self):
         prestashop_locations = self.search([
-           ('prestashop_synchronized', '=', True),
-           ('usage', '=', 'internal'),
+            ('prestashop_synchronized', '=', True),
+            ('usage', '=', 'internal'),
         ])
         return prestashop_locations
 
@@ -33,7 +33,7 @@ class StockMove(models.Model):
         locations = self.env['stock.location'].get_prestashop_stock_locations()
         for stock_move in self:
             if stock_move.location_dest_id.id in locations.ids or \
-                            stock_move.location_id.id in locations.ids:
+                    stock_move.location_id.id in locations.ids:
                 stock_move.update_prestashop_quantities()
 
     @api.multi
