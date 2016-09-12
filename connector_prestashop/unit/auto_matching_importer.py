@@ -23,14 +23,15 @@ class AutoMatchingImporter(ConnectorUnit):
     def run(self):
         _logger.debug(
             "[%s] Starting synchro between Odoo and PrestaShop"
-            % self.model._description
+            % self.model._name
         )
         nr_ps_already_mapped = 0
         nr_ps_mapped = 0
         nr_ps_not_mapped = 0
         erp_model_name = self.model._inherits.iterkeys().next()
         erp_rec_name = self.env[erp_model_name]._rec_name
-        erp_ids = self.env[erp_model_name].search([])
+        model = self.env[erp_model_name].with_context(active_test=False)
+        erp_ids = model.search([])
         erp_list_dict = erp_ids.read()
         adapter = self.unit_for(BackendAdapter)
         # Get the IDS from PS
@@ -51,7 +52,7 @@ class AutoMatchingImporter(ConnectorUnit):
                 # Do nothing for the PS IDs that are already mapped
                 _logger.debug(
                     "[%s] PrestaShop ID %s is already mapped to Odoo ID %s"
-                    % (self.model._description, ps_id, record.id)
+                    % (self.model._name, ps_id, record.id)
                 )
                 nr_ps_already_mapped += 1
             else:
@@ -78,7 +79,7 @@ class AutoMatchingImporter(ConnectorUnit):
                         _logger.debug(
                             "[%s] Mapping PrestaShop '%s' (%s) "
                             "to Odoo '%s' (%s) " %
-                            (self.model._description,
+                            (self.model._name,
                              ps_dict['name'],  # not hardcode if needed
                              ps_dict[self._ps_field],
                              erp_dict[erp_rec_name],
@@ -91,7 +92,7 @@ class AutoMatchingImporter(ConnectorUnit):
                     _logger.warning(
                         "[%s] PrestaShop '%s' (%s) was not mapped "
                         "to any Odoo entry" %
-                        (self.model._description,
+                        (self.model._name,
                          ps_dict['name'],
                          ps_dict[self._ps_field]))
 
@@ -99,19 +100,19 @@ class AutoMatchingImporter(ConnectorUnit):
 
         _logger.info(
             "[%s] Synchro between Odoo and PrestaShop successfull"
-            % self.model._description
+            % self.model._name
         )
         _logger.info(
             "[%s] Number of PrestaShop entries already mapped = %s"
-            % (self.model._description, nr_ps_already_mapped)
+            % (self.model._name, nr_ps_already_mapped)
         )
         _logger.info(
             "[%s] Number of PrestaShop entries mapped = %s"
-            % (self.model._description, nr_ps_mapped)
+            % (self.model._name, nr_ps_mapped)
         )
         _logger.info(
             "[%s] Number of PrestaShop entries not mapped = %s"
-            % (self.model._description, nr_ps_not_mapped)
+            % (self.model._name, nr_ps_not_mapped)
         )
 
         return True

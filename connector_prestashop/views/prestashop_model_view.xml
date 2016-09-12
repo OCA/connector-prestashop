@@ -13,6 +13,10 @@
     <field name="arch" type="xml">
         <form string="PrestaShop Backend">
             <header>
+                <button name="button_check_connection"
+                        type="object"
+                        class="oe_highlight"
+                        string="Check Connection"/>
                 <button name="synchronize_metadata"
                         type="object"
                         class="oe_highlight"

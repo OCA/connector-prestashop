@@ -3,10 +3,46 @@
 
 import base64
 import logging
-from prestapyt import PrestaShopWebServiceDict
+from contextlib import contextmanager
+from requests.exceptions import HTTPError, RequestException, ConnectionError
+from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
+from openerp import exceptions, _
+from openerp.addons.connector.exception import NetworkRetryableError
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 
 _logger = logging.getLogger(__name__)
+
+
+@contextmanager
+def api_handle_errors(message=''):
+    """ Handle error when calling the API
+
+    It is meant to be used when a model does a direct
+    call to a job using the API (not using job.delay()).
+    Avoid to have unhandled errors raising on front of the user,
+    instead, they are presented as :class:`openerp.exceptions.UserError`.
+    """
+    if message:
+        message = message + u'\n\n'
+    try:
+        yield
+    except NetworkRetryableError as err:
+        raise exceptions.UserError(
+            _(u'{}Network Error:\n\n{}').format(message, err)
+        )
+    except (HTTPError, RequestException, ConnectionError) as err:
+        raise exceptions.UserError(
+            _(u'{}API / Network Error:\n\n{}').format(message, err)
+        )
+    except PrestaShopWebServiceError as err:
+        raise exceptions.UserError(
+            _(u'{}Authentication Error:\n\n{}').format(message, err)
+        )
+    except PrestaShopWebServiceError as err:
+        raise exceptions.UserError(
+            _(u'{}Error during synchronization with '
+                'PrestaShop:\n\n{}').format(message, unicode(err))
+        )
 
 
 class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
@@ -92,6 +128,10 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
         """ Delete a record on the external system """
         raise NotImplementedError
 
+    def head(self):
+        """ HEAD """
+        raise NotImplementedError
+
 
 class GenericAdapter(PrestaShopCRUDAdapter):
 
@@ -104,7 +144,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: list
         """
-        _logger.info(
+        _logger.debug(
             'method search, model %s, filters %s',
             self._prestashop_model, unicode(filters))
         return self.client.search(self._prestashop_model, filters)
@@ -114,7 +154,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
         :rtype: dict
         """
-        _logger.info(
+        _logger.debug(
             'method read, model %s id %s, attributes %s',
             self._prestashop_model, str(id), unicode(attributes))
         res = self.client.get(self._prestashop_model, id, options=attributes)
@@ -123,7 +163,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
     def create(self, attributes=None):
         """ Create a record on the external system """
-        _logger.info(
+        _logger.debug(
             'method create, model %s, attributes %s',
             self._prestashop_model, unicode(attributes))
         return self.client.add(self._prestashop_model, {
@@ -133,7 +173,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
     def write(self, id, attributes=None):
         """ Update records on the external system """
         attributes['id'] = id
-        _logger.info(
+        _logger.debug(
             'method write, model %s, attributes %s',
             self._prestashop_model,
             unicode(attributes)
@@ -142,6 +182,11 @@ class GenericAdapter(PrestaShopCRUDAdapter):
             self._prestashop_model, id, {self._export_node_name: attributes})
 
     def delete(self, resource, ids):
-        _logger.info('method delete, model %s, ids %s', resource, unicode(ids))
+        _logger.debug('method delete, model %s, ids %s',
+                      resource, unicode(ids))
         # Delete a record(s) on the external system
         return self.client.delete(resource, ids)
+
+    def head(self, id=None):
+        """ HEAD """
+        return self.client.head(self._prestashop_model, resource_id=id)

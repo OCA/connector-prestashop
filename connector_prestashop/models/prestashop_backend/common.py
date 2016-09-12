@@ -5,7 +5,7 @@ import logging
 import pytz
 from datetime import datetime
 
-from openerp import models, fields, api
+from openerp import models, fields, api, exceptions, _
 
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -13,7 +13,7 @@ from openerp.addons.connector.session import ConnectorSession
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
 from ...connector import get_environment
-from ...unit.backend_adapter import GenericAdapter
+from ...unit.backend_adapter import GenericAdapter, api_handle_errors
 from ...backend import prestashop
 
 from ..product_template.exporter import export_product_quantities
@@ -97,8 +97,7 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def synchronize_metadata(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend in self:
             for model in [
                 'prestashop.shop.group',
@@ -112,8 +111,7 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def synchronize_basedata(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend in self:
             for model_name in [
                 'prestashop.res.lang',
@@ -128,6 +126,20 @@ class PrestashopBackend(models.Model):
             import_batch(session, 'prestashop.account.tax.group', backend.id)
             import_batch(session, 'prestashop.sale.order.state', backend.id)
         return True
+
+    @api.multi
+    def _check_connection(self):
+        self.ensure_one()
+        session = ConnectorSession.from_env(self.env)
+        env = get_environment(session, self._name, self.id)
+        adapter = env.get_connector_unit(GenericAdapter)
+        with api_handle_errors('Connection failed'):
+            adapter.head()
+
+    @api.multi
+    def button_check_connection(self):
+        self._check_connection()
+        raise exceptions.UserError(_('Connection successful'))
 
     def _date_as_user_tz(self, dtstr):
         if not dtstr:
@@ -321,6 +333,13 @@ class PrestashopShopGroup(models.Model):
         comodel_name="res.company",
         string='Company'
     )
+
+
+@prestashop
+class NoModelAdapter(GenericAdapter):
+    """ Used to test the connection """
+    _model_name = 'prestashop.backend'
+    _prestashop_model = ''
 
 
 @prestashop
