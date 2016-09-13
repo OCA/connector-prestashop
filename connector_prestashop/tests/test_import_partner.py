@@ -84,17 +84,16 @@ class TestImportPartner(PrestashopTransactionCase):
                 'filter[date_upd]': ['>[2016-09-01 00:00:00]'],
             }
             self.assertEqual(2, len(cassette.requests))
-            self.assertEqual('GET', cassette.requests[0].method)
-            self.assertEqual('/api/groups',
-                             self.parse_path(cassette.requests[0].uri))
-            query = self.parse_qs(cassette.requests[0].uri)
-            self.assertDictEqual(expected_query, query)
 
-            self.assertEqual('GET', cassette.requests[1].method)
-            query = self.parse_qs(cassette.requests[1].uri)
-            self.assertEqual('/api/customers',
-                             self.parse_path(cassette.requests[1].uri))
-            self.assertDictEqual(expected_query, query)
+            request = cassette.requests[0]
+            self.assertEqual('GET', request.method)
+            self.assertEqual('/api/groups', self.parse_path(request.uri))
+            self.assertDictEqual(expected_query, self.parse_qs(request.uri))
+
+            request = cassette.requests[1]
+            self.assertEqual('GET', request.method)
+            self.assertEqual('/api/customers', self.parse_path(request.uri))
+            self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
             self.assertEqual(5, import_record_mock.delay.call_count)
 
