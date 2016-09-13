@@ -42,7 +42,7 @@ class PartnerCategoryImporter(TranslatableRecordImporter):
 
     def _after_import(self, binding):
         super(PartnerCategoryImporter, self)._after_import(binding)
-        record = self._get_prestashop_data()
+        record = self.prestashop_record
         if float(record['reduction']):
             import_record(
                 self.session,

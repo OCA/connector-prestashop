@@ -4,7 +4,6 @@
 from openerp.addons.connector.unit.mapper import (
     ImportMapper,
     mapping,
-    only_create,
 )
 from ...unit.importer import TranslatableRecordImporter
 from ...backend import prestashop
@@ -20,7 +19,7 @@ class ProductPricelistMapper(ImportMapper):
 
     @mapping
     def static(self, record):
-        return {'active': True, 'type': 'sale'}
+        return {'active': True}
 
     @mapping
     def backend_id(self, record):
@@ -31,20 +30,15 @@ class ProductPricelistMapper(ImportMapper):
         return {'company_id': self.backend_record.company_id.id}
 
     @mapping
-    @only_create
     def versions(self, record):
         item = {
             'min_quantity': 0,
             'sequence': 5,
-            'base': 1,
-            'price_discount': - float(record['reduction']) / 100.0,
+            'base': 'list_price',
+            'compute_price': 'percentage',
+            'percent_price': float(record['reduction']),
         }
-        version = {
-            'name': 'Version',
-            'active': True,
-            'items_id': [(0, 0, item)],
-        }
-        return {'version_id': [(0, 0, version)]}
+        return {'item_ids': [(5,), (0, 0, item)]}
 
 
 @prestashop
@@ -56,8 +50,3 @@ class ProductPricelistImporter(TranslatableRecordImporter):
     _translatable_fields = {
         'prestashop.groups.pricelist': ['name'],
     }
-
-    def _run_record(self, prestashop_record, lang_code, erp_id=None):
-        return super(ProductPricelistImporter, self)._run_record(
-            prestashop_record, lang_code, erp_id=erp_id
-        )
