@@ -2,14 +2,13 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import json
 import logging
 import urlparse
 
 from contextlib import contextmanager
-
 from os.path import dirname, exists, join
 
+from prestapyt.xml2dict import xml2dict
 from vcr import VCR
 
 import openerp.tests.common as common
@@ -67,7 +66,6 @@ class PrestashopTransactionCase(common.TransactionCase):
             'webservice_key': token,
         })
         self.configure()
-        recorder.register_matcher('json_body', self.check_json_body)
 
     def configure(self):
         # Default Prestashop currency is GBP
@@ -85,30 +83,6 @@ class PrestashopTransactionCase(common.TransactionCase):
             self.create_binding_no_export(
                 'prestashop.res.country', odoo_country.id, ps_country_id
             )
-
-    def check_json_body(self, req1, req2):
-        """ Check real request datas in addition to compare with cassette.
-
-        By default, this matcher is only registered as 'json_body'.
-        Need be added to recorder.match_on to be called.
-        e.g:
-            match_on = recorder.match_on + ('json_body',)
-            with recorder.use_cassette(vcr_name, match_on=match_on):
-               [....]
-        """
-        if req1.path != req2.path:
-            return False
-
-        return self._check_json_body(
-            req1.path,
-            json.loads(req1.body),
-            json.loads(req2.body)
-        )
-
-    def _check_json_body(self, path, query_json, saved_json):
-        """ Can be override.
-        """
-        return query_json == saved_json
 
     def assert_records(self, expected_records, records):
         """ Assert that a recordset matches with expected values.
@@ -280,3 +254,7 @@ class PrestashopTransactionCase(common.TransactionCase):
             'account_id': self.tax_account.id,
             'price_include': False,
         })
+
+    @staticmethod
+    def xmltodict(xml):
+        return xml2dict(xml)

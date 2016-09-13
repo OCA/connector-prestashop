@@ -395,7 +395,7 @@ class TranslatableRecordImporter(PrestashopImporter):
         if not languages:
             raise FailedJobError(
                 _('No language mapping defined. '
-                  'Run "Synchronize base data".\n')
+                  'Run "Synchronize base data".')
             )
         model_name = self.connector_env.model_name
         for language_id, language_code in languages.iteritems():
@@ -403,7 +403,13 @@ class TranslatableRecordImporter(PrestashopImporter):
         for field in self._translatable_fields[model_name]:
             for language in record[field]['language']:
                 current_id = language['attrs']['id']
-                code = languages[current_id]
+                code = languages.get(current_id)
+                if not code:
+                    raise FailedJobError(
+                        _('No language could be found for the Prestashop lang '
+                          'with id "%s". Run "Synchronize base data" again.') %
+                        (current_id,)
+                    )
                 split_record[code][field] = language['value']
         return split_record
 
