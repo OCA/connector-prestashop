@@ -42,8 +42,9 @@ class ProductCombinationImporter(PrestashopImporter):
                 'prestashop.product.combination.option.value'
             )
 
-    def _after_import(self, erp_id):
-        self.import_supplierinfo(erp_id)
+    def _after_import(self, binding):
+        super(ProductCombinationImporter, self)._after_import(binding)
+        self.import_supplierinfo(binding)
 
     def set_variant_images(self, combinations):
         backend_adapter = self.unit_for(
@@ -76,7 +77,7 @@ class ProductCombinationImporter(PrestashopImporter):
                 # TODO: why is it silented?
                 pass
 
-    def import_supplierinfo(self, erp_id):
+    def import_supplierinfo(self, binding):
         ps_id = self._get_prestashop_data()['id']
         filters = {
             # 'filter[id_product]': ps_id,
@@ -88,7 +89,7 @@ class ProductCombinationImporter(PrestashopImporter):
             self.backend_record.id,
             filters=filters
         )
-        ps_product_template = erp_id
+        ps_product_template = binding
         ps_supplierinfos = self.env['prestashop.product.supplierinfo']. \
             search([('product_tmpl_id', '=', ps_product_template.id)])
         for ps_supplierinfo in ps_supplierinfos:
