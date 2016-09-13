@@ -141,23 +141,13 @@ class PrestashopBackend(models.Model):
         self._check_connection()
         raise exceptions.UserError(_('Connection successful'))
 
-    def _date_as_user_tz(self, dtstr):
-        if not dtstr:
-            return None
-        timezone = pytz.timezone(self.env.user.partner_id.tz or 'utc')
-        dt = datetime.strptime(dtstr, DEFAULT_SERVER_DATETIME_FORMAT)
-        dt = pytz.utc.localize(dt)
-        dt = dt.astimezone(timezone)
-        return dt.strftime('%Y-%m-%d %H:%M:%S')
-
     @api.multi
     def import_customers_since(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            # from_string = fields.Datetime.from_string
-            since_date = self._date_as_user_tz(
-                backend_record.import_partners_since)
+            # TODO: why is it converted as user TZ?? shouldn't
+            # odoo and prestashop both be UTC with ntp ?
+            since_date = backend_record.import_partners_since
             import_customers_since.delay(
                 session,
                 backend_record.id,
@@ -168,11 +158,9 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_products(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            since_date = self._date_as_user_tz(
-                backend_record.import_products_since)
+            since_date = backend_record.import_products_since
             import_products.delay(
                 session,
                 backend_record.id,
@@ -182,34 +170,29 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_carriers(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             import_carriers.delay(session, backend_record.id, priority=10)
         return True
 
     @api.multi
     def update_product_stock_qty(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             export_product_quantities.delay(session, backend_record.id)
         return True
 
     @api.multi
     def import_stock_qty(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             import_inventory.delay(session, backend_record.id)
 
     @api.multi
     def import_sale_orders(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            since_date = self._date_as_user_tz(
-                backend_record.import_orders_since)
+            since_date = backend_record.import_orders_since
             import_orders_since.delay(
                 session,
                 backend_record.id,
@@ -220,8 +203,7 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_payment_modes(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             import_batch.delay(session, 'account.payment.mode',
                                backend_record.id)
@@ -229,21 +211,17 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_refunds(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            since_date = self._date_as_user_tz(
-                backend_record.import_refunds_since)
+            since_date = backend_record.import_refunds_since
             import_refunds.delay(session, backend_record.id, since_date)
         return True
 
     @api.multi
     def import_suppliers(self):
-        session = ConnectorSession(
-            self.env.cr, self.env.uid, context=self.env.context)
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            since_date = self._date_as_user_tz(
-                backend_record.import_suppliers_since)
+            since_date = backend_record.import_suppliers_since
             import_suppliers.delay(session, backend_record.id, since_date)
         return True
 
