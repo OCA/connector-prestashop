@@ -51,6 +51,8 @@ class TestImportBackendData(PrestashopTransactionCase):
     @recorder.use_cassette
     def test_import_basedata(self):
         """ Import base data (langs, countries, currencies, taxes) """
+        # ensure it is created afresh from the sync
+        self.env['prestashop.res.lang'].search([]).unlink()
         self.configure_taxes()
         auto_import_logger = (
             'openerp.addons.connector_prestashop.unit.auto_matching_importer'

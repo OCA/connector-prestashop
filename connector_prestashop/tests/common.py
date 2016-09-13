@@ -4,6 +4,7 @@
 
 import json
 import logging
+import urlparse
 
 from contextlib import contextmanager
 
@@ -39,6 +40,7 @@ recorder = VCR(
     path_transformer=VCR.ensure_suffix('.yaml'),
     match_on=['method', 'path', 'query'],
     filter_headers=['Authorization'],
+    decode_compressed_response=True,
 )
 
 
@@ -70,6 +72,19 @@ class PrestashopTransactionCase(common.TransactionCase):
     def configure(self):
         # Default Prestashop currency is GBP
         self.env.ref('base.GBP').active = True
+
+    def base_mapping(self):
+        self.create_binding_no_export('prestashop.res.lang', 1, 1)
+        countries = [
+            (self.env.ref('base.fr'), 8),
+            (self.env.ref('base.uk'), 17),
+            (self.env.ref('base.ch'), 19),
+            (self.env.ref('base.us'), 21),
+        ]
+        for odoo_country, ps_country_id in countries:
+            self.create_binding_no_export(
+                'prestashop.res.country', odoo_country.id, ps_country_id
+            )
 
     def check_json_body(self, req1, req2):
         """ Check real request datas in addition to compare with cassette.
@@ -202,6 +217,14 @@ class PrestashopTransactionCase(common.TransactionCase):
         return self.env[model_name].with_context(
             connector_no_export=True
         ).create(values)
+
+    @staticmethod
+    def parse_path(url):
+        return urlparse.urlparse(url).path
+
+    @staticmethod
+    def parse_qs(url):
+        return urlparse.parse_qs(urlparse.urlparse(url).query)
 
     def configure_taxes(self):
         company = self.env.ref('base.main_company')
