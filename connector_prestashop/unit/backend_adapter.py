@@ -179,7 +179,7 @@ class GenericAdapter(PrestaShopCRUDAdapter):
             unicode(attributes)
         )
         return self.client.edit(
-            self._prestashop_model, id, {self._export_node_name: attributes})
+            self._prestashop_model, {self._export_node_name: attributes})
 
     def delete(self, resource, ids):
         _logger.debug('method delete, model %s, ids %s',
