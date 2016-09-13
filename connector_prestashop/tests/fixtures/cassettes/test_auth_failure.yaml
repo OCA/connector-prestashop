@@ -11,16 +11,16 @@ interactions:
   response:
     body: {string: !!python/unicode ''}
     headers:
-      access-time: ['1473686955']
+      access-time: ['1473763571']
       connection: [Keep-Alive]
       content-type: [text/xml;charset=utf-8]
-      date: ['Mon, 12 Sep 2016 13:29:15 GMT']
+      date: ['Tue, 13 Sep 2016 10:46:11 GMT']
       execution-time: ['0']
       keep-alive: ['timeout=5, max=100']
       psws-version: [1.6.1.6]
       server: [Apache/2.4.10 (Debian)]
-      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkQRVWg7tjopT%2FFjv4%2Bvos8obLs%2BJqgiZmnStSw%2Brs5gl9yZh7J3UXCcxz6djfMIsqVGlcdg%2BZ3ftRAHTQU92Q7A%3D000079;
-          expires=Sun, 02-Oct-2016 13:29:15 GMT; Max-Age=1728000; path=/; httponly']
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkZcN91QeAaPITR8VwDx9iwuaPleiE5gYiGXgXDEjtwf7IhDj4QPHCM2HJ6HrCDQpz5Z62QwG4krJzkNhLULxyPU%3D000078;
+          expires=Mon, 03-Oct-2016 10:46:11 GMT; Max-Age=1728000; path=/; httponly']
       www-authenticate: ['Basic realm="Welcome to PrestaShop Webservice, please enter
           the authentication key as the login. No password required."']
       x-powered-by: [PrestaShop Webservice]

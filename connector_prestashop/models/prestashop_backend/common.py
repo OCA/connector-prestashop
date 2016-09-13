@@ -2,13 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-import pytz
-from datetime import datetime
 
 from openerp import models, fields, api, exceptions, _
 
-
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
@@ -151,7 +147,7 @@ class PrestashopBackend(models.Model):
             import_customers_since.delay(
                 session,
                 backend_record.id,
-                since_date,
+                since_date=since_date,
                 priority=10,
             )
         return True

@@ -112,6 +112,13 @@ To use this module, you need to:
    :alt: Try me on Runbot
    :target: https://runbot.odoo-community.org/runbot/108/9.0
 
+Test dependencies
+=================
+
+Extra libs are required to run the tests:
+* ``vcrpy``
+* ``freezegun``
+
 Known issues / Roadmap
 ======================
 

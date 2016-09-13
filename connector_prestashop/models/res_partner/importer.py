@@ -5,7 +5,11 @@ import re
 
 from openerp import fields
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
+from openerp.addons.connector.unit.mapper import (
+    ImportMapper,
+    mapping,
+    only_create,
+)
 from ...unit.importer import (
     PrestashopImporter,
     import_batch,
@@ -49,13 +53,8 @@ class PartnerImportMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        name = ""
-        if record['firstname']:
-            name += record['firstname']
-        if record['lastname']:
-            if len(name) != 0:
-                name += " "
-            name += record['lastname']
+        parts = [record['firstname'], record['lastname']]
+        name = ' '.join(p.strip() for p in parts if p.strip())
         return {'name': name}
 
     @mapping
@@ -113,9 +112,10 @@ class ResPartnerImporter(PrestashopImporter):
             self._import_dependency(group['id'],
                                     'prestashop.res.partner.category')
 
-    def _after_import(self, erp_id):
+    def _after_import(self, binding):
+        super(ResPartnerImporter, self)._after_import(binding)
         binder = self.binder_for()
-        ps_id = binder.to_backend(erp_id)
+        ps_id = binder.to_backend(binding)
         import_batch.delay(
             self.session,
             'prestashop.address',
@@ -159,17 +159,10 @@ class AddressImportMapper(ImportMapper):
 
     @mapping
     def name(self, record):
-        name = ""
-        if record['firstname']:
-            name += record['firstname']
-        if record['lastname']:
-            if name:
-                name += " "
-            name += record['lastname']
+        parts = [record['firstname'], record['lastname']]
         if record['alias']:
-            if name:
-                name += " "
-            name += '('+record['alias']+')'
+            parts.append('(%s)' % record['alias'])
+        name = ' '.join(p.strip() for p in parts if p.strip())
         return {'name': name}
 
     @mapping
@@ -187,6 +180,13 @@ class AddressImportMapper(ImportMapper):
     @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
+
+    @only_create
+    @mapping
+    def type(self, record):
+        # do not set 'contact', otherwise the address fields are shared with
+        # the parent
+        return {'type': 'other'}
 
 
 @prestashop
