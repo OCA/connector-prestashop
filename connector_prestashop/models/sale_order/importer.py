@@ -294,6 +294,7 @@ class SaleOrderImporter(PrestashopImporter):
         binding.openerp_id.recompute()
 
     def _after_import(self, binding):
+        super(SaleOrderImporter, self)._after_import(binding)
         self._add_shipping_line(binding)
 
     # TODO: this method is unreachable

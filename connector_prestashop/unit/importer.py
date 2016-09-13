@@ -5,12 +5,16 @@ import logging
 from contextlib import closing, contextmanager
 
 import openerp
+from openerp import _
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Importer
 from openerp.addons.connector.connector import ConnectorUnit, Binder
 from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector.exception import RetryableJobError
+from openerp.addons.connector.exception import (
+    RetryableJobError,
+    FailedJobError,
+)
 from ..connector import get_environment
 from ..connector import add_checkpoint
 
@@ -99,12 +103,15 @@ class PrestashopImporter(Importer):
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
 
+    def _create_context(self):
+        return {'connector_no_export': True}
+
     def _create(self, data):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
         binding = self.model.with_context(
-            connector_no_export=True
+            **self._create_context()
         ).create(data)
         _logger.debug(
             '%d created from prestashop %s', binding, self.prestashop_id)
@@ -242,7 +249,7 @@ class PrestashopImporter(Importer):
 
         """
 
-        map_record = self.mapper.map_record(self.prestashop_record)
+        map_record = self._map_data()
 
         if binding:
             record = map_record.values()
@@ -350,8 +357,18 @@ class TranslatableRecordImporter(PrestashopImporter):
     _model_name = []
 
     _translatable_fields = {}
-
+    # TODO set default language on the backend
     _default_language = 'en_US'
+
+    def __init__(self, environment):
+        """
+        :param environment: current environment (backend, session, ...)
+        :type environment: :py:class:`connector.connector.ConnectorEnvironment`
+        """
+        super(TranslatableRecordImporter, self).__init__(environment)
+        self.main_lang_data = None
+        self.main_lang = None
+        self.other_langs_data = None
 
     def _get_oerp_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
@@ -373,79 +390,61 @@ class TranslatableRecordImporter(PrestashopImporter):
         return languages
 
     def _split_per_language(self, record):
-        splitted_record = {}
+        split_record = {}
         languages = self.find_each_language(record)
+        if not languages:
+            raise FailedJobError(
+                _('No language mapping defined. '
+                  'Run "Synchronize base data".\n')
+            )
         model_name = self.connector_env.model_name
-        for language_id, language_code in languages.items():
-            splitted_record[language_code] = record.copy()
-            for field in self._translatable_fields[model_name]:
-                for language in record[field]['language']:
-                    current_id = language['attrs']['id']
-                    current_value = language['value']
-                    if current_id == language_id:
-                        splitted_record[language_code][field] = current_value
-                        break
-        return splitted_record
+        for language_id, language_code in languages.iteritems():
+            split_record[language_code] = record.copy()
+        for field in self._translatable_fields[model_name]:
+            for language in record[field]['language']:
+                current_id = language['attrs']['id']
+                code = languages[current_id]
+                split_record[code][field] = language['value']
+        return split_record
 
-    def run(self, prestashop_id):
-        """ Run the synchronization
+    def _create_context(self):
+        context = super(TranslatableRecordImporter, self)._create_context()
+        if self.main_lang:
+            context['lang'] = self.main_lang
+        return context
 
-        :param prestashop_id: identifier of the record on PrestaShop
+    def _map_data(self):
+        """ Returns an instance of
+        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+
         """
-        self.prestashop_id = prestashop_id
-        self.prestashop_record = self._get_prestashop_data()
-        skip = self._has_to_skip()
-        if skip:
-            return skip
+        return self.mapper.map_record(self.main_lang_data)
 
-        # import the missing linked resources
-        self._import_dependencies()
+    def _import(self, binding):
+        """ Import the external record.
 
+        Can be inherited to modify for instance the session
+        (change current user, values in context, ...)
+
+        """
         # split prestashop data for every lang
-        splitted_record = self._split_per_language(self.prestashop_record)
-
-        binding = None
-        if self._default_language in splitted_record:
-            binding = self._run_record(
-                splitted_record[self._default_language],
-                self._default_language
-            )
-            del splitted_record[self._default_language]
-
-        for lang_code, prestashop_record in splitted_record.items():
-            binding = self._run_record(
-                prestashop_record,
-                lang_code,
-                binding=binding
-            )
-
-        self.binder.bind(self.prestashop_id, binding)
-
-        self._after_import(binding)
-
-    def _run_record(self, prestashop_record, lang_code, binding=None):
-        mapped = self.mapper.map_record(prestashop_record)
-
-        if not binding:
-            binding = self._get_binding()
-
-        if binding:
-            record = mapped.values()
+        split_record = self._split_per_language(self.prestashop_record)
+        if self._default_language in split_record:
+            self.main_lang_data = split_record[self._default_language]
+            self.main_lang = self._default_language
+            del split_record[self._default_language]
         else:
-            record = mapped.values(for_create=True)
+            self.main_lang, self.main_lang_data = split_record.popitem()
 
-        # special check on data before import
-        self._validate_data(record)
+        self.other_langs_data = split_record
 
-        # TODO: Analyze lang in context
-        context = self._context()
-        context['lang'] = lang_code
-        if binding:
-            self._update(binding, record)
-        else:
-            binding = self._create(record)
+        super(TranslatableRecordImporter, self)._import(binding)
 
-        return binding
+    def _after_import(self, binding):
+        """ Hook called at the end of the import """
+        for lang_code, lang_record in self.other_langs_data.iteritems():
+            map_record = self.mapper.map_record(lang_record)
+            binding.with_context(lang=lang_code).write(map_record.values())
 
 
 @job(default_channel='root.prestashop')

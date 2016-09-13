@@ -65,9 +65,10 @@ class SupplierImporter(PrestashopImporter):
             del record['image']
             return super(SupplierImporter, self)._create(record)
 
-    def _after_import(self, erp_id):
+    def _after_import(self, binding):
+        super(SupplierImporter, self)._after_import(binding)
         binder = self.binder_for()
-        ps_id = binder.to_backend(erp_id)
+        ps_id = binder.to_backend(binding)
         import_batch(
             self.session,
             'prestashop.product.supplierinfo',

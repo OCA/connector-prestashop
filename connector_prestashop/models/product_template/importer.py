@@ -373,26 +373,25 @@ class ProductTemplateImporter(TranslatableRecordImporter):
         ],
     }
 
-    def _after_import(self, erp_id):
-        self.import_images(erp_id)
+    def _after_import(self, binding):
+        super(ProductTemplateImporter, self)._after_import(binding)
+        self.import_images(binding)
         self.import_combinations()
-        self.attribute_line(erp_id)
-        self.deactivate_default_product(erp_id)
+        self.attribute_line(binding)
+        self.deactivate_default_product(binding)
 
-    def deactivate_default_product(self, erp_id):
-        template = erp_id
-        if template.product_variant_count != 1:
-            for product in template.product_variant_ids:
+    def deactivate_default_product(self, binding):
+        if binding.product_variant_count != 1:
+            for product in binding.product_variant_ids:
                 if not product.attribute_value_ids:
                     self.env['product.product'].browse(product.id).write(
                         {'active': False})
 
-    def attribute_line(self, erp_id):
-        template = erp_id
+    def attribute_line(self, binding):
         attr_line_value_ids = []
-        for attr_line in template.attribute_line_ids:
+        for attr_line in binding.attribute_line_ids:
             attr_line_value_ids.extend(attr_line.value_ids.ids)
-        template_id = template.openerp_id.id
+        template_id = binding.openerp_id.id
         products = self.env['product.product'].search([
             ('product_tmpl_id', '=', template_id)]
         )
@@ -445,7 +444,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                     priority=15,
                 )
 
-    def import_images(self, erp_id):
+    def import_images(self, binding):
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
         images = associations.get('images', {}).get(
@@ -463,7 +462,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                     priority=10,
                 )
 
-    def import_supplierinfo(self, erp_id):
+    def import_supplierinfo(self, binding):
         ps_id = self._get_prestashop_data()['id']
         filters = {
             'filter[id_product]': ps_id,
@@ -475,7 +474,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
             self.backend_record.id,
             filters=filters
         )
-        ps_product_template = erp_id
+        ps_product_template = binding
         ps_supplierinfos = self.env['prestashop.product.supplierinfo'].\
             search([('product_tmpl_id', '=', ps_product_template.id)])
         for ps_supplierinfo in ps_supplierinfos:

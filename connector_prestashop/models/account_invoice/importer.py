@@ -31,6 +31,7 @@ class RefundImporter(PrestashopImporter):
         self._import_dependency(record['id_order'], 'prestashop.sale.order')
 
     def _after_import(self, binding):
+        super(RefundImporter, self)._after_import(binding)
         # FIXME: context should be frozen
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id
