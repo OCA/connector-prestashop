@@ -370,6 +370,11 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         return {}
 
     @mapping
+    def date_add(self, record):
+        # When export a record the date_add in PS is null.
+        return {'date_add': record.create_date}
+
+    @mapping
     def translatable_fields(self, record):
         translatable_fields = [
             ('name', 'name'),
