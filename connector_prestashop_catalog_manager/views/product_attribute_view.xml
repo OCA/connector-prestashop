@@ -44,43 +44,5 @@
             </field>
         </record>
 
-<!--
-        <record id="attribute_option_form_view" model="ir.ui.view">
-            <field name="name">product.attribute.value.form</field>
-            <field name="model">product.attribute.value</field>
-                   ref="base_custom_attributes.attribute_option_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/field[@name='attribute_id']"
-                       position="after">
-                    <group string="Prestashop Bindings" colspan="4">
-                       <field name="prestashop_bind_ids" nolabel="1"/>
-                    </group>
-                </xpath>
-            </field>
-       </record>
-
-        <record id="option_value_connector_presta_form_view"
-                model="ir.ui.view">
-            <field name="model">prestashop.product.combination.option.value
-            </field>
-            <field name="arch" type="xml">
-                <form string="prestashop fields">
-                    <group col="1">
-                        <field name="backend_id"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="option_value_connector_presta_tree_view"
-                model="ir.ui.view">
-            <field name="model">prestashop.product.combination.option.value
-            </field>
-            <field name="arch" type="xml">
-                <tree string="prestashop product attribute" editable="top">
-                    <field name="backend_id" string="Backend"/>
-                </tree>
-            </field>
-        </record>
--->
     </data>
 </openerp>
