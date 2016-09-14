@@ -225,7 +225,7 @@ class SaleOrderMapper(ImportMapper):
         mode = binder.to_openerp(record['payment'])
         assert mode, ("import of error fail in SaleImportRule.check "
                       "when the payment mode is missing")
-        return {'payment_method_id': mode.id}
+        return {'payment_mode_id': mode.id}
 
     @mapping
     def carrier_id(self, record):
