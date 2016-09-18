@@ -257,11 +257,13 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                         'odoo_id': product.id,
                         'main_template_id': self.binding_id,
                     })
-                export_record.delay(
-                    self.session,
-                    'prestashop.product.combination',
-                    combination_ext_id.id, priority=50,
-                    eta=timedelta(seconds=20))
+            # If a template has been modified then always update PrestaShop
+            # combinations
+            export_record.delay(
+                self.session,
+                'prestashop.product.combination',
+                combination_ext_id.id, priority=50,
+                eta=timedelta(seconds=20))
 
     def _not_in_variant_images(self, image):
         images = []
