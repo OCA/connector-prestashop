@@ -30,7 +30,7 @@ class PaymentModeBinder(Binder):
         if company is None:
             company = self.backend_record.company_id
         bindings = self.model.with_context(active_test=False).search(
-            [(self._external_field, '=', str(external_id)),
+            [(self._external_field, '=', external_id),
              ('company_id', '=', company.id),
              ]
         )
