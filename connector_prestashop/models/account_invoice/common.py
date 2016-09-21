@@ -87,4 +87,4 @@ class PrestashopRefund(models.Model):
 @prestashop
 class RefundAdapter(GenericAdapter):
     _model_name = 'prestashop.refund'
-    _prestashop_model = 'order_slips'
+    _prestashop_model = 'order_slip'
