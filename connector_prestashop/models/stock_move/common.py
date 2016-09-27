@@ -48,7 +48,6 @@ class StockQuant(models.Model):
     def unlink(self):
         ps_locations = self.env['stock.location'].\
             get_prestashop_stock_locations()
-        for quant in self:
-            if quant.location_id in ps_locations.ids:
-                quant.product_id.update_prestashop_qty()
+        self.filtered(lambda x: x.location_id in ps_locations).mapped(
+            'product_id').update_prestashop_qty()
         return super(StockQuant, self).unlink()
