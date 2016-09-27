@@ -28,11 +28,11 @@ class ProductTemplate(models.Model):
     @api.multi
     def update_prestashop_quantities(self):
         for template in self:
-            for prestashop_template in template.prestashop_bind_ids:
-                prestashop_template.recompute_prestashop_qty()
-            ps_combinations = template.product_variant_ids
-            for ps_combinations in ps_combinations.prestashop_bind_ids:
-                ps_combinations.recompute_prestashop_qty()
+            # Recompute product template PrestaShop qty
+            template.mapped('prestashop_bind_ids').recompute_prestashop_qty()
+            # Recompute variant PrestaShop qty
+            template.mapped('product_variant_ids.prestashop_bind_ids'
+            ).recompute_prestashop_qty()
         return True
 
 
