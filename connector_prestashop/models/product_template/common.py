@@ -31,7 +31,8 @@ class ProductTemplate(models.Model):
             # Recompute product template PrestaShop qty
             template.mapped('prestashop_bind_ids').recompute_prestashop_qty()
             # Recompute variant PrestaShop qty
-            template.mapped('product_variant_ids.prestashop_bind_ids'
+            template.mapped(
+                'product_variant_ids.prestashop_bind_ids'
             ).recompute_prestashop_qty()
         return True
 
