@@ -28,7 +28,6 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.account.tax.group',
         'prestashop.product.category',
         'prestashop.product.image',
-        'prestashop.product.product',
         'prestashop.product.template',
         'prestashop.product.combination',
         'prestashop.product.combination.option',
@@ -41,7 +40,6 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
         'prestashop.groups.pricelist',
-        # 'prestashop.product.specificprice',
     ]
 
     def to_odoo(self, external_id, unwrap=False, browse=False):
