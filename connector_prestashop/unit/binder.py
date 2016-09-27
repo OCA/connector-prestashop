@@ -24,7 +24,6 @@ class PrestashopBinder(Binder):
         'prestashop.account.tax.group',
         'prestashop.product.category',
         'prestashop.product.image',
-        'prestashop.product.product',
         'prestashop.product.template',
         'prestashop.product.combination',
         'prestashop.product.combination.option',
@@ -37,7 +36,6 @@ class PrestashopBinder(Binder):
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
         'prestashop.groups.pricelist',
-        # 'prestashop.product.specificprice',
     ]
 
     # method overrided here until https://github.com/OCA/connector/pull/207
