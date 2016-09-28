@@ -14,7 +14,6 @@ from ..backend import prestashop
 from ..connector import add_checkpoint
 from .backend_adapter import GenericAdapter
 from .backend_adapter import PrestaShopCRUDAdapter
-from openerp.addons.connector.connector import Binder
 import re
 
 
