@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
+from decimal import Decimal
 
-from openerp import models
-from openerp.addons.connector.unit.mapper import ExportMapper
-from openerp.addons.connector.exception import MappingError
+from openerp.tools.translate import _
+from openerp.addons.connector.unit.mapper import (
+    mapping,
+    ImportMapper,
+    ExportMapper,
+    only_create
+)
+from ..backend import prestashop
+from ..connector import add_checkpoint
+from .backend_adapter import GenericAdapter
+from .backend_adapter import PrestaShopCRUDAdapter
+import re
 
 
 @prestashop
