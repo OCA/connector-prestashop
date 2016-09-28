@@ -5,12 +5,6 @@ from openerp import models, api
 import logging
 
 _logger = logging.getLogger(__name__)
-handler = logging.FileHandler('/opt/odoo/v8/sync_log.log')
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-_logger.addHandler(handler)
 
 
 class SyncProducts(models.TransientModel):
