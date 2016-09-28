@@ -115,6 +115,15 @@ class ProductProduct(models.Model):
                                     'and one is required as default'))
 
     @api.multi
+    def unlink(self):
+        templates = self.mapped('product_tmpl_id')
+        res = super(ProductProduct, self).unlink()
+        for template in templates:
+            if not template.product_variant_ids.filtered('default_on'):
+                template.product_variant_ids[:1].default_on = True
+        return res
+
+    @api.multi
     def open_product_template(self):
         """
         Utility method used to add an "Open Product Template"
