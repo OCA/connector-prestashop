@@ -4,6 +4,7 @@
 import logging
 from openerp import _, exceptions
 from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import related_action
 from openerp.addons.connector.unit.synchronizer import Exporter
 from .mapper import TranslationPrestashopExportMapper
 from ..connector import get_environment
@@ -168,7 +169,25 @@ class TranslationPrestashopExporter(PrestashopExporter):
         return records
 
 
+def related_action_record(session, job):
+    binding_model = job.args[0]
+    binding_id = job.args[1]
+    record = session.env[binding_model].browse(binding_id)
+    odoo_name = record.odoo_id._name
+
+    action = {
+        'name': _(odoo_name),
+        'type': 'ir.actions.act_window',
+        'res_model': odoo_name,
+        'view_type': 'form',
+        'view_mode': 'form',
+        'res_id': record.odoo_id.id,
+    }
+    return action
+
+
 @job(default_channel='root.prestashop')
+@related_action(action=related_action_record)
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on PrestaShop """
     # TODO: FIX PRESTASHOP do not support partial edit
