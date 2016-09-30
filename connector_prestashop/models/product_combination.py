@@ -70,7 +70,10 @@ class ProductProduct(models.Model):
 
     @api.multi
     def unlink(self):
-        self.write({'default_on': False})
+        self.write({
+            'default_on': False,
+            'active': False
+        })
         res = super(ProductProduct, self).unlink()
         return res
 
