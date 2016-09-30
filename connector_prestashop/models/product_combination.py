@@ -57,9 +57,11 @@ class ProductProduct(models.Model):
             return super(ProductProduct, self).create(vals)
         else:
             product = super(ProductProduct, self).create(vals)
-            value = not product.product_variant_ids.filtered(
-                lambda x: x.default_on)
-            product.with_context(connector_no_export=True).default_on = value
+            if product.product_variant_count > 1:
+                value = not product.product_variant_ids.filtered(
+                    lambda x: x.default_on)
+                product.with_context(
+                    connector_no_export=True).default_on = value
             return product
 
     @api.multi
@@ -81,15 +83,17 @@ class ProductProduct(models.Model):
         else:
             raise ValidationError(_('Error! Only one variant can be default '
                                     'and one is required as default'))
+        return res
 
     @api.multi
     def unlink(self):
         templates = self.mapped('product_tmpl_id')
-        res = super(ProductProduct, self).unlink()
         for template in templates:
-            if not template.product_variant_ids.filtered('default_on'):
-                template.product_variant_ids[:1].default_on = True
-        return res
+            if template.product_variant_count > 1:
+                if not template.product_variant_ids.filtered(
+                        lambda x: x.default_on and x.id != self.id):
+                    template.product_variant_ids[:1].default_on = True
+        return super(ProductProduct, self).unlink()
 
     @api.multi
     def open_product_template(self):
