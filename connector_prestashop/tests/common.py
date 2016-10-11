@@ -21,8 +21,8 @@ from openerp.addons.connector.session import ConnectorSession
 # The secret.txt file must not be committed.
 # The API token will be used to record the requests with vcr, but will not be
 # stored in the fixtures files
-prestashop_url = None
-token = None
+prestashop_url = 'http://localhost'
+token = 'xxx'
 filename = join(dirname(__file__), 'secret.txt')
 if exists(filename):
     with open(filename, 'r') as fp:
