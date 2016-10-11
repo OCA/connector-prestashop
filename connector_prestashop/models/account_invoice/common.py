@@ -87,4 +87,7 @@ class PrestashopRefund(models.Model):
 @prestashop
 class RefundAdapter(GenericAdapter):
     _model_name = 'prestashop.refund'
-    _prestashop_model = 'order_slip'
+
+    @property
+    def _prestashop_model(self):
+        return self.backend_record.get_version_ps_key('order_slip')
