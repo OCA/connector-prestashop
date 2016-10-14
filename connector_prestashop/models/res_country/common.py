@@ -25,7 +25,6 @@ class PrestashopResCountry(models.Model):
          'A erp record with same ID on PrestaShop already exists.'),
     ]
 
-
 class ResCountry(models.Model):
     _inherit = 'res.country'
 
