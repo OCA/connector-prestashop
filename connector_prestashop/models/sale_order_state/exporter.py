@@ -36,7 +36,7 @@ def find_prestashop_state(session, sale_state, backend):
 @job
 def export_sale_state(session, model_name, record_id):
     binding_model = session.env[model_name]
-    sales = binding_model.search([('openerp_id', '=', record_id)])
+    sales = binding_model.search([('odoo_id', '=', record_id)])
     for sale in sales:
         backend = sale.backend_id
         new_state = find_prestashop_state(session, sale.state, backend)

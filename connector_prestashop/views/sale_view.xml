@@ -54,7 +54,7 @@
                 <group string="PrestaShop">
                     <field name="prestashop_bind_ids" nolabel="1">
                         <tree name="prestashop_binding">
-                            <field name="openerp_id" />
+                            <field name="odoo_id" />
                             <field name="shop_group_id"/>
                             <field name="default_category_id"/>
                         </tree>
@@ -84,6 +84,25 @@
             </form>
         </field>
     </record>
+
+
+   <record id="view_stock_form" model="ir.ui.view">
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr='//notebook' position='before'>
+                <group string="PrestaShop">
+                    <field name="prestashop_bind_ids" nolabel="1">
+                        <tree name="prestashop_binding">
+                            <field name="odoo_id" />
+                            <field name="shop_group_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
 
     <record id="action_prestashop_sale_order_state_form" model="ir.actions.act_window">
         <field name="name">Sale Order States</field>

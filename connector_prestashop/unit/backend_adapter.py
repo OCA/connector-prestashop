@@ -8,6 +8,7 @@ from requests.exceptions import HTTPError, RequestException, ConnectionError
 from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
 from openerp import exceptions, _
 from openerp.addons.connector.exception import NetworkRetryableError
+
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 
 _logger = logging.getLogger(__name__)

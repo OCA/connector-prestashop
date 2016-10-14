@@ -47,7 +47,7 @@ class AutoMatchingImporter(ConnectorUnit):
         # Loop on all PS IDs
         for ps_id in ps_ids:
             # Check if the PS ID is already mapped to an OE ID
-            record = binder.to_openerp(ps_id)
+            record = binder.to_odoo(ps_id)
             if record:
                 # Do nothing for the PS IDs that are already mapped
                 _logger.debug(
@@ -69,12 +69,16 @@ class AutoMatchingImporter(ConnectorUnit):
                             ps_val, erp_val, ps_dict, erp_dict):
                         # it matches, so I write the external ID
                         data = {
-                            'openerp_id': erp_dict['id'],
+                            'odoo_id': erp_dict['id'],
                             'backend_id': self.backend_record.id,
                         }
                         for oe_field, ps_field in self._copy_fields:
                             data[oe_field] = erp_dict[ps_field]
-                        record = self.env[self._model_name].create(data)
+                        record = self.model.create(data)
+                        # try:
+                        #     record = self.model.create(data)
+                        # except:
+                        #     import pdb; pdb.set_trace()
                         binder.bind(ps_id, record)
                         _logger.debug(
                             "[%s] Mapping PrestaShop '%s' (%s) "

@@ -10,20 +10,16 @@ from ...backend import prestashop
 
 class PrestashopResCurrency(models.Model):
     _name = 'prestashop.res.currency'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.currency': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.currency': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.currency',
         string='Currency',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class ResCurrency(models.Model):
@@ -31,8 +27,8 @@ class ResCurrency(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.currency',
-        inverse_name='openerp_id',
-        string='prestashop Bindings',
+        inverse_name='odoo_id',
+        string='PrestaShop Bindings',
         readonly=True
     )
 

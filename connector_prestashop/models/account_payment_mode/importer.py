@@ -24,7 +24,7 @@ class PaymentModeBatchImporter(BatchImporter):
         If we have only 1 bank journal, we link the payment method to it,
         otherwise, the user will have to create manually the payment mode.
         """
-        if self.binder_for().to_openerp(record['payment']):
+        if self.binder_for().to_odoo(record['payment']):
             return  # already exists
         method_xmlid = 'account.account_payment_method_manual_in'
         payment_method = self.env.ref(method_xmlid, raise_if_not_found=False)

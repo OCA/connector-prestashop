@@ -25,7 +25,7 @@ class ProductImageMapper(ImportMapper):
     @mapping
     def from_template(self, record):
         binder = self.binder_for('prestashop.product.template')
-        template = binder.to_openerp(record['id_product'], unwrap=True)
+        template = binder.to_odoo(record['id_product'], unwrap=True)
         name = '%s_%s' % (template.name, record['id_image'])
         return {'owner_id': template.id, 'name': name}
 

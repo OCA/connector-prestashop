@@ -75,7 +75,7 @@ class PrestashopImporter(Importer):
         if importer_class is None:
             importer_class = PrestashopImporter
         binder = self.binder_for(binding_model)
-        if always or not binder.to_openerp(prestashop_id):
+        if always or not binder.to_odoo(prestashop_id):
             importer = self.unit_for(importer_class, model=binding_model)
             importer.run(prestashop_id)
 
@@ -98,7 +98,7 @@ class PrestashopImporter(Importer):
 
     def _get_binding(self):
         """Return the openerp id from the prestashop id"""
-        return self.binder.to_openerp(self.prestashop_id)
+        return self.binder.to_odoo(self.prestashop_id)
 
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
@@ -225,7 +225,7 @@ class PrestashopImporter(Importer):
                 # later (and the new T3 will be aware of the category X
                 # from the its inception).
                 binder = new_connector_env.get_connector_unit(Binder)
-                if binder.to_openerp(self.prestashop_id):
+                if binder.to_odoo(self.prestashop_id):
                     raise RetryableJobError(
                         'Concurrent error. The job will be retried later',
                         seconds=RETRY_WHEN_CONCURRENT_DETECTED,
@@ -372,7 +372,7 @@ class TranslatableRecordImporter(PrestashopImporter):
 
     def _get_oerp_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
-        erp_language = language_binder.to_openerp(prestashop_id)
+        erp_language = language_binder.to_odoo(prestashop_id)
         return erp_language
 
     def find_each_language(self, record):

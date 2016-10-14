@@ -60,7 +60,7 @@ class ProductCombinationImporter(PrestashopImporter):
                     ps_images = [ps_images]
                 if 'id' in ps_images[0]:
                     images = [
-                        binder.to_openerp(x.get('id'), unwrap=True)
+                        binder.to_odoo(x.get('id'), unwrap=True)
                         for x in ps_images
                     ]
                 else:
@@ -68,7 +68,7 @@ class ProductCombinationImporter(PrestashopImporter):
                 if images:
                     product_binder = self.binder_for(
                         'prestashop.product.combination')
-                    product_product = product_binder.to_openerp(
+                    product_product = product_binder.to_odoo(
                         combination['id'], unwrap=True)
                     product_product.with_context(
                         connector_no_export=True).write(
@@ -96,7 +96,7 @@ class ProductCombinationImporter(PrestashopImporter):
             try:
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
+                ps_supplierinfo.odoo_id.unlink()
 
 
 @prestashop
@@ -115,7 +115,7 @@ class ProductCombinationMapper(ImportMapper):
     @mapping
     def product_tmpl_id(self, record):
         template = self.get_main_template_binding(record)
-        return {'product_tmpl_id': template.openerp_id.id}
+        return {'product_tmpl_id': template.odoo_id.id}
 
     @mapping
     def from_main_template(self, record):
@@ -137,7 +137,7 @@ class ProductCombinationMapper(ImportMapper):
 
     def get_main_template_binding(self, record):
         template_binder = self.binder_for('prestashop.product.template')
-        return template_binder.to_openerp(record['id_product'])
+        return template_binder.to_odoo(record['id_product'])
 
     def _get_option_value(self, record):
         option_values = record['associations']['product_option_values'][
@@ -148,10 +148,10 @@ class ProductCombinationMapper(ImportMapper):
         for option_value in option_values:
             option_value_binder = self.binder_for(
                 'prestashop.product.combination.option.value')
-            option_value_binding = option_value_binder.to_openerp(
+            option_value_binding = option_value_binder.to_odoo(
                 option_value['id']
             )
-            yield option_value_binding.openerp_id
+            yield option_value_binding.odoo_id
 
     @mapping
     def name(self, record):
@@ -224,18 +224,18 @@ class ProductCombinationMapper(ImportMapper):
         product_tmpl_adapter = self.unit_for(
             GenericAdapter, 'prestashop.product.template')
         tax_group = product_tmpl_adapter.read(record['id_product'])
-        tax_group = self.binder_for('prestashop.account.tax.group').to_openerp(
+        tax_group = self.binder_for('prestashop.account.tax.group').to_odoo(
             tax_group['id_tax_rules_group'], unwrap=True)
         return tax_group.tax_ids
 
     @mapping
     def specific_price(self, record):
         product = self.binder_for(
-            'prestashop.product.combination').to_openerp(
+            'prestashop.product.combination').to_odoo(
             record['id'], unwrap=True
         )
         product_template = self.binder_for(
-            'prestashop.product.template').to_openerp(
+            'prestashop.product.template').to_odoo(
                 record['id_product'], unwrap=True
         )
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
@@ -280,7 +280,7 @@ class ProductCombinationOptionImporter(PrestashopImporter):
         else:
             # else, we create only a prestashop.product.combination.option
             data = {
-                'openerp_id': attribute_ids.id,
+                'odoo_id': attribute_ids.id,
                 'backend_id': self.backend_record.id,
             }
             erp_id = self.model.create(data)
@@ -307,7 +307,7 @@ class ProductCombinationOptionMapper(ImportMapper):
             if not isinstance(languages, list):
                 languages = [languages]
             for lang in languages:
-                erp_language = language_binder.to_openerp(
+                erp_language = language_binder.to_odoo(
                     lang['attrs']['id'])
                 if not erp_language:
                     continue
@@ -348,8 +348,7 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     @mapping
     def attribute_id(self, record):
         binder = self.binder_for('prestashop.product.combination.option')
-        attribute = binder.to_openerp(record['id_attribute_group'],
-                                      unwrap=True)
+        attribute = binder.to_odoo(record['id_attribute_group'], unwrap=True)
         return {'attribute_id': attribute.id}
 
     @mapping

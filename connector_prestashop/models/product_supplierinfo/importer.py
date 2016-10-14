@@ -102,14 +102,14 @@ class SupplierInfoMapper(ImportMapper):
     @mapping
     def name(self, record):
         binder = self.binder_for('prestashop.supplier')
-        partner = binder.to_openerp(record['id_supplier'], unwrap=True)
+        partner = binder.to_odoo(record['id_supplier'], unwrap=True)
         return {'name': partner.id}
 
     @mapping
     def product_id(self, record):
         if record['id_product_attribute'] != '0':
             binder = self.binder_for('prestashop.product.combination')
-            product = binder.to_openerp(
+            product = binder.to_odoo(
                 record['id_product_attribute'],
                 unwrap=True,
             )
@@ -119,7 +119,7 @@ class SupplierInfoMapper(ImportMapper):
     @mapping
     def product_tmpl_id(self, record):
         binder = self.binder_for('prestashop.product.template')
-        template = binder.to_openerp(record['id_product'], unwrap=True)
+        template = binder.to_odoo(record['id_product'], unwrap=True)
         return {'product_tmpl_id': template.id}
 
     @mapping

@@ -16,27 +16,23 @@ class ResPartner(models.Model):
 
     prestashop_supplier_bind_ids = fields.One2many(
         comodel_name='prestashop.supplier',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string="PrestaShop supplier bindings",
     )
 
 
 class PrestashopSupplier(models.Model):
     _name = 'prestashop.supplier'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.partner': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.partner': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class ProductSupplierinfo(models.Model):
@@ -44,27 +40,23 @@ class ProductSupplierinfo(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.supplierinfo',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string="PrestaShop bindings",
     )
 
 
 class PrestashopProductSupplierinfo(models.Model):
     _name = 'prestashop.product.supplierinfo'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.supplierinfo': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'product.supplierinfo': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='product.supplierinfo',
         string='Supplier info',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 @prestashop

@@ -116,8 +116,8 @@ class PrestashopBackend(models.Model):
                 'prestashop.account.tax',
             ]:
                 env = get_environment(session, model_name, backend.id)
-                directBinder = env.get_connector_unit(AutoMatchingImporter)
-                directBinder.run()
+                importer = env.get_connector_unit(AutoMatchingImporter)
+                importer.run()
 
             import_batch(session, 'prestashop.account.tax.group', backend.id)
             import_batch(session, 'prestashop.sale.order.state', backend.id)

@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import datetime
-
 import html2text
 
 from prestapyt import PrestaShopWebServiceError
@@ -18,7 +17,7 @@ from ...unit.importer import (
     PrestashopImporter,
     TranslatableRecordImporter,
 )
-from ...unit.mapper import backend_to_m2o
+from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...unit.backend_adapter import GenericAdapter
 from ...connector import get_environment
 from ...backend import prestashop
@@ -154,11 +153,10 @@ class TemplateMapper(ImportMapper):
         if not int(record['id_category_default']):
             return
         binder = self.binder_for('prestashop.product.category')
-        category = binder.to_openerp(
+        category = binder.to_odoo(
             record['id_category_default'],
             unwrap=True,
         )
-
         if category:
             return {'categ_id': category.id}
 
@@ -168,7 +166,7 @@ class TemplateMapper(ImportMapper):
             categories = [categories]
         if not categories:
             return
-        category = binder.to_openerp(categories[0]['id'], unwrap=True)
+        category = binder.to_odoo(categories[0]['id'], unwrap=True)
         return {'categ_id': category.id}
 
     @mapping
@@ -180,11 +178,10 @@ class TemplateMapper(ImportMapper):
         product_categories = self.env['product.category'].browse()
         binder = self.binder_for('prestashop.product.category')
         for ps_category in categories:
-            product_categories |= binder.to_openerp(
+            product_categories |= binder.to_odoo(
                 ps_category['id'],
                 unwrap=True,
             )
-
         return {'categ_ids': [(6, 0, product_categories.ids)]}
 
     @mapping
@@ -209,7 +206,7 @@ class TemplateMapper(ImportMapper):
         # if record['id_tax_rules_group'] == '0':
         #     return {}
         binder = self.binder_for('prestashop.account.tax.group')
-        tax_group = binder.to_openerp(
+        tax_group = binder.to_odoo(
             record['id_tax_rules_group'],
             unwrap=True,
         )
@@ -259,6 +256,13 @@ class TemplateMapper(ImportMapper):
     #     translated_fields = self.convert_languages(
     #         trans.get_record_by_lang(record.id), translatable_fields)
     #     return translated_fields
+
+
+@prestashop
+class TemplateAdapter(GenericAdapter):
+    _model_name = 'prestashop.product.template'
+    _prestashop_model = 'products'
+    _export_node_name = 'product'
 
 
 class ImportInventory(models.TransientModel):
@@ -316,9 +320,9 @@ class ProductInventoryImporter(PrestashopImporter):
     def _get_template(self, record):
         if record['id_product_attribute'] == '0':
             binder = self.binder_for('prestashop.product.template')
-            return binder.to_openerp(record['id_product'], unwrap=True)
+            return binder.to_odoo(record['id_product'], unwrap=True)
         binder = self.binder_for('prestashop.product.combination')
-        return binder.to_openerp(record['id_product_attribute'], unwrap=True)
+        return binder.to_odoo(record['id_product_attribute'], unwrap=True)
 
     def run(self, record):
         self._import_dependency(
@@ -391,7 +395,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
         attr_line_value_ids = []
         for attr_line in binding.attribute_line_ids:
             attr_line_value_ids.extend(attr_line.value_ids.ids)
-        template_id = binding.openerp_id.id
+        template_id = binding.odoo_id.id
         products = self.env['product.product'].search([
             ('product_tmpl_id', '=', template_id)]
         )
@@ -481,7 +485,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
             try:
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
+                ps_supplierinfo.odoo_id.unlink()
 
     def _import_dependencies(self):
         self._import_default_category()

@@ -17,7 +17,7 @@ class ProductImage(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.product.image',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
 
@@ -25,19 +25,15 @@ class ProductImage(models.Model):
 class PrestashopProductImage(models.Model):
     _name = 'prestashop.product.image'
     _inherit = 'prestashop.binding'
-    _inherits = {'base_multi_image.image': 'openerp_id'}
+    _inherits = {'base_multi_image.image': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='base_multi_image.image',
         required=True,
         ondelete='cascade',
         string='Product image',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 @prestashop

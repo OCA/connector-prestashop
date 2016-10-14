@@ -12,7 +12,7 @@ class StockWarehouse(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.shop',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         readonly=True,
         string='PrestaShop Bindings',
     )
@@ -39,12 +39,13 @@ class PrestashopShop(models.Model):
         required=True,
         ondelete='cascade',
     )
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='stock.warehouse',
         string='WareHouse',
         required=True,
         readonly=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     # what is the exact purpose of this field?
     default_category_id = fields.Many2one(

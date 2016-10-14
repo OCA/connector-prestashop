@@ -16,21 +16,22 @@ class SaleOrder(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.sale.order',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
 
 
 class PrestashopSaleOrder(models.Model):
     _name = 'prestashop.sale.order'
-    _inherit = 'prestashop.binding'
-    _inherits = {'sale.order': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'sale.order': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='sale.order',
         string='Sale Order',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     prestashop_order_line_ids = fields.One2many(
         comodel_name='prestashop.sale.order.line',
@@ -65,37 +66,33 @@ class PrestashopSaleOrder(models.Model):
         readonly=True,
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
-
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.sale.order.line',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
     prestashop_discount_bind_ids = fields.One2many(
         comodel_name='prestashop.sale.order.line.discount',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Discount Bindings',
     )
 
 
 class PrestashopSaleOrderLine(models.Model):
     _name = 'prestashop.sale.order.line'
-    _inherit = 'prestashop.binding'
-    _inherits = {'sale.order.line': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'sale.order.line': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='sale.order.line',
         string='Sale Order line',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     prestashop_order_id = fields.Many2one(
         comodel_name='prestashop.sale.order',
@@ -105,30 +102,26 @@ class PrestashopSaleOrderLine(models.Model):
         index=True,
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
-
     @api.model
     def create(self, vals):
         ps_sale_order = self.env['prestashop.sale.order'].search([
             ('id', '=', vals['prestashop_order_id'])
         ], limit=1)
-        vals['order_id'] = ps_sale_order.openerp_id.id
+        vals['order_id'] = ps_sale_order.odoo_id.id
         return super(PrestashopSaleOrderLine, self).create(vals)
 
 
 class PrestashopSaleOrderLineDiscount(models.Model):
     _name = 'prestashop.sale.order.line.discount'
-    _inherit = 'prestashop.binding'
-    _inherits = {'sale.order.line': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'sale.order.line': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='sale.order.line',
         string='Sale Order line',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     prestashop_order_id = fields.Many2one(
         comodel_name='prestashop.sale.order',
@@ -138,17 +131,12 @@ class PrestashopSaleOrderLineDiscount(models.Model):
         index=True,
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
-
     @api.model
     def create(self, vals):
         ps_sale_order = self.env['prestashop.sale.order'].search([
             ('id', '=', vals['prestashop_order_id'])
         ], limit=1)
-        vals['order_id'] = ps_sale_order.openerp_id.id
+        vals['order_id'] = ps_sale_order.odoo_id.id
         return super(PrestashopSaleOrderLineDiscount, self).create(vals)
 
 
