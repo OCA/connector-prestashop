@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
-from prestapyt import PrestaShopWebServiceError
 
 from openerp import fields
 from openerp.addons.connector.exception import FailedJobError
@@ -14,6 +13,13 @@ from ...unit.importer import (
     DelayedBatchImporter,
 )
 from ...backend import prestashop
+
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop

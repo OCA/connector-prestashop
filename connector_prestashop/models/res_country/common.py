@@ -22,7 +22,6 @@ class PrestashopResCountry(models.Model):
     )
 
 
-
 class ResCountry(models.Model):
     _inherit = 'res.country'
 

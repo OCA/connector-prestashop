@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
-from prestapyt import PrestaShopWebServiceError
-
 from openerp import models
 
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
@@ -16,6 +13,13 @@ from ...unit.importer import (
 )
 from ...unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
 from ...backend import prestashop
+
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop

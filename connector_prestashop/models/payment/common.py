@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-try:
-    from prestapyt import PrestaShopWebServiceDict
-except ImportError:
-    PrestaShopWebServiceDict = False
-
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
 

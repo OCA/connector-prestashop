@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mimetypes
-
-from prestapyt import PrestaShopWebServiceError
 
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (mapping,
@@ -12,6 +9,14 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from ...backend import prestashop
 from ...connector import get_environment
 from ...unit.importer import PrestashopImporter
+
+import mimetypes
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop

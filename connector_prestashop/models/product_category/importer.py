@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import datetime
-
-from prestapyt import PrestaShopWebServiceError
-
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
 from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
 from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...backend import prestashop
+
+import datetime
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop

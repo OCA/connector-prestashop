@@ -8,7 +8,12 @@ import urlparse
 from contextlib import contextmanager
 from os.path import dirname, exists, join
 
-from prestapyt.xml2dict import xml2dict
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt.xml2dict import xml2dict
+except:
+    _logger.debug('Cannot import from `prestapyt`')
+
 from vcr import VCR
 
 import openerp.tests.common as common
@@ -26,8 +31,8 @@ token = 'xxx'
 filename = join(dirname(__file__), 'secret.txt')
 if exists(filename):
     with open(filename, 'r') as fp:
-        assert len(fp.readlines()) == 2, "secret.txt must have 2 lines:" \
-                "url, token"
+        assert len(fp.readlines()) == 2,\
+            "secret.txt must have 2 lines: url, token"
         fp.seek(0)
         prestashop_url = next(fp).strip()
         token = next(fp).strip()
