@@ -9,6 +9,9 @@ from ...backend import prestashop
 
 class PrestashopAccountTax(models.Model):
     _name = 'prestashop.account.tax'
+    # Do not inherit from `prestashop.binding.odoo`
+    # because we do not want the constraint `prestashop_erp_uniq`.
+    # This allows us to create duplicated taxes.
     _inherit = 'prestashop.binding'
     _inherits = {'account.tax': 'openerp_id'}
 
