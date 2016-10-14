@@ -3,16 +3,20 @@
 
 from openerp import api, fields, models
 
+from ...unit.backend_adapter import GenericAdapter
+from ...backend import prestashop
+
 try:
     from xml.etree import cElementTree as ElementTree
 except ImportError, e:
     from xml.etree import ElementTree
 
-from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
-
-from ...unit.backend_adapter import GenericAdapter
-
-from ...backend import prestashop
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError, PrestaShopWebServiceDict
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 class ProductTemplate(models.Model):

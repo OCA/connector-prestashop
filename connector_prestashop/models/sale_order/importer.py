@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from datetime import datetime, timedelta
-from decimal import Decimal
-
-from prestapyt import PrestaShopWebServiceError
-
 from openerp import _, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
@@ -22,6 +17,15 @@ from ...unit.importer import (
 )
 from ...unit.exception import OrderImportRuleRetry
 from ...backend import prestashop
+
+from datetime import datetime, timedelta
+from decimal import Decimal
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop
@@ -206,8 +210,7 @@ class SaleOrderMapper(ImportMapper):
     @mapping
     def partner_shipping_id(self, record):
         binder = self.binder_for('prestashop.address')
-        shipping = binder.to_openerp(record['id_address_delivery'],
-                                     unwrap=True)
+        shipping = binder.to_odoo(record['id_address_delivery'], unwrap=True)
         return {'partner_shipping_id': shipping.id}
 
     @mapping
@@ -286,9 +289,9 @@ class SaleOrderImporter(PrestashopImporter):
         if shipping_total:
             sale_line_obj = self.session.env['sale.order.line']
             sale_line_obj.create({
-                'order_id': binding.openerp_id.id,
-                'product_id': binding.openerp_id.carrier_id.product_id.id,
-                'price_unit':  shipping_total,
+                'order_id': binding.odoo_id.id,
+                'product_id': binding.odoo_id.carrier_id.product_id.id,
+                'price_unit': shipping_total,
                 'is_delivery': True
             })
         binding.openerp_id.recompute()
