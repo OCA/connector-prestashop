@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import base64
-import logging
-from contextlib import contextmanager
-from requests.exceptions import HTTPError, RequestException, ConnectionError
-from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
 from openerp import exceptions, _
 from openerp.addons.connector.exception import NetworkRetryableError
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
 
+from contextlib import contextmanager
+from requests.exceptions import HTTPError, RequestException, ConnectionError
+import base64
+import logging
 _logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @contextmanager

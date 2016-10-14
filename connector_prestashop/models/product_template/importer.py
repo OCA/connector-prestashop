@@ -5,8 +5,6 @@ import datetime
 
 import html2text
 
-from prestapyt import PrestaShopWebServiceError
-
 from openerp import models, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
@@ -26,6 +24,13 @@ from ..product_image.importer import (
     import_product_image,
     set_product_image_variant,
 )
+
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop

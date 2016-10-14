@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from prestapyt import PrestaShopWebServiceDict
-
 import openerp.addons.decimal_precision as dp
 
 from openerp import models, fields, api
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
+
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceDict
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 class SaleOrder(models.Model):
