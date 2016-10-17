@@ -24,6 +24,9 @@
         'python': [
             "html2text",
             "prestapyt",
+            # tests dependencies
+            "freezegun",
+            "vcr",
         ],
     },
     "author": "Akretion,"
