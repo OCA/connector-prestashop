@@ -8,6 +8,7 @@ from openerp.addons.connector.session import ConnectorSession
 
 from contextlib import contextmanager
 from os.path import dirname, exists, join
+import os
 
 from vcr import VCR
 import logging
@@ -27,7 +28,10 @@ except:
 prestashop_url = 'http://localhost'
 token = 'xxx'
 filename = join(dirname(__file__), 'secret.txt')
+if not exists(filename):
+    filename = os.environ.get('PS_TEST_WS_CREDENTIALS', '')
 if exists(filename):
+    _logger.debug('Using credentials file %s', filename)
     with open(filename, 'r') as fp:
         assert len(fp.readlines()) == 2,\
             "secret.txt must have 2 lines: url, token"

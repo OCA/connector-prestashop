@@ -46,10 +46,11 @@ class ProductCategoryMapper(ImportMapper):
     def parent_id(self, record):
         if record['id_parent'] == '0':
             return {}
+        category = self.binder_for('prestashop.product.category').to_odoo(
+            record['id_parent'], unwrap=True)
         return {
-            'parent_id':
-                self.binder_for('prestashop.product.category').to_odoo(
-                    record['id_parent'], unwrap=True)}
+            'parent_id': category.id,
+        }
 
     @mapping
     def data_add(self, record):

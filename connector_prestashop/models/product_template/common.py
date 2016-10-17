@@ -120,13 +120,6 @@ class PrestashopProductTemplate(models.Model):
 
 
 @prestashop
-class TemplateAdapter(GenericAdapter):
-    _model_name = 'prestashop.product.template'
-    _prestashop_model = 'products'
-    _export_node_name = 'product'
-
-
-@prestashop
 class ProductInventoryAdapter(GenericAdapter):
     _model_name = '_import_stock_available'
     _prestashop_model = 'stock_availables'
