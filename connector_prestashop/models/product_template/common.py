@@ -120,41 +120,10 @@ class PrestashopProductTemplate(models.Model):
 
 
 @prestashop
-class TemplateAdapter(GenericAdapter):
-    _model_name = 'prestashop.product.template'
-    _prestashop_model = 'products'
-    _export_node_name = 'product'
-
-
-    @api.multi
-    def update_prestashop_qty(self):
-        for product in self:
-            if product.product_variant_count > 1:
-                # Recompute qty in combination binding
-                for combination_binding in product.prestashop_bind_ids:
-                    combination_binding.recompute_prestashop_qty()
-            # Recompute qty in product template binding if any combination
-            # if modified
-            for prestashop_product in \
-                    product.product_tmpl_id.prestashop_bind_ids:
-                prestashop_product.recompute_prestashop_qty()
-
-    @api.multi
-    def update_prestashop_quantities(self):
-        for product in self:
-            product_template = product.product_tmpl_id
-            prestashop_combinations = (
-                len(product_template.product_variant_ids) > 1 and
-                product_template.product_variant_ids) or []
-            if not prestashop_combinations:
-                for prestashop_product in product_template.prestashop_bind_ids:
-                    prestashop_product.recompute_prestashop_qty()
-            else:
-                for prestashop_combination in prestashop_combinations:
-                    for combination_binding in \
-                            prestashop_combination.prestashop_bind_ids:
-                        combination_binding.recompute_prestashop_qty()
-        return True
+class ProductInventoryAdapter(GenericAdapter):
+    _model_name = '_import_stock_available'
+    _prestashop_model = 'stock_availables'
+    _export_node_name = 'stock_available'
 
     def get(self, options=None):
         return self.client.get(self._prestashop_model, options=options)
