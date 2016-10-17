@@ -2,23 +2,21 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import logging
-import urlparse
+
+import openerp.tests.common as common
+from openerp.addons.connector.session import ConnectorSession
 
 from contextlib import contextmanager
 from os.path import dirname, exists, join
 
+from vcr import VCR
+import logging
+import urlparse
 _logger = logging.getLogger(__name__)
 try:
     from prestapyt.xml2dict import xml2dict
 except:
     _logger.debug('Cannot import from `prestapyt`')
-
-from vcr import VCR
-
-import openerp.tests.common as common
-from openerp.addons.connector.session import ConnectorSession
-
 
 # secret.txt is a file which can be placed by the developer in the
 # 'tests' directory. It contains the Prestashop URL on the first line

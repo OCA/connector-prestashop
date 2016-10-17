@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import datetime
-import html2text
-
 from openerp import models, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
@@ -24,8 +21,15 @@ from ..product_image.importer import (
     set_product_image_variant,
 )
 
+import datetime
 import logging
 _logger = logging.getLogger(__name__)
+
+try:
+    import html2text
+except:
+    _logger.debug('Cannot import from `prestapyt`')
+
 try:
     from prestapyt import PrestaShopWebServiceError
 except:
