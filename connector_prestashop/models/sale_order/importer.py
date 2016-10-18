@@ -347,6 +347,7 @@ class SaleOrderLineMapper(ImportMapper):
     def prestashop_id(self, record):
         return {'prestashop_id': record['id']}
 
+    # TODO: who is using this???
     def none_product(self, record):
         product_id = True
         if 'product_attribute_id' not in record:
