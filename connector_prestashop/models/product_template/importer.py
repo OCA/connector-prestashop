@@ -531,7 +531,7 @@ def import_inventory(session, backend_id):
 
 
 @job(default_channel='root.prestashop')
-def import_products(session, backend_id, since_date):
+def import_products(session, backend_id, since_date=None):
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
