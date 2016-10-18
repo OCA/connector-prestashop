@@ -76,7 +76,7 @@ class ProductCombinationImporter(PrestashopImporter):
                         combination['id'], unwrap=True)
                     product_product.with_context(
                         connector_no_export=True).write(
-                        {'image_ids': [(6, 0, images.ids)]})
+                        {'image_ids': [(6, 0, [x.id for x in images])]})
             except PrestaShopWebServiceError:
                 # TODO: why is it silented?
                 pass
