@@ -395,8 +395,12 @@ class SaleOrderLineMapper(ImportMapper):
                 limit=1,
             )
             if not product:
+                # TODO: what's this?
                 return self.tax_id(record)
-        return {'product_id': product.id}
+        return {
+            'product_id': product.id,
+            'product_uom': product and product.uom_id.id,
+        }
 
     def _find_tax(self, ps_tax_id):
         binder = self.binder_for('prestashop.account.tax')
