@@ -311,10 +311,23 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('standard_price', 'wholesale_price'),
         ('default_shop_id', 'id_shop_default'),
         ('always_available', 'active'),
-        ('ean13', 'ean13'),
+        ('barcode', 'barcode'),
         ('additional_shipping_cost', 'additional_shipping_cost'),
         ('minimal_quantity', 'minimal_quantity'),
         ('on_sale', 'on_sale'),
+    ]
+    # handled by base mapping `translatable_fields`
+    _translatable_fields = [
+        ('name', 'name'),
+        ('link_rewrite', 'link_rewrite'),
+        ('meta_title', 'meta_title'),
+        ('meta_description', 'meta_description'),
+        ('meta_keywords', 'meta_keywords'),
+        ('tags', 'tags'),
+        ('available_now', 'available_now'),
+        ('available_later', 'available_later'),
+        ('description_short_html', 'description_short'),
+        ('description_html', 'description'),
     ]
 
     @mapping
@@ -374,23 +387,3 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
     def date_add(self, record):
         # When export a record the date_add in PS is null.
         return {'date_add': record.create_date}
-
-    @mapping
-    def translatable_fields(self, record):
-        translatable_fields = [
-            ('name', 'name'),
-            ('link_rewrite', 'link_rewrite'),
-            ('meta_title', 'meta_title'),
-            ('meta_description', 'meta_description'),
-            ('meta_keywords', 'meta_keywords'),
-            ('tags', 'tags'),
-            ('available_now', 'available_now'),
-            ('available_later', 'available_later'),
-            ('description_short_html', 'description_short'),
-            ('description_html', 'description'),
-        ]
-
-        trans = TranslationPrestashopExporter(self.connector_env)
-        translated_fields = self.convert_languages(
-            trans.get_record_by_lang(record.id), translatable_fields)
-        return translated_fields

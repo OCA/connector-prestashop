@@ -108,9 +108,9 @@ class ProductCombinationExport(TranslationPrestashopExporter):
         return res['prestashop']['combination']['id']
 
     def _export_images(self):
-        if self.erp_record.image_ids:
+        if self.binding.image_ids:
             image_binder = self.binder_for('prestashop.product.image')
-            for image_line in self.erp_record.image_ids:
+            for image_line in self.binding.image_ids:
                 image_ext_id = image_binder.to_backend(
                     image_line.id, wrap=True)
                 if not image_ext_id:
@@ -135,7 +135,7 @@ class ProductCombinationExport(TranslationPrestashopExporter):
             'prestashop.product.combination.option')
         option_binder = self.binder_for(
             'prestashop.product.combination.option.value')
-        for value in self.erp_record.attribute_value_ids:
+        for value in self.binding.attribute_value_ids:
             attribute_ext_id = attribute_binder.to_backend(
                 value.attribute_id.id, wrap=True)
             if not attribute_ext_id:
@@ -166,7 +166,7 @@ class ProductCombinationExport(TranslationPrestashopExporter):
         # self._export_images()
 
     def update_quantities(self):
-        self.erp_record.odoo_id.with_context(
+        self.binding.odoo_id.with_context(
             self.session.context).update_prestashop_qty()
 
     def _after_export(self):
@@ -180,7 +180,7 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
     direct = [
         ('default_code', 'reference'),
         ('active', 'active'),
-        ('ean13', 'ean13'),
+        ('barcode', 'barcode'),
         ('minimal_quantity', 'minimal_quantity'),
         ('weight', 'weight'),
     ]
