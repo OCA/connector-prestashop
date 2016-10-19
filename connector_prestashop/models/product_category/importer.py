@@ -3,8 +3,8 @@
 
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
+from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
-from ...unit.mapper import backend_to_m2o
 from ...backend import prestashop
 
 import datetime
