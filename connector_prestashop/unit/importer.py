@@ -370,7 +370,7 @@ class TranslatableRecordImporter(PrestashopImporter):
         self.main_lang = None
         self.other_langs_data = None
 
-    def _get_oerp_language(self, prestashop_id):
+    def _get_odoo_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
         erp_language = language_binder.to_openerp(prestashop_id)
         return erp_language
@@ -384,12 +384,27 @@ class TranslatableRecordImporter(PrestashopImporter):
             for language in record[field]['language']:
                 if not language or language['attrs']['id'] in languages:
                     continue
-                erp_lang = self._get_oerp_language(language['attrs']['id'])
+                erp_lang = self._get_odoo_language(language['attrs']['id'])
                 if erp_lang:
                     languages[language['attrs']['id']] = erp_lang.code
         return languages
 
-    def _split_per_language(self, record):
+    def _split_per_language(self, record, fields=None):
+        """Split record values by language.
+
+        @param record: a record from PS
+        @param fields: fields whitelist
+        @return a dictionary with the following structure:
+
+            'en_US': {
+                'field1': value_en,
+                'field2': value_en,
+            },
+            'it_IT': {
+                'field1': value_it,
+                'field2': value_it,
+            }
+        """
         split_record = {}
         languages = self.find_each_language(record)
         if not languages:
@@ -400,7 +415,10 @@ class TranslatableRecordImporter(PrestashopImporter):
         model_name = self.connector_env.model_name
         for language_id, language_code in languages.iteritems():
             split_record[language_code] = record.copy()
-        for field in self._translatable_fields[model_name]:
+        _fields = self._translatable_fields[model_name]
+        if fields:
+            _fields = [x for x in _fields if x in fields]
+        for field in _fields:
             for language in record[field]['language']:
                 current_id = language['attrs']['id']
                 code = languages.get(current_id)
