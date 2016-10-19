@@ -208,20 +208,20 @@ class ProductCombinationMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
     @mapping
-    def ean13(self, record):
+    def barcode(self, record):
         barcode = None
         check_ean = self.env['barcode.nomenclature'].check_ean
-        if record['ean13'] in ['', '0']:
+        if record['barcode'] in ['', '0']:
             backend_adapter = self.unit_for(
                 GenericAdapter, 'prestashop.product.template')
             template = backend_adapter.read(record['id_product'])
-            ean13 = template.get('ean13')
-            if ean13 and ean13 != '0' and check_ean(template['ean13']):
-                barcode = ean13
-        elif self.env['barcode.nomenclature'].check_ean(record['ean13']):
-            barcode = record['ean13']
+            barcode = template.get('barcode')
+            if barcode and barcode != '0' and check_ean(template['barcode']):
+                barcode = barcode
+        elif self.env['barcode.nomenclature'].check_ean(record['barcode']):
+            barcode = record['barcode']
         if barcode:
-            return {'barcode': ean13}
+            return {'barcode': barcode}
         return {}
 
     def _get_tax_ids(self, record):
