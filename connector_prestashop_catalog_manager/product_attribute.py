@@ -88,16 +88,10 @@ class ProductCombinationOptionExportMapper(TranslationPrestashopExportMapper):
         ('group_type', 'group_type'),
     ]
 
-    @mapping
-    def translatable_fields(self, record):
-        translatable_fields = [
-            ('name', 'name'),
-            ('name', 'public_name'),
-        ]
-        trans = TranslationPrestashopExporter(self.connector_env)
-        translated_fields = self.convert_languages(
-            trans.get_record_by_lang(record.id), translatable_fields)
-        return translated_fields
+    _translatable_fields = [
+        ('name', 'name'),
+        ('name', 'public_name'),
+    ]
 
 
 @prestashop
@@ -110,7 +104,7 @@ class ProductCombinationOptionValueExport(PrestashopExporter):
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
-        attribute_id = self.erp_record.attribute_id.id
+        attribute_id = self.binding.attribute_id.id
         # export product attribute
         binder = self.binder_for('prestashop.product.combination.option')
         if not binder.to_backend(attribute_id, wrap=True):
@@ -127,6 +121,10 @@ class ProductCombinationOptionValueExportMapper(
     _model_name = 'prestashop.product.combination.option.value'
 
     direct = [('name', 'value')]
+    # handled by base mapping `translatable_fields`
+    _translatable_fields = [
+        ('name', 'name'),
+    ]
 
     @mapping
     def prestashop_product_attribute_id(self, record):
@@ -145,13 +143,3 @@ class ProductCombinationOptionValueExportMapper(
             'id_attribute_group': attribute_binder.to_backend(
                 record.attribute_id.id, wrap=True),
         }
-
-    @mapping
-    def translatable_fields(self, record):
-        translatable_fields = [
-            ('name', 'name'),
-        ]
-        trans = TranslationPrestashopExporter(self.connector_env)
-        translated_fields = self.convert_languages(
-            trans.get_record_by_lang(record.id), translatable_fields)
-        return translated_fields

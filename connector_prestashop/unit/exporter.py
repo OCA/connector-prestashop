@@ -299,23 +299,6 @@ class TranslationPrestashopExporter(PrestashopExporter):
                 TranslationPrestashopExportMapper)
         return self._mapper
 
-    def _map_data(self, fields=None):
-        """ Convert the external record to OpenERP """
-        self.mapper.convert(self.get_record_by_lang(), fields=fields)
-
-    def get_record_by_lang(self):
-        # get the backend's languages
-        languages = self.backend_record.language_ids
-        records = {}
-        # for each languages:
-        for language in languages:
-            # get the translated record
-            record = self.binding.with_context(
-                lang=language['code'])
-            # put it in the dict
-            records[language['prestashop_id']] = record
-        return records
-
 
 def related_action_record(session, job):
     binding_model = job.args[0]

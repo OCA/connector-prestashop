@@ -83,7 +83,7 @@ class ProductCategoryExporter(PrestashopExporter):
         """ Export the dependencies for the category"""
         category_binder = self.binder_for('prestashop.product.category')
         categories_obj = self.session.env['prestashop.product.category']
-        for category in self.erp_record:
+        for category in self.binding:
             self.export_parent_category(
                 category.odoo_id.parent_id, category_binder, categories_obj)
 
@@ -115,21 +115,15 @@ class ProductCategoryExportMapper(TranslationPrestashopExportMapper):
         ('active', 'active'),
         ('position', 'position')
     ]
-
-    @mapping
-    def translatable_fields(self, record):
-        translatable_fields = [
-            ('name', 'name'),
-            ('link_rewrite', 'link_rewrite'),
-            ('description', 'description'),
-            ('meta_description', 'meta_description'),
-            ('meta_keywords', 'meta_keywords'),
-            ('meta_title', 'meta_title'),
-        ]
-        trans = TranslationPrestashopExporter(self.environment)
-        translated_fields = self.convert_languages(
-            trans.get_record_by_lang(record.id), translatable_fields)
-        return translated_fields
+    # handled by base mapping `translatable_fields`
+    _translatable_fields = [
+        ('name', 'name'),
+        ('link_rewrite', 'link_rewrite'),
+        ('description', 'description'),
+        ('meta_description', 'meta_description'),
+        ('meta_keywords', 'meta_keywords'),
+        ('meta_title', 'meta_title'),
+    ]
 
     @mapping
     def parent_id(self, record):
