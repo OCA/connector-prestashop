@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from openerp import _
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
 from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
 from ...backend import prestashop
+from ...connector import add_checkpoint
+from ...connector import add_checkpoint_message
 
 import datetime
 import logging
@@ -88,9 +91,33 @@ class ProductCategoryImporter(TranslatableRecordImporter):
             try:
                 self._import_dependency(record['id_parent'],
                                         'prestashop.product.category')
-            except PrestaShopWebServiceError:
-                # TODO check this silent error
-                pass
+            except PrestaShopWebServiceError, e:
+                msg = _(
+                    'Parent category for `%s` '
+                    'cannot be imported. '
+                    'Error: %s'
+                )
+                binder = self.binder_for()
+                category = binder.to_odoo(record['id'])
+                if category:
+                    name = category.name
+                    add_checkpoint(
+                        self.session,
+                        category._name,
+                        category.id,
+                        self.backend_record.id,
+                        message=msg % (name, str(e))
+                    )
+                else:
+                    # not imported yet, retrieve name in default lang
+                    values = self._split_per_language(
+                        record, fields=['name', ])
+                    name = values[self._default_language]['name']
+                    add_checkpoint_message(
+                        self.session,
+                        self.backend_record.id,
+                        message=msg % (name, str(e))
+                    )
 
 
 @prestashop
