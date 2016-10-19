@@ -7,7 +7,6 @@ from openerp.addons.connector.unit.mapper import mapping
 from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter,
     export_record,
-    TranslationPrestashopExporter
 )
 from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
