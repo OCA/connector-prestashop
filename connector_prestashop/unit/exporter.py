@@ -34,8 +34,9 @@ class PrestashopBaseExporter(Exporter):
         """
         super(PrestashopBaseExporter, self).__init__(environment)
         self.prestashop_id = None
+        self.binding_id = None
 
-    def _get_binding(self, binding_id):
+    def _get_binding(self):
         """ Return the raw Odoo data for ``self.binding_id`` """
         return self.model.browse(self.binding_id)
 
@@ -44,8 +45,8 @@ class PrestashopBaseExporter(Exporter):
 
         :param binding_id: identifier of the binding record to export
         """
+        self.binding_id = binding_id
         self.binding = self._get_binding()
-
         self.prestashop_id = self.binder.to_backend(self.binding)
         result = self._run(*args, **kwargs)
 
@@ -283,6 +284,50 @@ class PrestashopExporter(PrestashopBaseExporter):
 
         message = _('Record exported with ID %s on PrestaShop.')
         return message % self.prestashop_id
+
+
+class TranslationPrestashopExporter(PrestashopExporter):
+
+    @property
+    def mapper(self):
+        if self._mapper is None:
+            self._mapper = self.connector_env.get_connector_unit(
+                TranslationPrestashopExportMapper)
+        return self._mapper
+
+    def _map_data(self, fields=None):
+        """ Convert the external record to OpenERP """
+        self.mapper.convert(self.get_record_by_lang(), fields=fields)
+
+    def get_record_by_lang(self):
+        # get the backend's languages
+        languages = self.backend_record.language_ids
+        records = {}
+        # for each languages:
+        for language in languages:
+            # get the translated record
+            record = self.binding.with_context(
+                lang=language['code'])
+            # put it in the dict
+            records[language['prestashop_id']] = record
+        return records
+
+
+def related_action_record(session, job):
+    binding_model = job.args[0]
+    binding_id = job.args[1]
+    record = session.env[binding_model].browse(binding_id)
+    odoo_name = record.odoo_id._name
+
+    action = {
+        'name': _(odoo_name),
+        'type': 'ir.actions.act_window',
+        'res_model': odoo_name,
+        'view_type': 'form',
+        'view_mode': 'form',
+        'res_id': record.odoo_id.id,
+    }
+    return action
 
 
 @job(default_channel='root.prestashop')
