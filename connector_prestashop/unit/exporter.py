@@ -36,8 +36,9 @@ class PrestashopBaseExporter(Exporter):
         """
         super(PrestashopBaseExporter, self).__init__(environment)
         self.prestashop_id = None
+        self.binding_id = None
 
-    def _get_binding(self, binding_id):
+    def _get_binding(self):
         """ Return the raw Odoo data for ``self.binding_id`` """
         return self.model.browse(self.binding_id)
 
@@ -46,8 +47,8 @@ class PrestashopBaseExporter(Exporter):
 
         :param binding_id: identifier of the binding record to export
         """
+        self.binding_id = binding_id
         self.binding = self._get_binding()
-
         self.prestashop_id = self.binder.to_backend(self.binding)
         result = self._run(*args, **kwargs)
 
@@ -302,15 +303,15 @@ class TranslationPrestashopExporter(PrestashopExporter):
         """ Convert the external record to OpenERP """
         self.mapper.convert(self.get_record_by_lang(), fields=fields)
 
-    def get_record_by_lang(self, record_id):
+    def get_record_by_lang(self):
         # get the backend's languages
         languages = self.backend_record.language_ids
         records = {}
         # for each languages:
         for language in languages:
             # get the translated record
-            record = self.model.with_context(
-                lang=language['code']).browse(record_id)
+            record = self.binding.with_context(
+                lang=language['code'])
             # put it in the dict
             records[language['prestashop_id']] = record
         return records

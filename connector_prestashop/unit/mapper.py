@@ -19,7 +19,6 @@ class PrestashopExportMapper(ExportMapper):
         return res
 
 
-# TODO: check if this stuff is needed for catalog export
 class TranslationPrestashopExportMapper(PrestashopExportMapper):
 
     def convert(self, records_by_language, fields=None):
