@@ -6,19 +6,18 @@ from datetime import timedelta
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import mapping
 
-from openerp.addons.connector_prestashop.unit.import_synchronizer import \
-    TemplateRecordImport
+from openerp.addons.connector_prestashop.\
+    models.product_template.importer import ProductTemplateImporter
 
-from openerp.addons.connector_prestashop.unit.export_synchronizer import (
+from openerp.addons.connector_prestashop.unit.exporter import (
     export_record,
     TranslationPrestashopExporter
 )
 from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
-from openerp.addons.connector_prestashop.consumer import delay_export
 from openerp.addons.connector_prestashop.backend import prestashop
-from openerp.addons.connector_prestashop.product import INVENTORY_FIELDS
+from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
 
 import openerp.addons.decimal_precision as dp
 import unicodedata
@@ -46,7 +45,7 @@ def get_slug(name):
 
 @on_record_create(model_names='prestashop.product.template')
 def prestashop_product_template_create(session, model_name, record_id, fields):
-    delay_export(session, model_name, record_id, priority=20)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.template')
@@ -125,7 +124,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
 
     def _create(self, record):
         res = super(ProductTemplateExport, self)._create(record)
-        self.write_binging_vals(self.erp_record, record)
+        self.write_binging_vals(self.binding, record)
         return res['prestashop']['product']['id']
 
     def _update(self, data):
@@ -140,7 +139,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             ('description_short_html', 'description_short'),
             ('description_html', 'description'),
         ]
-        trans = TemplateRecordImport(self.connector_env)
+        trans = ProductTemplateImporter(self.connector_env)
         splitted_record = trans._split_per_language(ps_record)
         for lang_code, prestashop_record in splitted_record.items():
             vals = {}
@@ -182,14 +181,14 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             return 1 + self._parent_length(categ.parent_id)
 
     def _set_main_category(self):
-        if self.erp_record.categ_id.id == 1 and self.erp_record.categ_ids:
+        if self.binding.categ_id.id == 1 and self.binding.categ_ids:
             max_parent = {'length': 0}
-            for categ in self.erp_record.categ_ids:
+            for categ in self.binding.categ_ids:
                 parent_length = self._parent_length(categ.parent_id)
                 if parent_length > max_parent['length']:
                     max_parent = {'categ_id': categ.id,
                                   'length': parent_length}
-            self.erp_record.odoo_id.with_context(
+            self.binding.odoo_id.with_context(
                 connector_no_export=True).write({
                     'categ_id': max_parent['categ_id'],
                     'categ_ids': [(3, max_parent['categ_id'])],
@@ -209,10 +208,10 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             'prestashop.product.category']
         self._set_main_category()
 
-        for category in self.erp_record.categ_id + self.erp_record.categ_ids:
+        for category in self.binding.categ_id + self.binding.categ_ids:
             self.export_categories(category, category_binder, categories_obj)
 
-        for line in self.erp_record.attribute_line_ids:
+        for line in self.binding.attribute_line_ids:
             attribute_ext_id = attribute_binder.to_backend(
                 line.attribute_id.id, wrap=True)
             if not attribute_ext_id:
@@ -243,7 +242,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
 
     def export_variants(self):
         combination_obj = self.session.env['prestashop.product.combination']
-        for product in self.erp_record.product_variant_ids:
+        for product in self.binding.product_variant_ids:
             if not product.attribute_value_ids:
                 continue
             combination_ext_id = combination_obj.search([
@@ -267,15 +266,15 @@ class ProductTemplateExport(TranslationPrestashopExporter):
 
     def _not_in_variant_images(self, image):
         images = []
-        if len(self.erp_record.product_variant_ids) > 1:
-            for product in self.erp_record.product_variant_ids:
+        if len(self.binding.product_variant_ids) > 1:
+            for product in self.binding.product_variant_ids:
                 images.extend(product.image_ids.ids)
         return image.id not in images
 
     def check_images(self):
-        if self.erp_record.image_ids:
+        if self.binding.image_ids:
             image_binder = self.binder_for('prestashop.product.image')
-            for image in self.erp_record.image_ids:
+            for image in self.binding.image_ids:
                 image_ext_id = image_binder.to_backend(image.id, wrap=True)
                 if not image_ext_id:
                     image_ext_id = self.session.env[
@@ -290,8 +289,8 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                         image_ext_id.id, priority=15)
 
     def update_quantities(self):
-        if len(self.erp_record.product_variant_ids) == 1:
-            product = self.erp_record.odoo_id.product_variant_ids[0]
+        if len(self.binding.product_variant_ids) == 1:
+            product = self.binding.odoo_id.product_variant_ids[0]
             product.update_prestashop_quantities()
 
     def _after_export(self):
