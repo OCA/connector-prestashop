@@ -4,7 +4,7 @@
 from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import mapping
 
-from openerp.addons.connector_prestashop.unit.export_synchronizer import (
+from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter,
     export_record,
     TranslationPrestashopExporter
@@ -12,8 +12,6 @@ from openerp.addons.connector_prestashop.unit.export_synchronizer import (
 from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
-from openerp.addons.connector_prestashop.consumer import \
-    delay_export, delay_export_all_bindings
 from openerp.addons.connector_prestashop.backend import prestashop
 
 import unicodedata
@@ -37,6 +35,7 @@ def get_slug(name):
     slug = re.sub(r'[-\s]+', '-', slug)
     return slug
 
+# TODO: attach this to a model to ease override
 CATEGORY_EXPORT_FIELDS = [
     'name',
     'parent_id',
@@ -45,24 +44,31 @@ CATEGORY_EXPORT_FIELDS = [
     'meta_description',
     'meta_keywords',
     'meta_title',
-    'position']
+    'position'
+]
 
 
 @on_record_create(model_names='prestashop.product.category')
 def prestashop_product_template_create(session, model_name, record_id, fields):
-    delay_export(session, model_name, record_id, priority=20)
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='product.category')
 def product_category_write(session, model_name, record_id, fields):
     if set(fields.keys()) <= set(CATEGORY_EXPORT_FIELDS):
-        delay_export_all_bindings(session, model_name, record_id, fields)
+        if session.context.get('connector_no_export'):
+            return
+        model = session.env[model_name]
+        record = model.browse(record_id)
+        for binding in record.prestashop_bind_ids:
+            export_record.delay(session, binding._model._name, binding.id,
+                                fields=fields, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.category')
 def prestashop_product_category_write(session, model_name, record_id, fields):
     if set(fields.keys()) <= set(CATEGORY_EXPORT_FIELDS):
-        delay_export(session, model_name, record_id, fields)
+        export_record.delay(session, model_name, record_id, fields)
 
 
 @prestashop
