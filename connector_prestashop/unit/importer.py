@@ -405,6 +405,12 @@ class TranslatableRecordImporter(PrestashopImporter):
                 current_id = language['attrs']['id']
                 code = languages.get(current_id)
                 if not code:
+                    # TODO: be nicer here.
+                    # Currently if you have a language in PS
+                    # that is not present in odoo
+                    # the basic metadata sync is broken.
+                    # We should present skip the language
+                    # and maybe show a message to users.
                     raise FailedJobError(
                         _('No language could be found for the Prestashop lang '
                           'with id "%s". Run "Synchronize base data" again.') %
