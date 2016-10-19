@@ -1,28 +1,26 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import os.path
 from openerp.addons.connector.event import on_record_write, on_record_unlink
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import mapping
-
-from openerp.addons.connector_prestashop.unit.export_synchronizer import (
+from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter,
     export_record)
-from openerp.addons.connector_prestashop.unit.delete_synchronizer import (
+from openerp.addons.connector_prestashop.unit.deleter import (
     export_delete_record
 )
-
 from openerp.addons.connector_prestashop.unit.mapper import (
     PrestashopExportMapper
 )
-
 from openerp.addons.connector_prestashop.connector import get_environment
 from openerp.addons.connector_prestashop.backend import prestashop
 
-import os
 from openerp import models, fields
 from openerp.tools.translate import _
+
+import os
+import os.path
 
 
 @on_record_write(model_names='base_multi_image.image')
@@ -86,14 +84,14 @@ class ProductImageExport(PrestashopExporter):
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""
         assert self.binding_id
-        assert self.erp_record
+        assert self.binding
 
         if self._has_to_skip():
             return
 
         # export the missing linked resources
         self._export_dependencies()
-        map_record = self.mapper.map_record(self.erp_record)
+        map_record = self.mapper.map_record(self.binding)
 
         if self.prestashop_id:
             record = map_record.values()
