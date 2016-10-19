@@ -202,13 +202,13 @@ class TemplateMapper(ImportMapper):
         return {'company_id': self.backend_record.company_id.id}
 
     @mapping
-    def ean13(self, record):
+    def barcode(self, record):
         if self.has_combinations(record):
             return {}
-        if record['ean13'] in ['', '0']:
+        if record['barcode'] in ['', '0']:
             return {}
-        if self.env['barcode.nomenclature'].check_ean(record['ean13']):
-            return {'barcode': record['ean13']}
+        if self.env['barcode.nomenclature'].check_ean(record['barcode']):
+            return {'barcode': record['barcode']}
         return {}
 
     def _get_tax_ids(self, record):
