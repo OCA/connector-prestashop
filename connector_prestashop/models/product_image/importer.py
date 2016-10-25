@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
+from openerp import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
@@ -80,12 +80,17 @@ class ProductImageImporter(PrestashopImporter):
     def run(self, template_id, image_id):
         self.template_id = template_id
         self.image_id = image_id
-
         try:
             super(ProductImageImporter, self).run(image_id)
-        except PrestaShopWebServiceError:
-            # TODO Check this silent error
-            pass
+        except PrestaShopWebServiceError as error:
+            msg = _(
+                'Import of image id `%s` failed. '
+                'Error: `%s`'
+            ) % (image_id, error.msg)
+            self.backend_record.add_checkpoint(
+                model='product.template',
+                record_id=int(template_id),
+                message=msg)
 
 
 @job(default_channel='root.prestashop')
