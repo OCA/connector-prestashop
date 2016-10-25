@@ -16,7 +16,6 @@ from ...unit.importer import (
     import_batch,
     DelayedBatchImporter,
 )
-from ...connector import add_checkpoint
 
 
 @prestashop
@@ -41,11 +40,9 @@ class RefundImporter(PrestashopImporter):
         if invoice.amount_total == float(self.prestashop_record['amount']):
             invoice.signal_workflow('invoice_open')
         else:
-            add_checkpoint(
-                self.session,
-                'account.invoice',
-                invoice.id,
-                self.backend_record.id
+            self.backend_record.add_checkpoint(
+                model='account.invoice',
+                record_id=invoice.id,
             )
 
 

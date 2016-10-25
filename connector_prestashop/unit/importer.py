@@ -16,7 +16,6 @@ from openerp.addons.connector.exception import (
     FailedJobError,
 )
 from ..connector import get_environment
-from ..connector import add_checkpoint
 
 
 _logger = logging.getLogger(__name__)
@@ -304,7 +303,7 @@ class BatchImporter(Importer):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
 
-
+# TODO 2016-10-25: is this used at all somewhere???
 class AddCheckpoint(ConnectorUnit):
     """ Add a connector.checkpoint on the underlying model
     (not the prestashop.* but the _inherits'ed model) """
@@ -313,10 +312,10 @@ class AddCheckpoint(ConnectorUnit):
 
     def run(self, binding_id):
         record = self.model.browse(binding_id)
-        add_checkpoint(self.session,
-                       record._model._name,
-                       record.id,
-                       self.backend_record.id)
+        self.backend_record.add_checkpoint(
+            model=record._model._name,
+            record_id=record.id,
+        )
 
 
 class DirectBatchImporter(BatchImporter):

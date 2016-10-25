@@ -17,7 +17,6 @@ from ...unit.importer import (
 )
 from ...backend import prestashop
 from openerp.addons.connector.unit.mapper import backend_to_m2o
-from ...connector import add_checkpoint
 
 
 @prestashop
@@ -222,13 +221,10 @@ class AddressImporter(PrestashopImporter):
             if self._check_vat(vat_number):
                 binding.parent_id.write({'vat': vat_number})
             else:
-                # requires https://github.com/OCA/connector/pull/216
                 msg = _('Please, check the VAT number: %s') % vat_number
-                add_checkpoint(
-                    self.session,
-                    'res.partner',
-                    binding.parent_id.id,
-                    self.backend_record.id,
+                self.backend_record.add_checkpoint(
+                    model=binding.parent_id._name,
+                    record_id=binding.parent_id.id,
                     message=msg,
                 )
 
