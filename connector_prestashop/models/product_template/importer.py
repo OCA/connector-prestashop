@@ -57,13 +57,12 @@ class TemplateMapper(ImportMapper):
             GenericAdapter, 'prestashop.product.combination')
         combination = price_adapter.read(
             record['id_default_combination']['value'])
-        impact_price = float(combination['price'])
-        price = float(record['price'])
+        impact_price = float(combination['price'] or '0.0')
+        price = float(record['price'] or '0.0')
         if tax:
             tax = tax[:1]
             return (price / (1 + tax.amount) - impact_price) * (1 + tax.amount)
-        price = float(record['price']) - impact_price
-        return price
+        return price - impact_price
 
     @mapping
     def list_price(self, record):
@@ -430,7 +429,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
 
-        ps_key = self.backend_record.get_version_ps_key('combination')
+        ps_key = self.backend_record.get_version_ps_key('combinations')
         combinations = associations.get('combinations', {}).get(ps_key, [])
 
         if not isinstance(combinations, list):
