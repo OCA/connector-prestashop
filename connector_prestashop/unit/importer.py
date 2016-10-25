@@ -303,6 +303,7 @@ class BatchImporter(Importer):
         """ Import a record directly or delay the import of the record """
         raise NotImplementedError
 
+
 # TODO 2016-10-25: is this used at all somewhere???
 class AddCheckpoint(ConnectorUnit):
     """ Add a connector.checkpoint on the underlying model
