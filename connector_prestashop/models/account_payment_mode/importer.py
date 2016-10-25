@@ -3,7 +3,6 @@
 
 from ...unit.importer import BatchImporter
 from ...backend import prestashop
-from ...connector import add_checkpoint
 
 
 @prestashop
@@ -44,5 +43,7 @@ class PaymentModeBatchImporter(BatchImporter):
             'fixed_journal_id': journals.id,
             'payment_method_id': payment_method.id
         })
-        add_checkpoint(self.session, self.model._name, mode.id,
-                       self.backend_record.id)
+        self.backend_record.add_checkpoint(
+            model=self.model._name,
+            record_id=mode.id,
+        )

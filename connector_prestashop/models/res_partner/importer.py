@@ -16,8 +16,7 @@ from ...unit.importer import (
     DelayedBatchImporter,
 )
 from ...backend import prestashop
-from ...unit.mapper import backend_to_m2o
-from ...connector import add_checkpoint
+from openerp.addons.connector.unit.mapper import backend_to_m2o
 
 
 @prestashop
@@ -215,11 +214,19 @@ class AddressImporter(PrestashopImporter):
             if self._check_vat(vat_number):
                 binding.parent_id.write({'vat': vat_number})
             else:
+<<<<<<< HEAD
                 add_checkpoint(
                     self.session,
                     'res.partner',
                     binding.parent_id.id,
                     self.backend_record.id
+=======
+                msg = _('Please, check the VAT number: %s') % vat_number
+                self.backend_record.add_checkpoint(
+                    model=binding.parent_id._name,
+                    record_id=binding.parent_id.id,
+                    message=msg,
+>>>>>>> [imp] get rid of `add_checkpoint` occurrencies (requires https://github.com/OCA/connector/pull/220)
                 )
 
 
