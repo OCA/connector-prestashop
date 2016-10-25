@@ -473,6 +473,7 @@ class SaleOrderLineDiscountImporter(ImportMapper):
 @job(default_channel='root.prestashop')
 def import_orders_since(session, backend_id, since_date=None):
     """ Prepare the import of orders modified on PrestaShop """
+    backend_record = session.env['prestashop.backend'].browse(backend_id)
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
@@ -488,11 +489,16 @@ def import_orders_since(session, backend_id, since_date=None):
         filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
     try:
         import_batch(session, 'prestashop.mail.message', backend_id, filters)
-    except:
-        # TODO Check this silent error
-        pass
+    except Exception as error:
+        msg = _(
+            'Mail messages import failed with filters `%s`. '
+            'Error: `%s`'
+        ) % (str(filters), str(error))
+        backend_record.add_checkpoint(
+            message=msg
+        )
 
     now_fmt = fields.Datetime.now()
-    session.env['prestashop.backend'].browse(backend_id).write({
+    backend_record.write({
         'import_orders_since': now_fmt
     })
