@@ -144,8 +144,9 @@ class ProductCombinationMapper(ImportMapper):
         return template_binder.to_odoo(record['id_product'])
 
     def _get_option_value(self, record):
-        option_values = record['associations']['product_option_values'][
-            self.backend_record.get_version_ps_key('product_option_value')]
+        option_values = record.get('associations', {}).get(
+            'product_option_values', {}).get(
+            self.backend_record.get_version_ps_key('product_option_value'), [])
         if type(option_values) is dict:
             option_values = [option_values]
 
