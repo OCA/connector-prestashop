@@ -7,8 +7,6 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
 from ...backend import prestashop
-from ...connector import add_checkpoint
-from ...connector import add_checkpoint_message
 
 import datetime
 import logging
@@ -101,23 +99,17 @@ class ProductCategoryImporter(TranslatableRecordImporter):
                 category = binder.to_odoo(record['id'])
                 if category:
                     name = category.name
-                    add_checkpoint(
-                        self.session,
-                        category._name,
-                        category.id,
-                        self.backend_record.id,
-                        message=msg % (name, str(e))
-                    )
                 else:
                     # not imported yet, retrieve name in default lang
                     values = self._split_per_language(
                         record, fields=['name', ])
                     name = values[self._default_language]['name']
-                    add_checkpoint_message(
-                        self.session,
-                        self.backend_record.id,
-                        message=msg % (name, str(e))
-                    )
+
+                self.backend_record.add_checkpoint(
+                    model=category._name,
+                    record_id=category.id,
+                    message=msg % (name, str(e))
+                )
 
 
 @prestashop
