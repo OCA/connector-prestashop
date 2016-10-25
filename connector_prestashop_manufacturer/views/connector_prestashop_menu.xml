@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <menuitem id="menu_prestashop_manufacturer"
+        name="Manufacturers"
+        parent="connector_prestashop.menu_prestashop_root"
+        sequence="50"
+        action="action_prestashop_manufacturer"/>
+
+</data>
+</openerp>
