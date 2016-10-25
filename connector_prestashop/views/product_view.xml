@@ -103,31 +103,6 @@
            </field>
         </record>
 
-    <record id="product_connector_presta_form_view" model="ir.ui.view">
-       <field name="model">prestashop.product.template</field>
-       <field name="arch" type="xml">
-            <form string="prestashop fields">
-                <group col="1">
-                    <field name="backend_id"/>
-                    <field name="default_shop_id"/>
-                    <field name="link_rewrite"/>
-                    <field name="description_short_html"/>
-                    <field name="description_html"/>
-                </group>
-                <group col="4" colspan="4">
-                    <field name="date_add"/>
-                    <field name="date_upd"/>
-                    <field name="sale_ok"/>
-                    <field name="quantity" string="qty"/>
-                    <field name="always_available"/>
-                    <field name="available_for_order"/>
-                    <field name="show_price"/>
-                    <field name="on_sale"/>
-                </group>
-            </form>
-       </field>
-    </record>
-
     <record id="product_connector_presta_tree_view" model="ir.ui.view">
         <field name="model">prestashop.product.template</field>
         <field name="arch" type="xml">

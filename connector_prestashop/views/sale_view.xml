@@ -63,7 +63,6 @@
             </field>
         </record>
 
-
     <record id="view_prestashop_sale_order_state_form" model="ir.ui.view">
         <field name="name">prestashop.sale.order.state.form</field>
         <field name="model">prestashop.sale.order.state</field>
