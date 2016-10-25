@@ -240,8 +240,8 @@ class ProductCombinationMapper(ImportMapper):
         )
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
         factor_tax = tax.price_include and (1 + tax.amount) or 1.0
-        impact = float(record['price']) * factor_tax
-        cost_price = float(record['wholesale_price'])
+        impact = float(record['price'] or '0.0') * factor_tax
+        cost_price = float(record['wholesale_price'] or '0.0')
         return {
             'list_price': product_template.list_price,
             'standard_price': cost_price or product_template.standard_price,
