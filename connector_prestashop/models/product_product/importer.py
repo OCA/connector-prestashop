@@ -144,8 +144,9 @@ class ProductCombinationMapper(ImportMapper):
         return template_binder.to_odoo(record['id_product'])
 
     def _get_option_value(self, record):
-        option_values = record['associations']['product_option_values'][
-            self.backend_record.get_version_ps_key('product_option_value')]
+        option_values = record.get('associations', {}).get(
+            'product_option_values', {}).get(
+            self.backend_record.get_version_ps_key('product_option_value'), [])
         if type(option_values) is dict:
             option_values = [option_values]
 
@@ -240,8 +241,8 @@ class ProductCombinationMapper(ImportMapper):
         )
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
         factor_tax = tax.price_include and (1 + tax.amount) or 1.0
-        impact = float(record['price']) * factor_tax
-        cost_price = float(record['wholesale_price'])
+        impact = float(record['price'] or '0.0') * factor_tax
+        cost_price = float(record['wholesale_price'] or '0.0')
         return {
             'list_price': product_template.list_price,
             'standard_price': cost_price or product_template.standard_price,
