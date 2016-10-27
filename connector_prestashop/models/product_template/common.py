@@ -154,7 +154,7 @@ class ProductInventoryAdapter(GenericAdapter):
             stock = res[first_key]
             stock['quantity'] = int(quantity)
             try:
-                client.edit(self._prestashop_model, stock['id'], {
+                client.edit(self._prestashop_model, {
                     self._export_node_name: stock
                 })
             # TODO: investigate the silent errors
