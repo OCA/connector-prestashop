@@ -3,4 +3,4 @@ prestapyt >= 0.7.0
 unidecode
 # tests dependencies
 freezegun
-vcr
+vcrpy
