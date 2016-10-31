@@ -12,7 +12,12 @@ class CountryImporter(DirectBinder):
     _ps_field = 'iso_code'
 
     def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-        if len(erp_val) >= 2 and len(ps_val) >= 2 and \
-                erp_val[0:2].lower() == ps_val[0:2].lower():
+        if (
+            erp_val and
+            ps_val and
+            len(erp_val) >= 2 and
+            len(ps_val) >= 2 and
+            erp_val[0:2].lower() == ps_val[0:2].lower()
+        ):
             return True
         return False
