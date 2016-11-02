@@ -117,7 +117,11 @@
                     <button name="recompute_prestashop_qty"
                         class="oe_highlight"
                         type="object"
-                        string="Export quantity"/>
+                        string="Recompute quantity"/>
+                    <button name="force_export_stock"
+                        class="oe_highlight"
+                        type="object"
+                        string="Export All Stock"/>
                     <button name="resync"
                         type="object"
                         string="Resync" />

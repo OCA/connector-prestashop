@@ -51,9 +51,9 @@ class MailMessageRecordImport(PrestashopImporter):
 
     def _import_dependencies(self):
         record = self.prestashop_record
-        self._check_dependency(record['id_order'], 'prestashop.sale.order')
+        self._import_dependency(record['id_order'], 'prestashop.sale.order')
         if record['id_customer'] != '0':
-            self._check_dependency(
+            self._import_dependency(
                 record['id_customer'], 'prestashop.res.partner'
             )
 

@@ -125,8 +125,8 @@ class ResPartnerRecordImport(PrestashopImporter):
         if not isinstance(groups, list):
             groups = [groups]
         for group in groups:
-            self._check_dependency(group['id'],
-                                   'prestashop.res.partner.category')
+            self._import_dependency(
+                group['id'], 'prestashop.res.partner.category')
 
     def _after_import(self, erp_id):
         binder = self.binder_for(self._model_name)

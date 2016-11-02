@@ -3,6 +3,7 @@
 
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.mapper import backend_to_m2o
+from ...unit.importer import PrestashopImporter, DirectBatchImporter
 from ...backend import prestashop
 
 
@@ -32,11 +33,11 @@ class ShopImportMapper(ImportMapper):
         return {'odoo_id': self.backend_record.warehouse_id.id}
 
 
-# @prestashop
-# class ShopImporter(PrestashopImporter):
-#     _model_name = 'prestashop.shop'
-#
-#
-# @prestashop
-# class ShopBatchImporter(DirectBatchImporter):
-#     _model_name = 'prestashop.shop'
+@prestashop
+class ShopImporter(PrestashopImporter):
+    _model_name = 'prestashop.shop'
+
+
+@prestashop
+class ShopBatchImporter(DirectBatchImporter):
+    _model_name = 'prestashop.shop'

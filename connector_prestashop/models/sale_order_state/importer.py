@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
-from ...unit.importer import TranslatableRecordImporter
+from ...unit.importer import TranslatableRecordImporter, DirectBatchImporter
 from ...backend import prestashop
 
 
@@ -37,6 +37,6 @@ class SaleOrderStateImport(TranslatableRecordImporter):
     }
 
 
-# @prestashop
-# class SaleOrderStateBatchImporter(DirectBatchImporter):
-#     _model_name = 'prestashop.sale.order.state'
+@prestashop
+class SaleOrderStateBatchImporter(DirectBatchImporter):
+    _model_name = 'prestashop.sale.order.state'

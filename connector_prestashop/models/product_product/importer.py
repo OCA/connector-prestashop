@@ -31,20 +31,20 @@ class ProductCombinationRecordImport(PrestashopImporter):
 
     def _import_dependencies(self):
         record = self.prestashop_record
+        ps_key = self.backend_record.get_version_ps_key('product_option_value')
         option_values = record.get('associations', {}).get(
-            'product_option_values', {}).get(
-            self.backend_record.get_version_ps_key('product_option_value'), [])
+            'product_option_values', {}).get(ps_key, [])
         if not isinstance(option_values, list):
             option_values = [option_values]
         backend_adapter = self.unit_for(
             BackendAdapter, 'prestashop.product.combination.option.value')
         for option_value in option_values:
             option_value = backend_adapter.read(option_value['id'])
-            self._check_dependency(
+            self._import_dependency(
                 option_value['id_attribute_group'],
                 'prestashop.product.combination.option',
             )
-            self._check_dependency(
+            self._import_dependency(
                 option_value['id'],
                 'prestashop.product.combination.option.value'
             )
@@ -267,7 +267,7 @@ class ProductCombinationOptionRecordImport(PrestashopImporter):
         if not isinstance(option_values, list):
             option_values = [option_values]
         for option_value in option_values:
-            self._check_dependency(
+            self._import_dependency(
                 option_value['id'],
                 'prestashop.product.combination.option.value'
             )
@@ -289,7 +289,8 @@ class ProductCombinationOptionRecordImport(PrestashopImporter):
                 'odoo_id': attribute_ids.id,
                 'backend_id': self.backend_record.id,
             }
-            erp_id = self.model.create(data)
+            erp_id = self.model.with_context(
+                connector_no_export=True).create(data)
             self.binder.bind(self.prestashop_id, erp_id.id)
         self._import_values()
 

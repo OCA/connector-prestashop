@@ -41,6 +41,7 @@
                 </group>
                 <group name="main_configuration" string="Main Configuration">
                     <field name="warehouse_id"/>
+                    <field name="stock_location_id"/>
                     <field name="taxes_included"/>
                     <field name="discount_product_id" />
                     <field name="shipping_product_id" />
@@ -263,7 +264,6 @@
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
-
 
 </data>
 </openerp>

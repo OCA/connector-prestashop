@@ -19,6 +19,7 @@ class PrestashopDeleter(Deleter):
         return _('Record %s deleted on PrestaShop on resource %s') % (
             external_id, resource)
 
+
 PrestashopDeleteSynchronizer = PrestashopDeleter  # Deprecated
 
 

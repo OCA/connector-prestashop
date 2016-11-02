@@ -11,6 +11,8 @@ except ImportError, e:
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
+from openerp.addons.connector.session import ConnectorSession
+from ..product_template.exporter import export_inventory
 
 _logger = logging.getLogger(__name__)
 
@@ -105,20 +107,46 @@ class PrestashopProductTemplate(models.Model):
     on_sale = fields.Boolean(string='Show on sale icon')
 
     @api.multi
+    def force_export_stock(self):
+        session = ConnectorSession.from_env(self.env)
+        for template in self:
+            if template.product_variant_count > 1:
+                for binding in template.mapped(
+                        'product_variant_ids.prestashop_bind_ids'):
+                    export_inventory.delay(
+                        session,
+                        'prestashop.product.combination',
+                        binding.id,
+                        fields=['quantity'],
+                        priority=20
+                    )
+            else:
+                for binding in template.prestashop_bind_ids:
+                    export_inventory.delay(
+                        session,
+                        'prestashop.product.template',
+                        binding.id,
+                        fields=['quantity'],
+                        priority=20
+                    )
+
+    def _prestashop_qty(self):
+        locations = self.backend_id.get_stock_locations()
+        qty_available = self.with_context(location=locations.ids).qty_available
+        return qty_available - self.outgoing_qty
+
+    @api.multi
     def recompute_prestashop_qty(self):
         for product_binding in self:
             new_qty = product_binding._prestashop_qty()
             if product_binding.quantity != new_qty:
-                product_binding.quantity = new_qty
+                product_binding.quantity = new_qty if new_qty >= 0.0 else 0.0
+            # Recompute variants if is needed
+            if product_binding.product_variant_count > 1:
+                for variant in product_binding.mapped(
+                        'product_variant_ids.prestashop_bind_ids'):
+                    variant.recompute_prestashop_qty()
         return True
-
-    def _prestashop_qty(self):
-        locations = self.env['stock.location'].search([
-            ('id', 'child_of', self.backend_id.warehouse_id.lot_stock_id.id),
-            ('prestashop_synchronized', '=', True),
-            ('usage', '=', 'internal'),
-        ])
-        return self.with_context(location=locations.ids).qty_available
 
 
 @prestashop
@@ -170,3 +198,17 @@ class ProductInventoryAdapter(GenericAdapter):
                 pass
             except ElementTree.ParseError:
                 pass
+
+
+@prestashop
+class PrestashopProductTags(GenericAdapter):
+    _model_name = '_prestashop_product_tag'
+    _prestashop_model = 'tags'
+    _export_node_name = 'tag'
+
+    def search(self, filters=None):
+        res = self.client.get(self._prestashop_model, options=filters)
+        tags = res[self._prestashop_model][self._export_node_name]
+        if isinstance(tags, dict):
+            return [tags]
+        return tags

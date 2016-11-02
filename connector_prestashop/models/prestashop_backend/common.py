@@ -4,9 +4,7 @@
 from datetime import datetime
 import pytz
 
-from openerp import models, fields, api
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-
+from openerp.addons.connector.connector import ConnectorEnvironment
 from openerp.addons.connector.session import ConnectorSession
 from ...unit.direct_binder import DirectBinder
 from ...unit.importer import import_batch, import_record
@@ -22,6 +20,9 @@ from ..product_supplierinfo.importer import import_suppliers
 from ..account_invoice.importer import import_refunds
 from ..product_template.importer import import_products
 from ..sale_order.importer import import_orders_since
+
+from openerp import models, fields, api
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class PrestashopBackend(models.Model):
@@ -40,6 +41,7 @@ class PrestashopBackend(models.Model):
             ('1.5', '< 1.6.0.9'),
             ('1.6.0.9', '1.6.0.9 - 1.6.0.10'),
             ('1.6.0.11', '>= 1.6.0.11'),
+            ('1.6.1.2', '>= 1.6.1.2'),
         ]
     version = fields.Selection(
         selection='_select_versions',
@@ -57,6 +59,11 @@ class PrestashopBackend(models.Model):
         string='Warehouse',
         required=True,
         help='Warehouse used to compute the stock quantities.'
+    )
+    stock_location_id = fields.Many2one(
+        comodel_name='stock.location',
+        string='Stock Location',
+        help='Location used to import stock quantities.'
     )
     taxes_included = fields.Boolean("Use tax included prices")
     import_partners_since = fields.Datetime('Import partners since')
@@ -228,23 +235,47 @@ class PrestashopBackend(models.Model):
             import_suppliers.delay(session, backend_record.id, since_date)
         return True
 
+    keys_conversion = {
+        '1.6.0.9': {
+            'product_option_value': 'product_option_values',
+            'category': 'categories',
+            'order_slip': 'order_slips',
+            'order_slip_detail': 'order_slip_details',
+            'group': 'groups',
+            'order_row': 'order_rows',
+            'tax': 'taxes',
+            'image': 'images',
+            'combinations': 'combinations',
+            'tag': 'tags',
+        },
+        # singular names as < 1.6.0.9
+        '1.6.0.11': {},
+        '1.6.1.2': {
+            'product_option_value': 'product_option_value',
+            'category': 'category',
+            'image': 'image',
+            'order_slip': 'order_slip',
+            'order_slip_detail': 'order_slip_detail',
+            'group': 'group',
+            'order_row': 'order_row',
+            'tax': 'taxes',
+            'combinations': 'combination',
+            'product_features': 'product_feature',
+            'tag': 'tag',
+            'messages': 'customer_messages',
+        },
+    }
+
+    @api.multi
+    def get_environment(self, model_name, session=None):
+        self.ensure_one()
+        if not session:
+            session = ConnectorSession.from_env(self.env)
+        return ConnectorEnvironment(self, session, model_name)
+
     def get_version_ps_key(self, key):
-        keys_conversion = {
-            '1.6.0.9': {
-                'product_option_value': 'product_option_values',
-                'category': 'categories',
-                'order_slip': 'order_slips',
-                'order_slip_detail': 'order_slip_details',
-                'group': 'groups',
-                'order_row': 'order_rows',
-                'tax': 'taxes',
-                'image': 'images',
-            },
-            # singular names as < 1.6.0.9
-            '1.6.0.11': {},
-        }
-        if self.version == '1.6.0.9':
-            key = keys_conversion[self.version][key]
+        if self.version in ['1.6.0.9', '1.6.1.2']:
+            return self.keys_conversion[self.version][key]
         return key
 
     @api.model
@@ -283,6 +314,17 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession()
         import_record(session, model_name, self.id, ext_id)
         return True
+
+    @api.multi
+    def get_stock_locations(self):
+        self.ensure_one()
+        locations = self.env['stock.location'].search([
+            ('id', 'child_of', self.stock_location_id.id or
+                self.warehouse_id.lot_stock_id.id),
+            ('prestashop_synchronized', '=', True),
+            ('usage', '=', 'internal'),
+        ])
+        return locations
 
 
 class PrestashopShopGroup(models.Model):

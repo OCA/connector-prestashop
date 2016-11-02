@@ -256,17 +256,18 @@ class SaleOrderImport(PrestashopImporter):
 
     def _import_dependencies(self):
         record = self.prestashop_record
-        self._check_dependency(record['id_customer'], 'prestashop.res.partner')
-        self._check_dependency(
+        self._import_dependency(
+            record['id_customer'], 'prestashop.res.partner')
+        self._import_dependency(
             record['id_address_invoice'], 'prestashop.address'
         )
-        self._check_dependency(
+        self._import_dependency(
             record['id_address_delivery'], 'prestashop.address'
         )
 
         if record['id_carrier'] != '0':
-            self._check_dependency(record['id_carrier'],
-                                   'prestashop.delivery.carrier')
+            self._import_dependency(
+                record['id_carrier'], 'prestashop.delivery.carrier')
 
         orders = record['associations'] \
             .get('order_rows', {}) \
@@ -275,8 +276,8 @@ class SaleOrderImport(PrestashopImporter):
             orders = [orders]
         for order in orders:
             try:
-                self._check_dependency(order['product_id'],
-                                       'prestashop.product.template')
+                self._import_dependency(
+                    order['product_id'], 'prestashop.product.template')
             except PrestaShopWebServiceError:
                 pass
 
@@ -307,11 +308,11 @@ class SaleOrderImport(PrestashopImporter):
             refund = backend_adapter.read(refund_id)
             if refund['id_order'] == id_order:
                 continue
-            self._check_dependency(refund_id, 'prestashop.refund')
+            self._import_dependency(refund_id, 'prestashop.refund')
 
     def _has_to_skip(self):
         """ Return True if the import can be skipped """
-        if self._get_odoo_id():
+        if self._get_binding():
             return True
         rules = self.unit_for(SaleImportRule)
         return rules.check(self.prestashop_record)

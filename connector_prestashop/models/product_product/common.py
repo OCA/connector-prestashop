@@ -64,54 +64,27 @@ class ProductProduct(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'product_tmpl_id' in vals:
-            template = self.env['product.template'].browse(
-                vals['product_tmpl_id'])
-            if template.product_variant_ids:
-                vals['default_on'] = not template.product_variant_ids.filtered(
-                    lambda x: x.default_on)
-            return super(ProductProduct, self).create(vals)
-        else:
-            product = super(ProductProduct, self).create(vals)
-            if product.product_variant_count > 1:
-                value = not product.product_variant_ids.filtered(
-                    lambda x: x.default_on)
-                product.with_context(
-                    connector_no_export=True).default_on = value
-            return product
+        res = super(ProductProduct, self).create(vals)
+        res._set_variants_default_on()
+        return res
 
     @api.multi
     def write(self, vals):
         if not vals.get('active', True):
             vals['default_on'] = False
         res = super(ProductProduct, self).write(vals)
-        if not self.env.context.get('skip_check_default_variant', False):
-            for product in self:
-                template = product.product_tmpl_id
-                if 'default_on' in vals and template.product_variant_count > 1:
-                    old_default_var = template.product_variant_ids.filtered(
-                        lambda x: x.default_on and x.id != product.id)
-                    if old_default_var:
-                        old_default_var.with_context(
-                            skip_check_default_variant=True,
-                            connector_no_export=True,
-                        ).default_on = False
-        if self._check_default_on():
-            return res
-        else:
-            raise ValidationError(_('Error! Only one variant can be default '
-                                    'and one is required as default'))
+        default_on_list = vals.get('default_on', False) and self.ids or []
+        self._set_variants_default_on(default_on_list)
         return res
 
     @api.multi
     def unlink(self):
-        templates = self.mapped('product_tmpl_id')
-        for template in templates:
-            if template.product_variant_count > 1:
-                if not template.product_variant_ids.filtered(
-                        lambda x: x.default_on and x.id != self.id):
-                    template.product_variant_ids[:1].default_on = True
-        return super(ProductProduct, self).unlink()
+        self.write({
+            'default_on': False,
+            'active': False
+        })
+        res = super(ProductProduct, self).unlink()
+        return res
 
     @api.multi
     def update_prestashop_qty(self):
@@ -185,13 +158,13 @@ class PrestashopProductCombination(models.Model):
     @api.multi
     def recompute_prestashop_qty(self):
         for product_binding in self:
-            if product_binding.quantity != product_binding.qty_available:
-                product_binding.quantity = product_binding.qty_available
+            locations = product_binding.backend_id.get_stock_locations()
+            qty_available = product_binding.with_context(
+                location=locations.ids).qty_available
+            qty = qty_available - product_binding.outgoing_qty
+            if product_binding.quantity != qty:
+                product_binding.quantity = qty if qty >= 0.0 else 0.0
         return True
-
-    @api.model
-    def _prestashop_qty(self, product):
-        return product.qty_available
 
 
 class ProductAttribute(models.Model):
