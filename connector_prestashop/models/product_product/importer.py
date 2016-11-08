@@ -28,9 +28,9 @@ class ProductCombinationImporter(PrestashopImporter):
 
     def _import_dependencies(self):
         record = self.prestashop_record
+        ps_key = self.backend_record.get_version_ps_key('product_option_value')
         option_values = record.get('associations', {}).get(
-            'product_option_values', {}).get(
-            self.backend_record.get_version_ps_key('product_option_value'), [])
+            'product_option_values', {}).get(ps_key, [])
         if not isinstance(option_values, list):
             option_values = [option_values]
         backend_adapter = self.unit_for(
@@ -39,12 +39,10 @@ class ProductCombinationImporter(PrestashopImporter):
             option_value = backend_adapter.read(option_value['id'])
             self._import_dependency(
                 option_value['id_attribute_group'],
-                'prestashop.product.combination.option',
-            )
+                'prestashop.product.combination.option')
             self._import_dependency(
                 option_value['id'],
-                'prestashop.product.combination.option.value'
-            )
+                'prestashop.product.combination.option.value')
 
     def _after_import(self, binding):
         super(ProductCombinationImporter, self)._after_import(binding)
@@ -345,7 +343,7 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     direct = [
         ('name', 'name'),
     ]
-
+        
     @mapping
     def attribute_id(self, record):
         binder = self.binder_for('prestashop.product.combination.option')

@@ -38,3 +38,7 @@ class PrestashopBinder(Binder):
         'prestashop.mail.message',
         'prestashop.groups.pricelist',
     ]
+
+    def to_odoo(self, external_id, unwrap=False):
+        # Make alias to to_openerp, remove in v10
+        return self.to_openerp(external_id, unwrap)

@@ -99,8 +99,9 @@ class TemplateMapper(ImportMapper):
         return {'date_upd': record['date_upd']}
 
     def has_combinations(self, record):
-        combinations = record.get('associations', {}).get(
-            'combinations', {}).get('combinations', [])
+        associations = record.get('associations', {})
+        combinations = associations.get('combinations', {}).get(
+            self.backend_record.get_version_ps_key('combinations'))
         return len(combinations) != 0
 
     def _template_code_exists(self, code):
