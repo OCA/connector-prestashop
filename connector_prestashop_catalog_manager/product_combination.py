@@ -180,7 +180,7 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
     direct = [
         ('default_code', 'reference'),
         ('active', 'active'),
-        ('barcode', 'barcode'),
+        ('barcode', 'ean13'),
         ('minimal_quantity', 'minimal_quantity'),
         ('weight', 'weight'),
     ]
