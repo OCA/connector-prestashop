@@ -223,6 +223,7 @@ class AddressImporter(PrestashopImporter):
             else:
                 msg = _('Please, check the VAT number: %s') % vat_number
                 self.backend_record.add_checkpoint(
+                    session=self.session,
                     model=binding.parent_id._name,
                     record_id=binding.parent_id.id,
                     message=msg,

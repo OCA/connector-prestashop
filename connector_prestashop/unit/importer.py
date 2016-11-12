@@ -314,6 +314,7 @@ class AddCheckpoint(ConnectorUnit):
     def run(self, binding_id):
         record = self.model.browse(binding_id)
         self.backend_record.add_checkpoint(
+            session=self.session,
             model=record._model._name,
             record_id=record.id,
         )

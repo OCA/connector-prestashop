@@ -41,6 +41,7 @@ class RefundImporter(PrestashopImporter):
             invoice.signal_workflow('invoice_open')
         else:
             self.backend_record.add_checkpoint(
+                session=self.session,
                 model='account.invoice',
                 record_id=invoice.id,
             )

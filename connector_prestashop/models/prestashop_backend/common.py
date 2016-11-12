@@ -6,6 +6,7 @@ import logging
 from openerp import models, fields, api, exceptions, _
 
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.checkpoint import checkpoint
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
 from ...connector import get_environment
@@ -241,7 +242,7 @@ class PrestashopBackend(models.Model):
             'image': 'image',
             'order_slip': 'order_slips',
             'order_slip_detail': 'order_slip_details',
-            'group': 'groups',
+            'group': 'group',
             'order_row': 'order_rows',
             'tax': 'taxes',
             'combinations': 'combination',
@@ -289,6 +290,12 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession()
         import_record(session, model_name, self.id, ext_id)
         return True
+
+    @api.multi
+    def add_checkpoint(self, session, model, record_id, message=None):
+        self.ensure_one()
+        checkpoint.add_checkpoint(
+            session, model, record_id, self._name, self.id, message)
 
 
 class PrestashopShopGroup(models.Model):
