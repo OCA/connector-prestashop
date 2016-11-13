@@ -46,6 +46,8 @@ def product_image_unlink(session, model_name, record_id):
         if product.exists():
             product_template = product.prestashop_bind_ids.filtered(
                 lambda x: x.backend_id == binding.backend_id)
+            if not product_template:
+                return
             env_product = get_environment(
                 session, 'prestashop.product.template', binding.backend_id.id)
             binder_product = env_product.get_connector_unit(Binder)
