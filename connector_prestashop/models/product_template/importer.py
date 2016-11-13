@@ -102,7 +102,7 @@ class TemplateMapper(ImportMapper):
         associations = record.get('associations', {})
         combinations = associations.get('combinations', {}).get(
             self.backend_record.get_version_ps_key('combinations'))
-        return len(combinations) != 0
+        return len(combinations or '') != 0
 
     def _template_code_exists(self, code):
         model = self.session.env['product.template']
