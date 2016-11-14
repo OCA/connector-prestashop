@@ -246,26 +246,21 @@ class TemplateMapper(ImportMapper):
             }
         return {}
 
-    # @mapping
-    # def translatable_fields(self, record):
-    #     translatable_fields = [
-    #         # ('name', 'name'),
-    #         # ('link_rewrite', 'link_rewrite'),
-    #         ('meta_title', 'meta_title'),
-    #         ('meta_description', 'meta_description'),
-    #         ('meta_keywords', 'meta_keywords'),
-    #         # ('tags', 'tags'),
-    #         # ('description_short_html', 'description_short'),
-    #         # ('description_html', 'description'),
-    #         # ('available_now', 'available_now'),
-    #         # ('available_later', 'available_later'),
-    #         # ("description_sale", "description"),
-    #         # ('description', 'description_short'),
-    #     ]
-    #     trans = TranslationPrestashopImporter(self.connector_env)
-    #     translated_fields = self.convert_languages(
-    #         trans.get_record_by_lang(record.id), translatable_fields)
-    #     return translated_fields
+    @mapping
+    def extra_features(self, record):
+        mapper = self.unit_for(ProductFeaturesImportMapper)
+        return mapper.map_record(record).values(**self.options)
+    
+
+@prestashop
+class ProductFeaturesImportMapper(ImportMapper):
+    # For extend in connector_prestashop_features module, by this way we
+    # avoid have dependencies of other modules as procut_custom_info
+    _model_name = 'prestashop.product.template'
+
+    @mapping
+    def extras(self, record):
+        return {}
 
 
 @prestashop

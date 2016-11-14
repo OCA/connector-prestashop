@@ -246,6 +246,7 @@ class PrestashopBackend(models.Model):
             'order_row': 'order_rows',
             'tax': 'taxes',
             'combinations': 'combination',
+            'product_features': 'product_feature',
         },
     }
 
