@@ -198,6 +198,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
+        super(ProductTemplateExport, self)._export_dependencies()
         attribute_binder = self.binder_for(
             'prestashop.product.combination.option')
         option_binder = self.binder_for(

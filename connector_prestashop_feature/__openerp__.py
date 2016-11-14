@@ -3,7 +3,7 @@
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 {
-    'name': 'Connector Prestashop Product Features',
+    'name': 'Connector Prestashop Product Feature',
     'summary': 'Import product features from PrestaShop',
     'version': '9.0.1.0.0',
     'category': 'Connector',
@@ -19,10 +19,7 @@
     ],
     'data': [
         'data/custom.info.template.csv',
-        # 'data/cron.xml',
-        # 'views/partner_view.xml',
-        # 'views/prestashop_model_view.xml',
-        # 'views/product_view.xml',
-        # 'views/connector_prestashop_menu.xml',
+        'data/cron.xml',
+        'views/prestashop_model_view.xml',
     ]
 }

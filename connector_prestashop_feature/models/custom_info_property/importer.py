@@ -18,6 +18,8 @@ from openerp.addons.connector_prestashop.unit.importer import (
     import_record,
 )
 from openerp.addons.connector_prestashop.backend import prestashop
+from openerp.addons.connector_prestashop.unit.backend_adapter import \
+    PrestaShopCRUDAdapter
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -33,19 +35,21 @@ class ProductFeaturesImporter(TranslatableRecordImporter):
     }
     
     def _import_feature_values(self):
-        prestashop_record = self._get_prestashop_data()
-        associations = prestashop_record.get('product_features', {})
-
-        ps_key = self.backend_record.get_version_ps_key('product_features')
-        features = associations.get('product_features', {}).get(ps_key, [])
-
-        if not isinstance(features, list):
-            features = [features]
-        if features:
-            for feature in features:
+        record = self._get_prestashop_data()
+        feature_value_adapter = self.unit_for(
+            PrestaShopCRUDAdapter,
+            'prestashop.product.feature.values')
+        filters = {
+            'filter[id_feature]': record['id'],
+        }
+        feature_values = feature_value_adapter.search(filters)
+        feature_value_binder = self.binder_for(
+            'prestashop.product.feature.values')
+        for value in feature_values:
+            if not feature_value_binder.to_odoo(value):
                 import_record(
                     self.session, 'prestashop.product.feature.values',
-                    self.backend_record.id, feature['id'])
+                    self.backend_record.id, value)
 
     def _after_import(self, binding):
         super(ProductFeaturesImporter, self)._after_import(binding)
@@ -68,7 +72,7 @@ class ProductFeaturesImportMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
     @mapping
-    def active(self, record):
+    def position(self, record):
         return {'position': int(record['position'])}
 
     @mapping
@@ -79,7 +83,7 @@ class ProductFeaturesImportMapper(ImportMapper):
     @only_create
     def assign_custom_template(self, record):
         custom_tmpl = self.env.ref(
-            'connector_prestashop_features.tpl_prestashop_features')
+            'connector_prestashop_feature.tpl_prestashop_features')
         return {'template_id': custom_tmpl.id}
 
 
@@ -87,64 +91,6 @@ class ProductFeaturesImportMapper(ImportMapper):
 class ProductFeaturesBatchImport(DelayedBatchImporter):
     """ Import the PrestaShop Product Features. """
     _model_name = 'prestashop.product.features'
-
-
-@prestashop
-class ProductFeatureValuesImporter(TranslatableRecordImporter):
-    _model_name = [
-        'prestashop.product.feature.values',
-    ]
-    
-    _translatable_fields = {
-        'prestashop.product.feature.values': ['name'],
-    }
-    
-    def _import_feature(self):
-        
-        record = self.prestashop_record
-        if int(record['id']):
-            self._import_dependency(
-                record['id'], 'prestashop.product.features')
-    
-    def _import_dependencies(self):
-        super(ProductFeatureValuesImporter, self)._import_dependencies()
-        self._import_feature()
-
-
-@prestashop
-class ProductFeatureValuesImportMapper(ImportMapper):
-    _model_name = 'prestashop.product.feature.values'
-
-    direct = [
-        ('date_add', 'date_add'),
-        ('date_upd', 'date_upd'),
-        ('name', 'name_ext'),
-        ('name', 'name'),
-    ]
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def active(self, record):
-        return {'active_ext': record['active'] == '1'}
-
-    @mapping
-    @only_create
-    def property(self, record):
-        return {'property_ids': [(4, id)]}
-
-    @mapping
-    def property(self, record):
-        # Field property_ids
-        return {}
-
-
-@prestashop
-class ProductFeatureValuesBatchImport(DelayedBatchImporter):
-    """ Import the PrestaShop Product Feature Values. """
-    _model_name = 'prestashop.product.feature.values'
 
 
 @job(default_channel='root.prestashop')

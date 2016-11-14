@@ -5,10 +5,10 @@
 from openerp import models
 
 
-class connector_prestashop_features(models.AbstractModel):
+class connector_prestashop_feature(models.AbstractModel):
     """Empty model used to know if the module is installed on the
     database.
 
     If the model is in the registry, the module is installed.
     """
-    _name = 'connector_prestashop_features.installed'
+    _name = 'connector_prestashop_feature.installed'

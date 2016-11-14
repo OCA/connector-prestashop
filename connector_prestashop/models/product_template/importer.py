@@ -246,6 +246,11 @@ class TemplateMapper(ImportMapper):
             }
         return {}
 
+    @mapping
+    def extras_product_features(self, record):
+        # To extend in connector_prestashop_feature module
+        return {}
+
 
 @prestashop
 class TemplateAdapter(GenericAdapter):

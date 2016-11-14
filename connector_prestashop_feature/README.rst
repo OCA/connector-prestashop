@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-=====================================
-Connector PrestaShop Product Features
-=====================================
+====================================
+Connector PrestaShop Product Feature
+====================================
 
 This module extends the functionality of connector_prestashop module to allow
 you to import product features

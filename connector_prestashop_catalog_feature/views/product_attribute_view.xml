@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--This is a product inherited form that will be dynamically populated-->
+
+
+
+        <record id="product_attribute_form_view" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+            <form string="prestashop fields">
+                <group string="Prestashop Bindings" colspan="4">
+                     <field name="name"/>
+                    <field name="prestashop_bind_ids" nolabel="1"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="product_attribute_connector_presta_form_view"
+                model="ir.ui.view">
+            <field name="model">prestashop.product.combination.option</field>
+            <field name="arch" type="xml">
+                <form string="prestashop fields">
+                    <group col="1">
+                        <field name="backend_id"/>
+                        <field name="prestashop_position"/>
+                        <field name="public_name" required="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_attribute_connector_presta_tree_view"
+                model="ir.ui.view">
+            <field name="model">prestashop.product.combination.option</field>
+            <field name="arch" type="xml">
+                <tree string="prestashop product attribute" editable="top">
+                    <field name="backend_id" string="Backend"/>
+                    <field name="prestashop_position"/>
+                    <field name="public_name"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>
