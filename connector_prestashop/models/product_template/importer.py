@@ -246,22 +246,6 @@ class TemplateMapper(ImportMapper):
             }
         return {}
 
-    @mapping
-    def extra_features(self, record):
-        mapper = self.unit_for(ProductFeaturesImportMapper)
-        return mapper.map_record(record).values(**self.options)
-    
-
-@prestashop
-class ProductFeaturesImportMapper(ImportMapper):
-    # For extend in connector_prestashop_features module, by this way we
-    # avoid have dependencies of other modules as procut_custom_info
-    _model_name = 'prestashop.product.template'
-
-    @mapping
-    def extras(self, record):
-        return {}
-
 
 @prestashop
 class TemplateAdapter(GenericAdapter):
