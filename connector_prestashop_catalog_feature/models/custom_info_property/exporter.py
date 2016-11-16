@@ -2,18 +2,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import mapping
 
 from openerp.addons.connector_prestashop.connector import get_environment
-from openerp.addons.connector_prestashop.unit.exporter import (
-    PrestashopExporter,
-    export_record,
-    TranslationPrestashopExporter,
-)
-from openerp.addons.connector_prestashop.unit.mapper import (
-    TranslationPrestashopExportMapper,
-    PrestashopExportMapper
-)
+from openerp.addons.connector_prestashop.unit.exporter import \
+    PrestashopExporter
+from openerp.addons.connector_prestashop.unit.mapper import \
+    TranslationPrestashopExportMapper
 from openerp.addons.connector_prestashop.backend import prestashop
 
 
@@ -27,20 +21,20 @@ class ProductFeaturesExporter(PrestashopExporter):
 
     def _create(self, record):
         res = super(ProductFeaturesExporter, self)._create(record)
-        return res['prestashop']['category']['id']
+        return res['prestashop']['product_feature']['id']
 
 
 @prestashop
-class ProductFeaturesExportMapper(PrestashopExportMapper):
+class ProductFeaturesExportMapper(TranslationPrestashopExportMapper):
     _model_name = 'prestashop.product.features'
 
     direct = [
         ('name', 'name'),
+        ('sequence', 'position'),
     ]
-
-    @mapping
-    def position(self, record):
-        return {'position': int(record['position'])}
+    _translatable_fields = [
+        ('name', 'name'),
+    ]
 
 
 @job(default_channel='root.prestashop')

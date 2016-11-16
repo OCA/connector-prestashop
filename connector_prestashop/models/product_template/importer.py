@@ -3,7 +3,11 @@
 
 from openerp import models, fields
 from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import mapping, ImportMapper
+from openerp.addons.connector.unit.mapper import (
+    mapping,
+    only_create,
+    ImportMapper
+)
 
 from ...unit.importer import (
     DelayedBatchImporter,
@@ -103,6 +107,15 @@ class TemplateMapper(ImportMapper):
         combinations = associations.get('combinations', {}).get(
             self.backend_record.get_version_ps_key('combinations'))
         return len(combinations or '') != 0
+
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        """ Will bind the product to an existing one with the same code """
+        product = self.env['product.template'].search(
+            [('default_code', '=', record['reference'])], limit=1)
+        if product:
+            return {'odoo_id': product.id}
 
     def _template_code_exists(self, code):
         model = self.session.env['product.template']

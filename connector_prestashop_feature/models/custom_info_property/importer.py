@@ -11,7 +11,6 @@ from openerp.addons.connector.unit.mapper import (
     only_create,
 )
 from openerp.addons.connector_prestashop.unit.importer import (
-    PrestashopImporter,
     import_batch,
     DelayedBatchImporter,
     TranslatableRecordImporter,
@@ -33,7 +32,7 @@ class ProductFeaturesImporter(TranslatableRecordImporter):
     _translatable_fields = {
         'prestashop.product.features': ['name'],
     }
-    
+
     def _import_feature_values(self):
         record = self._get_prestashop_data()
         feature_value_adapter = self.unit_for(
@@ -54,7 +53,7 @@ class ProductFeaturesImporter(TranslatableRecordImporter):
     def _after_import(self, binding):
         super(ProductFeaturesImporter, self)._after_import(binding)
         self._import_feature_values()
-        
+
 
 @prestashop
 class ProductFeaturesImportMapper(ImportMapper):
@@ -63,17 +62,13 @@ class ProductFeaturesImportMapper(ImportMapper):
     direct = [
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
-        ('name', 'name_ext'),
         ('name', 'name'),
+        ('position', 'sequence'),
     ]
 
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def position(self, record):
-        return {'position': int(record['position'])}
 
     @mapping
     def field_type(self, record):

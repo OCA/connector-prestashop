@@ -21,9 +21,6 @@ class PrestashopProductFeatures(models.Model):
         required=True,
         ondelete='cascade',
     )
-    name_ext = fields.Char(
-        string='Name in PrestaShop',
-    )
     active_ext = fields.Boolean(
         string='Active in PrestaShop',
     )

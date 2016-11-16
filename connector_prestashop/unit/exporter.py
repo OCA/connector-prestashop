@@ -207,6 +207,10 @@ class PrestashopExporter(PrestashopBaseExporter):
         """
         return
 
+    def _after_export(self):
+        """Create records of dependants prestashop objects"""
+        return
+
     def _create(self, data):
         """ Create the PrestaShop record """
         return self.backend_adapter.create(data)
@@ -285,7 +289,7 @@ class PrestashopExporter(PrestashopBaseExporter):
             if self.prestashop_id == 0:
                 raise exceptions.Warning(
                     _("Record on PrestaShop have not been created"))
-
+            self._after_export()
         message = _('Record exported with ID %s on PrestaShop.')
         return message % self.prestashop_id
 

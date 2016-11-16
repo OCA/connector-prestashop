@@ -3,8 +3,7 @@
 
 from datetime import timedelta
 
-from openerp.addons.connector.event import on_record_create, on_record_write
-from openerp.addons.connector.unit.mapper import mapping
+from openerp.addons.connector.unit.mapper import mapping, m2o_to_backend
 
 from openerp.addons.connector_prestashop.\
     models.product_template.importer import ProductTemplateImporter
@@ -17,107 +16,9 @@ from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
 from openerp.addons.connector_prestashop.backend import prestashop
-from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
+from ...consumer import get_slug
 
-import openerp.addons.decimal_precision as dp
-import unicodedata
 import re
-from openerp import models, fields
-
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-
-def get_slug(name):
-    if slugify_lib:
-        try:
-            return slugify_lib.slugify(name)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', name).encode(
-        'ascii', 'ignore').decode('ascii')
-    slug = re.sub(r'[\W_]', ' ', uni).strip().lower()
-    slug = re.sub(r'[-\s]+', '-', slug)
-    return slug
-
-
-@on_record_create(model_names='prestashop.product.template')
-def prestashop_product_template_create(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    export_record.delay(session, model_name, record_id, priority=20)
-
-
-@on_record_write(model_names='prestashop.product.template')
-def prestashop_product_template_write(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
-    if fields:
-        export_record.delay(
-            session, model_name, record_id, fields, priority=20)
-        # Propagate minimal_quantity from template to variants
-        if 'minimal_quantity' in fields:
-            ps_template = session.env[model_name].browse(record_id)
-            for binding in ps_template.prestashop_bind_ids:
-                binding.odoo_id.mapped(
-                    'product_variant_ids.prestashop_bind_ids').write({
-                        'minimal_quantity': binding.minimal_quantity
-                    })
-
-
-@on_record_write(model_names='product.template')
-def product_template_write(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    model = session.env[model_name]
-    record = model.browse(record_id)
-    for binding in record.prestashop_bind_ids:
-        export_record.delay(
-            session, 'prestashop.product.template', binding.id, fields,
-            priority=20)
-
-
-class PrestashopProductTemplate(models.Model):
-    _inherit = 'prestashop.product.template'
-
-    meta_title = fields.Char(
-        string='Meta Title',
-        translate=True
-    )
-    meta_description = fields.Char(
-        string='Meta Description',
-        translate=True
-    )
-    meta_keywords = fields.Char(
-        string='Meta Keywords',
-        translate=True
-    )
-    tags = fields.Char(
-        string='Tags',
-        translate=True
-    )
-    online_only = fields.Boolean(string='Online Only')
-    additional_shipping_cost = fields.Float(
-        string='Additional Shipping Price',
-        digits_compute=dp.get_precision('Product Price'),
-        help="Additionnal Shipping Price for the product on Prestashop")
-    available_now = fields.Char(
-        string='Available Now',
-        translate=True
-    )
-    available_later = fields.Char(
-        string='Available Later',
-        translate=True
-    )
-    available_date = fields.Date(string='Available Date')
-    minimal_quantity = fields.Integer(
-        string='Minimal Quantity',
-        help='Minimal Sale quantity',
-        default=1,
-    )
 
 
 @prestashop
@@ -312,7 +213,7 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('online_only', 'online_only'),
         ('weight', 'weight'),
         ('standard_price', 'wholesale_price'),
-        ('default_shop_id', 'id_shop_default'),
+        (m2o_to_backend('default_shop_id'), 'id_shop_default'),
         ('always_available', 'active'),
         ('barcode', 'barcode'),
         ('additional_shipping_cost', 'additional_shipping_cost'),
@@ -367,6 +268,14 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
                     'category_id': self._get_product_category(record)},
             }
         }
+
+    @mapping
+    def default_combination(self, record):
+        if record.product_variant_count > 1:
+            default_variant = record.product_variant_ids.filtered('default_on')
+            binder = self.binder_for('prestashop.product.combination')
+            ps_variant_id = binder.to_backend(default_variant.id, wrap=True)
+            return {'id_default_combination': ps_variant_id}
 
     @mapping
     def categ_id(self, record):

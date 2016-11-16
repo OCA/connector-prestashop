@@ -8,17 +8,13 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (
     ImportMapper,
     mapping,
-    only_create,
 )
 from openerp.addons.connector_prestashop.unit.importer import (
-    PrestashopImporter,
     import_batch,
     DelayedBatchImporter,
     TranslatableRecordImporter,
-    import_record,
 )
 from openerp.addons.connector_prestashop.backend import prestashop
-from openerp.addons.connector_prestashop.unit.backend_adapter import PrestaShopCRUDAdapter
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -28,17 +24,17 @@ class ProductFeatureValuesImporter(TranslatableRecordImporter):
     _model_name = [
         'prestashop.product.feature.values',
     ]
-    
+
     _translatable_fields = {
         'prestashop.product.feature.values': ['value'],
     }
-    
+
     def _import_feature(self):
         record = self.prestashop_record
         if int(record['id_feature']):
             self._import_dependency(
                 record['id_feature'], 'prestashop.product.features')
-    
+
     def _import_dependencies(self):
         super(ProductFeatureValuesImporter, self)._import_dependencies()
         # self._import_feature()
