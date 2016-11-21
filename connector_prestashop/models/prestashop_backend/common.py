@@ -238,7 +238,7 @@ class PrestashopBackend(models.Model):
         '1.6.0.11': {},
         '1.6.1.2': {
             'product_option_value': 'product_option_value',
-            'category': 'categories',
+            'category': 'category',
             'image': 'image',
             'order_slip': 'order_slips',
             'order_slip_detail': 'order_slip_details',

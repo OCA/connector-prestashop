@@ -171,27 +171,6 @@ class TemplateMapper(ImportMapper):
         return {'purchase_ok': True}
 
     @mapping
-    def categ_id(self, record):
-        if not int(record['id_category_default']):
-            return
-        binder = self.binder_for('prestashop.product.category')
-        category = binder.to_odoo(
-            record['id_category_default'],
-            unwrap=True,
-        )
-        if category:
-            return {'categ_id': category.id}
-
-        categories = record['associations'].get('categories', {}).get(
-            self.backend_record.get_version_ps_key('category'), [])
-        if not isinstance(categories, list):
-            categories = [categories]
-        if not categories:
-            return
-        category = binder.to_odoo(categories[0]['id'], unwrap=True)
-        return {'categ_id': category.id}
-
-    @mapping
     def categ_ids(self, record):
         categories = record['associations'].get('categories', {}).get(
             self.backend_record.get_version_ps_key('category'), [])
@@ -205,6 +184,18 @@ class TemplateMapper(ImportMapper):
                 unwrap=True,
             )
         return {'categ_ids': [(6, 0, product_categories.ids)]}
+
+    @mapping
+    def default_category_id(self, record):
+        if not int(record['id_category_default']):
+            return
+        binder = self.binder_for('prestashop.product.category')
+        category = binder.to_odoo(
+            record['id_category_default'],
+            unwrap=True,
+        )
+        if category:
+            return {'prestashop_default_category_id': category.id}
 
     @mapping
     def backend_id(self, record):

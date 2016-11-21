@@ -28,6 +28,11 @@ class ProductTemplate(models.Model):
         copy=False,
         string='PrestaShop Bindings',
     )
+    prestashop_default_category_id = fields.Many2one(
+        comodel_name='product.category',
+        string='PrestaShop Default Category',
+        ondelete='restrict'
+    )
 
     @api.multi
     def update_prestashop_quantities(self):

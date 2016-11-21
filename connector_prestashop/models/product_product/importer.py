@@ -256,7 +256,7 @@ class ProductCombinationMapper(ImportMapper):
     def odoo_id(self, record):
         Propuct = self.env['product.product']
         product = Propuct.search([
-            ('name', '=', record['name'])
+            ('default_code', '=', record['reference'])
         ])
         if Propuct:
             return {'odoo_id': product.id}
