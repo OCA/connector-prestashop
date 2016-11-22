@@ -159,11 +159,17 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_products_since
-            import_products.delay(
-                session,
-                backend_record.id,
-                since_date,
-                priority=10)
+            shops = self.env['prestashop.shop'].search([
+                ('backend_id', '=', backend_record.id),
+            ])
+            for shop in shops:
+                import_products.delay(
+                    session,
+                    backend_record.id,
+                    since_date,
+                    priority=10,
+                    shop_url=shop.default_url
+                )
         return True
 
     @api.multi
@@ -292,6 +298,7 @@ class PrestashopBackend(models.Model):
         import_record(session, model_name, self.id, ext_id)
         return True
 
+    # TODO: Remove when this method has been active in parent class
     @api.multi
     def add_checkpoint(self, session, model, record_id, message=None):
         self.ensure_one()

@@ -56,6 +56,13 @@ class PrestashopShop(models.Model):
         store=True,
     )
     default_url = fields.Char('Default url')
+    pricelist_id = fields.Many2one(
+        comodel_name='product.pricelist',
+        string='Pricelist',
+        ondelete='restrict',
+        help='Select a pricelist if you want assign the price based'
+             ' in a pricelist',
+    )
 
 
 @prestashop

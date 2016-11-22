@@ -525,7 +525,7 @@ def import_inventory(session, backend_id):
 
 
 @job(default_channel='root.prestashop')
-def import_products(session, backend_id, since_date=None):
+def import_products(session, backend_id, since_date=None, shop_url=None):
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
@@ -535,14 +535,16 @@ def import_products(session, backend_id, since_date=None):
         'prestashop.product.category',
         backend_id,
         filters,
-        priority=15
+        priority=15,
+        shop_url=shop_url
     )
     import_batch(
         session,
         'prestashop.product.template',
         backend_id,
         filters,
-        priority=15
+        priority=15,
+        shop_url=shop_url
     )
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_products_since': now_fmt
