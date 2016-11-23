@@ -490,8 +490,8 @@ def import_batch(session, model_name, backend_id, filters=None, **kwargs):
 def import_record(
         session, model_name, backend_id, prestashop_id, shop_url=None):
     """ Import a record from PrestaShop """
-    if shop_url:
-        session.change_context(shop_url=shop_url)
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.run(prestashop_id)
+    with env.session.change_context(
+            shop_url=shop_url, connector_no_export=True):
+        importer = env.get_connector_unit(PrestashopImporter)
+        importer.run(prestashop_id)
