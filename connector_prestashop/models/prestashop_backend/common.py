@@ -159,17 +159,12 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_products_since
-            shops = self.env['prestashop.shop'].search([
-                ('backend_id', '=', backend_record.id),
-            ])
-            for shop in shops:
-                import_products.delay(
-                    session,
-                    backend_record.id,
-                    since_date,
-                    priority=10,
-                    shop_url=shop.default_url
-                )
+            import_products.delay(
+                session,
+                backend_record.id,
+                since_date,
+                priority=10,
+            )
         return True
 
     @api.multi
@@ -209,8 +204,8 @@ class PrestashopBackend(models.Model):
     def import_payment_modes(self):
         session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            import_batch.delay(session, 'account.payment.mode',
-                               backend_record.id)
+            import_batch.delay(
+                session, 'account.payment.mode', backend_record.id)
         return True
 
     @api.multi

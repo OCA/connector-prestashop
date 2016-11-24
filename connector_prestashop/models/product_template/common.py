@@ -106,11 +106,6 @@ class PrestashopProductTemplate(models.Model):
     )
     reference = fields.Char(string='Original reference')
     on_sale = fields.Boolean(string='Show on sale icon')
-    shop_ids = fields.One2many(
-        comodel_name='prestashop.product.template.shop',
-        inverse_name='product_binding_id',
-        string='Shop',
-    )
 
     @api.multi
     def recompute_prestashop_qty(self):
@@ -127,25 +122,6 @@ class PrestashopProductTemplate(models.Model):
             ('usage', '=', 'internal'),
         ])
         return self.with_context(location=locations.ids).qty_available
-
-
-class ProductTemplatePrestashopShop(models.Model):
-    _name = 'prestashop.product.template.shop'
-
-    product_binding_id = fields.Many2one(
-        comodel_name='prestashop.product.template',
-        string='Product Template',
-        ondelete='cascade',
-    )
-    shop_id = fields.Many2one(
-        comodel_name='prestashop.shop',
-        string='Shop',
-    )
-    backend_id = fields.Many2one(
-        comodel_name='prestashop.backend',
-        related='shop_id.backend_id',
-        string='Backend',
-    )
 
 
 @prestashop

@@ -96,24 +96,6 @@ class TemplateMapper(ImportMapper):
                 price = float(record['price'])
 
         price = self._apply_taxes(tax, price)
-        shop = self._get_prestashop_shop()
-        if shop.pricelist_id:
-            binder = self.binder_for('prestashop.product.template')
-            product = binder.to_odoo(record['id'], unwrap=True)
-            if product:
-                pricelist_item_vals = {
-                    'pricelist_id': shop.pricelist_id.id,
-                    'product_tmpl_id': product.id,
-                    'fixed_price': price,
-                }
-                product_pricelist_item = product.item_ids.filtered(
-                        lambda x: x.pricelist_id == shop.pricelist_id)
-                if not product_pricelist_item:
-                    return {'item_ids': [(0, 0, pricelist_item_vals)]}
-                else:
-                    return {'item_ids': [
-                        (1, product_pricelist_item.id, pricelist_item_vals)]
-                    }
         return {'list_price': price}
     
     def _get_prestashop_shop(self):
@@ -268,10 +250,8 @@ class TemplateMapper(ImportMapper):
 
     @mapping
     def taxes_id(self, record):
-        shop = self._get_prestashop_shop()
-        if not shop.pricelist_id:
-            taxes = self._get_tax_ids(record)
-            return {'taxes_id': [(6, 0, taxes.ids)]}
+        taxes = self._get_tax_ids(record)
+        return {'taxes_id': [(6, 0, taxes.ids)]}
 
     @mapping
     def type(self, record):
@@ -295,24 +275,6 @@ class TemplateMapper(ImportMapper):
     @mapping
     def extras_product_features(self, record):
         # To extend in connector_prestashop_feature module
-        return {}
-
-    @mapping
-    def shop_by_product(self, record):
-        ProductShop = self.env['prestashop.product.template.shop']
-        binder = self.binder_for('prestashop.product.template')
-        product_binding = binder.to_odoo(record['id'])
-        if product_binding:
-            prestashop_shop = self._get_prestashop_shop()
-            product_shop = ProductShop.search([
-                ('product_binding_id', '=', product_binding.id),
-                ('shop_id', '=', prestashop_shop.id),
-            ])
-            if not product_shop:
-                ProductShop.with_context(connector_no_export=True).create({
-                    'product_binding_id': product_binding.id,
-                    'shop_id': prestashop_shop.id,
-                })
         return {}
 
 

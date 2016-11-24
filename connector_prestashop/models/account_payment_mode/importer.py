@@ -17,7 +17,7 @@ class PaymentModeBatchImporter(BatchImporter):
             filters, **kwargs
         )
 
-    def _import_record(self, record):
+    def _import_record(self, record, **kwargs):
         """ Create the missing payment method
 
         If we have only 1 bank journal, we link the payment method to it,

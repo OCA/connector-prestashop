@@ -245,9 +245,6 @@
                 <group>
                     <field name="default_url"/>
                 </group>
-                <group>
-                    <field name="pricelist_id"/>
-                </group>
             </sheet>
         </form>
     </field>

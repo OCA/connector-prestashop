@@ -99,13 +99,6 @@
                 <group col="1">
                     <field name="odoo_id" invisible="1"/>
                     <field name="backend_id"/>
-                    <field name="shop_ids"
-                           domain="[('shop_id.backend_id', '=', backend_id)]"
-                           context="{'default_product_binding_id': id}" nolabel="1">
-                        <tree string="Shop">
-                            <field name="shop_id"/>
-                        </tree>
-                    </field>
                     <field name="default_shop_id"/>
                     <field name="link_rewrite"/>
                     <field name="description_short_html"/>
@@ -142,34 +135,6 @@
                 <button name="resync"
                     type="object"
                     string="Resync" />
-            </tree>
-        </field>
-    </record>
-
-    <record id="product_template_presta_shop_form_view" model="ir.ui.view">
-        <field name="name">PrestaShop Product Template Shop</field>
-        <field name="model">prestashop.product.template.shop</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Product Shop" create="0">
-                <sheet>
-                    <group>
-                        <field name="product_binding_id"/>
-                        <field name="shop_id"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="product_template_presta_shop_tree_view" model="ir.ui.view">
-        <field name="name">PrestaShop Product Template Shop</field>
-        <field name="model">prestashop.product.template.shop</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Product Shop" create="0">
-                <field name="product_binding_id"/>
-                <field name="shop_id"/>
             </tree>
         </field>
     </record>
