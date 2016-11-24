@@ -248,6 +248,7 @@ class PrestashopBackend(models.Model):
             'tax': 'taxes',
             'combinations': 'combination',
             'product_features': 'product_feature',
+            'tag': 'tag',
         },
     }
 

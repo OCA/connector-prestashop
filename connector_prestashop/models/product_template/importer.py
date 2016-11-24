@@ -86,7 +86,7 @@ class TemplateMapper(ImportMapper):
         tax = self._get_tax_ids(record)
         associations = record.get('associations', {})
         combinations = associations.get('combinations', {}).get(
-            'combinations', [])
+            self.backend_record.get_version_ps_key('combinations'), [])
         if not isinstance(combinations, list):
             combinations = [combinations]
         if combinations:
@@ -97,15 +97,23 @@ class TemplateMapper(ImportMapper):
 
         price = self._apply_taxes(tax, price)
         return {'list_price': price}
-    
-    def _get_prestashop_shop(self):
-        shop_url = self.session.context.get('shop_url', False)
-        PrestaShopShop = self.env['prestashop.shop']
-        prestashop_shop = PrestaShopShop.search([
-            ('default_url', '=', shop_url),
-        ], limit=1)
-        return prestashop_shop
-    
+
+    @mapping
+    def tags_to_text(self, record):
+        associations = record.get('associations', {})
+        tags = associations.get('tags', {}).get(
+            self.backend_record.get_version_ps_key('tag'), [])
+        tag_adapter = self.unit_for(GenericAdapter, '_prestashop_product_tag')
+        if not isinstance(tags, list):
+            tags = [tags]
+        if tags:
+            ps_tags = tag_adapter.search(filters={
+                'filter[id]': '[%s]' % '|'.join(x['id'] for x in tags),
+                'display': '[name]'
+            })
+            if ps_tags:
+                return {'tags': ', '.join(x['name'] for x in ps_tags)}
+
     @mapping
     def name(self, record):
         if record['name']:
