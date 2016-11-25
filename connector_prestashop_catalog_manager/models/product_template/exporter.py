@@ -83,20 +83,6 @@ class ProductTemplateExport(TranslationPrestashopExporter):
         else:
             return 1 + self._parent_length(categ.parent_id)
 
-    # def _set_main_category(self):
-    #     if self.binding.categ_id.id == 1 and self.binding.categ_ids:
-    #         max_parent = {'length': 0}
-    #         for categ in self.binding.categ_ids:
-    #             parent_length = self._parent_length(categ.parent_id)
-    #             if parent_length > max_parent['length']:
-    #                 max_parent = {'categ_id': categ.id,
-    #                               'length': parent_length}
-    #         self.binding.odoo_id.with_context(
-    #             connector_no_export=True).write({
-    #                 'categ_id': max_parent['categ_id'],
-    #                 'categ_ids': [(3, max_parent['categ_id'])],
-    #             })
-
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
         super(ProductTemplateExport, self)._export_dependencies()
@@ -236,15 +222,20 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('description_html', 'description'),
     ]
 
+    def _get_factor_tax(self, tax):
+        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
+        return factor_tax
+
     @mapping
     def list_price(self, record):
         dp_obj = self.env['decimal.precision']
         precision = dp_obj.precision_get('Product Price')
-        if record.taxes_id.price_include and record.taxes_id.type == 'percent':
+        tax = record.taxes_id
+        if tax.price_include and tax.amount_type == 'percent':
             return {
                 'price': str(
-                    round(record.list_price / (
-                        1 + record.taxes_id.amount), precision))
+                    round(record.list_price /
+                          self._get_factor_tax(tax), precision))
             }
         else:
             return {'price': str(record.list_price)}
