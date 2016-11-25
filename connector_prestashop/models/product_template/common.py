@@ -162,3 +162,17 @@ class ProductInventoryAdapter(GenericAdapter):
                 pass
             except ElementTree.ParseError:
                 pass
+
+
+@prestashop
+class PrestashopProductTags(GenericAdapter):
+    _model_name = '_prestashop_product_tag'
+    _prestashop_model = 'tags'
+    _export_node_name = 'tag'
+
+    def search(self, filters=None):
+        res = self.client.get(self._prestashop_model, options=filters)
+        tags = res[self._prestashop_model][self._export_node_name]
+        if isinstance(tags, dict):
+            return [tags]
+        return tags
