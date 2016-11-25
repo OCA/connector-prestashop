@@ -41,6 +41,7 @@ class PrestashopBackend(models.Model):
             ('1.5', '< 1.6.0.9'),
             ('1.6.0.9', '1.6.0.9 - 1.6.0.10'),
             ('1.6.0.11', '>= 1.6.0.11'),
+            ('1.6.1.12', '>= 1.6.1.12'),
         ]
     version = fields.Selection(
         selection='_select_versions',
@@ -221,23 +222,39 @@ class PrestashopBackend(models.Model):
             import_suppliers.delay(session, backend_record.id, since_date)
         return True
 
+    keys_conversion = {
+        '1.6.0.9': {
+            'product_option_value': 'product_option_values',
+            'category': 'categories',
+            'order_slip': 'order_slips',
+            'order_slip_detail': 'order_slip_details',
+            'group': 'groups',
+            'order_row': 'order_rows',
+            'tax': 'taxes',
+            'image': 'images',
+            'combinations': 'combinations',
+            'tag': 'tags',
+        },
+        # singular names as < 1.6.0.9
+        '1.6.0.11': {},
+        '1.6.1.2': {
+            'product_option_value': 'product_option_value',
+            'category': 'category',
+            'image': 'image',
+            'order_slip': 'order_slips',
+            'order_slip_detail': 'order_slip_details',
+            'group': 'group',
+            'order_row': 'order_rows',
+            'tax': 'taxes',
+            'combinations': 'combination',
+            'product_features': 'product_feature',
+            'tag': 'tag',
+        },
+    }
+
     def get_version_ps_key(self, key):
-        keys_conversion = {
-            '1.6.0.9': {
-                'product_option_value': 'product_option_values',
-                'category': 'categories',
-                'order_slip': 'order_slips',
-                'order_slip_detail': 'order_slip_details',
-                'group': 'groups',
-                'order_row': 'order_rows',
-                'tax': 'taxes',
-                'image': 'images',
-            },
-            # singular names as < 1.6.0.9
-            '1.6.0.11': {},
-        }
-        if self.version == '1.6.0.9':
-            key = keys_conversion[self.version][key]
+        if self.version in ['1.6.0.9', '1.6.1.2']:
+            return self.keys_conversion[self.version][key]
         return key
 
     @api.model
