@@ -13,11 +13,11 @@ from openerp.addons.connector_prestashop.models.product_template import \
 _logger = logging.getLogger(__name__)
 
 
-@prestashop(replacing=importer.TemplateMapper)
-class FeaturesImportMapper(importer.TemplateMapper):
+@prestashop(replacing=importer.FeaturesProductImportMapper)
+class FeaturesImportMapper(importer.FeaturesProductImportMapper):
 
     @mapping
-    def extras_product_features(self, record):
+    def extras_features(self, record):
         custom_info_template = self.env.ref(
             'connector_prestashop_feature.tpl_prestashop_features')
         return {'custom_info_template_id': custom_info_template.id}
@@ -79,7 +79,7 @@ class TemplateRecordImportFeatures(importer.ProductTemplateImporter):
                 feature_value['id_feature_value'], unwrap=True)
             value_to_update = ps_info_values.filtered(
                 lambda x: x.property_id == info_property)
-            if value_to_update.value_id != info_value:
+            if value_to_update and value_to_update.value_id != info_value:
                 value_to_update.with_context(
                     connector_no_export=True).value_id = info_value
 

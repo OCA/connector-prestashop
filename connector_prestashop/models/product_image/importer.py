@@ -90,16 +90,18 @@ class ProductImageImporter(PrestashopImporter):
 
 @job(default_channel='root.prestashop')
 def import_product_image(session, model_name, backend_id, product_tmpl_id,
-                         image_id):
+                         image_id, shop_url=None):
     """Import a product image"""
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.run(product_tmpl_id, image_id)
+    with env.session.change_context(shop_url=shop_url):
+        importer = env.get_connector_unit(PrestashopImporter)
+        importer.run(product_tmpl_id, image_id)
 
 
 @job(default_channel='root.prestashop')
 def set_product_image_variant(
-        session, model_name, backend_id, combination_ids):
+        session, model_name, backend_id, combination_ids, shop_url=None):
     env = get_environment(session, model_name, backend_id)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.set_variant_images(combination_ids)
+    with env.session.change_context(shop_url=shop_url):
+        importer = env.get_connector_unit(PrestashopImporter)
+        importer.set_variant_images(combination_ids)

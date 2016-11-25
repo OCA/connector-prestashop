@@ -112,7 +112,7 @@ class TemplateMapper(ImportMapper):
                 'display': '[name]'
             })
             if ps_tags:
-                return {'tags': ', '.join(x['name'] for x in ps_tags)}
+                return {'tags': ','.join(x['name'] for x in ps_tags)}
 
     @mapping
     def name(self, record):
@@ -281,8 +281,19 @@ class TemplateMapper(ImportMapper):
         return {}
 
     @mapping
-    def extras_product_features(self, record):
-        # To extend in connector_prestashop_feature module
+    def extras_features(self, record):
+        mapper = self.unit_for(FeaturesProductImportMapper)
+        return mapper.map_record(record).values(**self.options)
+
+
+@prestashop
+class FeaturesProductImportMapper(ImportMapper):
+    # For extend in connector_prestashop_feature module, by this way we
+    # avoid have dependencies of other modules as procut_custom_info
+    _model_name = 'prestashop.product.template'
+
+    @mapping
+    def extras_features(self, record):
         return {}
 
 
@@ -461,12 +472,16 @@ class ProductTemplateImporter(TranslatableRecordImporter):
             if first_exec:
                 import_record(
                     self.session, 'prestashop.product.combination',
-                    self.backend_record.id, first_exec['id'])
+                    self.backend_record.id, first_exec['id'],
+                    shop_url=self.shop_url
+                )
 
             for combination in combinations:
                 import_record(
                     self.session, 'prestashop.product.combination',
-                    self.backend_record.id, combination['id'])
+                    self.backend_record.id, combination['id'],
+                    shop_url=self.shop_url
+                )
             if combinations and associations['images'].get('image', False):
                 set_product_image_variant.delay(
                     self.session,
@@ -474,6 +489,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                     self.backend_record.id,
                     combinations,
                     priority=15,
+                    shop_url=self.shop_url
                 )
 
     def import_images(self, binding):
@@ -492,6 +508,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                     prestashop_record['id'],
                     image['id'],
                     priority=10,
+                    shop_url=self.shop_url
                 )
 
     def import_supplierinfo(self, binding):
