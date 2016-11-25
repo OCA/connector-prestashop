@@ -87,7 +87,7 @@ class ExportMultipleProducts(models.TransientModel):
                     image.product_id = product
 
     def _check_category(self, product):
-        if not (product.categ_id and product.categ_id.parent_id):
+        if not (product.categ_id):
             return False
         return True
 
