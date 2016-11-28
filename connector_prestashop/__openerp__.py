@@ -10,7 +10,7 @@
     "version": "9.0.1.0.3",
     "license": "AGPL-3",
     "depends": [
-        "base_vat",
+        "account",
         "product",
         "product_multi_category",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
@@ -22,9 +22,11 @@
     ],
     "external_dependencies": {
         'python': [
-            "unidecode",
             "html2text",
             "prestapyt",
+            # tests dependencies
+            "freezegun",
+            "vcr",
         ],
     },
     "author": "Akretion,"
@@ -49,6 +51,7 @@
         'views/partner_view.xml',
         'views/sale_view.xml',
         'views/account_view.xml',
+        'views/stock_view.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
         'data/ecommerce_data.xml',

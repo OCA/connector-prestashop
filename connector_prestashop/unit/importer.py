@@ -16,7 +16,6 @@ from openerp.addons.connector.exception import (
     FailedJobError,
 )
 from ..connector import get_environment
-from ..connector import add_checkpoint
 
 
 _logger = logging.getLogger(__name__)
@@ -75,7 +74,7 @@ class PrestashopImporter(Importer):
         if importer_class is None:
             importer_class = PrestashopImporter
         binder = self.binder_for(binding_model)
-        if always or not binder.to_openerp(prestashop_id):
+        if always or not binder.to_odoo(prestashop_id):
             importer = self.unit_for(importer_class, model=binding_model)
             importer.run(prestashop_id)
 
@@ -98,7 +97,7 @@ class PrestashopImporter(Importer):
 
     def _get_binding(self):
         """Return the openerp id from the prestashop id"""
-        return self.binder.to_openerp(self.prestashop_id)
+        return self.binder.to_odoo(self.prestashop_id)
 
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
@@ -225,7 +224,7 @@ class PrestashopImporter(Importer):
                 # later (and the new T3 will be aware of the category X
                 # from the its inception).
                 binder = new_connector_env.get_connector_unit(Binder)
-                if binder.to_openerp(self.prestashop_id):
+                if binder.to_odoo(self.prestashop_id):
                     raise RetryableJobError(
                         'Concurrent error. The job will be retried later',
                         seconds=RETRY_WHEN_CONCURRENT_DETECTED,
@@ -305,6 +304,7 @@ class BatchImporter(Importer):
         raise NotImplementedError
 
 
+# TODO 2016-10-25: is this used at all somewhere???
 class AddCheckpoint(ConnectorUnit):
     """ Add a connector.checkpoint on the underlying model
     (not the prestashop.* but the _inherits'ed model) """
@@ -313,10 +313,10 @@ class AddCheckpoint(ConnectorUnit):
 
     def run(self, binding_id):
         record = self.model.browse(binding_id)
-        add_checkpoint(self.session,
-                       record._model._name,
-                       record.id,
-                       self.backend_record.id)
+        self.backend_record.add_checkpoint(
+            model=record._model._name,
+            record_id=record.id,
+        )
 
 
 class DirectBatchImporter(BatchImporter):
@@ -370,9 +370,9 @@ class TranslatableRecordImporter(PrestashopImporter):
         self.main_lang = None
         self.other_langs_data = None
 
-    def _get_oerp_language(self, prestashop_id):
+    def _get_odoo_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
-        erp_language = language_binder.to_openerp(prestashop_id)
+        erp_language = language_binder.to_odoo(prestashop_id)
         return erp_language
 
     def find_each_language(self, record):
@@ -384,12 +384,27 @@ class TranslatableRecordImporter(PrestashopImporter):
             for language in record[field]['language']:
                 if not language or language['attrs']['id'] in languages:
                     continue
-                erp_lang = self._get_oerp_language(language['attrs']['id'])
+                erp_lang = self._get_odoo_language(language['attrs']['id'])
                 if erp_lang:
                     languages[language['attrs']['id']] = erp_lang.code
         return languages
 
-    def _split_per_language(self, record):
+    def _split_per_language(self, record, fields=None):
+        """Split record values by language.
+
+        @param record: a record from PS
+        @param fields: fields whitelist
+        @return a dictionary with the following structure:
+
+            'en_US': {
+                'field1': value_en,
+                'field2': value_en,
+            },
+            'it_IT': {
+                'field1': value_it,
+                'field2': value_it,
+            }
+        """
         split_record = {}
         languages = self.find_each_language(record)
         if not languages:
@@ -400,11 +415,20 @@ class TranslatableRecordImporter(PrestashopImporter):
         model_name = self.connector_env.model_name
         for language_id, language_code in languages.iteritems():
             split_record[language_code] = record.copy()
-        for field in self._translatable_fields[model_name]:
+        _fields = self._translatable_fields[model_name]
+        if fields:
+            _fields = [x for x in _fields if x in fields]
+        for field in _fields:
             for language in record[field]['language']:
                 current_id = language['attrs']['id']
                 code = languages.get(current_id)
                 if not code:
+                    # TODO: be nicer here.
+                    # Currently if you have a language in PS
+                    # that is not present in odoo
+                    # the basic metadata sync is broken.
+                    # We should present skip the language
+                    # and maybe show a message to users.
                     raise FailedJobError(
                         _('No language could be found for the Prestashop lang '
                           'with id "%s". Run "Synchronize base data" again.') %

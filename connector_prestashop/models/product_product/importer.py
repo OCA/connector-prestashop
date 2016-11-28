@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
-from prestapyt import PrestaShopWebServiceError
-
 from openerp import models
 
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
@@ -16,6 +13,13 @@ from ...unit.importer import (
 )
 from ...unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
 from ...backend import prestashop
+
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop
@@ -60,7 +64,7 @@ class ProductCombinationImporter(PrestashopImporter):
                     ps_images = [ps_images]
                 if 'id' in ps_images[0]:
                     images = [
-                        binder.to_openerp(x.get('id'), unwrap=True)
+                        binder.to_odoo(x.get('id'), unwrap=True)
                         for x in ps_images
                     ]
                 else:
@@ -68,11 +72,11 @@ class ProductCombinationImporter(PrestashopImporter):
                 if images:
                     product_binder = self.binder_for(
                         'prestashop.product.combination')
-                    product_product = product_binder.to_openerp(
+                    product_product = product_binder.to_odoo(
                         combination['id'], unwrap=True)
                     product_product.with_context(
                         connector_no_export=True).write(
-                        {'image_ids': [(6, 0, images.ids)]})
+                        {'image_ids': [(6, 0, [x.id for x in images])]})
             except PrestaShopWebServiceError:
                 # TODO: why is it silented?
                 pass
@@ -96,7 +100,7 @@ class ProductCombinationImporter(PrestashopImporter):
             try:
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
+                ps_supplierinfo.odoo_id.unlink()
 
 
 @prestashop
@@ -115,7 +119,7 @@ class ProductCombinationMapper(ImportMapper):
     @mapping
     def product_tmpl_id(self, record):
         template = self.get_main_template_binding(record)
-        return {'product_tmpl_id': template.openerp_id.id}
+        return {'product_tmpl_id': template.odoo_id.id}
 
     @mapping
     def from_main_template(self, record):
@@ -137,21 +141,22 @@ class ProductCombinationMapper(ImportMapper):
 
     def get_main_template_binding(self, record):
         template_binder = self.binder_for('prestashop.product.template')
-        return template_binder.to_openerp(record['id_product'])
+        return template_binder.to_odoo(record['id_product'])
 
     def _get_option_value(self, record):
-        option_values = record['associations']['product_option_values'][
-            self.backend_record.get_version_ps_key('product_option_value')]
+        option_values = record.get('associations', {}).get(
+            'product_option_values', {}).get(
+            self.backend_record.get_version_ps_key('product_option_value'), [])
         if type(option_values) is dict:
             option_values = [option_values]
 
         for option_value in option_values:
             option_value_binder = self.binder_for(
                 'prestashop.product.combination.option.value')
-            option_value_binding = option_value_binder.to_openerp(
+            option_value_binding = option_value_binder.to_odoo(
                 option_value['id']
             )
-            yield option_value_binding.openerp_id
+            yield option_value_binding.odoo_id
 
     @mapping
     def name(self, record):
@@ -204,44 +209,40 @@ class ProductCombinationMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
     @mapping
-    def ean13(self, record):
-        barcode = None
+    def barcode(self, record):
+        barcode = record.get('barcode') or record.get('ean13')
         check_ean = self.env['barcode.nomenclature'].check_ean
-        if record['ean13'] in ['', '0']:
+        if barcode in ['', '0']:
             backend_adapter = self.unit_for(
                 GenericAdapter, 'prestashop.product.template')
             template = backend_adapter.read(record['id_product'])
-            ean13 = template.get('ean13')
-            if ean13 and ean13 != '0' and check_ean(template['ean13']):
-                barcode = ean13
-        elif self.env['barcode.nomenclature'].check_ean(record['ean13']):
-            barcode = record['ean13']
-        if barcode:
-            return {'barcode': ean13}
+            barcode = template.get('barcode') or template.get('ean13')
+        if barcode and barcode != '0' and check_ean(barcode):
+            return {'barcode': barcode}
         return {}
 
     def _get_tax_ids(self, record):
         product_tmpl_adapter = self.unit_for(
             GenericAdapter, 'prestashop.product.template')
         tax_group = product_tmpl_adapter.read(record['id_product'])
-        tax_group = self.binder_for('prestashop.account.tax.group').to_openerp(
+        tax_group = self.binder_for('prestashop.account.tax.group').to_odoo(
             tax_group['id_tax_rules_group'], unwrap=True)
         return tax_group.tax_ids
 
     @mapping
     def specific_price(self, record):
         product = self.binder_for(
-            'prestashop.product.combination').to_openerp(
+            'prestashop.product.combination').to_odoo(
             record['id'], unwrap=True
         )
         product_template = self.binder_for(
-            'prestashop.product.template').to_openerp(
+            'prestashop.product.template').to_odoo(
                 record['id_product'], unwrap=True
         )
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
         factor_tax = tax.price_include and (1 + tax.amount) or 1.0
-        impact = float(record['price']) * factor_tax
-        cost_price = float(record['wholesale_price'])
+        impact = float(record['price'] or '0.0') * factor_tax
+        cost_price = float(record['wholesale_price'] or '0.0')
         return {
             'list_price': product_template.list_price,
             'standard_price': cost_price or product_template.standard_price,
@@ -280,7 +281,7 @@ class ProductCombinationOptionImporter(PrestashopImporter):
         else:
             # else, we create only a prestashop.product.combination.option
             data = {
-                'openerp_id': attribute_ids.id,
+                'odoo_id': attribute_ids.id,
                 'backend_id': self.backend_record.id,
             }
             erp_id = self.model.create(data)
@@ -307,7 +308,7 @@ class ProductCombinationOptionMapper(ImportMapper):
             if not isinstance(languages, list):
                 languages = [languages]
             for lang in languages:
-                erp_language = language_binder.to_openerp(
+                erp_language = language_binder.to_odoo(
                     lang['attrs']['id'])
                 if not erp_language:
                     continue
@@ -348,8 +349,7 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     @mapping
     def attribute_id(self, record):
         binder = self.binder_for('prestashop.product.combination.option')
-        attribute = binder.to_openerp(record['id_attribute_group'],
-                                      unwrap=True)
+        attribute = binder.to_odoo(record['id_attribute_group'], unwrap=True)
         return {'attribute_id': attribute.id}
 
     @mapping

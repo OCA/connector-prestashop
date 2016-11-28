@@ -3,7 +3,7 @@
 
 import re
 
-from openerp import fields
+from openerp import fields, _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (
     ImportMapper,
@@ -16,8 +16,7 @@ from ...unit.importer import (
     DelayedBatchImporter,
 )
 from ...backend import prestashop
-from ...unit.mapper import backend_to_m2o
-from ...connector import add_checkpoint
+from openerp.addons.connector.unit.mapper import backend_to_m2o
 
 
 @prestashop
@@ -40,7 +39,7 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def pricelist(self, record):
         binder = self.binder_for('prestashop.groups.pricelist')
-        pricelist = binder.to_openerp(record['id_default_group'], unwrap=True)
+        pricelist = binder.to_odoo(record['id_default_group'], unwrap=True)
         if not pricelist:
             return {}
         return {'property_product_pricelist': pricelist.id}
@@ -68,10 +67,10 @@ class PartnerImportMapper(ImportMapper):
         partner_category_bindings = self.env[model_name].browse()
         binder = self.binder_for(model_name)
         for group in groups:
-            partner_category_bindings |= binder.to_openerp(group['id'])
+            partner_category_bindings |= binder.to_odoo(group['id'])
 
         result = {'group_ids': [(6, 0, partner_category_bindings.ids)],
-                  'category_id': [(4, b.openerp_id.id)
+                  'category_id': [(4, b.odoo_id.id)
                                   for b in partner_category_bindings]}
         return result
 
@@ -84,7 +83,7 @@ class PartnerImportMapper(ImportMapper):
         binder = self.binder_for('prestashop.res.lang')
         erp_lang = None
         if record.get('id_lang'):
-            erp_lang = binder.to_openerp(record['id_lang'])
+            erp_lang = binder.to_odoo(record['id_lang'])
         if not erp_lang:
             erp_lang = self.env.ref('base.lang_en')
         return {'lang': erp_lang.code}
@@ -92,6 +91,13 @@ class PartnerImportMapper(ImportMapper):
     @mapping
     def customer(self, record):
         return {'customer': True}
+
+    @mapping
+    def is_company(self, record):
+        # This is sad because we _have_ to have a company partner if we want to
+        # store multiple adresses... but... well... we have customers who want
+        # to be billed at home and be delivered at work... (...)...
+        return {'is_company': True}
 
     @mapping
     def company_id(self, record):
@@ -154,7 +160,7 @@ class AddressImportMapper(ImportMapper):
     @mapping
     def parent_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        parent = binder.to_openerp(record['id_customer'], unwrap=True)
+        parent = binder.to_odoo(record['id_customer'], unwrap=True)
         return {'parent_id': parent.id}
 
     @mapping
@@ -173,7 +179,7 @@ class AddressImportMapper(ImportMapper):
     def country(self, record):
         if record.get('id_country'):
             binder = self.binder_for('prestashop.res.country')
-            country = binder.to_openerp(record['id_country'], unwrap=True)
+            country = binder.to_odoo(record['id_country'], unwrap=True)
             return {'country_id': country.id}
         return {}
 
@@ -215,11 +221,11 @@ class AddressImporter(PrestashopImporter):
             if self._check_vat(vat_number):
                 binding.parent_id.write({'vat': vat_number})
             else:
-                add_checkpoint(
-                    self.session,
-                    'res.partner',
-                    binding.parent_id.id,
-                    self.backend_record.id
+                msg = _('Please, check the VAT number: %s') % vat_number
+                self.backend_record.add_checkpoint(
+                    model=binding.parent_id._name,
+                    record_id=binding.parent_id.id,
+                    message=msg,
                 )
 
 

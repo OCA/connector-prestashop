@@ -10,24 +10,20 @@ from ...backend import prestashop
 
 class PrestashopResLang(models.Model):
     _name = 'prestashop.res.lang'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.lang': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.lang': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.lang',
         required=True,
         ondelete='cascade',
-        string='Lang',
+        string='Language',
+        oldname='openerp_id',
     )
     active = fields.Boolean(
-        string='Active in prestashop',
+        string='Active in PrestaShop',
         default=False,
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class ResLang(models.Model):
@@ -35,7 +31,7 @@ class ResLang(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.lang',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         readonly=True,
         string='PrestaShop Bindings',
     )

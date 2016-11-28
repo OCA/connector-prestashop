@@ -1,56 +1,53 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.osv.orm import Model
+from openerp import api, fields, models
 
 
-class StockMove(Model):
-    _inherit = 'stock.move'
+class StockLocation(models.Model):
+    _inherit = 'stock.location'
 
-    def update_prestashop_quantities(self, cr, uid, ids, context=None):
-        for move in self.browse(cr, uid, ids, context=context):
-            move.product_id.update_prestashop_quantities()
+    prestashop_synchronized = fields.Boolean(
+        string='Sync with PrestaShop',
+        help='Check this option to synchronize this location with PrestaShop')
 
-    def get_stock_location_ids(self, cr, uid, context=None):
-        warehouse_obj = self.pool['stock.warehouse']
-        warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        warehouses = warehouse_obj.browse(
-            cr, uid, warehouse_ids, context=context
-        )
-        location_ids = []
-        for warehouse in warehouses:
-            location_ids.append(warehouse.lot_stock_id.id)
-        return location_ids
+    @api.model
+    def get_prestashop_stock_locations(self):
+        prestashop_locations = self.search([
+            ('prestashop_synchronized', '=', True),
+            ('usage', '=', 'internal'),
+        ])
+        return prestashop_locations
 
-    def create(self, cr, uid, vals, context=None):
-        stock_id = super(StockMove, self).create(
-            cr, uid, vals, context=context
-        )
-        location_ids = self.get_stock_location_ids(cr, uid, context=context)
-        if vals['location_id'] in location_ids:
-            self.update_prestashop_quantities(
-                cr, uid, [stock_id], context=context
-            )
-        return stock_id
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        res = super(StockMove, self).action_cancel(
-            cr, uid, ids, context=context
-        )
-        location_ids = self.get_stock_location_ids(cr, uid, context=context)
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.location_id.id in location_ids:
-                self.update_prestashop_quantities(
-                    cr, uid, [move.id], context=context
-                )
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+    @api.model
+    def create(self, vals):
+        location_obj = self.env['stock.location']
+        ps_locations = location_obj.get_prestashop_stock_locations()
+        quant = super(StockQuant, self).create(vals)
+        if quant.location_id in ps_locations:
+            quant.product_id.update_prestashop_qty()
+        return quant
+
+    @api.multi
+    def write(self, vals):
+        location_obj = self.env['stock.location']
+        ps_locations = location_obj.get_prestashop_stock_locations()
+        for quant in self:
+            location = quant.location_id
+            res = super(StockQuant, self).write(vals)
+            if location in ps_locations:
+                quant.invalidate_cache()
+                quant.product_id.update_prestashop_qty()
         return res
 
-    def action_done(self, cr, uid, ids, context=None):
-        res = super(StockMove, self).action_done(cr, uid, ids, context=context)
-        location_ids = self.get_stock_location_ids(cr, uid, context=context)
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.location_dest_id.id in location_ids:
-                self.update_prestashop_quantities(
-                    cr, uid, [move.id], context=context
-                )
-        return res
+    @api.multi
+    def unlink(self):
+        ps_locations = self.env['stock.location'].\
+            get_prestashop_stock_locations()
+        self.filtered(lambda x: x.location_id in ps_locations).mapped(
+            'product_id').update_prestashop_qty()
+        return super(StockQuant, self).unlink()

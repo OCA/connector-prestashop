@@ -8,7 +8,9 @@
     'depends': [
         'connector_prestashop',
     ],
-    'author': 'Akretion',
+    'author': 'Akretion,'
+              'Tecnativa,'
+              'Odoo Community Association (OCA)',
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
 }

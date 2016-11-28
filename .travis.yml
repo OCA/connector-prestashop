@@ -23,6 +23,8 @@ virtualenv:
 install:
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - pip install html2text
+  - pip install prestapyt
   - travis_install_nightly
 
 script:

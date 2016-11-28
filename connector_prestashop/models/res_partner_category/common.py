@@ -12,7 +12,7 @@ class ResPartnerCategory(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.partner.category',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
         readonly=True,
     )
@@ -20,14 +20,15 @@ class ResPartnerCategory(models.Model):
 
 class PrestashopResPartnerCategory(models.Model):
     _name = 'prestashop.res.partner.category'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.partner.category': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.partner.category': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.partner.category',
         string='Partner Category',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     date_add = fields.Datetime(
         string='Created At (on PrestaShop)',
@@ -38,13 +39,11 @@ class PrestashopResPartnerCategory(models.Model):
         readonly=True,
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
     # TODO add prestashop shop when the field will be available in the api.
     # we have reported the bug for it
     # see http://forge.prestashop.com/browse/PSCFV-8284
+    # 2016-10-13 UPDATE: the bug has been fixed since a while:
+    # check if we can drop this!
 
 
 @prestashop

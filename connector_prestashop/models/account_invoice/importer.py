@@ -16,7 +16,6 @@ from ...unit.importer import (
     import_batch,
     DelayedBatchImporter,
 )
-from ...connector import add_checkpoint
 
 
 @prestashop
@@ -35,18 +34,15 @@ class RefundImporter(PrestashopImporter):
         # FIXME: context should be frozen
         context = self.session.context
         context['company_id'] = self.backend_record.company_id.id
-        invoice = binding.openerp_id
-        # FIXME: this method does not exist
-        invoice.button_reset_taxes()
+
+        invoice = binding.odoo_id
 
         if invoice.amount_total == float(self.prestashop_record['amount']):
             invoice.signal_workflow('invoice_open')
         else:
-            add_checkpoint(
-                self.session,
-                'account.invoice',
-                invoice.id,
-                self.backend_record.id
+            self.backend_record.add_checkpoint(
+                model='account.invoice',
+                record_id=invoice.id,
             )
 
 
@@ -69,7 +65,18 @@ class RefundMapper(ImportMapper):
 
     def _get_order(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        return binder.to_openerp(record['id_order'])
+        return binder.to_odoo(record['id_order'])
+
+    @mapping
+    def from_sale_order(self, record):
+        sale_order = self._get_order(record)
+        fiscal_position = None
+        if sale_order.fiscal_position:
+            fiscal_position = sale_order.fiscal_position_id.id
+        return {
+            'origin': sale_order['name'],
+            'fiscal_position_id': fiscal_position,
+        }
 
     @mapping
     def comment(self, record):
@@ -132,11 +139,9 @@ class RefundMapper(ImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order = binder.to_openerp(record['id_order'], unwrap=True)
-
+        sale_order = binder.to_odoo(record['id_order'], unwrap=True)
         if not sale_order.carrier_id:
             return None
-
         sale_order_line_ids = self.env['sale.order.line'].search([
             ('order_id', '=', sale_order.id),
             ('product_id', '=', sale_order.carrier_id.product_id.id),
@@ -213,18 +218,17 @@ class RefundMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_openerp(record['id_customer'], unwrap=True)
+        partner = binder.to_odoo(record['id_customer'], unwrap=True)
         return {'partner_id': partner.id}
 
     @mapping
     def account_id(self, record):
-        binder = self.binder_for('prestashop.sale.order')
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_openerp(record['id_customer'])
+        partner = binder.to_odoo(record['id_customer'])
         partner = partner.with_context(
             company_id=self.backend_record.company_id.id,
         )
-        return {'account_id': partner.property_account_receivable.id}
+        return {'account_id': partner.property_account_receivable_id.id}
 
     @mapping
     def company_id(self, record):

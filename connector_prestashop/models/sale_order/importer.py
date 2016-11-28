@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from datetime import datetime, timedelta
-from decimal import Decimal
-
-from prestapyt import PrestaShopWebServiceError
-
 from openerp import _, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.connector import ConnectorUnit
@@ -22,6 +17,15 @@ from ...unit.importer import (
 )
 from ...unit.exception import OrderImportRuleRetry
 from ...backend import prestashop
+
+from datetime import datetime, timedelta
+from decimal import Decimal
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop
@@ -80,7 +84,7 @@ class SaleImportRule(ConnectorUnit):
         """
         ps_payment_method = record['payment']
         mode_binder = self.binder_for('account.payment.mode')
-        payment_mode = mode_binder.to_openerp(ps_payment_method)
+        payment_mode = mode_binder.to_odoo(ps_payment_method)
         if not payment_mode:
             raise FailedJobError(_(
                 "The configuration is missing for the Payment Mode '%s'.\n\n"
@@ -194,20 +198,19 @@ class SaleOrderMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_openerp(record['id_customer'], unwrap=True)
+        partner = binder.to_odoo(record['id_customer'], unwrap=True)
         return {'partner_id': partner.id}
 
     @mapping
     def partner_invoice_id(self, record):
         binder = self.binder_for('prestashop.address')
-        address = binder.to_openerp(record['id_address_invoice'], unwrap=True)
+        address = binder.to_odoo(record['id_address_invoice'], unwrap=True)
         return {'partner_invoice_id': address.id}
 
     @mapping
     def partner_shipping_id(self, record):
         binder = self.binder_for('prestashop.address')
-        shipping = binder.to_openerp(record['id_address_delivery'],
-                                     unwrap=True)
+        shipping = binder.to_odoo(record['id_address_delivery'], unwrap=True)
         return {'partner_shipping_id': shipping.id}
 
     @mapping
@@ -222,7 +225,7 @@ class SaleOrderMapper(ImportMapper):
     @mapping
     def payment(self, record):
         binder = self.binder_for('account.payment.mode')
-        mode = binder.to_openerp(record['payment'])
+        mode = binder.to_odoo(record['payment'])
         assert mode, ("import of error fail in SaleImportRule.check "
                       "when the payment mode is missing")
         return {'payment_mode_id': mode.id}
@@ -232,7 +235,7 @@ class SaleOrderMapper(ImportMapper):
         if record['id_carrier'] == '0':
             return {}
         binder = self.binder_for('prestashop.delivery.carrier')
-        carrier = binder.to_openerp(record['id_carrier'], unwrap=True)
+        carrier = binder.to_odoo(record['id_carrier'], unwrap=True)
         return {'carrier_id': carrier.id}
 
     @mapping
@@ -286,12 +289,12 @@ class SaleOrderImporter(PrestashopImporter):
         if shipping_total:
             sale_line_obj = self.session.env['sale.order.line']
             sale_line_obj.create({
-                'order_id': binding.openerp_id.id,
-                'product_id': binding.openerp_id.carrier_id.product_id.id,
-                'price_unit':  shipping_total,
+                'order_id': binding.odoo_id.id,
+                'product_id': binding.odoo_id.carrier_id.product_id.id,
+                'price_unit': shipping_total,
                 'is_delivery': True
             })
-        binding.openerp_id.recompute()
+        binding.odoo_id.recompute()
 
     def _after_import(self, binding):
         super(SaleOrderImporter, self)._after_import(binding)
@@ -344,11 +347,12 @@ class SaleOrderLineMapper(ImportMapper):
     def prestashop_id(self, record):
         return {'prestashop_id': record['id']}
 
+    # TODO: who is using this???
     def none_product(self, record):
         product_id = True
         if 'product_attribute_id' not in record:
             binder = self.binder_for('prestashop.product.template')
-            template = binder.to_openerp(
+            template = binder.to_odoo(
                 record['product_id'],
                 unwrap=True,
             )
@@ -378,25 +382,29 @@ class SaleOrderLineMapper(ImportMapper):
             combination_binder = self.binder_for(
                 'prestashop.product.combination'
             )
-            product = combination_binder.to_openerp(
+            product = combination_binder.to_odoo(
                 record['product_attribute_id'],
                 unwrap=True,
             )
         else:
             binder = self.binder_for('prestashop.product.template')
-            template = binder.to_openerp(record['product_id'], unwrap=True)
+            template = binder.to_odoo(record['product_id'], unwrap=True)
             product = self.env['product.product'].search([
                 ('product_tmpl_id', '=', template.id),
                 ('company_id', '=', self.backend_record.company_id.id)],
                 limit=1,
             )
             if not product:
+                # TODO: what's this?
                 return self.tax_id(record)
-        return {'product_id': product.id}
+        return {
+            'product_id': product.id,
+            'product_uom': product and product.uom_id.id,
+        }
 
     def _find_tax(self, ps_tax_id):
         binder = self.binder_for('prestashop.account.tax')
-        return binder.to_openerp(ps_tax_id, unwrap=True)
+        return binder.to_odoo(ps_tax_id, unwrap=True)
 
     @mapping
     def tax_id(self, record):
@@ -417,7 +425,7 @@ class SaleOrderLineMapper(ImportMapper):
 
 
 @prestashop
-class SaleOrderLineDiscountImporter(ImportMapper):
+class SaleOrderLineDiscountMapper(ImportMapper):
     _model_name = 'prestashop.sale.order.line.discount'
 
     direct = []
@@ -465,6 +473,7 @@ class SaleOrderLineDiscountImporter(ImportMapper):
 @job(default_channel='root.prestashop')
 def import_orders_since(session, backend_id, since_date=None):
     """ Prepare the import of orders modified on PrestaShop """
+    backend_record = session.env['prestashop.backend'].browse(backend_id)
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
@@ -480,11 +489,16 @@ def import_orders_since(session, backend_id, since_date=None):
         filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
     try:
         import_batch(session, 'prestashop.mail.message', backend_id, filters)
-    except:
-        # TODO Check this silent error
-        pass
+    except Exception as error:
+        msg = _(
+            'Mail messages import failed with filters `%s`. '
+            'Error: `%s`'
+        ) % (str(filters), str(error))
+        backend_record.add_checkpoint(
+            message=msg
+        )
 
     now_fmt = fields.Datetime.now()
-    session.env['prestashop.backend'].browse(backend_id).write({
+    backend_record.write({
         'import_orders_since': now_fmt
     })

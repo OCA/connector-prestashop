@@ -3,7 +3,6 @@
 
 from ...unit.importer import BatchImporter
 from ...backend import prestashop
-from ...connector import add_checkpoint
 
 
 @prestashop
@@ -24,7 +23,7 @@ class PaymentModeBatchImporter(BatchImporter):
         If we have only 1 bank journal, we link the payment method to it,
         otherwise, the user will have to create manually the payment mode.
         """
-        if self.binder_for().to_openerp(record['payment']):
+        if self.binder_for().to_odoo(record['payment']):
             return  # already exists
         method_xmlid = 'account.account_payment_method_manual_in'
         payment_method = self.env.ref(method_xmlid, raise_if_not_found=False)
@@ -44,5 +43,7 @@ class PaymentModeBatchImporter(BatchImporter):
             'fixed_journal_id': journals.id,
             'payment_method_id': payment_method.id
         })
-        add_checkpoint(self.session, self.model._name, mode.id,
-                       self.backend_record.id)
+        self.backend_record.add_checkpoint(
+            model=self.model._name,
+            record_id=mode.id,
+        )

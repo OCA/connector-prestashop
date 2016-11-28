@@ -116,8 +116,8 @@ class PrestashopBackend(models.Model):
                 'prestashop.account.tax',
             ]:
                 env = get_environment(session, model_name, backend.id)
-                directBinder = env.get_connector_unit(AutoMatchingImporter)
-                directBinder.run()
+                importer = env.get_connector_unit(AutoMatchingImporter)
+                importer.run()
 
             import_batch(session, 'prestashop.account.tax.group', backend.id)
             import_batch(session, 'prestashop.sale.order.state', backend.id)
@@ -240,54 +240,41 @@ class PrestashopBackend(models.Model):
             key = keys_conversion[self.version][key]
         return key
 
-    # TODO: new API
-    def _scheduler_launch(self, cr, uid, callback, domain=None,
-                          context=None):
-        if domain is None:
-            domain = []
-        ids = self.search(cr, uid, domain, context=context)
-        if ids:
-            callback(cr, uid, ids, context=context)
+    @api.model
+    def _scheduler_update_product_stock_qty(self, domain=None):
+        self.search(domain or []).update_product_stock_qty()
 
-    def _scheduler_update_product_stock_qty(self, cr, uid, domain=None,
-                                            context=None):
-        self._scheduler_launch(cr, uid, self.update_product_stock_qty,
-                               domain=domain, context=context)
+    @api.model
+    def _scheduler_import_sale_orders(self, domain=None):
+        self.search(domain or []).import_sale_orders()
 
-    def _scheduler_import_sale_orders(self, cr, uid, domain=None,
-                                      context=None):
-        self._scheduler_launch(cr, uid, self.import_sale_orders, domain=domain,
-                               context=context)
+    @api.model
+    def _scheduler_import_customers(self, domain=None):
+        self.search(domain or []).import_customers_since()
 
-    def _scheduler_import_customers(self, cr, uid, domain=None,
-                                    context=None):
-        self._scheduler_launch(cr, uid, self.import_customers_since,
-                               domain=domain, context=context)
+    @api.model
+    def _scheduler_import_products(self, domain=None):
+        self.search(domain or []).import_products()
 
-    def _scheduler_import_products(self, cr, uid, domain=None, context=None):
-        self._scheduler_launch(cr, uid, self.import_products, domain=domain,
-                               context=context)
+    @api.model
+    def _scheduler_import_carriers(self, domain=None):
+        self.search(domain or []).import_carriers()
 
-    def _scheduler_import_carriers(self, cr, uid, domain=None, context=None):
-        self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
-                               context=context)
+    @api.model
+    def _scheduler_import_payment_methods(self, domain=None):
+        backends = self.search(domain or [])
+        backends.import_payment_methods()
+        backends.import_refunds()
 
-    def _scheduler_import_payment_modes(self, cr, uid, domain=None,
-                                        context=None):
-        self._scheduler_launch(cr, uid, self.import_payment_modes,
-                               domain=domain, context=context)
+    @api.model
+    def _scheduler_import_suppliers(self, domain=None):
+        self.search(domain or []).import_suppliers()
 
-        self._scheduler_launch(cr, uid, self.import_refunds,
-                               domain=domain, context=context)
-
-    def _scheduler_import_suppliers(self, cr, uid, domain=None, context=None):
-        self._scheduler_launch(cr, uid, self.import_suppliers,
-                               domain=domain, context=context)
-
-    def import_record(self, cr, uid, backend_id, model_name, ext_id,
-                      context=None):
-        session = ConnectorSession(cr, uid, context=context)
-        import_record(session, model_name, backend_id, ext_id)
+    @api.multi
+    def import_record(self, model_name, ext_id):
+        self.ensure_one()
+        session = ConnectorSession()
+        import_record(session, model_name, self.id, ext_id)
         return True
 
 

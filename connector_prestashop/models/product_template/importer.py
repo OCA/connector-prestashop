@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import datetime
-
-import html2text
-
-from prestapyt import PrestaShopWebServiceError
-
 from openerp import models, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
@@ -18,7 +12,7 @@ from ...unit.importer import (
     PrestashopImporter,
     TranslatableRecordImporter,
 )
-from ...unit.mapper import backend_to_m2o
+from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...unit.backend_adapter import GenericAdapter
 from ...connector import get_environment
 from ...backend import prestashop
@@ -26,6 +20,20 @@ from ..product_image.importer import (
     import_product_image,
     set_product_image_variant,
 )
+
+import datetime
+import logging
+_logger = logging.getLogger(__name__)
+
+try:
+    import html2text
+except:
+    _logger.debug('Cannot import from `prestapyt`')
+
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop
@@ -49,13 +57,12 @@ class TemplateMapper(ImportMapper):
             GenericAdapter, 'prestashop.product.combination')
         combination = price_adapter.read(
             record['id_default_combination']['value'])
-        impact_price = float(combination['price'])
-        price = float(record['price'])
+        impact_price = float(combination['price'] or '0.0')
+        price = float(record['price'] or '0.0')
         if tax:
             tax = tax[:1]
             return (price / (1 + tax.amount) - impact_price) * (1 + tax.amount)
-        price = float(record['price']) - impact_price
-        return price
+        return price - impact_price
 
     @mapping
     def list_price(self, record):
@@ -154,11 +161,10 @@ class TemplateMapper(ImportMapper):
         if not int(record['id_category_default']):
             return
         binder = self.binder_for('prestashop.product.category')
-        category = binder.to_openerp(
+        category = binder.to_odoo(
             record['id_category_default'],
             unwrap=True,
         )
-
         if category:
             return {'categ_id': category.id}
 
@@ -168,7 +174,7 @@ class TemplateMapper(ImportMapper):
             categories = [categories]
         if not categories:
             return
-        category = binder.to_openerp(categories[0]['id'], unwrap=True)
+        category = binder.to_odoo(categories[0]['id'], unwrap=True)
         return {'categ_id': category.id}
 
     @mapping
@@ -180,11 +186,10 @@ class TemplateMapper(ImportMapper):
         product_categories = self.env['product.category'].browse()
         binder = self.binder_for('prestashop.product.category')
         for ps_category in categories:
-            product_categories |= binder.to_openerp(
+            product_categories |= binder.to_odoo(
                 ps_category['id'],
                 unwrap=True,
             )
-
         return {'categ_ids': [(6, 0, product_categories.ids)]}
 
     @mapping
@@ -196,20 +201,21 @@ class TemplateMapper(ImportMapper):
         return {'company_id': self.backend_record.company_id.id}
 
     @mapping
-    def ean13(self, record):
+    def barcode(self, record):
         if self.has_combinations(record):
             return {}
-        if record['ean13'] in ['', '0']:
+        barcode = record.get('barcode') or record.get('ean13')
+        if barcode in ['', '0']:
             return {}
-        if self.env['barcode.nomenclature'].check_ean(record['ean13']):
-            return {'barcode': record['ean13']}
+        if self.env['barcode.nomenclature'].check_ean(barcode):
+            return {'barcode': barcode}
         return {}
 
     def _get_tax_ids(self, record):
         # if record['id_tax_rules_group'] == '0':
         #     return {}
         binder = self.binder_for('prestashop.account.tax.group')
-        tax_group = binder.to_openerp(
+        tax_group = binder.to_odoo(
             record['id_tax_rules_group'],
             unwrap=True,
         )
@@ -259,6 +265,13 @@ class TemplateMapper(ImportMapper):
     #     translated_fields = self.convert_languages(
     #         trans.get_record_by_lang(record.id), translatable_fields)
     #     return translated_fields
+
+
+@prestashop
+class TemplateAdapter(GenericAdapter):
+    _model_name = 'prestashop.product.template'
+    _prestashop_model = 'products'
+    _export_node_name = 'product'
 
 
 class ImportInventory(models.TransientModel):
@@ -316,9 +329,9 @@ class ProductInventoryImporter(PrestashopImporter):
     def _get_template(self, record):
         if record['id_product_attribute'] == '0':
             binder = self.binder_for('prestashop.product.template')
-            return binder.to_openerp(record['id_product'], unwrap=True)
+            return binder.to_odoo(record['id_product'], unwrap=True)
         binder = self.binder_for('prestashop.product.combination')
-        return binder.to_openerp(record['id_product_attribute'], unwrap=True)
+        return binder.to_odoo(record['id_product_attribute'], unwrap=True)
 
     def run(self, record):
         self._import_dependency(
@@ -391,7 +404,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
         attr_line_value_ids = []
         for attr_line in binding.attribute_line_ids:
             attr_line_value_ids.extend(attr_line.value_ids.ids)
-        template_id = binding.openerp_id.id
+        template_id = binding.odoo_id.id
         products = self.env['product.product'].search([
             ('product_tmpl_id', '=', template_id)]
         )
@@ -416,8 +429,8 @@ class ProductTemplateImporter(TranslatableRecordImporter):
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
 
-        combinations = associations.get('combinations', {}).get(
-            'combinations', [])
+        ps_key = self.backend_record.get_version_ps_key('combinations')
+        combinations = associations.get('combinations', {}).get(ps_key, [])
 
         if not isinstance(combinations, list):
             combinations = [combinations]
@@ -481,7 +494,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
             try:
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
+                ps_supplierinfo.odoo_id.unlink()
 
     def _import_dependencies(self):
         self._import_default_category()
@@ -523,7 +536,7 @@ def import_inventory(session, backend_id):
 
 
 @job(default_channel='root.prestashop')
-def import_products(session, backend_id, since_date):
+def import_products(session, backend_id, since_date=None):
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}

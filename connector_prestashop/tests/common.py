@@ -2,18 +2,22 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import logging
-import urlparse
-
-from contextlib import contextmanager
-from os.path import dirname, exists, join
-
-from prestapyt.xml2dict import xml2dict
-from vcr import VCR
 
 import openerp.tests.common as common
 from openerp.addons.connector.session import ConnectorSession
 
+from contextlib import contextmanager
+from os.path import dirname, exists, join
+import os
+
+from vcr import VCR
+import logging
+import urlparse
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt.xml2dict import xml2dict
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 # secret.txt is a file which can be placed by the developer in the
 # 'tests' directory. It contains the Prestashop URL on the first line
@@ -24,10 +28,13 @@ from openerp.addons.connector.session import ConnectorSession
 prestashop_url = 'http://localhost'
 token = 'xxx'
 filename = join(dirname(__file__), 'secret.txt')
+if not exists(filename):
+    filename = os.environ.get('PS_TEST_WS_CREDENTIALS', '')
 if exists(filename):
+    _logger.debug('Using credentials file %s', filename)
     with open(filename, 'r') as fp:
-        assert len(fp.readlines()) == 2, "secret.txt must have 2 lines:" \
-                "url, token"
+        assert len(fp.readlines()) == 2,\
+            "secret.txt must have 2 lines: url, token"
         fp.seek(0)
         prestashop_url = next(fp).strip()
         token = next(fp).strip()
@@ -179,11 +186,11 @@ class PrestashopTransactionCase(common.TransactionCase):
         with recorder.use_cassette('sync_basedata'):
             self.backend_record.synchronize_basedata()
 
-    def create_binding_no_export(self, model_name, openerp_id,
+    def create_binding_no_export(self, model_name, odoo_id,
                                  prestashop_id=None, **cols):
         values = {
             'backend_id': self.backend_record.id,
-            'openerp_id': openerp_id,
+            'odoo_id': odoo_id,
             'prestashop_id': prestashop_id,
         }
         if cols:

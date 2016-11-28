@@ -17,46 +17,45 @@ class SaleOrderState(models.Model):
     )
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.sale.order.state',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
 
 
 class PrestashopSaleOrderState(models.Model):
     _name = 'prestashop.sale.order.state'
-    _inherit = 'prestashop.binding'
-    _inherits = {'sale.order.state': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'sale.order.state': 'odoo_id'}
 
     openerp_state_ids = fields.One2many(
         comodel_name='sale.order.state.list',
         inverse_name='prestashop_state_id',
         string='Odoo States',
     )
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='sale.order.state',
         required=True,
         ondelete='cascade',
         string='Sale Order State',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class SaleOrderStateList(models.Model):
     _name = 'sale.order.state.list'
 
     name = fields.Selection(
-        [
-            ('draft', 'Quotation'),
+        selection=[
+            ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
-            ('sale', 'Sale Order'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('invoice_except', 'Invoice Exception'),
             ('done', 'Done')
         ],
-        string='Odoo Sales State',
+        string='Odoo State',
         required=True,
     )
     prestashop_state_id = fields.Many2one(

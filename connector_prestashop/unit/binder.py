@@ -7,9 +7,10 @@ from ..backend import prestashop
 
 @prestashop
 class PrestashopBinder(Binder):
-    """ Generic Binder for Prestshop """
+    """ Generic Binder for Prestashop """
 
     _external_field = 'prestashop_id'
+    _openerp_field = 'odoo_id'
 
     _model_name = [
         'prestashop.shop.group',
@@ -24,7 +25,6 @@ class PrestashopBinder(Binder):
         'prestashop.account.tax.group',
         'prestashop.product.category',
         'prestashop.product.image',
-        'prestashop.product.product',
         'prestashop.product.template',
         'prestashop.product.combination',
         'prestashop.product.combination.option',
@@ -37,5 +37,4 @@ class PrestashopBinder(Binder):
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
         'prestashop.groups.pricelist',
-        # 'prestashop.product.specificprice',
     ]

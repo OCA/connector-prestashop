@@ -3,7 +3,7 @@
 
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.importer import PrestashopImporter, DirectBatchImporter
-from ...unit.mapper import backend_to_m2o
+from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...backend import prestashop
 
 
@@ -30,7 +30,7 @@ class ShopImportMapper(ImportMapper):
 
     @mapping
     def opener_id(self, record):
-        return {'openerp_id': self.backend_record.warehouse_id.id}
+        return {'odoo_id': self.backend_record.warehouse_id.id}
 
 
 @prestashop

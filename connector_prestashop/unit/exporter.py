@@ -9,9 +9,11 @@ import psycopg2
 
 from openerp import _, exceptions
 from openerp.addons.connector.queue.job import job
+from openerp.addons.connector.queue.job import related_action
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import RetryableJobError
 from ..connector import get_environment
+from .mapper import TranslationPrestashopExportMapper
 
 
 _logger = logging.getLogger(__name__)
@@ -34,8 +36,9 @@ class PrestashopBaseExporter(Exporter):
         """
         super(PrestashopBaseExporter, self).__init__(environment)
         self.prestashop_id = None
+        self.binding_id = None
 
-    def _get_binding(self, binding_id):
+    def _get_binding(self):
         """ Return the raw Odoo data for ``self.binding_id`` """
         return self.model.browse(self.binding_id)
 
@@ -44,8 +47,8 @@ class PrestashopBaseExporter(Exporter):
 
         :param binding_id: identifier of the binding record to export
         """
+        self.binding_id = binding_id
         self.binding = self._get_binding()
-
         self.prestashop_id = self.binder.to_backend(self.binding)
         result = self._run(*args, **kwargs)
 
@@ -62,6 +65,8 @@ class PrestashopBaseExporter(Exporter):
 
 class PrestashopExporter(PrestashopBaseExporter):
     """ A common flow for the exports to PrestaShop """
+
+    _openerp_field = 'odoo_id'
 
     def __init__(self, environment):
         """
@@ -86,7 +91,7 @@ class PrestashopExporter(PrestashopBaseExporter):
 
             IntegrityError: duplicate key value violates unique
             constraint "prestashop_product_template_openerp_uniq"
-            DETAIL:  Key (backend_id, openerp_id)=(1, 4851) already exists.
+            DETAIL:  Key (backend_id, odoo_id)=(1, 4851) already exists.
 
         In that case, we'll retry the import just later.
 
@@ -149,7 +154,7 @@ class PrestashopExporter(PrestashopBaseExporter):
         wrap = relation._model._name != binding_model
 
         if wrap and hasattr(relation, binding_field_name):
-            domain = [('openerp_id', '=', relation.id),
+            domain = [(self._openerp_field, '=', relation.id),
                       ('backend_id', '=', self.backend_record.id)]
             model = self.env[binding_model].with_context(active_test=False)
             binding = model.search(domain)
@@ -162,10 +167,10 @@ class PrestashopExporter(PrestashopBaseExporter):
                 # prestashop.product.product, it is exported, but we need to
                 # create the binding for the template.
                 bind_values = {'backend_id': self.backend_record.id,
-                               'openerp_id': relation.id}
+                               self._openerp_field: relation.id}
                 # If 2 jobs create it at the same time, retry
                 # one later. A unique constraint (backend_id,
-                # openerp_id) should exist on the binding model
+                # odoo_id) should exist on the binding model
                 with self._retry_unique_violation():
                     model_c = self.env[binding_model].sudo().with_context(
                         connector_no_export=True
@@ -226,7 +231,7 @@ class PrestashopExporter(PrestashopBaseExporter):
         with :meth:`_export_dependencies`. Each level will set its own lock
         on the binding record it has to export.
 
-        Uses "NO KEY UPDATE", to avoid FK accesses
+        Uses ``NO KEY UPDATE``, to avoid FK accesses
         being blocked in PSQL > 9.3.
         """
         sql = ("SELECT id FROM %s WHERE ID = %%s FOR NO KEY UPDATE NOWAIT" %
@@ -285,7 +290,35 @@ class PrestashopExporter(PrestashopBaseExporter):
         return message % self.prestashop_id
 
 
+class TranslationPrestashopExporter(PrestashopExporter):
+
+    @property
+    def mapper(self):
+        if self._mapper is None:
+            self._mapper = self.connector_env.get_connector_unit(
+                TranslationPrestashopExportMapper)
+        return self._mapper
+
+
+def related_action_record(session, job):
+    binding_model = job.args[0]
+    binding_id = job.args[1]
+    record = session.env[binding_model].browse(binding_id)
+    odoo_name = record.odoo_id._name
+
+    action = {
+        'name': _(odoo_name),
+        'type': 'ir.actions.act_window',
+        'res_model': odoo_name,
+        'view_type': 'form',
+        'view_mode': 'form',
+        'res_id': record.odoo_id.id,
+    }
+    return action
+
+
 @job(default_channel='root.prestashop')
+@related_action(action=related_action_record)
 def export_record(session, model_name, binding_id, fields=None):
     """ Export a record on PrestaShop """
     # TODO: FIX PRESTASHOP do not support partial edit

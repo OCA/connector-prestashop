@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mimetypes
-
-from prestapyt import PrestaShopWebServiceError
-
+from openerp import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
@@ -12,6 +9,14 @@ from openerp.addons.connector.unit.mapper import (mapping,
 from ...backend import prestashop
 from ...connector import get_environment
 from ...unit.importer import PrestashopImporter
+
+import mimetypes
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from prestapyt import PrestaShopWebServiceError
+except:
+    _logger.debug('Cannot import from `prestapyt`')
 
 
 @prestashop
@@ -25,7 +30,7 @@ class ProductImageMapper(ImportMapper):
     @mapping
     def from_template(self, record):
         binder = self.binder_for('prestashop.product.template')
-        template = binder.to_openerp(record['id_product'], unwrap=True)
+        template = binder.to_odoo(record['id_product'], unwrap=True)
         name = '%s_%s' % (template.name, record['id_image'])
         return {'owner_id': template.id, 'name': name}
 
@@ -75,12 +80,17 @@ class ProductImageImporter(PrestashopImporter):
     def run(self, template_id, image_id):
         self.template_id = template_id
         self.image_id = image_id
-
         try:
             super(ProductImageImporter, self).run(image_id)
-        except PrestaShopWebServiceError:
-            # TODO Check this silent error
-            pass
+        except PrestaShopWebServiceError as error:
+            msg = _(
+                'Import of image id `%s` failed. '
+                'Error: `%s`'
+            ) % (image_id, error.msg)
+            self.backend_record.add_checkpoint(
+                model='product.template',
+                record_id=int(template_id),
+                message=msg)
 
 
 @job(default_channel='root.prestashop')
