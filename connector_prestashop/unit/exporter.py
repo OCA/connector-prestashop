@@ -323,11 +323,12 @@ def related_action_record(session, job):
 
 @job(default_channel='root.prestashop')
 @related_action(action=related_action_record)
-def export_record(session, model_name, binding_id, fields=None):
+def export_record(session, model_name, binding_id, fields=None, shop_url=None):
     """ Export a record on PrestaShop """
     # TODO: FIX PRESTASHOP do not support partial edit
     fields = None
     record = session.env[model_name].browse(binding_id)
     env = get_environment(session, model_name, record.backend_id.id)
-    exporter = env.get_connector_unit(PrestashopExporter)
-    return exporter.run(binding_id, fields=fields)
+    with env.session.change_context(shop_url=shop_url):
+        exporter = env.get_connector_unit(PrestashopExporter)
+        return exporter.run(binding_id, fields=fields)
