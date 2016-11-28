@@ -43,7 +43,7 @@ class ExportMultipleProducts(models.TransientModel):
     shop_id = fields.Many2one(
         comodel_name='prestashop.shop',
         default=_default_shop,
-        string='Shop',
+        string='Default Shop',
     )
 
     def _parent_length(self, categ):
@@ -113,7 +113,7 @@ class ExportMultipleProducts(models.TransientModel):
 
     def create_prestashop_template(self, product):
         presta_tmpl_obj = self.env['prestashop.product.template']
-        presta_tmpl_obj.create({
+        return presta_tmpl_obj.create({
             'backend_id': self.backend_id.id,
             'default_shop_id': self.shop_id.id,
             'link_rewrite': get_slug(product.name),
