@@ -52,14 +52,15 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                 connector_no_export=True,
                 lang=lang_code).write(vals)
 
-    def export_categories(self, category, binder, ps_categ_obj):
+    def export_categories(self, category):
         if not category:
             return
-        ext_id = binder.to_backend(category.id, wrap=True)
+        category_binder = self.binder_for('prestashop.product.category')
+        ext_id = category_binder.to_backend(category.id, wrap=True)
         if ext_id:
             return ext_id
-        parent_cat_id = self.export_categories(
-            category.parent_id, binder, ps_categ_obj)
+
+        ps_categ_obj = self.session.env['prestashop.product.category']
         position_cat_id = ps_categ_obj.search(
             [], order='position desc', limit=1)
         obj_position = position_cat_id.position + 1
@@ -69,13 +70,12 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             'link_rewrite': get_slug(category.name),
             'position': obj_position,
         }
-        category_ext_id = ps_categ_obj.with_context(
+        binding = ps_categ_obj.with_context(
             connector_no_export=True).create(res)
-        parent_cat_id = export_record(self.session,
-                                      'prestashop.product.category',
-                                      category_ext_id.id,
-                                      fields={'parent_id': parent_cat_id})
-        return re.search(r'\d+', parent_cat_id).group()
+        export_record(
+            self.session,
+            'prestashop.product.category',
+            binding.id)
 
     def _parent_length(self, categ):
         if not categ.parent_id:
@@ -90,15 +90,11 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             'prestashop.product.combination.option')
         option_binder = self.binder_for(
             'prestashop.product.combination.option.value')
-        category_binder = self.binder_for(
-            'prestashop.product.category')
         attribute_obj = self.session.env[
             'prestashop.product.combination.option']
-        categories_obj = self.session.env[
-            'prestashop.product.category']
-
+        
         for category in self.binding.categ_ids:
-            self.export_categories(category, category_binder, categories_obj)
+            self.export_categories(category)
 
         for line in self.binding.attribute_line_ids:
             attribute_ext_id = attribute_binder.to_backend(

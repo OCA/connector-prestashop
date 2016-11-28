@@ -111,6 +111,7 @@ class ExportMultipleProducts(models.TransientModel):
         products = template_obj.browse(self.env.context['active_ids'])
         products.update_prestashop_quantities()
 
+    @api.multi
     def create_prestashop_template(self, product):
         presta_tmpl_obj = self.env['prestashop.product.template']
         return presta_tmpl_obj.create({
