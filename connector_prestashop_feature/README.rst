@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-====================================
-Connector PrestaShop Product Feature
-====================================
+=====================================
+Connector PrestaShop Product Features
+=====================================
 
 This module extends the functionality of connector_prestashop module to allow
 you to import product features
@@ -24,7 +24,7 @@ To use this module, you need to:
 #. Wait for the import in background has been done.
 
 Also exists a cron for execute the import named
-*'PrestaShop - Import Manufacturers'*.
+*'PrestaShop - Import Features'*.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
