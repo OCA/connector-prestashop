@@ -14,6 +14,8 @@ class PaymentModeAdapter(GenericAdapter):
 
     def search(self, filters=None):
         res = self.client.get(self._prestashop_model, options=filters)
+        if not res['orders']:
+            return []
         methods = res[self._prestashop_model][self._export_node_name]
         if isinstance(methods, dict):
             return [methods]

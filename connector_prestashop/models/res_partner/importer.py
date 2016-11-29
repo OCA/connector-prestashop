@@ -223,6 +223,7 @@ class AddressImporter(PrestashopImporter):
 =======
                 msg = _('Please, check the VAT number: %s') % vat_number
                 self.backend_record.add_checkpoint(
+                    session=self.session,
                     model=binding.parent_id._name,
                     record_id=binding.parent_id.id,
                     message=msg,
@@ -236,19 +237,29 @@ class AddressBatchImporter(DelayedBatchImporter):
 
 
 @job(default_channel='root.prestashop')
-def import_customers_since(session, backend_id, since_date=None):
+def import_customers_since(
+        session, backend_id, since_date=None, shop_url=None):
     """ Prepare the import of partners modified on PrestaShop """
     filters = None
     if since_date:
         filters = {
             'date': '1',
-            'filter[date_upd]': '>[%s]' % (since_date)}
+            'filter[date_upd]': '>[%s]' % since_date}
     now_fmt = fields.Datetime.now()
     import_batch(
-        session, 'prestashop.res.partner.category', backend_id, filters
+        session,
+        'prestashop.res.partner.category',
+        backend_id,
+        filters,
+        shop_url=shop_url
     )
     import_batch(
-        session, 'prestashop.res.partner', backend_id, filters, priority=15
+        session,
+        'prestashop.res.partner',
+        backend_id,
+        filters,
+        priority=15,
+        shop_url=shop_url
     )
 
     session.env['prestashop.backend'].browse(backend_id).write({
