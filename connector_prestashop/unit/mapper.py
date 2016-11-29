@@ -11,11 +11,12 @@ class PrestashopExportMapper(ExportMapper):
         res = super(PrestashopExportMapper, self)._map_direct(record,
                                                               from_attr,
                                                               to_attr) or ''
-        column = self.model._all_columns[from_attr].column
-        if column._type == 'boolean':
-            return res and 1 or 0
-        elif column._type == 'float':
-            res = str(res)
+        if isinstance(from_attr, basestring):
+            column = self.model._all_columns[from_attr].column
+            if column._type == 'boolean':
+                return res and 1 or 0
+            elif column._type == 'float':
+                res = str(res)
         return res
 
 

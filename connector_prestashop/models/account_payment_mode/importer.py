@@ -17,7 +17,7 @@ class PaymentModeBatchImporter(BatchImporter):
             filters, **kwargs
         )
 
-    def _import_record(self, record):
+    def _import_record(self, record, **kwargs):
         """ Create the missing payment method
 
         If we have only 1 bank journal, we link the payment method to it,
@@ -44,6 +44,7 @@ class PaymentModeBatchImporter(BatchImporter):
             'payment_method_id': payment_method.id
         })
         self.backend_record.add_checkpoint(
+            session=self.session,
             model=self.model._name,
             record_id=mode.id,
         )
