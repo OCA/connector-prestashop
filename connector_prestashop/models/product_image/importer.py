@@ -80,17 +80,28 @@ class ProductImageImporter(PrestashopImporter):
     def run(self, template_id, image_id):
         self.template_id = template_id
         self.image_id = image_id
+
         try:
             super(ProductImageImporter, self).run(image_id)
         except PrestaShopWebServiceError as error:
-            msg = _(
-                'Import of image id `%s` failed. '
-                'Error: `%s`'
-            ) % (image_id, error.msg)
-            self.backend_record.add_checkpoint(
-                model='product.template',
-                record_id=int(template_id),
-                message=msg)
+            binder = self.binder_for('prestashop.product.template')
+            template = binder.to_odoo(template_id, unwrap=True)
+            if template:
+                msg = _(
+                    'Import of image id `%s` failed. '
+                    'Error: `%s`'
+                ) % (image_id, error.msg)
+                self.backend_record.add_checkpoint(
+                    model='product.template',
+                    record_id=template.id,
+                    message=msg)
+            else:
+                msg = _(
+                    'Import of image id `%s` of PrestaShop product '
+                    'with id `%s` failed. '
+                    'Error: `%s`'
+                ) % (image_id, template_id, error.msg)
+                self.backend_record.add_checkpoint(message=msg)
 
 
 @job(default_channel='root.prestashop')
