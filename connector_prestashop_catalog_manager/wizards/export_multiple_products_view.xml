@@ -7,8 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Export Products">
                     <group>
-                        <field name="name"/>
-                        <field name="shop" domain="[('backend_id','=',name)]"/>
+                        <field name="backend_id"/>
+                        <field name="shop_id" domain="[('backend_id', '=', backend_id)]"/>
                     </group>
                     <footer>
                         <button name="export_products" type="object"

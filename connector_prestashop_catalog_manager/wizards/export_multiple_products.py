@@ -27,21 +27,23 @@ def get_slug(name):
 class ExportMultipleProducts(models.TransientModel):
     _name = 'export.multiple.products'
 
+    @api.multi
     def _default_backend(self):
         return self.env['prestashop.backend'].search([], limit=1).id
 
+    @api.multi
     def _default_shop(self):
         return self.env['prestashop.shop'].search([], limit=1).id
 
-    name = fields.Many2one(
+    backend_id = fields.Many2one(
         comodel_name='prestashop.backend',
         default=_default_backend,
         string='Backend',
     )
-    shop = fields.Many2one(
+    shop_id = fields.Many2one(
         comodel_name='prestashop.shop',
         default=_default_shop,
-        string='Shop',
+        string='Default Shop',
     )
 
     def _parent_length(self, categ):
@@ -87,7 +89,7 @@ class ExportMultipleProducts(models.TransientModel):
                     image.product_id = product
 
     def _check_category(self, product):
-        if not (product.categ_id and product.categ_id.parent_id):
+        if not (product.categ_ids):
             return False
         return True
 
@@ -110,6 +112,16 @@ class ExportMultipleProducts(models.TransientModel):
         products.update_prestashop_quantities()
 
     @api.multi
+    def create_prestashop_template(self, product):
+        presta_tmpl_obj = self.env['prestashop.product.template']
+        return presta_tmpl_obj.create({
+            'backend_id': self.backend_id.id,
+            'default_shop_id': self.shop_id.id,
+            'link_rewrite': get_slug(product.name),
+            'odoo_id': product.id,
+        })
+
+    @api.multi
     def export_products(self):
         self.ensure_one()
         product_obj = self.env['product.template']
@@ -117,8 +129,8 @@ class ExportMultipleProducts(models.TransientModel):
         for product in product_obj.browse(self.env.context['active_ids']):
             presta_tmpl = presta_tmpl_obj.search([
                 ('odoo_id', '=', product.id),
-                ('backend_id', '=', self.name.id),
-                ('default_shop_id', '=', self.shop.id),
+                ('backend_id', '=', self.backend_id.id),
+                ('default_shop_id', '=', self.shop_id.id),
             ])
             if not presta_tmpl:
                 self._check_images(product)
@@ -126,12 +138,7 @@ class ExportMultipleProducts(models.TransientModel):
                 var = self._check_variants(product)
                 if not(var and cat):
                     continue
-                presta_tmpl_obj.create({
-                    'backend_id': self.name.id,
-                    'default_shop_id': self.shop.id,
-                    'link_rewrite': get_slug(product.name),
-                    'odoo_id': product.id,
-                })
+                self.create_prestashop_template(product)
             else:
                 for tmpl in presta_tmpl:
                     if ' ' in tmpl.link_rewrite:

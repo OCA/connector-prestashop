@@ -9,7 +9,7 @@
             <form string="Export Categories">
                 <group>
                     <field name="backend_id"/>
-                    <field name="shop_id" domain="[('backend_id','=',name)]"/>
+                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]"/>
                 </group>
                 <footer>
                     <button name="export_categories" type="object"
