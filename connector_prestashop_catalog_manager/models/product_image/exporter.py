@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.addons.connector.event import on_record_write, on_record_unlink
-from openerp.addons.connector.connector import Binder
 from openerp.addons.connector.unit.mapper import mapping
-from openerp.addons.connector_prestashop.unit.exporter import (
-    PrestashopExporter,
-    export_record)
-from openerp.addons.connector_prestashop.unit.deleter import (
-    export_delete_record
-)
+from openerp.addons.connector_prestashop.unit.exporter import \
+    PrestashopExporter
 from openerp.addons.connector_prestashop.unit.mapper import (
     PrestashopExportMapper
 )
-from openerp.addons.connector_prestashop.connector import get_environment
+
 from openerp.addons.connector_prestashop.backend import prestashop
 
 from openerp import models, fields
@@ -21,46 +15,6 @@ from openerp.tools.translate import _
 
 import os
 import os.path
-
-
-@on_record_write(model_names='base_multi_image.image')
-def product_image_write(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    model = session.env[model_name]
-    record = model.browse(record_id)
-    for binding in record.prestashop_bind_ids:
-        export_record.delay(session, 'prestashop.product.image',
-                            binding.id, record.file_db_store,
-                            priority=20)
-
-
-@on_record_unlink(model_names='base_multi_image.image')
-def product_image_unlink(session, model_name, record_id):
-    if session.context.get('connector_no_export'):
-        return
-    model = session.env[model_name]
-    record = model.browse(record_id)
-    for binding in record.prestashop_bind_ids:
-        product = session.env[record.owner_model].browse(record.owner_id)
-        if product.exists():
-            product_template = product.prestashop_bind_ids.filtered(
-                lambda x: x.backend_id == binding.backend_id)
-            env_product = get_environment(
-                session, 'prestashop.product.template', binding.backend_id.id)
-            binder_product = env_product.get_connector_unit(Binder)
-            external_product_id = binder_product.to_backend(
-                product_template.id)
-
-            env = get_environment(
-                session, binding._name, binding.backend_id.id)
-            binder = env.get_connector_unit(Binder)
-            external_id = binder.to_backend(binding.id)
-            resource = 'images/products/%s' % (external_product_id)
-            if external_id:
-                export_delete_record.delay(
-                    session, binding._name, binding.backend_id.id,
-                    external_id, resource)
 
 
 class ProductImage(models.Model):
@@ -153,11 +107,14 @@ class ProductImageExportMapper(PrestashopExportMapper):
     @mapping
     def product_id(self, record):
         if record.odoo_id.owner_model == u'product.product':
-            product_tmpl_id = record.env['product.product'].browse(
-                record.odoo_id.owner_id).product_tmpl_id.id
+            product_tmpl = record.env['product.product'].browse(
+                record.odoo_id.owner_id).product_tmpl_id
         else:
-            product_tmpl_id = record.odoo_id.owner_id
-        return {'id_product': product_tmpl_id}
+            product_tmpl = record.env['product.template'].browse(
+                record.odoo_id.owner_id)
+        binder = self.binder_for('prestashop.product.template')
+        ps_product_id = binder.to_backend(product_tmpl, wrap=True)
+        return {'id_product': ps_product_id}
 
     @mapping
     def extension(self, record):

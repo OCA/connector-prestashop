@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import mapping
 
 from openerp.addons.connector_prestashop.unit.exporter import (
@@ -11,63 +10,8 @@ from openerp.addons.connector_prestashop.unit.exporter import (
 from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
+from ...consumer import get_slug
 from openerp.addons.connector_prestashop.backend import prestashop
-
-import unicodedata
-import re
-
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-
-def get_slug(name):
-    if slugify_lib:
-        try:
-            return slugify_lib.slugify(name)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', name).encode(
-        'ascii', 'ignore').decode('ascii')
-    slug = re.sub(r'[\W_]', ' ', uni).strip().lower()
-    slug = re.sub(r'[-\s]+', '-', slug)
-    return slug
-
-# TODO: attach this to a model to ease override
-CATEGORY_EXPORT_FIELDS = [
-    'name',
-    'parent_id',
-    'description',
-    'link_rewrite',
-    'meta_description',
-    'meta_keywords',
-    'meta_title',
-    'position'
-]
-
-
-@on_record_create(model_names='prestashop.product.category')
-def prestashop_product_template_create(session, model_name, record_id, fields):
-    export_record.delay(session, model_name, record_id, priority=20)
-
-
-@on_record_write(model_names='product.category')
-def product_category_write(session, model_name, record_id, fields):
-    if set(fields.keys()) <= set(CATEGORY_EXPORT_FIELDS):
-        if session.context.get('connector_no_export'):
-            return
-        model = session.env[model_name]
-        record = model.browse(record_id)
-        for binding in record.prestashop_bind_ids:
-            export_record.delay(session, binding._model._name, binding.id,
-                                fields=fields, priority=20)
-
-
-@on_record_write(model_names='prestashop.product.category')
-def prestashop_product_category_write(session, model_name, record_id, fields):
-    if set(fields.keys()) <= set(CATEGORY_EXPORT_FIELDS):
-        export_record.delay(session, model_name, record_id, fields)
 
 
 @prestashop

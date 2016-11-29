@@ -1,98 +1,21 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.addons.connector.event import on_record_create, on_record_write
 from openerp.addons.connector.unit.mapper import mapping
 
 from openerp.addons.connector_prestashop.unit.exporter import (
     TranslationPrestashopExporter,
-    export_record
+    export_record,
+    PrestashopExporter,
 )
 from openerp.addons.connector_prestashop.unit.mapper import \
     TranslationPrestashopExportMapper
-from openerp.addons.connector_prestashop.unit.deleter import (
-    export_delete_record
-)
 from openerp.addons.connector_prestashop.backend import prestashop
-from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
-from openerp import models, fields
 from collections import OrderedDict
 import logging
 
-EXCLUDE_FIELDS = ['list_price', 'margin']
 
 _logger = logging.getLogger(__name__)
-
-
-@on_record_create(model_names='prestashop.product.combination')
-def prestashop_product_combination_create(session, model_name, record_id,
-                                          fields=None):
-    if session.context.get('connector_no_export'):
-        return
-    export_record.delay(session, model_name, record_id, priority=20)
-
-
-@on_record_write(model_names='prestashop.product.combination')
-def prestashop_product_combination_write(session, model_name,
-                                         record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
-
-    if fields:
-        export_record.delay(session, model_name, record_id,
-                            fields, priority=20)
-
-
-@on_record_write(model_names='product.product')
-def product_product_write(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-
-    for field in EXCLUDE_FIELDS:
-        fields.pop(field, None)
-
-    model = session.env[model_name]
-    record = model.browse(record_id)
-    if not record.is_product_variant:
-        return
-
-    if 'active' in fields and not fields['active']:
-        prestashop_product_combination_unlink(session, record_id)
-        return
-
-    if fields:
-        for binding in record.prestashop_bind_ids:
-            export_record.delay(
-                session,
-                'prestashop.product.combination',
-                binding.id,
-                fields,
-                priority=20
-            )
-
-
-def prestashop_product_combination_unlink(session, record_id):
-    # binding is deactivate when deactive a product variant
-    ps_binding_product = session.env['prestashop.product.combination'].search([
-        ('active', '=', False),
-        ('odoo_id', '=', record_id)
-    ])
-    for binding in ps_binding_product:
-        resource = 'combinations/%s' % (binding.prestashop_id)
-        export_delete_record.delay(
-            session, 'prestashop.product.combination', binding.backend_id.id,
-            binding.prestashop_id, resource)
-    ps_binding_product.unlink()
-
-
-class PrestashopProductCombination(models.Model):
-    _inherit = 'prestashop.product.combination'
-    minimal_quantity = fields.Integer(
-        string='Minimal Quantity',
-        default=1,
-        help='Minimal Sale quantity',
-    )
 
 
 @prestashop
@@ -180,14 +103,17 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
     direct = [
         ('default_code', 'reference'),
         ('active', 'active'),
-        ('barcode', 'barcode'),
+        ('barcode', 'ean13'),
         ('minimal_quantity', 'minimal_quantity'),
         ('weight', 'weight'),
     ]
 
     @mapping
     def combination_default(self, record):
-        return {'default_on': str(int(record['default_on']))}
+        return {}
+        # TODO Check issue to write default combination see
+        # TODO id_default_combination in product template export mapper
+        # return {'default_on': str(int(record['default_on']))}
 
     def get_main_template_id(self, record):
         template_binder = self.binder_for('prestashop.product.template')
@@ -235,3 +161,78 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
             ('images', {'image': self._get_combination_image(record) or False})
         ])
         return {'associations': associations}
+
+
+@prestashop
+class ProductCombinationOptionExport(PrestashopExporter):
+    _model_name = 'prestashop.product.combination.option'
+
+    def _create(self, record):
+        res = super(ProductCombinationOptionExport, self)._create(record)
+        return res['prestashop']['product_option']['id']
+
+
+@prestashop
+class ProductCombinationOptionExportMapper(TranslationPrestashopExportMapper):
+    _model_name = 'prestashop.product.combination.option'
+
+    direct = [
+        ('prestashop_position', 'position'),
+        ('group_type', 'group_type'),
+    ]
+
+    _translatable_fields = [
+        ('name', 'name'),
+        ('name', 'public_name'),
+    ]
+
+
+@prestashop
+class ProductCombinationOptionValueExport(PrestashopExporter):
+    _model_name = 'prestashop.product.combination.option.value'
+
+    def _create(self, record):
+        res = super(ProductCombinationOptionValueExport, self)._create(record)
+        return res['prestashop']['product_option_value']['id']
+
+    def _export_dependencies(self):
+        """ Export the dependencies for the record"""
+        attribute_id = self.binding.attribute_id.id
+        # export product attribute
+        binder = self.binder_for('prestashop.product.combination.option')
+        if not binder.to_backend(attribute_id, wrap=True):
+            exporter = self.get_connector_unit_for_model(
+                TranslationPrestashopExporter,
+                'prestashop.product.combination.option')
+            exporter.run(attribute_id)
+        return
+
+
+@prestashop
+class ProductCombinationOptionValueExportMapper(
+        TranslationPrestashopExportMapper):
+    _model_name = 'prestashop.product.combination.option.value'
+
+    direct = [('name', 'value')]
+    # handled by base mapping `translatable_fields`
+    _translatable_fields = [
+        ('name', 'name'),
+    ]
+
+    @mapping
+    def prestashop_product_attribute_id(self, record):
+        attribute_binder = self.binder_for(
+            'prestashop.product.combination.option.value')
+        return {
+            'id_feature': attribute_binder.to_backend(
+                record.attribute_id.id, wrap=True)
+        }
+
+    @mapping
+    def prestashop_product_group_attribute_id(self, record):
+        attribute_binder = self.binder_for(
+            'prestashop.product.combination.option')
+        return {
+            'id_attribute_group': attribute_binder.to_backend(
+                record.attribute_id.id, wrap=True),
+        }

@@ -3,8 +3,7 @@
 
 from datetime import timedelta
 
-from openerp.addons.connector.event import on_record_create, on_record_write
-from openerp.addons.connector.unit.mapper import mapping
+from openerp.addons.connector.unit.mapper import mapping, m2o_to_backend
 
 from openerp.addons.connector_prestashop.\
     models.product_template.importer import ProductTemplateImporter
@@ -17,107 +16,9 @@ from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
 from openerp.addons.connector_prestashop.backend import prestashop
-from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
+from ...consumer import get_slug
 
-import openerp.addons.decimal_precision as dp
-import unicodedata
 import re
-from openerp import models, fields
-
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-
-def get_slug(name):
-    if slugify_lib:
-        try:
-            return slugify_lib.slugify(name)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', name).encode(
-        'ascii', 'ignore').decode('ascii')
-    slug = re.sub(r'[\W_]', ' ', uni).strip().lower()
-    slug = re.sub(r'[-\s]+', '-', slug)
-    return slug
-
-
-@on_record_create(model_names='prestashop.product.template')
-def prestashop_product_template_create(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    export_record.delay(session, model_name, record_id, priority=20)
-
-
-@on_record_write(model_names='prestashop.product.template')
-def prestashop_product_template_write(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
-    if fields:
-        export_record.delay(
-            session, model_name, record_id, fields, priority=20)
-        # Propagate minimal_quantity from template to variants
-        if 'minimal_quantity' in fields:
-            ps_template = session.env[model_name].browse(record_id)
-            for binding in ps_template.prestashop_bind_ids:
-                binding.odoo_id.mapped(
-                    'product_variant_ids.prestashop_bind_ids').write({
-                        'minimal_quantity': binding.minimal_quantity
-                    })
-
-
-@on_record_write(model_names='product.template')
-def product_template_write(session, model_name, record_id, fields):
-    if session.context.get('connector_no_export'):
-        return
-    model = session.env[model_name]
-    record = model.browse(record_id)
-    for binding in record.prestashop_bind_ids:
-        export_record.delay(
-            session, 'prestashop.product.template', binding.id, fields,
-            priority=20)
-
-
-class PrestashopProductTemplate(models.Model):
-    _inherit = 'prestashop.product.template'
-
-    meta_title = fields.Char(
-        string='Meta Title',
-        translate=True
-    )
-    meta_description = fields.Char(
-        string='Meta Description',
-        translate=True
-    )
-    meta_keywords = fields.Char(
-        string='Meta Keywords',
-        translate=True
-    )
-    tags = fields.Char(
-        string='Tags',
-        translate=True
-    )
-    online_only = fields.Boolean(string='Online Only')
-    additional_shipping_cost = fields.Float(
-        string='Additional Shipping Price',
-        digits_compute=dp.get_precision('Product Price'),
-        help="Additionnal Shipping Price for the product on Prestashop")
-    available_now = fields.Char(
-        string='Available Now',
-        translate=True
-    )
-    available_later = fields.Char(
-        string='Available Later',
-        translate=True
-    )
-    available_date = fields.Date(string='Available Date')
-    minimal_quantity = fields.Integer(
-        string='Minimal Quantity',
-        help='Minimal Sale quantity',
-        default=1,
-    )
 
 
 @prestashop
@@ -151,14 +52,15 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                 connector_no_export=True,
                 lang=lang_code).write(vals)
 
-    def export_categories(self, category, binder, ps_categ_obj):
+    def export_categories(self, category):
         if not category:
             return
-        ext_id = binder.to_backend(category.id, wrap=True)
+        category_binder = self.binder_for('prestashop.product.category')
+        ext_id = category_binder.to_backend(category.id, wrap=True)
         if ext_id:
             return ext_id
-        parent_cat_id = self.export_categories(
-            category.parent_id, binder, ps_categ_obj)
+
+        ps_categ_obj = self.session.env['prestashop.product.category']
         position_cat_id = ps_categ_obj.search(
             [], order='position desc', limit=1)
         obj_position = position_cat_id.position + 1
@@ -168,13 +70,12 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             'link_rewrite': get_slug(category.name),
             'position': obj_position,
         }
-        category_ext_id = ps_categ_obj.with_context(
+        binding = ps_categ_obj.with_context(
             connector_no_export=True).create(res)
-        parent_cat_id = export_record(self.session,
-                                      'prestashop.product.category',
-                                      category_ext_id.id,
-                                      fields={'parent_id': parent_cat_id})
-        return re.search(r'\d+', parent_cat_id).group()
+        export_record(
+            self.session,
+            'prestashop.product.category',
+            binding.id)
 
     def _parent_length(self, categ):
         if not categ.parent_id:
@@ -182,66 +83,32 @@ class ProductTemplateExport(TranslationPrestashopExporter):
         else:
             return 1 + self._parent_length(categ.parent_id)
 
-    def _set_main_category(self):
-        if self.binding.categ_id.id == 1 and self.binding.categ_ids:
-            max_parent = {'length': 0}
-            for categ in self.binding.categ_ids:
-                parent_length = self._parent_length(categ.parent_id)
-                if parent_length > max_parent['length']:
-                    max_parent = {'categ_id': categ.id,
-                                  'length': parent_length}
-            self.binding.odoo_id.with_context(
-                connector_no_export=True).write({
-                    'categ_id': max_parent['categ_id'],
-                    'categ_ids': [(3, max_parent['categ_id'])],
-                })
-
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
+        super(ProductTemplateExport, self)._export_dependencies()
         attribute_binder = self.binder_for(
             'prestashop.product.combination.option')
         option_binder = self.binder_for(
             'prestashop.product.combination.option.value')
-        category_binder = self.binder_for(
-            'prestashop.product.category')
         attribute_obj = self.session.env[
             'prestashop.product.combination.option']
-        categories_obj = self.session.env[
-            'prestashop.product.category']
-        self._set_main_category()
-
-        for category in self.binding.categ_id + self.binding.categ_ids:
-            self.export_categories(category, category_binder, categories_obj)
+        
+        for category in self.binding.categ_ids:
+            self.export_categories(category)
 
         for line in self.binding.attribute_line_ids:
             attribute_ext_id = attribute_binder.to_backend(
                 line.attribute_id.id, wrap=True)
             if not attribute_ext_id:
-                res = {
-                    'backend_id': self.backend_record.id,
-                    'odoo_id': line.attribute_id.id,
-                }
-                attribute_ext_id = attribute_obj.with_context(
-                    connector_no_export=True).create(res)
-                export_record(
-                    self.session,
-                    'prestashop.product.combination.option',
-                    attribute_ext_id.id)
+                self._export_dependency(
+                    line.attribute_id,
+                    'prestashop.product.combination.option')
             for value in line.value_ids:
                 value_ext_id = option_binder.to_backend(value.id, wrap=True)
                 if not value_ext_id:
-                    value_ext_id = self.session.env[
-                        'prestashop.product.combination.option.value'].\
-                        with_context(connector_no_export=True).create({
-                            'backend_id': self.backend_record.id,
-                            'odoo_id': value.id,
-                        })
-                    export_record(
-                        self.session,
-                        'prestashop.product.combination.option.value',
-                        value_ext_id.id
-                    )
-
+                    self._export_dependency(
+                        value, 'prestashop.product.combination.option.value')
+    
     def export_variants(self):
         combination_obj = self.session.env['prestashop.product.combination']
         for product in self.binding.product_variant_ids:
@@ -311,12 +178,15 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('online_only', 'online_only'),
         ('weight', 'weight'),
         ('standard_price', 'wholesale_price'),
-        ('default_shop_id', 'id_shop_default'),
+        (m2o_to_backend('default_shop_id'), 'id_shop_default'),
         ('always_available', 'active'),
         ('barcode', 'barcode'),
         ('additional_shipping_cost', 'additional_shipping_cost'),
         ('minimal_quantity', 'minimal_quantity'),
         ('on_sale', 'on_sale'),
+        (m2o_to_backend(
+            'prestashop_default_category_id',
+            binding='prestashop.product.category'), 'id_category_default'),
     ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [
@@ -332,15 +202,20 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('description_html', 'description'),
     ]
 
+    def _get_factor_tax(self, tax):
+        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
+        return factor_tax
+
     @mapping
     def list_price(self, record):
         dp_obj = self.env['decimal.precision']
         precision = dp_obj.precision_get('Product Price')
-        if record.taxes_id.price_include and record.taxes_id.type == 'percent':
+        tax = record.taxes_id
+        if tax.price_include and tax.amount_type == 'percent':
             return {
                 'price': str(
-                    round(record.list_price / (
-                        1 + record.taxes_id.amount), precision))
+                    round(record.list_price /
+                          self._get_factor_tax(tax), precision))
             }
         else:
             return {'price': str(record.list_price)}
@@ -352,8 +227,7 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
     def _get_product_category(self, record):
         ext_categ_ids = []
         binder = self.binder_for('prestashop.product.category')
-        categories = list(set(record.categ_ids + record.categ_id))
-        for category in categories:
+        for category in record.categ_ids:
             ext_categ_ids.append(
                 {'id': binder.to_backend(category.id, wrap=True)})
         return ext_categ_ids
@@ -368,10 +242,12 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         }
 
     @mapping
-    def categ_id(self, record):
-        binder = self.binder_for('prestashop.product.category')
-        ext_categ_id = binder.to_backend(record.categ_id.id, wrap=True)
-        return {'id_category_default': ext_categ_id}
+    def default_combination(self, record):
+        if record.product_variant_count > 1:
+            default_variant = record.product_variant_ids.filtered('default_on')
+            binder = self.binder_for('prestashop.product.combination')
+            ps_variant_id = binder.to_backend(default_variant.id, wrap=True)
+            return {'id_default_combination': ps_variant_id}
 
     @mapping
     def tax_ids(self, record):
@@ -389,3 +265,12 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
     def date_add(self, record):
         # When export a record the date_add in PS is null.
         return {'date_add': record.create_date}
+
+    @mapping
+    def default_image(self, record):
+        default_image = record.image_ids.filtered('front_image')[:1]
+        if default_image:
+            binder = self.binder_for('prestashop.product.image')
+            ps_image_id = binder.to_backend(default_image, wrap=True)
+            if ps_image_id:
+                return {'id_default_image': ps_image_id}
