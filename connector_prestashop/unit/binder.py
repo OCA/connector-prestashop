@@ -12,9 +12,6 @@ class PrestashopBinder(Binder):
     _external_field = 'prestashop_id'
     _openerp_field = 'odoo_id'
 
-    def to_odoo(self, external_id, unwrap=False):
-        return self.to_openerp(external_id, unwrap=unwrap)
-
     _model_name = [
         'prestashop.shop.group',
         'prestashop.shop',
@@ -41,3 +38,7 @@ class PrestashopBinder(Binder):
         'prestashop.mail.message',
         'prestashop.groups.pricelist',
     ]
+
+    def to_odoo(self, external_id, unwrap=False):
+        # Make alias to to_openerp, remove in v10
+        return self.to_openerp(external_id, unwrap)
