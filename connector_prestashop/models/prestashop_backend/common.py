@@ -290,7 +290,7 @@ class PrestashopBackend(models.Model):
     @api.multi
     def import_record(self, model_name, ext_id):
         self.ensure_one()
-        session = ConnectorSession()
+        session = ConnectorSession.from_env(self.env)
         import_record(session, model_name, self.id, ext_id)
         return True
 
