@@ -107,11 +107,14 @@ class ProductImageExportMapper(PrestashopExportMapper):
     @mapping
     def product_id(self, record):
         if record.odoo_id.owner_model == u'product.product':
-            product_tmpl_id = record.env['product.product'].browse(
-                record.odoo_id.owner_id).product_tmpl_id.id
+            product_tmpl = record.env['product.product'].browse(
+                record.odoo_id.owner_id).product_tmpl_id
         else:
-            product_tmpl_id = record.odoo_id.owner_id
-        return {'id_product': product_tmpl_id}
+            product_tmpl = record.env['product.template'].browse(
+                record.odoo_id.owner_id)
+        binder = self.binder_for('prestashop.product.template')
+        ps_product_id = binder.to_backend(product_tmpl, wrap=True)
+        return {'id_product': ps_product_id}
 
     @mapping
     def extension(self, record):
