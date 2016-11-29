@@ -2,18 +2,12 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-=============================================
-Catalog Manager for Odoo PrestaShop Connector
-=============================================
+==============================================================
+Catalog Manager for Odoo PrestaShop Connector Product Features
+==============================================================
 
 This module is an extension for *connector_prestashop*. With it, you will be
-able to manage your catalog directly from Odoo:
-
-* Create/modify attributtes and values in Odoo and push then in PrestaShop.
-* Create/modify products and push them in PrestaShop.
-* Create/modify products variants and push them in PrestaShop (combinations).
-* Create/modify category and push them in PrestaShop.
-* Create/modify image and push then in PrestaShop.
+able to manage product features directly from Odoo:
 
 Usage
 =====
@@ -49,11 +43,7 @@ Images
 Contributors
 ------------
 
-* Sébastien Beau <sebastien.beau@akretion.com>
-* Benoît Guillot <benoit.guillot@akretion.com>
-* Mikel Arregi <mikelarregi@avanzosc.es>
 * Sergio Teruel <sergio.teruel@tecnativa.com>
-* Pedro M. Baeza <pedro.baeza@tecnativa.com>
 
 Maintainer
 ----------
