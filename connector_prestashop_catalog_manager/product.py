@@ -45,6 +45,8 @@ def get_slug(name):
 
 @on_record_create(model_names='prestashop.product.template')
 def prestashop_product_template_create(session, model_name, record_id, fields):
+    if session.context.get('connector_no_export'):
+        return
     export_record.delay(session, model_name, record_id, priority=20)
 
 
