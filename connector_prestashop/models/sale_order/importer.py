@@ -471,7 +471,7 @@ class SaleOrderLineDiscountImporter(ImportMapper):
 
 
 @job(default_channel='root.prestashop')
-def import_orders_since(session, backend_id, since_date=None):
+def import_orders_since(session, backend_id, since_date=None, shop_url=None):
     """ Prepare the import of orders modified on PrestaShop """
     backend_record = session.env['prestashop.backend'].browse(backend_id)
     filters = None
@@ -483,7 +483,8 @@ def import_orders_since(session, backend_id, since_date=None):
         backend_id,
         filters,
         priority=10,
-        max_retries=0
+        max_retries=0,
+        shop_url=shop_url
     )
     if since_date:
         filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
