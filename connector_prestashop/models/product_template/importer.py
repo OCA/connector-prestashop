@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from bs4 import BeautifulSoup
+
 from openerp import models, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import mapping, ImportMapper
@@ -41,8 +43,6 @@ class TemplateMapper(ImportMapper):
     _model_name = 'prestashop.product.template'
 
     direct = [
-        ('description', 'description_html'),
-        ('description_short', 'description_short_html'),
         ('weight', 'weight'),
         ('wholesale_price', 'standard_price'),
         (backend_to_m2o('id_shop_default'), 'default_shop_id'),
@@ -135,10 +135,24 @@ class TemplateMapper(ImportMapper):
         html.ignore_links = True
         return html.handle(content)
 
+    @staticmethod
+    def sanitize_html(content):
+        content = BeautifulSoup(content, 'html.parser')
+        # Prestashop adds both 'lang="fr-ch"' and 'xml:lang="fr-ch"'
+        # but Odoo tries to parse the xml for the translation and fails
+        # due to the unknow namespace
+        for child in content.find_all(lambda tag: tag.has_attr('xml:lang')):
+            del child['xml:lang']
+        return content.prettify()
+
     @mapping
-    def description(self, record):
+    def descriptions(self, record):
         return {
             'description': self.clear_html_field(
+                record.get('description_short', '')),
+            'description_html': self.sanitize_html(
+                record.get('description', '')),
+            'description_short_html': self.sanitize_html(
                 record.get('description_short', '')),
         }
 
