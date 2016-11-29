@@ -56,11 +56,16 @@ class PrestashopBaseExporter(Exporter):
         # commit so we keep the external ID if several cascading exports
         # are called and one of them fails
         self.session.commit()
+        self._after_export()
         return result
 
     def _run(self):
         """ Flow of the synchronization, implemented in inherited classes"""
         raise NotImplementedError
+
+    def _after_export(self):
+        """Create records of dependants prestashop objects"""
+        return
 
 
 class PrestashopExporter(PrestashopBaseExporter):
@@ -207,10 +212,6 @@ class PrestashopExporter(PrestashopBaseExporter):
         """
         return
 
-    def _after_export(self):
-        """Create records of dependants prestashop objects"""
-        return
-
     def _create(self, data):
         """ Create the PrestaShop record """
         return self.backend_adapter.create(data)
@@ -289,7 +290,6 @@ class PrestashopExporter(PrestashopBaseExporter):
             if self.prestashop_id == 0:
                 raise exceptions.Warning(
                     _("Record on PrestaShop have not been created"))
-            self._after_export()
         message = _('Record exported with ID %s on PrestaShop.')
         return message % self.prestashop_id
 
