@@ -11,6 +11,9 @@ class PrestashopBinder(Binder):
 
     _external_field = 'prestashop_id'
 
+    def to_odoo(self, external_id, unwrap=False):
+        return self.to_openerp(external_id, unwrap=unwrap)
+
     _model_name = [
         'prestashop.shop.group',
         'prestashop.shop',
