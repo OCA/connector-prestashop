@@ -482,7 +482,10 @@ class TranslatableRecordImporter(PrestashopImporter):
         """ Hook called at the end of the import """
         for lang_code, lang_record in self.other_langs_data.iteritems():
             map_record = self.mapper.map_record(lang_record)
-            binding.with_context(lang=lang_code).write(map_record.values())
+            binding.with_context(
+                lang=lang_code,
+                connector_no_export=True,
+            ).write(map_record.values())
 
 
 @job(default_channel='root.prestashop')
