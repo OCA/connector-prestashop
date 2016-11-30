@@ -56,19 +56,6 @@ class TemplateMapper(ImportMapper):
         ('on_sale', 'on_sale'),
     ]
 
-    def get_sale_price(self, record, tax):
-        price_adapter = self.unit_for(
-            GenericAdapter, 'prestashop.product.combination')
-        combination = price_adapter.read(
-            record['id_default_combination']['value'])
-        impact_price = float(combination['price'] or '0.0')
-        price = float(record['price'] or '0.0')
-        if tax:
-            tax = tax[:1]
-            return (price / (1 + tax.amount / 100) - impact_price) * (
-                1 + tax.amount / 100)
-        return price - impact_price
-
     def _apply_taxes(self, tax, price):
         if self.backend_record.taxes_included == tax.price_include:
             return price
@@ -84,17 +71,8 @@ class TemplateMapper(ImportMapper):
     def list_price(self, record):
         price = 0.0
         tax = self._get_tax_ids(record)
-        associations = record.get('associations', {})
-        combinations = associations.get('combinations', {}).get(
-            self.backend_record.get_version_ps_key('combinations'), [])
-        if not isinstance(combinations, list):
-            combinations = [combinations]
-        if combinations:
-            price = self.get_sale_price(record, tax)
-        else:
-            if record['price'] != '':
-                price = float(record['price'])
-
+        if record['price'] != '':
+            price = float(record['price'])
         price = self._apply_taxes(tax, price)
         return {'list_price': price}
 
