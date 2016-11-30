@@ -156,7 +156,8 @@ class ProductCombinationMapper(ImportMapper):
             option_value_binding = option_value_binder.to_openerp(
                 option_value['id']
             )
-            yield option_value_binding.openerp_id
+            assert option_value_binding, "must have a binding for the option"
+            yield option_value_binding.odoo_id
 
     @mapping
     def name(self, record):
@@ -254,7 +255,7 @@ class ProductCombinationMapper(ImportMapper):
 class ProductCombinationOptionImporter(PrestashopImporter):
     _model_name = 'prestashop.product.combination.option'
 
-    def _import_values(self):
+    def _import_values(self, attribute_binding):
         record = self.prestashop_record
         option_values = record.get('associations', {}).get(
             'product_option_values', {}).get(
@@ -267,26 +268,9 @@ class ProductCombinationOptionImporter(PrestashopImporter):
                 'prestashop.product.combination.option.value'
             )
 
-    def run(self, ext_id):
-        # looking for an product.attribute with the same name
-        self.prestashop_id = ext_id
-        self.prestashop_record = self._get_prestashop_data()
-        name = self.mapper.name(self.prestashop_record)['name']
-        attribute_ids = self.env['product.attribute'].search([
-            ('name', '=', name),
-        ])
-        if len(attribute_ids) == 0:
-            # if we don't find it, we create a prestashop_product_combination
-            super(ProductCombinationOptionImporter, self).run(ext_id)
-        else:
-            # else, we create only a prestashop.product.combination.option
-            data = {
-                'odoo_id': attribute_ids.id,
-                'backend_id': self.backend_record.id,
-            }
-            erp_id = self.model.create(data)
-            self.binder.bind(self.prestashop_id, erp_id)
-        self._import_values()
+    def _after_import(self, binding):
+        super(ProductCombinationOptionImporter, self)._after_import(binding)
+        self._import_values(binding)
 
 
 @prestashop
@@ -298,6 +282,16 @@ class ProductCombinationOptionMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def odoo_id(self, record):
+        name = self.name(record)
+        binding = self.model.search(
+            [('name', '=', name)],
+            limit=1,
+        )
+        if binding:
+            return {'odoo_id': binding.id}
 
     @mapping
     def name(self, record):
@@ -345,6 +339,24 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     direct = [
         ('name', 'name'),
     ]
+
+    @mapping
+    def odoo_id(self, record):
+        attribute_binder = self.binder_for(
+            'prestashop.product.combination.option'
+        )
+        attribute = attribute_binder.to_odoo(
+            record['id_attribute_group'],
+            unwrap=True
+        )
+        assert attribute
+        binding = self.env['product.attribute.value'].search(
+            [('name', '=', record['name']),
+             ('attribute_id', '=', attribute.id)],
+            limit=1,
+        )
+        if binding:
+            return {'odoo_id': binding.id}
 
     @mapping
     def attribute_id(self, record):
