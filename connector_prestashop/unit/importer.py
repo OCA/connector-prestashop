@@ -49,7 +49,8 @@ class PrestashopImporter(Importer):
         return
 
     def _import_dependency(self, prestashop_id, binding_model,
-                           importer_class=None, always=False):
+                           importer_class=None, always=False,
+                           **kwargs):
         """
         Import a dependency. The importer class is a subclass of
         ``PrestashopImporter``. A specific class can be defined.
@@ -68,6 +69,7 @@ class PrestashopImporter(Importer):
                        it is still skipped if it has not been modified on
                        PrestaShop
         :type always: boolean
+        :param kwargs: additional keyword arguments are passed to the importer
         """
         if not prestashop_id:
             return
@@ -76,7 +78,7 @@ class PrestashopImporter(Importer):
         binder = self.binder_for(binding_model)
         if always or not binder.to_odoo(prestashop_id):
             importer = self.unit_for(importer_class, model=binding_model)
-            importer.run(prestashop_id)
+            importer.run(prestashop_id, **kwargs)
 
     def _map_data(self):
         """ Returns an instance of
@@ -104,6 +106,12 @@ class PrestashopImporter(Importer):
 
     def _create_context(self):
         return {'connector_no_export': True}
+
+    def _create_data(self, map_record):
+        return map_record.values(for_create=True)
+
+    def _update_data(self, map_record):
+        return map_record.values()
 
     def _create(self, data):
         """ Create the OpenERP record """
@@ -165,7 +173,7 @@ class PrestashopImporter(Importer):
                 else:
                     cr.commit()
 
-    def run(self, prestashop_id):
+    def run(self, prestashop_id, **kwargs):
         """ Run the synchronization
 
         :param prestashop_id: identifier of the record on PrestaShop
@@ -238,9 +246,9 @@ class PrestashopImporter(Importer):
         # import the missing linked resources
         self._import_dependencies()
 
-        self._import(binding)
+        self._import(binding, **kwargs)
 
-    def _import(self, binding):
+    def _import(self, binding, **kwargs):
         """ Import the external record.
 
         Can be inherited to modify for instance the session
@@ -251,9 +259,9 @@ class PrestashopImporter(Importer):
         map_record = self._map_data()
 
         if binding:
-            record = map_record.values()
+            record = self._update_data(map_record)
         else:
-            record = map_record.values(for_create=True)
+            record = self._create_data(map_record)
 
         # special check on data before import
         self._validate_data(record)
@@ -450,7 +458,7 @@ class TranslatableRecordImporter(PrestashopImporter):
         """
         return self.mapper.map_record(self.main_lang_data)
 
-    def _import(self, binding):
+    def _import(self, binding, **kwargs):
         """ Import the external record.
 
         Can be inherited to modify for instance the session
