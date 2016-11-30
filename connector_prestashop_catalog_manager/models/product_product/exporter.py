@@ -108,6 +108,10 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
         ('weight', 'weight'),
     ]
 
+    def _get_factor_tax(self, tax):
+        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
+        return factor_tax
+
     @mapping
     def combination_default(self, record):
         return {}
@@ -125,13 +129,20 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
 
     @mapping
     def _unit_price_impact(self, record):
+        dp_obj = self.env['decimal.precision']
+        precision = dp_obj.precision_get('Product Price')
         tax = record.taxes_id[:1]
-        factor_tax = tax.price_include and (1 + tax.amount) or 1.0
-        return {'price': str(record.impact_price / factor_tax)}
+        if tax.price_include and tax.amount_type == 'percent':
+            return {
+                'price': round(
+                    record.impact_price / self._get_factor_tax(tax), precision)
+            }
+        else:
+            return {'price': record.impact_price}
 
     @mapping
     def cost_price(self, record):
-        return {'wholesale_price': str(record.standard_price)}
+        return {'wholesale_price': record.standard_price}
 
     def _get_product_option_value(self, record):
         option_value = []
