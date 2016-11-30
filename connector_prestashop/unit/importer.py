@@ -496,19 +496,18 @@ class TranslatableRecordImporter(PrestashopImporter):
 def import_batch(session, model_name, backend_id, filters=None, **kwargs):
     """ Prepare a batch import of records from PrestaShop """
     env = get_environment(session, model_name, backend_id)
-    shop_url = kwargs.get('shop_url', None)
-    with env.session.change_context(
-            shop_url=shop_url, connector_no_export=True):
+    ctx = dict(session.context, **kwargs)
+    with env.session.change_context(ctx):
         importer = env.get_connector_unit(BatchImporter)
         importer.run(filters=filters, **kwargs)
 
 
 @job(default_channel='root.prestashop')
 def import_record(
-        session, model_name, backend_id, prestashop_id, shop_url=None):
+        session, model_name, backend_id, prestashop_id, **kwargs):
     """ Import a record from PrestaShop """
+    ctx = dict(session.context, **kwargs)
     env = get_environment(session, model_name, backend_id)
-    with env.session.change_context(
-            shop_url=shop_url, connector_no_export=True):
+    with env.session.change_context(ctx):
         importer = env.get_connector_unit(PrestashopImporter)
-        importer.run(prestashop_id)
+        importer.run(prestashop_id, **kwargs)
