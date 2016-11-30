@@ -114,10 +114,7 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
 
     @mapping
     def combination_default(self, record):
-        return {}
-        # TODO Check issue to write default combination see
-        # TODO id_default_combination in product template export mapper
-        # return {'default_on': str(int(record['default_on']))}
+        return {'default_on': int(record['default_on'])}
 
     def get_main_template_id(self, record):
         template_binder = self.binder_for('prestashop.product.template')

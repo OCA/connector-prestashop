@@ -221,20 +221,18 @@ def product_product_write(session, model_name, record_id, fields):
 
     if fields:
         for binding in record.prestashop_bind_ids:
+            priority = 20
+            if 'default_on' in fields and fields['default_on']:
+                # PS has to uncheck actual default combination first
+                priority = 99
             export_record.delay(
                 session,
                 'prestashop.product.combination',
                 binding.id,
                 fields,
-                priority=20,
+                priority=priority,
                 shop_url=_get_shop_url(session)
             )
-    # We can not update directly default_on in combination because this field
-    # is unique key in PS so I trigger a write in product template to assign
-    # the default combination
-    if 'default_on' in fields:
-        product_template_write(
-            session, 'product.template', record.product_tmpl_id.id, 'name')
 
 
 @on_record_create(model_names='prestashop.product.combination.option')
