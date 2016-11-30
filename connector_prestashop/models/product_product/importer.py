@@ -232,6 +232,17 @@ class ProductCombinationMapper(ImportMapper):
             tax_group['id_tax_rules_group'], unwrap=True)
         return tax_group.tax_ids
 
+    def _apply_taxes(self, tax, price):
+        if self.backend_record.taxes_included == tax.price_include:
+            return price
+        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
+        if self.backend_record.taxes_included:
+            if not tax.price_include:
+                return price / factor_tax
+        else:
+            if tax.price_include:
+                return price * factor_tax
+
     @mapping
     def specific_price(self, record):
         product = self.binder_for(
@@ -243,8 +254,7 @@ class ProductCombinationMapper(ImportMapper):
                 record['id_product'], unwrap=True
         )
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
-        factor_tax = tax.price_include and (1 + tax.amount) or 1.0
-        impact = float(record['price'] or '0.0') * factor_tax
+        impact = float(self._apply_taxes(tax, float(record['price'] or '0.0')))
         cost_price = float(record['wholesale_price'] or '0.0')
         return {
             'list_price': product_template.list_price,
