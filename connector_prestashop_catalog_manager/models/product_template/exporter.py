@@ -242,14 +242,6 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         }
 
     @mapping
-    def default_combination(self, record):
-        if record.product_variant_count > 1:
-            default_variant = record.product_variant_ids.filtered('default_on')
-            binder = self.binder_for('prestashop.product.combination')
-            ps_variant_id = binder.to_backend(default_variant.id, wrap=True)
-            return {'id_default_combination': ps_variant_id}
-
-    @mapping
     def tax_ids(self, record):
         binder = self.binder_for('prestashop.account.tax.group')
         ext_id = binder.to_backend(record.tax_group_id.id, wrap=True)
