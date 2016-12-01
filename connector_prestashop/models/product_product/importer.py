@@ -250,15 +250,13 @@ class ProductCombinationMapper(ImportMapper):
             record['id'], unwrap=True
         )
         product_template = self.binder_for(
-            'prestashop.product.template').to_openerp(
-                record['id_product'], unwrap=True
-        )
+            'prestashop.product.template').to_odoo(record['id_product'])
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
         impact = float(self._apply_taxes(tax, float(record['price'] or '0.0')))
         cost_price = float(record['wholesale_price'] or '0.0')
         return {
             'list_price': product_template.list_price,
-            'standard_price': cost_price or product_template.standard_price,
+            'standard_price': cost_price or product_template.wholesale_price,
             'impact_price': impact
         }
 
