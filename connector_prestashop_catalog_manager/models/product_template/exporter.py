@@ -243,6 +243,8 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
 
     @mapping
     def tax_ids(self, record):
+        if not record.taxes_id:
+            return
         binder = self.binder_for('prestashop.account.tax.group')
         ext_id = binder.to_backend(record.taxes_id[:1].tax_group_id, wrap=True)
         return {'id_tax_rules_group': ext_id}
