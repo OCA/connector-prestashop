@@ -61,6 +61,11 @@ class PrestashopBackend(models.Model):
         required=True,
         help='Warehouse used to compute the stock quantities.'
     )
+    stock_location_id = fields.Many2one(
+        comodel_name='stock.location',
+        string='Stock Location',
+        help='Location used to import stock quantities.'
+    )
     taxes_included = fields.Boolean("Use tax included prices")
     import_partners_since = fields.Datetime('Import partners since')
     import_orders_since = fields.Datetime('Import Orders since')
