@@ -375,7 +375,8 @@ class ProductInventoryImporter(PrestashopImporter):
         else:
             products = template
 
-        location = self.backend_record.warehouse_id.lot_stock_id
+        location = (self.backend_record.stock_location_id or
+                    self.backend_record.warehouse_id.lot_stock_id)
         for product in products:
             vals = {
                 'location_id': location.id,
