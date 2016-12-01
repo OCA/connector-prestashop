@@ -48,6 +48,7 @@ class TemplateMapper(ImportMapper):
 
     direct = [
         ('weight', 'weight'),
+        ('wholesale_price', 'wholesale_price'),
         ('wholesale_price', 'standard_price'),
         (backend_to_m2o('id_shop_default'), 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
@@ -55,7 +56,7 @@ class TemplateMapper(ImportMapper):
         ('available_for_order', 'available_for_order'),
         ('on_sale', 'on_sale'),
     ]
-
+    
     def _apply_taxes(self, tax, price):
         if self.backend_record.taxes_included == tax.price_include:
             return price
