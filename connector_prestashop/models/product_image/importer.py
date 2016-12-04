@@ -12,6 +12,9 @@ from ...unit.importer import PrestashopImporter
 
 import mimetypes
 import logging
+
+from openerp import _
+
 _logger = logging.getLogger(__name__)
 try:
     from prestapyt import PrestaShopWebServiceError
@@ -106,18 +109,20 @@ class ProductImageImporter(PrestashopImporter):
 
 @job(default_channel='root.prestashop')
 def import_product_image(session, model_name, backend_id, product_tmpl_id,
-                         image_id, shop_url=None):
+                         image_id, **kwargs):
     """Import a product image"""
+    ctx = dict(session.context, **kwargs)
     env = get_environment(session, model_name, backend_id)
-    with env.session.change_context(shop_url=shop_url):
+    with env.session.change_context(ctx):
         importer = env.get_connector_unit(PrestashopImporter)
         importer.run(product_tmpl_id, image_id)
 
 
 @job(default_channel='root.prestashop')
 def set_product_image_variant(
-        session, model_name, backend_id, combination_ids, shop_url=None):
+        session, model_name, backend_id, combination_ids, **kwargs):
+    ctx = dict(session.context, **kwargs)
     env = get_environment(session, model_name, backend_id)
-    with env.session.change_context(shop_url=shop_url):
+    with env.session.change_context(ctx):
         importer = env.get_connector_unit(PrestashopImporter)
         importer.set_variant_images(combination_ids)
