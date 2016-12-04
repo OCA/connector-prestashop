@@ -31,13 +31,15 @@ class ProductInventoryExporter(Exporter):
 
 
 @job(default_channel='root.prestashop')
-def export_inventory(session, model_name, record_id, fields=None):
+def export_inventory(session, model_name, record_id, fields=None, **kwargs):
     """ Export the inventory configuration and quantity of a product. """
     template = session.env[model_name].browse(record_id)
     backend_id = template.backend_id.id
+    ctx = dict(session.context, **kwargs)
     env = get_environment(session, model_name, backend_id)
-    inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
-    return inventory_exporter.run(record_id, fields)
+    with env.session.change_context(ctx):
+        inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
+        return inventory_exporter.run(record_id, fields)
 
 
 @job(default_channel='root.prestashop')

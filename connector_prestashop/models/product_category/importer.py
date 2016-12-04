@@ -106,7 +106,6 @@ class ProductCategoryImporter(TranslatableRecordImporter):
                     name = values[self._default_language]['name']
 
                 self.backend_record.add_checkpoint(
-                    session=self.session,
                     model=category._name,
                     record_id=category.id,
                     message=msg % (name, str(e))

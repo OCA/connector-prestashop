@@ -248,7 +248,7 @@ class PrestashopBackend(models.Model):
             'order_slip': 'order_slips',
             'order_slip_detail': 'order_slip_details',
             'group': 'group',
-            'order_row': 'order_rows',
+            'order_row': 'order_row',
             'tax': 'taxes',
             'combinations': 'combination',
             'product_features': 'product_feature',
@@ -297,13 +297,6 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession.from_env(self.env)
         import_record(session, model_name, self.id, ext_id)
         return True
-
-    # TODO: Remove when this method has been active in parent class
-    @api.multi
-    def add_checkpoint(self, session, model, record_id, message=None):
-        self.ensure_one()
-        checkpoint.add_checkpoint(
-            session, model, record_id, self._name, self.id, message)
 
 
 class PrestashopShopGroup(models.Model):
