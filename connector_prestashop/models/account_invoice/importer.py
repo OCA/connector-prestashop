@@ -42,7 +42,6 @@ class RefundImporter(PrestashopImporter):
             invoice.signal_workflow('invoice_open')
         else:
             self.backend_record.add_checkpoint(
-                session=self.session,
                 model='account.invoice',
                 record_id=invoice.id,
             )
@@ -238,12 +237,12 @@ class RefundBatchImporter(DelayedBatchImporter):
 
 
 @job(default_channel='root.prestashop')
-def import_refunds(session, backend_id, since_date):
+def import_refunds(session, backend_id, since_date, **kwargs):
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
     now_fmt = fields.Datetime.now()
-    import_batch(session, 'prestashop.refund', backend_id, filters)
+    import_batch(session, 'prestashop.refund', backend_id, filters, **kwargs)
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_refunds_since': now_fmt
     })
