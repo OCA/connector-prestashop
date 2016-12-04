@@ -44,7 +44,6 @@ class PaymentModeBatchImporter(BatchImporter):
             'payment_method_id': payment_method.id
         })
         self.backend_record.add_checkpoint(
-            session=self.session,
             model=self.model._name,
             record_id=mode.id,
         )
