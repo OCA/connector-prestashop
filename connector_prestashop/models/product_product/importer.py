@@ -6,8 +6,8 @@ from openerp import models
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import (
     mapping,
+    only_create,
     ImportMapper,
-    only_create
 )
 from ...unit.importer import (
     PrestashopImporter,
@@ -303,10 +303,11 @@ class ProductCombinationOptionMapper(ImportMapper):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @only_create
     @mapping
     def odoo_id(self, record):
         name = self.name(record)
-        binding = self.model.search(
+        binding = self.env['product.attribute'].search(
             [('name', '=', name)],
             limit=1,
         )
@@ -370,6 +371,7 @@ class ProductCombinationOptionValueMapper(ImportMapper):
         ('name', 'name'),
     ]
 
+    @only_create
     @mapping
     def odoo_id(self, record):
         attribute_binder = self.binder_for(
