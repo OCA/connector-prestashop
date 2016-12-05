@@ -15,7 +15,6 @@ from openerp.addons.connector.exception import (
     RetryableJobError,
     FailedJobError,
 )
-from ..connector import get_environment
 
 
 _logger = logging.getLogger(__name__)
@@ -495,19 +494,17 @@ class TranslatableRecordImporter(PrestashopImporter):
 @job(default_channel='root.prestashop')
 def import_batch(session, model_name, backend_id, filters=None, **kwargs):
     """ Prepare a batch import of records from PrestaShop """
-    env = get_environment(session, model_name, backend_id)
-    ctx = dict(session.context, **kwargs)
-    with env.session.change_context(ctx):
-        importer = env.get_connector_unit(BatchImporter)
-        importer.run(filters=filters, **kwargs)
+    backend = session.env['prestashop.backend'].browse(backend_id)
+    env = backend.get_environment(model_name, session=session)
+    importer = env.get_connector_unit(BatchImporter)
+    importer.run(filters=filters, **kwargs)
 
 
 @job(default_channel='root.prestashop')
 def import_record(
         session, model_name, backend_id, prestashop_id, **kwargs):
     """ Import a record from PrestaShop """
-    ctx = dict(session.context, **kwargs)
-    env = get_environment(session, model_name, backend_id)
-    with env.session.change_context(ctx):
-        importer = env.get_connector_unit(PrestashopImporter)
-        importer.run(prestashop_id, **kwargs)
+    backend = session.env['prestashop.backend'].browse(backend_id)
+    env = backend.get_environment(model_name, session=session)
+    importer = env.get_connector_unit(PrestashopImporter)
+    importer.run(prestashop_id)
