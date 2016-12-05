@@ -91,7 +91,7 @@ class RefundMapper(ImportMapper):
         for slip_detail in slip_details:
             line = self._invoice_line(slip_detail, fpos)
             lines.append((0, 0, line))
-        return {'invoice_line': lines}
+        return {'invoice_line_ids': lines}
 
     def _invoice_line_shipping(self, record, fpos):
         order_line = self._get_shipping_order_line(record)
