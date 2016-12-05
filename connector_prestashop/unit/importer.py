@@ -34,7 +34,6 @@ class PrestashopImporter(Importer):
         super(PrestashopImporter, self).__init__(environment)
         self.prestashop_id = None
         self.prestashop_record = None
-        self.shop_url = None
 
     def _get_prestashop_data(self):
         """ Return the raw prestashop data for ``self.prestashop_id`` """
@@ -178,7 +177,6 @@ class PrestashopImporter(Importer):
 
         :param prestashop_id: identifier of the record on PrestaShop
         """
-        self.shop_url = self.session.context.get('shop_url', None)
         self.prestashop_id = prestashop_id
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
@@ -286,7 +284,6 @@ class BatchImporter(Importer):
 
     def run(self, filters=None, **kwargs):
         """ Run the synchronization """
-        self.shop_url = self.session.context.get('shop_url', None)
         if filters is None:
             filters = {}
         if 'limit' in filters:
@@ -507,4 +504,4 @@ def import_record(
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
     importer = env.get_connector_unit(PrestashopImporter)
-    importer.run(prestashop_id)
+    importer.run(prestashop_id, **kwargs)
