@@ -8,7 +8,6 @@ from openerp.addons.connector.event import (
 )
 from openerp.addons.connector.connector import Binder
 from openerp.addons.connector_prestashop.unit.exporter import export_record
-from openerp.addons.connector_prestashop.connector import get_environment
 from openerp.addons.connector_prestashop.unit.deleter import (
     export_delete_record
 )
@@ -103,20 +102,22 @@ def product_image_unlink(session, model_name, record_id):
     model = session.env[model_name]
     record = model.browse(record_id)
     for binding in record.prestashop_bind_ids:
+        backend = binding.backend_id
         product = session.env[record.owner_model].browse(record.owner_id)
         if product.exists():
             product_template = product.prestashop_bind_ids.filtered(
                 lambda x: x.backend_id == binding.backend_id)
             if not product_template:
                 return
-            env_product = get_environment(
-                session, 'prestashop.product.template', binding.backend_id.id)
+            env_product = backend.get_environment(
+                'prestashop.product.template',
+                session=session,
+            )
             binder_product = env_product.get_connector_unit(Binder)
             external_product_id = binder_product.to_backend(
                 product_template.id)
 
-            env = get_environment(
-                session, binding._name, binding.backend_id.id)
+            env = backend.get_environment(binding._name, session=session)
             binder = env.get_connector_unit(Binder)
             external_id = binder.to_backend(binding.id)
             resource = 'images/products/%s' % (external_product_id)
