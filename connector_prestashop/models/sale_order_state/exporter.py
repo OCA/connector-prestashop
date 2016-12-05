@@ -11,7 +11,7 @@ from ...backend import prestashop
 class SaleStateExporter(Exporter):
     _model_name = ['prestashop.sale.order']
 
-    def run(self, prestashop_id, state):
+    def run(self, prestashop_id, state, **kwargs):
         datas = {
             'order_history': {
                 'id_order': prestashop_id,

@@ -23,7 +23,7 @@ class PrestashopTrackingExporter(Exporter):
                 trackings.append(picking.carrier_tracking_ref)
         return ';'.join(trackings) if trackings else None
 
-    def run(self, binding_id):
+    def run(self, binding_id, **kwargs):
         """ Export the tracking number of a picking to Magento """
         # verify the picking is done + magento id exists
         tracking_adapter = self.unit_for(
