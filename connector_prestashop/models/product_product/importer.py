@@ -32,9 +32,9 @@ class ProductCombinationImporter(PrestashopImporter):
 
     def _import_dependencies(self):
         record = self.prestashop_record
+        ps_key = self.backend_record.get_version_ps_key('product_option_value')
         option_values = record.get('associations', {}).get(
-            'product_option_values', {}).get(
-            self.backend_record.get_version_ps_key('product_option_value'), [])
+            'product_option_values', {}).get(ps_key, [])
         if not isinstance(option_values, list):
             option_values = [option_values]
         backend_adapter = self.unit_for(
@@ -43,12 +43,10 @@ class ProductCombinationImporter(PrestashopImporter):
             option_value = backend_adapter.read(option_value['id'])
             self._import_dependency(
                 option_value['id_attribute_group'],
-                'prestashop.product.combination.option',
-            )
+                'prestashop.product.combination.option')
             self._import_dependency(
                 option_value['id'],
-                'prestashop.product.combination.option.value'
-            )
+                'prestashop.product.combination.option.value')
 
     def _after_import(self, binding):
         super(ProductCombinationImporter, self)._after_import(binding)
@@ -234,6 +232,17 @@ class ProductCombinationMapper(ImportMapper):
             tax_group['id_tax_rules_group'], unwrap=True)
         return tax_group.tax_ids
 
+    def _apply_taxes(self, tax, price):
+        if self.backend_record.taxes_included == tax.price_include:
+            return price
+        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
+        if self.backend_record.taxes_included:
+            if not tax.price_include:
+                return price / factor_tax
+        else:
+            if tax.price_include:
+                return price * factor_tax
+
     @mapping
     def specific_price(self, record):
         product = self.binder_for(
@@ -241,18 +250,25 @@ class ProductCombinationMapper(ImportMapper):
             record['id'], unwrap=True
         )
         product_template = self.binder_for(
-            'prestashop.product.template').to_odoo(
-                record['id_product'], unwrap=True
-        )
+            'prestashop.product.template').to_odoo(record['id_product'])
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
-        factor_tax = tax.price_include and (1 + tax.amount) or 1.0
-        impact = float(record['price'] or '0.0') * factor_tax
+        impact = float(self._apply_taxes(tax, float(record['price'] or '0.0')))
         cost_price = float(record['wholesale_price'] or '0.0')
         return {
             'list_price': product_template.list_price,
-            'standard_price': cost_price or product_template.standard_price,
+            'standard_price': cost_price or product_template.wholesale_price,
             'impact_price': impact
         }
+
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        Propuct = self.env['product.product']
+        product = Propuct.search([
+            ('default_code', '=', record['reference'])
+        ])
+        if Propuct:
+            return {'odoo_id': product.id}
 
 
 @prestashop
@@ -320,6 +336,16 @@ class ProductCombinationOptionMapper(ImportMapper):
             name = record['name']
         return {'name': name}
 
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        ProductAttribute = self.env['product.attribute']
+        product_attribute = ProductAttribute.search([
+            ('name', '=', record['name'])
+        ])
+        if product_attribute:
+            return {'odoo_id': product_attribute.id}
+
 
 @prestashop
 class ProductCombinationOptionValueAdapter(GenericAdapter):
@@ -373,6 +399,16 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
+
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        AttributeValue = self.env['product.attribute.value']
+        attribute_value = AttributeValue.search([
+            ('name', '=', record['name'])
+        ])
+        if attribute_value:
+            return {'odoo_id': attribute_value.id}
 
 
 @prestashop

@@ -55,11 +55,16 @@ class PrestashopBaseExporter(Exporter):
         # commit so we keep the external ID if several cascading exports
         # are called and one of them fails
         self.session.commit()
+        self._after_export()
         return result
 
     def _run(self):
         """ Flow of the synchronization, implemented in inherited classes"""
         raise NotImplementedError
+
+    def _after_export(self):
+        """Create records of dependants prestashop objects"""
+        return
 
 
 class PrestashopExporter(PrestashopBaseExporter):
@@ -318,11 +323,12 @@ def related_action_record(session, job):
 
 @job(default_channel='root.prestashop')
 @related_action(action=related_action_record)
-def export_record(session, model_name, binding_id, fields=None):
+def export_record(session, model_name, binding_id, fields=None, shop_url=None):
     """ Export a record on PrestaShop """
     # TODO: FIX PRESTASHOP do not support partial edit
     fields = None
     record = session.env[model_name].browse(binding_id)
     env = record.backend_id.get_environment(model_name, session=session)
-    exporter = env.get_connector_unit(PrestashopExporter)
-    return exporter.run(binding_id, fields=fields)
+    with env.session.change_context(shop_url=shop_url):
+        exporter = env.get_connector_unit(PrestashopExporter)
+        return exporter.run(binding_id, fields=fields)

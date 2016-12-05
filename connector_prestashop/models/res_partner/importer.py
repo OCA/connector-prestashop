@@ -235,19 +235,29 @@ class AddressBatchImporter(DelayedBatchImporter):
 
 
 @job(default_channel='root.prestashop')
-def import_customers_since(session, backend_id, since_date=None):
+def import_customers_since(
+        session, backend_id, since_date=None, **kwargs):
     """ Prepare the import of partners modified on PrestaShop """
     filters = None
     if since_date:
         filters = {
             'date': '1',
-            'filter[date_upd]': '>[%s]' % (since_date)}
+            'filter[date_upd]': '>[%s]' % since_date}
     now_fmt = fields.Datetime.now()
     import_batch(
-        session, 'prestashop.res.partner.category', backend_id, filters
+        session,
+        'prestashop.res.partner.category',
+        backend_id,
+        filters,
+        **kwargs
     )
     import_batch(
-        session, 'prestashop.res.partner', backend_id, filters, priority=15
+        session,
+        'prestashop.res.partner',
+        backend_id,
+        filters,
+        priority=15,
+        **kwargs
     )
 
     session.env['prestashop.backend'].browse(backend_id).write({

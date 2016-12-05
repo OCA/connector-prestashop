@@ -43,7 +43,7 @@ class VersionKey1612(VersionKey):
         'order_slip': 'order_slips',
         'order_slip_detail': 'order_slip_details',
         'group': 'group',
-        'order_row': 'order_rows',
+        'order_row': 'order_row',
         'tax': 'taxes',
         'combinations': 'combination',
         'product_features': 'product_feature',

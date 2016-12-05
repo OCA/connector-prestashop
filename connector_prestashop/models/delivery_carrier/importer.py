@@ -88,7 +88,11 @@ class DeliveryCarrierBatchImporter(DelayedBatchImporter):
 
 
 @job(default_channel='root.prestashop')
-def import_carriers(session, backend_id):
+def import_carriers(session, backend_id, **kwargs):
     import_batch(
-        session, 'prestashop.delivery.carrier', backend_id, priority=5
+        session,
+        'prestashop.delivery.carrier',
+        backend_id,
+        priority=5,
+        **kwargs
     )

@@ -7,6 +7,7 @@ from openerp import models, fields, api, exceptions, _
 
 from openerp.addons.connector.connector import ConnectorEnvironment
 from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.checkpoint import checkpoint
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
 from ...unit.backend_adapter import GenericAdapter, api_handle_errors
@@ -41,8 +42,8 @@ class PrestashopBackend(models.Model):
         return [
             ('1.5', '< 1.6.0.9'),
             ('1.6.0.9', '1.6.0.9 - 1.6.0.10'),
-            ('1.6.0.11', '>= 1.6.0.11'),
-            ('1.6.1.12', '>= 1.6.1.12'),
+            ('1.6.0.11', '>= 1.6.0.11 - <1.6.1.2'),
+            ('1.6.1.2', '=1.6.1.2')
         ]
     version = fields.Selection(
         selection='_select_versions',
@@ -60,6 +61,11 @@ class PrestashopBackend(models.Model):
         string='Warehouse',
         required=True,
         help='Warehouse used to compute the stock quantities.'
+    )
+    stock_location_id = fields.Many2one(
+        comodel_name='stock.location',
+        string='Stock Location',
+        help='Location used to import stock quantities.'
     )
     taxes_included = fields.Boolean("Use tax included prices")
     import_partners_since = fields.Datetime('Import partners since')

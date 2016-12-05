@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import _
+
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
@@ -11,6 +11,9 @@ from ...unit.importer import PrestashopImporter
 
 import mimetypes
 import logging
+
+from openerp import _
+
 _logger = logging.getLogger(__name__)
 try:
     from prestapyt import PrestaShopWebServiceError
@@ -105,18 +108,22 @@ class ProductImageImporter(PrestashopImporter):
 
 @job(default_channel='root.prestashop')
 def import_product_image(session, model_name, backend_id, product_tmpl_id,
-                         image_id):
+                         image_id, **kwargs):
     """Import a product image"""
+    ctx = dict(session.context, **kwargs)
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.run(product_tmpl_id, image_id)
+    with env.session.change_context(ctx):
+        importer = env.get_connector_unit(PrestashopImporter)
+        importer.run(product_tmpl_id, image_id)
 
 
 @job(default_channel='root.prestashop')
 def set_product_image_variant(
-        session, model_name, backend_id, combination_ids):
+        session, model_name, backend_id, combination_ids, **kwargs):
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.set_variant_images(combination_ids)
+    ctx = dict(session.context, **kwargs)
+    with env.session.change_context(ctx):
+        importer = env.get_connector_unit(PrestashopImporter)
+        importer.set_variant_images(combination_ids)

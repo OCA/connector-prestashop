@@ -162,13 +162,14 @@ class SupplierInfoBatchImporter(DelayedBatchImporter):
 
 
 @job(default_channel='root.prestashop')
-def import_suppliers(session, backend_id, since_date):
+def import_suppliers(session, backend_id, since_date, **kwargs):
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
     now_fmt = fields.Datetime.now()
-    import_batch(session, 'prestashop.supplier', backend_id, filters)
-    import_batch(session, 'prestashop.product.supplierinfo', backend_id)
+    import_batch(session, 'prestashop.supplier', backend_id, filters, **kwargs)
+    import_batch(
+        session, 'prestashop.product.supplierinfo', backend_id, **kwargs)
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_suppliers_since': now_fmt
     })

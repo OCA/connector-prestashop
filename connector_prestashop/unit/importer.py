@@ -34,6 +34,7 @@ class PrestashopImporter(Importer):
         super(PrestashopImporter, self).__init__(environment)
         self.prestashop_id = None
         self.prestashop_record = None
+        self.shop_url = None
 
     def _get_prestashop_data(self):
         """ Return the raw prestashop data for ``self.prestashop_id`` """
@@ -177,6 +178,7 @@ class PrestashopImporter(Importer):
 
         :param prestashop_id: identifier of the record on PrestaShop
         """
+        self.shop_url = self.session.context.get('shop_url', None)
         self.prestashop_id = prestashop_id
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
@@ -284,6 +286,7 @@ class BatchImporter(Importer):
 
     def run(self, filters=None, **kwargs):
         """ Run the synchronization """
+        self.shop_url = self.session.context.get('shop_url', None)
         if filters is None:
             filters = {}
         if 'limit' in filters:
@@ -321,6 +324,7 @@ class AddCheckpoint(ConnectorUnit):
     def run(self, binding_id):
         record = self.model.browse(binding_id)
         self.backend_record.add_checkpoint(
+            session=self.session,
             model=record._model._name,
             record_id=record.id,
         )
@@ -490,16 +494,21 @@ class TranslatableRecordImporter(PrestashopImporter):
 @job(default_channel='root.prestashop')
 def import_batch(session, model_name, backend_id, filters=None, **kwargs):
     """ Prepare a batch import of records from PrestaShop """
+    ctx = dict(session.context, **kwargs)
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
-    importer = env.get_connector_unit(BatchImporter)
-    importer.run(filters=filters, **kwargs)
+    with env.session.change_context(ctx):
+        importer = env.get_connector_unit(BatchImporter)
+        importer.run(filters=filters, **kwargs)
 
 
 @job(default_channel='root.prestashop')
-def import_record(session, model_name, backend_id, prestashop_id):
+def import_record(
+        session, model_name, backend_id, prestashop_id, **kwargs):
     """ Import a record from PrestaShop """
+    ctx = dict(session.context, **kwargs)
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.run(prestashop_id)
+    with env.session.change_context(ctx):
+        importer = env.get_connector_unit(PrestashopImporter)
+        importer.run(prestashop_id, **kwargs)

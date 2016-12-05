@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from openerp import api, fields, models
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
@@ -27,6 +28,11 @@ class ProductTemplate(models.Model):
         inverse_name='odoo_id',
         copy=False,
         string='PrestaShop Bindings',
+    )
+    prestashop_default_category_id = fields.Many2one(
+        comodel_name='product.category',
+        string='PrestaShop Default Category',
+        ondelete='restrict'
     )
 
     @api.multi
@@ -101,6 +107,10 @@ class PrestashopProductTemplate(models.Model):
     )
     reference = fields.Char(string='Original reference')
     on_sale = fields.Boolean(string='Show on sale icon')
+    wholesale_price = fields.Float(
+        string='Cost Price',
+        digits_compute=dp.get_precision('Product Price'),
+    )
 
     @api.multi
     def recompute_prestashop_qty(self):

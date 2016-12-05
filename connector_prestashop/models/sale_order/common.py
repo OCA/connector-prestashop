@@ -154,23 +154,6 @@ class SaleOrderAdapter(GenericAdapter):
     def update_sale_state(self, prestashop_id, datas):
         return self.client.add('order_histories', datas)
 
-    def search(self, filters=None):
-        result = super(SaleOrderAdapter, self).search(filters=filters)
-
-        # TODO: see why we have to interact with Odoo here, should not be
-        # tne responsibility of the adapter
-        shops = self.env['prestashop.shop'].search([
-            ('backend_id', '=', self.backend_record.id)
-        ])
-        for shop in shops:
-            if not shop.default_url:
-                continue
-            api = PrestaShopWebServiceDict(
-                '%s/api' % shop.default_url, self.prestashop.webservice_key
-            )
-            result += api.search(self._prestashop_model, filters)
-        return result
-
 
 @prestashop
 class SaleOrderLineAdapter(GenericAdapter):
