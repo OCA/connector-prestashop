@@ -36,7 +36,7 @@ def export_inventory(session, model_name, record_id, fields=None, **kwargs):
     backend = template.backend_id
     env = backend.get_environment(model_name, session=session)
     inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
-    return inventory_exporter.run(record_id, fields)
+    return inventory_exporter.run(record_id, fields, **kwargs)
 
 
 @job(default_channel='root.prestashop')
