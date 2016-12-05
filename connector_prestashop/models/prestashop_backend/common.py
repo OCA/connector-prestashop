@@ -10,6 +10,7 @@ from openerp.addons.connector.session import ConnectorSession
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
 from ...unit.backend_adapter import GenericAdapter, api_handle_errors
+from ...unit.version_key import VersionKey
 from ...backend import prestashop
 
 from ..product_template.exporter import export_product_quantities
@@ -228,40 +229,11 @@ class PrestashopBackend(models.Model):
             import_suppliers.delay(session, backend_record.id, since_date)
         return True
 
-    keys_conversion = {
-        '1.6.0.9': {
-            'product_option_value': 'product_option_values',
-            'category': 'categories',
-            'order_slip': 'order_slips',
-            'order_slip_detail': 'order_slip_details',
-            'group': 'groups',
-            'order_row': 'order_rows',
-            'tax': 'taxes',
-            'image': 'images',
-            'combinations': 'combinations',
-            'tag': 'tags',
-        },
-        # singular names as < 1.6.0.9
-        '1.6.0.11': {},
-        '1.6.1.2': {
-            'product_option_value': 'product_option_value',
-            'category': 'category',
-            'image': 'image',
-            'order_slip': 'order_slips',
-            'order_slip_detail': 'order_slip_details',
-            'group': 'group',
-            'order_row': 'order_rows',
-            'tax': 'taxes',
-            'combinations': 'combination',
-            'product_features': 'product_feature',
-            'tag': 'tag',
-        },
-    }
-
     def get_version_ps_key(self, key):
-        if self.version in ['1.6.0.9', '1.6.1.2']:
-            return self.keys_conversion[self.version][key]
-        return key
+        self.ensure_one()
+        env = self.get_environment('_prestashop.version.key')
+        keys = env.get_connector_unit(VersionKey)
+        return keys.get_key(key)
 
     @api.model
     def _scheduler_update_product_stock_qty(self, domain=None):
