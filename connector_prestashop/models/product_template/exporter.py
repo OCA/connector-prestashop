@@ -6,7 +6,6 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.synchronizer import Exporter
 
 from ...unit.backend_adapter import GenericAdapter
-from ...connector import get_environment
 from ...backend import prestashop
 
 
@@ -34,8 +33,8 @@ class ProductInventoryExporter(Exporter):
 def export_inventory(session, model_name, record_id, fields=None):
     """ Export the inventory configuration and quantity of a product. """
     template = session.env[model_name].browse(record_id)
-    backend_id = template.backend_id.id
-    env = get_environment(session, model_name, backend_id)
+    backend = template.backend_id
+    env = backend.get_environment(model_name, session=session)
     inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
     return inventory_exporter.run(record_id, fields)
 

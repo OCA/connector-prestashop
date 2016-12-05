@@ -16,7 +16,6 @@ from ...unit.importer import (
 )
 from openerp.addons.connector.unit.mapper import backend_to_m2o
 from ...unit.backend_adapter import GenericAdapter
-from ...connector import get_environment
 from ...backend import prestashop
 from ..product_image.importer import (
     import_product_image,
@@ -560,7 +559,8 @@ class ProductTemplateImporter(TranslatableRecordImporter):
 
 @job(default_channel='root.prestashop')
 def import_inventory(session, backend_id):
-    env = get_environment(session, '_import_stock_available', backend_id)
+    backend = session.env['prestashop.backend'].browse(backend_id)
+    env = backend.get_environment('_import_stock_available', session=session)
     inventory_importer = env.get_connector_unit(ProductInventoryBatchImporter)
     return inventory_importer.run()
 

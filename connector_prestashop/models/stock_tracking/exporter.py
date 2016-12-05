@@ -8,7 +8,6 @@ from openerp.exceptions import UserError
 from openerp.addons.connector.queue.job import job
 from ...backend import prestashop
 from ...unit.backend_adapter import PrestaShopCRUDAdapter
-from ...connector import get_environment
 
 _logger = logging.getLogger(__name__)
 
@@ -56,7 +55,7 @@ class PrestashopTrackingExporter(Exporter):
 def export_tracking_number(session, model_name, record_id):
     """ Export the tracking number of a delivery order. """
     order = session.env[model_name].browse(record_id)
-    backend_id = order.backend_id.id
-    env = get_environment(session, model_name, backend_id)
+    backend = order.backend_id
+    env = backend.get_environment(model_name, session=session)
     tracking_exporter = env.get_connector_unit(PrestashopTrackingExporter)
     return tracking_exporter.run(record_id)

@@ -12,7 +12,6 @@ from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.queue.job import related_action
 from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector.exception import RetryableJobError
-from ..connector import get_environment
 from .mapper import TranslationPrestashopExportMapper
 
 
@@ -324,6 +323,6 @@ def export_record(session, model_name, binding_id, fields=None):
     # TODO: FIX PRESTASHOP do not support partial edit
     fields = None
     record = session.env[model_name].browse(binding_id)
-    env = get_environment(session, model_name, record.backend_id.id)
+    env = record.backend_id.get_environment(model_name, session=session)
     exporter = env.get_connector_unit(PrestashopExporter)
     return exporter.run(binding_id, fields=fields)
