@@ -7,7 +7,6 @@ from openerp.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
 
 from ...backend import prestashop
-from ...connector import get_environment
 from ...unit.importer import PrestashopImporter
 
 import mimetypes
@@ -111,18 +110,16 @@ class ProductImageImporter(PrestashopImporter):
 def import_product_image(session, model_name, backend_id, product_tmpl_id,
                          image_id, **kwargs):
     """Import a product image"""
-    ctx = dict(session.context, **kwargs)
-    env = get_environment(session, model_name, backend_id)
-    with env.session.change_context(ctx):
-        importer = env.get_connector_unit(PrestashopImporter)
-        importer.run(product_tmpl_id, image_id)
+    backend = session.env['prestashop.backend'].browse(backend_id)
+    env = backend.get_environment(model_name, session=session)
+    importer = env.get_connector_unit(PrestashopImporter)
+    importer.run(product_tmpl_id, image_id)
 
 
 @job(default_channel='root.prestashop')
 def set_product_image_variant(
-        session, model_name, backend_id, combination_ids, **kwargs):
-    ctx = dict(session.context, **kwargs)
-    env = get_environment(session, model_name, backend_id)
-    with env.session.change_context(ctx):
-        importer = env.get_connector_unit(PrestashopImporter)
-        importer.set_variant_images(combination_ids)
+        session, model_name, backend_id, combination_ids):
+    backend = session.env['prestashop.backend'].browse(backend_id)
+    env = backend.get_environment(model_name, session=session)
+    importer = env.get_connector_unit(PrestashopImporter)
+    importer.set_variant_images(combination_ids)
