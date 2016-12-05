@@ -5,11 +5,11 @@ import logging
 
 from openerp import models, fields, api, exceptions, _
 
+from openerp.addons.connector.connector import ConnectorEnvironment
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.checkpoint import checkpoint
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
-from ...connector import get_environment
 from ...unit.backend_adapter import GenericAdapter, api_handle_errors
 from ...backend import prestashop
 
@@ -99,6 +99,13 @@ class PrestashopBackend(models.Model):
     )
 
     @api.multi
+    def get_environment(self, model_name, session=None):
+        self.ensure_one()
+        if not session:
+            session = ConnectorSession.from_env(self.env)
+        return ConnectorEnvironment(self, session, model_name)
+
+    @api.multi
     def synchronize_metadata(self):
         session = ConnectorSession.from_env(self.env)
         for backend in self:
@@ -122,9 +129,9 @@ class PrestashopBackend(models.Model):
                 'prestashop.res.currency',
                 'prestashop.account.tax',
             ]:
-                env = get_environment(session, model_name, backend.id)
-                directBinder = env.get_connector_unit(AutoMatchingImporter)
-                directBinder.run()
+                env = backend.get_environment(model_name, session=session)
+                importer = env.get_connector_unit(AutoMatchingImporter)
+                importer.run()
 
             import_batch(session, 'prestashop.account.tax.group', backend.id)
             import_batch(session, 'prestashop.sale.order.state', backend.id)
@@ -133,8 +140,7 @@ class PrestashopBackend(models.Model):
     @api.multi
     def _check_connection(self):
         self.ensure_one()
-        session = ConnectorSession.from_env(self.env)
-        env = get_environment(session, self._name, self.id)
+        env = self.get_environment(self._name)
         adapter = env.get_connector_unit(GenericAdapter)
         with api_handle_errors('Connection failed'):
             adapter.head()
