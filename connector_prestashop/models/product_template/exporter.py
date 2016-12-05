@@ -21,7 +21,7 @@ class ProductInventoryExporter(Exporter):
             'filter[id_product_attribute]': 0
         }
 
-    def run(self, binding_id, fields):
+    def run(self, binding_id, fields, **kwargs):
         """ Export the product inventory to PrestaShop """
         template = self.model.browse(binding_id)
         adapter = self.unit_for(GenericAdapter, '_import_stock_available')
