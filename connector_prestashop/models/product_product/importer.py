@@ -336,16 +336,6 @@ class ProductCombinationOptionMapper(ImportMapper):
             name = record['name']
         return {'name': name}
 
-    @only_create
-    @mapping
-    def odoo_id(self, record):
-        ProductAttribute = self.env['product.attribute']
-        product_attribute = ProductAttribute.search([
-            ('name', '=', record['name'])
-        ])
-        if product_attribute:
-            return {'odoo_id': product_attribute.id}
-
 
 @prestashop
 class ProductCombinationOptionValueAdapter(GenericAdapter):
@@ -399,16 +389,6 @@ class ProductCombinationOptionValueMapper(ImportMapper):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-
-    @only_create
-    @mapping
-    def odoo_id(self, record):
-        AttributeValue = self.env['product.attribute.value']
-        attribute_value = AttributeValue.search([
-            ('name', '=', record['name'])
-        ])
-        if attribute_value:
-            return {'odoo_id': attribute_value.id}
 
 
 @prestashop

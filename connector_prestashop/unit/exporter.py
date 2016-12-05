@@ -58,7 +58,7 @@ class PrestashopBaseExporter(Exporter):
         self._after_export()
         return result
 
-    def _run(self):
+    def _run(self, *args, **kwargs):
         """ Flow of the synchronization, implemented in inherited classes"""
         raise NotImplementedError
 
@@ -252,7 +252,7 @@ class PrestashopExporter(PrestashopBaseExporter):
                 '(%s with id %s). The job will be retried later.' %
                 (self.model._name, self.binding_id))
 
-    def _run(self, fields=None):
+    def _run(self, fields=None, **kwargs):
         """ Flow of the synchronization, implemented in inherited classes"""
         assert self.binding_id
         assert self.binding
@@ -323,12 +323,11 @@ def related_action_record(session, job):
 
 @job(default_channel='root.prestashop')
 @related_action(action=related_action_record)
-def export_record(session, model_name, binding_id, fields=None, shop_url=None):
+def export_record(session, model_name, binding_id, fields=None, **kwargs):
     """ Export a record on PrestaShop """
     # TODO: FIX PRESTASHOP do not support partial edit
     fields = None
     record = session.env[model_name].browse(binding_id)
     env = record.backend_id.get_environment(model_name, session=session)
-    with env.session.change_context(shop_url=shop_url):
-        exporter = env.get_connector_unit(PrestashopExporter)
-        return exporter.run(binding_id, fields=fields)
+    exporter = env.get_connector_unit(PrestashopExporter)
+    return exporter.run(binding_id, fields=fields, **kwargs)

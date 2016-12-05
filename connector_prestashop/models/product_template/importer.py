@@ -33,7 +33,7 @@ _logger = logging.getLogger(__name__)
 try:
     import html2text
 except:
-    _logger.debug('Cannot import from `prestapyt`')
+    _logger.debug('Cannot import `html2text`')
 
 try:
     from prestapyt import PrestaShopWebServiceError
@@ -55,7 +55,7 @@ class TemplateMapper(ImportMapper):
         ('available_for_order', 'available_for_order'),
         ('on_sale', 'on_sale'),
     ]
-    
+
     def _apply_taxes(self, tax, price):
         if self.backend_record.taxes_included == tax.price_include:
             return price
@@ -355,7 +355,7 @@ class ProductInventoryImporter(PrestashopImporter):
         binder = self.binder_for('prestashop.product.combination')
         return binder.to_odoo(record['id_product_attribute'], unwrap=True)
 
-    def run(self, record):
+    def run(self, record, **kwargs):
         self._import_dependency(
             record['id_product'], 'prestashop.product.template'
         )
@@ -448,6 +448,26 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                         'value_ids': [(6, 0, values.ids)],
                     })
 
+    def _import_combination(self, combination, **kwargs):
+        """ Import a combination
+
+        Can be overriden for instance to forward arguments to the importer
+        """
+        self._import_dependency(combination['id'],
+                                'prestashop.product.combination',
+                                always=True,
+                                **kwargs)
+
+    def _delay_product_image_variant(self, combinations, **kwargs):
+        set_product_image_variant.delay(
+            self.session,
+            'prestashop.product.combination',
+            self.backend_record.id,
+            combinations,
+            priority=15,
+            **kwargs
+        )
+
     def import_combinations(self):
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
@@ -463,27 +483,24 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                     'id': prestashop_record[
                         'id_default_combination']['value']}))
             if first_exec:
-                import_record(
-                    self.session, 'prestashop.product.combination',
-                    self.backend_record.id, first_exec['id'],
-                    shop_url=self.shop_url
-                )
+                self._import_combination(first_exec['id'])
 
             for combination in combinations:
-                import_record(
-                    self.session, 'prestashop.product.combination',
-                    self.backend_record.id, combination['id'],
-                    shop_url=self.shop_url
-                )
-            if combinations and associations['images'].get('image', False):
-                set_product_image_variant.delay(
-                    self.session,
-                    'prestashop.product.combination',
-                    self.backend_record.id,
-                    combinations,
-                    priority=15,
-                    shop_url=self.shop_url
-                )
+                self._import_combination(combination['id'])
+
+            if combinations and associations['images'].get('image'):
+                self._delay_product_image_variant(combinations)
+
+    def _delay_import_product_image(self, prestashop_record, image, **kwargs):
+        import_product_image.delay(
+            self.session,
+            'prestashop.product.image',
+            self.backend_record.id,
+            prestashop_record['id'],
+            image['id'],
+            priority=10,
+            **kwargs
+        )
 
     def import_images(self, binding):
         prestashop_record = self._get_prestashop_data()
@@ -494,15 +511,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
             images = [images]
         for image in images:
             if image.get('id'):
-                import_product_image.delay(
-                    self.session,
-                    'prestashop.product.image',
-                    self.backend_record.id,
-                    prestashop_record['id'],
-                    image['id'],
-                    priority=10,
-                    shop_url=self.shop_url
-                )
+                self._delay_product_image_variant(prestashop_record, image)
 
     def import_supplierinfo(self, binding):
         ps_id = self._get_prestashop_data()['id']
