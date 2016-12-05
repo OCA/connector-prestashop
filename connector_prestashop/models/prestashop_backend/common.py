@@ -7,7 +7,6 @@ from openerp import models, fields, api, exceptions, _
 
 from openerp.addons.connector.connector import ConnectorEnvironment
 from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector.checkpoint import checkpoint
 from ...unit.importer import import_batch, import_record
 from ...unit.auto_matching_importer import AutoMatchingImporter
 from ...unit.backend_adapter import GenericAdapter, api_handle_errors

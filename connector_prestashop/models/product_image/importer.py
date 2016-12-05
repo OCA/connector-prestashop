@@ -79,12 +79,12 @@ class ProductImageImporter(PrestashopImporter):
         """ Return the raw PrestaShop data for ``self.prestashop_id`` """
         return self.backend_adapter.read(self.template_id, self.image_id)
 
-    def run(self, template_id, image_id):
+    def run(self, template_id, image_id, **kwargs):
         self.template_id = template_id
         self.image_id = image_id
 
         try:
-            super(ProductImageImporter, self).run(image_id)
+            super(ProductImageImporter, self).run(image_id, **kwargs)
         except PrestaShopWebServiceError as error:
             binder = self.binder_for('prestashop.product.template')
             template = binder.to_odoo(template_id, unwrap=True)
@@ -122,4 +122,4 @@ def set_product_image_variant(
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
     importer = env.get_connector_unit(PrestashopImporter)
-    importer.set_variant_images(combination_ids)
+    importer.set_variant_images(combination_ids, **kwargs)
