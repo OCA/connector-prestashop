@@ -6,10 +6,9 @@ import openerp.addons.connector.backend as backend
 
 prestashop = backend.Backend('prestashop')
 # version < 1.6.0.9
-prestashop1500 = backend.Backend(parent=prestashop, version='1.5')
+prestashop_1_5_0_0 = backend.Backend(parent=prestashop, version='1.5')
 # version 1.6.0.9 - 1.6.0.10
-prestashop1609 = backend.Backend(parent=prestashop, version='1.6.0.9')
+prestashop_1_6_0_9 = backend.Backend(parent=prestashop, version='1.6.0.9')
 # version >= 1.6.0.11
-prestashop16011 = backend.Backend(parent=prestashop, version='1.6.0.11')
-# version = 1.6.1.2
-prestashop1612 = backend.Backend(parent=prestashop, version='1.6.1.2')
+prestashop_1_6_0_11 = backend.Backend(parent=prestashop, version='1.6.0.11')
+prestashop_1_6_1_12 = backend.Backend(parent=prestashop, version='1.6.1.12')
