@@ -34,6 +34,7 @@ def get_slug(name):
     slug = re.sub(r'[-\s]+', '-', slug)
     return slug
 
+
 # TODO: attach this to a model to ease override
 CATEGORY_EXPORT_FIELDS = [
     'name',
@@ -49,16 +50,11 @@ CATEGORY_EXPORT_FIELDS = [
 EXCLUDE_FIELDS = ['list_price']
 
 
-def _get_shop_url(session):
-    return session.context.get('shop_url', None)
-
-
 @on_record_create(model_names='prestashop.product.category')
 def prestashop_product_category_create(session, model_name, record_id, fields):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id, priority=20,
-                        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='product.category')
@@ -71,7 +67,7 @@ def product_category_write(session, model_name, record_id, fields):
         for binding in record.prestashop_bind_ids:
             export_record.delay(
                 session, binding._model._name, binding.id, fields=fields,
-                priority=20,shop_url=_get_shop_url(session))
+                priority=20)
 
 
 @on_record_write(model_names='prestashop.product.category')
@@ -79,8 +75,7 @@ def prestashop_product_category_write(session, model_name, record_id, fields):
     if session.context.get('connector_no_export'):
         return
     if set(fields.keys()) <= set(CATEGORY_EXPORT_FIELDS):
-        export_record.delay(session, model_name, record_id, fields,
-                            shop_url=_get_shop_url(session))
+        export_record.delay(session, model_name, record_id, fields)
 
 
 @on_record_write(model_names='base_multi_image.image')
@@ -92,7 +87,7 @@ def product_image_write(session, model_name, record_id, fields):
     for binding in record.prestashop_bind_ids:
         export_record.delay(session, 'prestashop.product.image',
                             binding.id, record.file_db_store,
-                            priority=20, shop_url=_get_shop_url(session))
+                            priority=20)
 
 
 @on_record_unlink(model_names='base_multi_image.image')
@@ -131,9 +126,7 @@ def product_image_unlink(session, model_name, record_id):
 def prestashop_product_template_create(session, model_name, record_id, fields):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(
-        session, model_name, record_id, priority=20,
-        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.template')
@@ -143,8 +136,8 @@ def prestashop_product_template_write(session, model_name, record_id, fields):
     fields = list(set(fields).difference(set(INVENTORY_FIELDS)))
     if fields:
         export_record.delay(
-            session, model_name, record_id, fields, priority=20,
-            shop_url=_get_shop_url(session))
+            session, model_name, record_id, fields, priority=20
+        )
         # Propagate minimal_quantity from template to variants
         if 'minimal_quantity' in fields:
             ps_template = session.env[model_name].browse(record_id)
@@ -164,7 +157,8 @@ def product_template_write(session, model_name, record_id, fields):
     for binding in record.prestashop_bind_ids:
         export_record.delay(
             session, 'prestashop.product.template', binding.id, fields,
-            priority=20, shop_url=_get_shop_url(session))
+            priority=20,
+        )
 
 
 @on_record_create(model_names='prestashop.product.combination')
@@ -172,8 +166,7 @@ def prestashop_product_combination_create(session, model_name, record_id,
                                           fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id, priority=20,
-                        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.combination')
@@ -186,7 +179,7 @@ def prestashop_product_combination_write(session, model_name,
     if fields:
         export_record.delay(
             session, model_name, record_id, fields, priority=20,
-            shop_url=_get_shop_url(session))
+        )
 
 
 def prestashop_product_combination_unlink(session, record_id):
@@ -232,7 +225,6 @@ def product_product_write(session, model_name, record_id, fields):
                 binding.id,
                 fields,
                 priority=priority,
-                shop_url=_get_shop_url(session)
             )
 
 
@@ -241,8 +233,7 @@ def prestashop_product_attribute_created(
         session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id, priority=20,
-                        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_create(model_names='prestashop.product.combination.option.value')
@@ -250,8 +241,7 @@ def prestashop_product_atrribute_value_created(
         session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id, priority=20,
-                        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.combination.option')
@@ -259,8 +249,7 @@ def prestashop_product_attribute_written(session, model_name, record_id,
                                          fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id, priority=20,
-                        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='prestashop.product.combination.option.value')
@@ -268,8 +257,7 @@ def prestashop_attribute_option_written(session, model_name, record_id,
                                         fields=None):
     if session.context.get('connector_no_export'):
         return
-    export_record.delay(session, model_name, record_id, priority=20,
-                        shop_url=_get_shop_url(session))
+    export_record.delay(session, model_name, record_id, priority=20)
 
 
 @on_record_write(model_names='product.attribute.value')
@@ -281,8 +269,7 @@ def product_attribute_written(session, model_name, record_id, fields=None):
                           record_id, context=session.context)
     for binding in record.prestashop_bind_ids:
         export_record.delay(session, 'prestashop.product.combination.option',
-                            binding.id, fields, priority=20,
-                            shop_url=_get_shop_url(session))
+                            binding.id, fields, priority=20)
 
 
 @on_record_write(model_names='produc.attribute.value')
@@ -295,5 +282,4 @@ def attribute_option_written(session, model_name, record_id, fields=None):
     for binding in record.prestashop_bind_ids:
         export_record.delay(session,
                             'prestashop.product.combination.option.value',
-                            binding.id, fields, priority=20,
-                            shop_url=_get_shop_url(session))
+                            binding.id, fields, priority=20)
