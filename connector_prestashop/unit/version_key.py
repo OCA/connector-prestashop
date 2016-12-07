@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from openerp.addons.connector.connector import ConnectorUnit
-from ..backend import prestashop, prestashop_1_6_0_9, prestashop_1_6_1_12
+from ..backend import prestashop, prestashop_1_6_0_9, prestashop_1_6_1_2
 
 
 @prestashop
@@ -17,7 +17,7 @@ class VersionKey(ConnectorUnit):
 
 
 @prestashop_1_6_0_9
-class VersionKey1609(VersionKey):
+class VersionKey_1_6_0_9(VersionKey):
 
     keys = {
         'product_option_value': 'product_option_values',
@@ -33,14 +33,14 @@ class VersionKey1609(VersionKey):
     }
 
 
-@prestashop_1_6_1_12
-class VersionKey1612(VersionKey):
+@prestashop_1_6_1_2
+class VersionKey_1_6_1_2(VersionKey):
 
     keys = {
         'product_option_value': 'product_option_value',
         'category': 'category',
         'image': 'image',
-        'order_slip': 'order_slips',
+        'order_slip': 'order_slip',
         'order_slip_detail': 'order_slip_details',
         'group': 'group',
         'order_row': 'order_row',
@@ -48,4 +48,5 @@ class VersionKey1612(VersionKey):
         'combinations': 'combination',
         'product_features': 'product_feature',
         'tag': 'tag',
+        'messages': 'customer_messages',
     }
