@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from bs4 import BeautifulSoup
-
 from openerp import _, models, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (
@@ -32,12 +30,17 @@ _logger = logging.getLogger(__name__)
 
 try:
     import html2text
-except:
+except ImportError:
     _logger.debug('Cannot import `html2text`')
 
 try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    _logger.debug('Cannot import `bs4`')
+
+try:
     from prestapyt import PrestaShopWebServiceError
-except:
+except ImportError:
     _logger.debug('Cannot import from `prestapyt`')
 
 
