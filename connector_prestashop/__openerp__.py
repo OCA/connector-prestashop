@@ -27,6 +27,7 @@
             # tests dependencies
             "freezegun",
             "vcr",
+            "bs4",
         ],
     },
     "author": "Akretion,"
