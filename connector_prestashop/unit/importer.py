@@ -170,7 +170,9 @@ class PrestashopImporter(Importer):
                     cr.rollback()
                     raise
                 else:
-                    cr.commit()
+                    # Despite what pylint says, this a perfectly valid
+                    # commit (in a new cursor). Disable the warning.
+                    cr.commit()  # pylint: disable=invalid-commit
 
     def run(self, prestashop_id, **kwargs):
         """ Run the synchronization
