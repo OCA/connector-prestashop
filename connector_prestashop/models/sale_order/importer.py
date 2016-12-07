@@ -216,8 +216,7 @@ class SaleOrderMapper(ImportMapper):
 
     @mapping
     def pricelist_id(self, record):
-        # TODO: configure on the backend
-        return {'pricelist_id': 1}
+        return {'pricelist_id': self.backend_record.pricelist_id.id}
 
     @mapping
     def backend_id(self, record):
@@ -355,21 +354,6 @@ class SaleOrderLineMapper(ImportMapper):
     @mapping
     def prestashop_id(self, record):
         return {'prestashop_id': record['id']}
-
-    # TODO: who is using this???
-    def none_product(self, record):
-        product_id = True
-        if 'product_attribute_id' not in record:
-            binder = self.binder_for('prestashop.product.template')
-            template = binder.to_odoo(
-                record['product_id'],
-                unwrap=True,
-            )
-            product_id = self.env['product.product'].search([
-                ('product_tmpl_id', '=', template.id),
-                ('company_id', '=', self.backend_record.company_id.id)]
-            )
-        return not product_id
 
     @mapping
     def price_unit(self, record):

@@ -56,7 +56,6 @@
                         <tree name="prestashop_binding">
                             <field name="odoo_id" />
                             <field name="shop_group_id"/>
-                            <field name="default_category_id"/>
                         </tree>
                     </field>
                 </group>

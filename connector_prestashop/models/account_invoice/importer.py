@@ -83,7 +83,6 @@ class RefundMapper(ImportMapper):
 
     @mapping
     def comment(self, record):
-        # FIXME: should be a translated text
         return {'comment': _('PrestaShop amount: %s') % record['amount']}
 
     @mapping

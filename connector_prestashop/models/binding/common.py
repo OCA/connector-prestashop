@@ -18,7 +18,6 @@ class PrestashopBinding(models.AbstractModel):
         required=True,
         ondelete='restrict'
     )
-    # TODO : do I keep the char like in Magento, or do I put a PrestaShop ?
     prestashop_id = fields.Integer('ID on PrestaShop')
 
     _sql_constraints = [
