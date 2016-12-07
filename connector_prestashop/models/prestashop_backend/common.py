@@ -66,6 +66,14 @@ class PrestashopBackend(models.Model):
         string='Stock Location',
         help='Location used to import stock quantities.'
     )
+    pricelist_id = fields.Many2one(
+        comodel_name='product.pricelist',
+        string='Pricelist',
+        required=True,
+        default=lambda self: self._default_pricelist_id(),
+        help="Pricelist used in sales orders",
+    )
+
 
     refund_journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -103,6 +111,10 @@ class PrestashopBackend(models.Model):
         required=True,
         string='Shipping Product',
     )
+
+    @api.model
+    def _default_pricelist_id(self):
+        return self.env['product.pricelist'].search([], limit=1)
 
     @api.multi
     def get_environment(self, model_name, session=None):
@@ -160,8 +172,6 @@ class PrestashopBackend(models.Model):
     def import_customers_since(self):
         session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            # TODO: why is it converted as user TZ?? shouldn't
-            # odoo and prestashop both be UTC with ntp ?
             since_date = backend_record.import_partners_since
             import_customers_since.delay(
                 session,
