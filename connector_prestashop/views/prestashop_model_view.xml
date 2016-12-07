@@ -43,6 +43,7 @@
                     <field name="webservice_key" colspan="4"/>
                 </group>
                 <group name="main_configuration" string="Main Configuration">
+                    <field name="pricelist_id"/>
                     <field name="warehouse_id"/>
                     <field name="stock_location_id"/>
                     <field name="refund_journal_id"/>
