@@ -8,6 +8,9 @@ import mock
 
 from freezegun import freeze_time
 
+from openerp.addons.connector_prestashop.unit.importer import (
+    import_record,
+)
 from openerp.addons.connector_prestashop.models.\
     product_template.importer import (
         import_products
@@ -21,9 +24,14 @@ ExpectedProductCategory = namedtuple(
     'name'
 )
 
-ExpectedProduct = namedtuple(
+ExpectedTemplate = namedtuple(
     'ExpectedProduct',
-    'name '
+    'name categ_id categ_ids list_price'
+)
+
+ExpectedVariant = namedtuple(
+    'ExpectedVariant',
+    'default_code standard_price display_name'
 )
 
 
@@ -37,6 +45,35 @@ class TestImportProduct(PrestashopTransactionCase):
 
         self.shop_group = self.env['prestashop.shop.group'].search([])
         self.shop = self.env['prestashop.shop'].search([])
+
+        self.mock_delay_import_image = mock.MagicMock()
+        self.patch_delay_import_image = mock.patch(
+            'openerp.addons.connector_prestashop.models.product_template'
+            '.importer.set_product_image_variant',
+            new=self.mock_delay_import_image
+        )
+        self.patch_delay_import_image.start()
+
+        self.mock_delay_import_image = mock.MagicMock()
+        self.patch_delay_import_image = mock.patch(
+            'openerp.addons.connector_prestashop.models.product_template'
+            '.importer.import_product_image',
+            new=self.mock_delay_import_image
+        )
+        self.patch_delay_import_image.start()
+
+        self.mock_delay_set_image = mock.MagicMock()
+        self.patch_delay_set_image = mock.patch(
+            'openerp.addons.connector_prestashop.models.product_template'
+            '.importer.set_product_image_variant',
+            new=self.mock_delay_set_image
+        )
+        self.patch_delay_set_image.start()
+
+    def tearDown(self):
+        super(TestImportProduct, self).tearDown()
+        self.patch_delay_import_image.stop()
+        self.patch_delay_set_image.stop()
 
     @freeze_time('2016-09-13 00:00:00')
     def test_import_products(self):
@@ -87,3 +124,74 @@ class TestImportProduct(PrestashopTransactionCase):
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
             self.assertEqual(18, import_record_mock.delay.call_count)
+
+    def test_import_product_record(self):
+        """ Import a product """
+        # product 1 is assigned to categories 1-5 on PrestaShop
+        categs = self.env['product.category']
+        for idx in range(1, 6):
+            cat = self.env['product.category'].create(
+                {'name': 'ps_categ_%d' % idx}
+            )
+            self.create_binding_no_export(
+                'prestashop.product.category', cat.id, idx,
+            )
+            categs |= cat
+
+        with recorder.use_cassette('test_import_product_template_record_1'):
+            import_record(self.conn_session, 'prestashop.product.template',
+                          self.backend_record.id, 1)
+
+        domain = [('prestashop_id', '=', 1),
+                  ('backend_id', '=', self.backend_record.id)]
+        binding = self.env['prestashop.product.template'].search(domain)
+        binding.ensure_one()
+
+        expected = [
+            ExpectedTemplate(
+                name='Faded Short Sleeves T-shirt',
+                # For the categories, this is what I observed, not
+                # necessarily what is wanted.
+                categ_id=self.env.ref('product.product_category_all'),
+                categ_ids=categs.filtered(lambda r: r.name != 'ps_categ_1'),
+                list_price=16.51,
+            )]
+
+        self.assert_records(expected, binding)
+
+        variants = binding.product_variant_ids
+
+        expected_variants = [
+            ExpectedVariant(
+                default_code='1_1',
+                standard_price=4.95,
+                display_name='[1_1] Faded Short Sleeves T-shirt (S, Orange)',
+            ),
+            ExpectedVariant(
+                default_code='1_2',
+                standard_price=4.95,
+                display_name='[1_2] Faded Short Sleeves T-shirt (S, Blue)',
+            ),
+            ExpectedVariant(
+                default_code='1_3',
+                standard_price=4.95,
+                display_name='[1_3] Faded Short Sleeves T-shirt (M, Orange)',
+            ),
+            ExpectedVariant(
+                default_code='1_4',
+                standard_price=4.95,
+                display_name='[1_4] Faded Short Sleeves T-shirt (Blue, M)',
+            ),
+            ExpectedVariant(
+                default_code='1_5',
+                standard_price=4.95,
+                display_name='[1_5] Faded Short Sleeves T-shirt (Orange, L)',
+            ),
+            ExpectedVariant(
+                default_code='1_6',
+                standard_price=4.95,
+                display_name='[1_6] Faded Short Sleeves T-shirt (L, Blue)',
+            ),
+        ]
+
+        self.assert_records(expected_variants, variants)
