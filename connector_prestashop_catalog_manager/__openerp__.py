@@ -7,7 +7,7 @@
 
 {
     "name": "Prestashop-Odoo Catalog Manager",
-    "version": "8.0.1.0.2",
+    "version": "9.0.1.0.2",
     "license": "AGPL-3",
     "depends": [
         "connector_prestashop"
