@@ -1,6 +1,6 @@
 connector
 connector-ecommerce
 e-commerce
-product-attribute https://github.com/sodexis/product-attribute.git 9.0-product_multi_image
+product-attribute
 product-variant
 sale-workflow
