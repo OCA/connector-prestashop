@@ -483,10 +483,10 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                     'id': prestashop_record[
                         'id_default_combination']['value']}))
             if first_exec:
-                self._import_combination(first_exec['id'])
+                self._import_combination(first_exec)
 
             for combination in combinations:
-                self._import_combination(combination['id'])
+                self._import_combination(combination)
 
             if combinations and associations['images'].get('image'):
                 self._delay_product_image_variant(combinations)
@@ -511,7 +511,7 @@ class ProductTemplateImporter(TranslatableRecordImporter):
             images = [images]
         for image in images:
             if image.get('id'):
-                self._delay_product_image_variant(prestashop_record, image)
+                self._delay_import_product_image(prestashop_record, image)
 
     def import_supplierinfo(self, binding):
         ps_id = self._get_prestashop_data()['id']
