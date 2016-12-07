@@ -21,7 +21,7 @@ from .common import recorder, PrestashopTransactionCase
 
 ExpectedProductCategory = namedtuple(
     'ExpectedProductCategory',
-    'name'
+    'name odoo_id__display_name'
 )
 
 ExpectedTemplate = namedtuple(
@@ -124,6 +124,25 @@ class TestImportProduct(PrestashopTransactionCase):
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
             self.assertEqual(18, import_record_mock.delay.call_count)
+
+    def test_import_product_record_category(self):
+        """ Import a product category """
+        with recorder.use_cassette('test_import_product_category_record_1'):
+            import_record(self.conn_session, 'prestashop.product.category',
+                          self.backend_record.id, 5)
+
+        domain = [('prestashop_id', '=', 5),
+                  ('backend_id', '=', self.backend_record.id)]
+        binding = self.env['prestashop.product.category'].search(domain)
+        binding.ensure_one()
+
+        expected = [
+            ExpectedProductCategory(
+                name='T-shirts',
+                odoo_id__display_name='Root / Home / Women / Tops / T-shirts',
+            )]
+
+        self.assert_records(expected, binding)
 
     def test_import_product_record(self):
         """ Import a product """
