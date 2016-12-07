@@ -74,7 +74,6 @@ class PrestashopBackend(models.Model):
         help="Pricelist used in sales orders",
     )
 
-
     refund_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Refund Journal',

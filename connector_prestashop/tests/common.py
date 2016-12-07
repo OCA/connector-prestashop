@@ -123,11 +123,32 @@ class PrestashopTransactionCase(common.TransactionCase):
          - prestashop.shop(name: Shop2, company_id: res.company(2,))
          + prestashop.shop(name: Shop3, company_id: res.company(1,))
 
+         The expected fields can follow record relations with the dotted
+         notation style, but using '__' instead of '.'. Example::
+
+            ExpectedShop = namedtuple('ExpectedShop',
+                                      'name company_id__name')
+            expected = [
+                ExpectedShop(
+                    name='Shop1',
+                    company__name='Swiss Company',
+                ),
+            ]
+            self.assert_records(expected, shops)
+
+
         :param expected_records: list of namedtuple with matching values
                                  for the records
         :param records: the recordset to check
         :raises: AssertionError if the values do not match
         """
+
+        def get_record_field(record, field):
+            attrs = field.split('__')
+            for attr in attrs:
+                record = record[attr]
+            return record
+
         model_name = records._model._name
         records = list(records)
         assert len(expected_records) > 0, "must have > 0 expected record"
@@ -136,8 +157,9 @@ class PrestashopTransactionCase(common.TransactionCase):
         equals = []
         for expected in expected_records:
             for record in records:
-                for field, value in expected._asdict().iteritems():
-                    if not getattr(record, field) == value:
+                for field, expected_value in expected._asdict().iteritems():
+                    record_value = get_record_field(record, field)
+                    if not record_value == expected_value:
                         break
                 else:
                     records.remove(record)
@@ -151,8 +173,11 @@ class PrestashopTransactionCase(common.TransactionCase):
             message.append(
                 u' ✓ {}({})'.format(
                     model_name,
-                    u', '.join(u'%s: %s' % (field, getattr(record, field)) for
-                               field in fields)
+                    u', '.join(u'%s: %s' % (
+                        field.replace('__', '.'),
+                        get_record_field(record, field))
+                        for field in fields
+                    )
                 )
             )
         for expected in not_found:
@@ -160,8 +185,8 @@ class PrestashopTransactionCase(common.TransactionCase):
             message.append(
                 u' - {}({})'.format(
                     model_name,
-                    u', '.join(u'%s: %s' % (k, v) for
-                               k, v in expected._asdict().iteritems())
+                    u', '.join(u'%s: %s' % (field.replace('__', '.'), v) for
+                               field, v in expected._asdict().iteritems())
                 )
             )
         for record in records:
@@ -169,8 +194,10 @@ class PrestashopTransactionCase(common.TransactionCase):
             message.append(
                 u' + {}({})'.format(
                     model_name,
-                    u', '.join(u'%s: %s' % (field, getattr(record, field)) for
-                               field in fields)
+                    u', '.join(u'%s: %s' % (
+                        field.replace('__', '.'),
+                        get_record_field(record, field))
+                        for field in fields)
                 )
             )
         if not_found or records:
