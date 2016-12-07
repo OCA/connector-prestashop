@@ -34,6 +34,7 @@ def get_slug(name):
     slug = re.sub(r'[-\s]+', '-', slug)
     return slug
 
+
 # TODO: attach this to a model to ease override
 CATEGORY_EXPORT_FIELDS = [
     'name',

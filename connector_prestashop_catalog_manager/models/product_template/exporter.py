@@ -18,8 +18,6 @@ from openerp.addons.connector_prestashop.unit.mapper import (
 from openerp.addons.connector_prestashop.backend import prestashop
 from ...consumer import get_slug
 
-import re
-
 
 @prestashop
 class ProductTemplateExport(TranslationPrestashopExporter):
@@ -90,9 +88,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             'prestashop.product.combination.option')
         option_binder = self.binder_for(
             'prestashop.product.combination.option.value')
-        attribute_obj = self.session.env[
-            'prestashop.product.combination.option']
-        
+
         for category in self.binding.categ_ids:
             self.export_categories(category)
 
@@ -108,7 +104,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                 if not value_ext_id:
                     self._export_dependency(
                         value, 'prestashop.product.combination.option.value')
-    
+
     def export_variants(self):
         combination_obj = self.session.env['prestashop.product.combination']
         for product in self.binding.product_variant_ids:
