@@ -163,15 +163,9 @@ class ProductInventoryAdapter(GenericAdapter):
             first_key = res.keys()[0]
             stock = res[first_key]
             stock['quantity'] = int(quantity)
-            try:
-                client.edit(self._prestashop_model, {
-                    self._export_node_name: stock
-                })
-            # TODO: investigate the silent errors
-            except PrestaShopWebServiceError:
-                pass
-            except ElementTree.ParseError:
-                pass
+            client.edit(self._prestashop_model, {
+                self._export_node_name: stock
+            })
 
 
 @prestashop

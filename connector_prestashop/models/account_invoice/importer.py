@@ -183,14 +183,17 @@ class RefundMapper(ImportMapper):
             quantity = 1
         else:
             quantity = record['product_quantity']
+
         if self.backend_record.taxes_included:
             price_unit = record['amount_tax_incl']
         else:
             price_unit = record['amount_tax_excl']
+
         try:
             price_unit = float(price_unit) / float(quantity)
         except ValueError:
             pass
+
         discount = False
         if price_unit in ['0.00', ''] and order_line is not None:
             price_unit = order_line['price_unit']
