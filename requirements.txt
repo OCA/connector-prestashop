@@ -1,6 +1,7 @@
 html2text
 prestapyt >= 0.7.0
 unidecode
+bs4
 # tests dependencies
 freezegun
 vcrpy
