@@ -7,15 +7,12 @@ from openerp.addons.decimal_precision import decimal_precision as dp
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
 
-try:
-    from xml.etree import cElementTree as ElementTree
-except ImportError, e:
-    from xml.etree import ElementTree
-
 import logging
+
 _logger = logging.getLogger(__name__)
+
 try:
-    from prestapyt import PrestaShopWebServiceError, PrestaShopWebServiceDict
+    from prestapyt import PrestaShopWebServiceDict
 except:
     _logger.debug('Cannot import from `prestapyt`')
 
