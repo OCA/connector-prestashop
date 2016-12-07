@@ -3,7 +3,7 @@
 
 from bs4 import BeautifulSoup
 
-from openerp import models, fields
+from openerp import _, models, fields
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (
     mapping,
@@ -403,12 +403,30 @@ class ProductTemplateImporter(TranslatableRecordImporter):
         ],
     }
 
+    def __init__(self, environment):
+        """
+        :param environment: current environment (backend, session, ...)
+        :type environment: :py:class:`connector.connector.ConnectorEnvironment`
+        """
+        super(ProductTemplateImporter, self).__init__(environment)
+        self.default_category_error = False
+
     def _after_import(self, binding):
         super(ProductTemplateImporter, self)._after_import(binding)
         self.import_images(binding)
         self.import_combinations()
         self.attribute_line(binding)
         self.deactivate_default_product(binding)
+        self.checkpoint_default_category_missing(binding)
+
+    def checkpoint_default_category_missing(self, binding):
+        if self.default_category_error:
+            msg = _('The default category could not be imported.')
+            self.backend_record.add_checkpoint(
+                model='product.template',
+                record_id=binding.odoo_id.id,
+                message=msg,
+            )
 
     def deactivate_default_product(self, binding):
         if binding.product_variant_count != 1:
@@ -545,8 +563,9 @@ class ProductTemplateImporter(TranslatableRecordImporter):
                 self._import_dependency(record['id_category_default'],
                                         'prestashop.product.category')
             except PrestaShopWebServiceError:
-                # TODO check this silent error
-                pass
+                # a checkpoint will be added in _after_import (because
+                # we'll know the binding at this point)
+                self.default_category_error = True
 
     def _import_categories(self):
         record = self.prestashop_record
