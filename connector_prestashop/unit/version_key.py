@@ -36,12 +36,17 @@ class VersionKey_1_6_0_9(VersionKey):
 @prestashop_1_6_1_2
 class VersionKey_1_6_1_2(VersionKey):
 
+    # keys checked in 1.6.1.9:
+    # * customer_messages
+    # * order_slip
+    # * order_slip_detail
+
     keys = {
         'product_option_value': 'product_option_value',
         'category': 'category',
         'image': 'image',
         'order_slip': 'order_slip',
-        'order_slip_detail': 'order_slip_details',
+        'order_slip_detail': 'order_slip_detail',
         'group': 'group',
         'order_row': 'order_rows',
         'tax': 'taxes',
