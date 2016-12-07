@@ -66,6 +66,12 @@ class PrestashopBackend(models.Model):
         string='Stock Location',
         help='Location used to import stock quantities.'
     )
+
+    refund_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Refund Journal',
+    )
+
     taxes_included = fields.Boolean("Use tax included prices")
     import_partners_since = fields.Datetime('Import partners since')
     import_orders_since = fields.Datetime('Import Orders since')
