@@ -97,6 +97,7 @@ class TestExportPicking(PrestashopTransactionCase):
         self.sale.procurement_group_id = procurement_group.id
 
     def tearDown(self):
+        super(TestExportPicking, self).tearDown()
         self.patch_delay.stop()
 
     def test_event_tracking_number__not_prestashop_sale(self):
