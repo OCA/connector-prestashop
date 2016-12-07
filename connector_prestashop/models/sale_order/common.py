@@ -10,10 +10,6 @@ from ...backend import prestashop
 
 import logging
 _logger = logging.getLogger(__name__)
-try:
-    from prestapyt import PrestaShopWebServiceDict
-except:
-    _logger.debug('Cannot import from `prestapyt`')
 
 
 class SaleOrder(models.Model):
