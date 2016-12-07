@@ -46,13 +46,6 @@ class PrestashopShop(models.Model):
         readonly=True,
         ondelete='cascade',
     )
-    # what is the exact purpose of this field?
-    default_category_id = fields.Many2one(
-        comodel_name='product.category',
-        string='Default Product Category',
-        help="The category set on products when?? TODO."
-        "\nOpenERP requires a main category on products for accounting."
-    )
     backend_id = fields.Many2one(
         compute='_compute_backend_id',
         comodel_name='prestashop.backend',
