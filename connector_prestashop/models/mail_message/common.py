@@ -34,4 +34,7 @@ class PrestashopMailMessage(models.Model):
 @prestashop
 class MailMessageAdapter(GenericAdapter):
     _model_name = 'prestashop.mail.message'
-    _prestashop_model = 'messages'
+
+    @property
+    def _prestashop_model(self):
+        return self.backend_record.get_version_ps_key('messages')
