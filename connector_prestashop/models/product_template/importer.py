@@ -267,15 +267,6 @@ class TemplateMapper(ImportMapper):
         return {"type": 'product'}
 
     @mapping
-    def procure_method(self, record):
-        if record['type'] == 'pack':
-            return {
-                'procure_method': 'make_to_order',
-                'supply_method': 'produce',
-            }
-        return {}
-
-    @mapping
     def extras_features(self, record):
         mapper = self.unit_for(FeaturesProductImportMapper)
         return mapper.map_record(record).values(**self.options)
@@ -284,7 +275,7 @@ class TemplateMapper(ImportMapper):
 @prestashop
 class FeaturesProductImportMapper(ImportMapper):
     # For extend in connector_prestashop_feature module, by this way we
-    # avoid have dependencies of other modules as procut_custom_info
+    # avoid have dependencies of other modules as product_custom_info
     _model_name = 'prestashop.product.template'
 
     @mapping
@@ -398,6 +389,8 @@ class ProductTemplateImporter(TranslatableRecordImporter):
     _model_name = [
         'prestashop.product.template',
     ]
+
+    _base_mapper = TemplateMapper
 
     _translatable_fields = {
         'prestashop.product.template': [
