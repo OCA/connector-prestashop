@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import fields
+from openerp import _, fields
 
+from openerp.addons.connector.exception import MappingError
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import (
     mapping,
@@ -29,22 +30,21 @@ class RefundImporter(PrestashopImporter):
         )
         self._import_dependency(record['id_order'], 'prestashop.sale.order')
 
-    def _after_import(self, binding):
-        super(RefundImporter, self)._after_import(binding)
-        # FIXME: context should be frozen
-        context = self.session.context
-        context['company_id'] = self.backend_record.company_id.id
-        invoice = binding.openerp_id
-        # FIXME: this method does not exist
-        invoice.button_reset_taxes()
-
+    def _open_refund(self, binding):
+        invoice = binding.odoo_id
         if invoice.amount_total == float(self.prestashop_record['amount']):
             invoice.signal_workflow('invoice_open')
         else:
             self.backend_record.add_checkpoint(
                 model='account.invoice',
                 record_id=invoice.id,
+                message=_('The refund for order %s has a different amount '
+                          'in PrestaShop and in Odoo.') % invoice.origin
             )
+
+    def _after_import(self, binding):
+        super(RefundImporter, self)._after_import(binding)
+        self._open_refund(binding)
 
 
 @prestashop
@@ -58,20 +58,33 @@ class RefundMapper(ImportMapper):
 
     @mapping
     def journal(self, record):
-        journal = self.env['account.journal'].search([
-            ('company_id', '=', self.backend_record.company_id.id),
-            ('type', '=', 'sale_refund'),
-        ], limit=1)
+        journal = self.backend_record.refund_journal_id
+        if not journal:
+            raise MappingError(
+                _('The refund journal must be configured on '
+                  'the PrestaShop Backend.')
+            )
         return {'journal_id': journal.id}
 
     def _get_order(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        return binder.to_openerp(record['id_order'])
+        return binder.to_odoo(record['id_order'])
+
+    @mapping
+    def from_sale_order(self, record):
+        sale_order = self._get_order(record)
+        fiscal_position = None
+        if sale_order.fiscal_position_id:
+            fiscal_position = sale_order.fiscal_position_id.id
+        return {
+            'origin': sale_order['name'],
+            'fiscal_position_id': fiscal_position,
+        }
 
     @mapping
     def comment(self, record):
         # FIXME: should be a translated text
-        return {'comment': 'Montant dans prestashop : %s' % (record['amount'])}
+        return {'comment': _('PrestaShop amount: %s') % record['amount']}
 
     @mapping
     @only_create
@@ -106,9 +119,9 @@ class RefundMapper(ImportMapper):
         product = self.env['product.product'].browse(
             order_line['product_id'][0]
         )
-        account_id = product.property_account_income.id
+        account_id = product.property_account_income_id.id
         if not account_id:
-            account_id = product.categ_id.property_account_income_categ.id
+            account_id = product.categ_id.property_account_income_categ_id.id
         if fpos:
             fpos_obj = self.env['account.fiscal.position']
             account_id = fpos_obj.map_account(
@@ -154,7 +167,7 @@ class RefundMapper(ImportMapper):
             name = order_line.name
             for tax in order_line.tax_id:
                 tax_ids.append(tax.id)
-            account_id = product.property_account_income.id
+            account_id = product.property_account_income_id.id
             if not account_id:
                 categ = product.categ_id
                 account_id = categ.property_account_income_categ_id.id
