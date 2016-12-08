@@ -38,30 +38,13 @@ class CarrierImportMapper(ImportMapper):
     def product_id(self, record):
         if self.backend_record.shipping_product_id:
             return {'product_id': self.backend_record.shipping_product_id.id}
-        prod_mod = self.session.pool['product.product']
-        default_ship_product = prod_mod.search(
-            self.session.cr,
-            self.session.uid,
-            [('default_code', '=', 'SHIP'),
-             ('company_id', '=', self.backend_record.company_id.id)],
-        )
-        if default_ship_product:
-            return {'product_id': default_ship_product[0]}
-        return {}
+        product = self.env.ref('connector_ecommerce.product_product_shipping')
+        return {'product_id': product.id}
 
     @mapping
     def partner_id(self, record):
-        partner_pool = self.session.pool['res.partner']
-        default_partner = partner_pool.search(
-            self.session.cr,
-            self.session.uid,
-            [],
-        )[0]
-        return {'partner_id': default_partner}
-
-    @mapping
-    def prestashop_id(self, record):
-        return {'prestashop_id': record['id']}
+        default_partner = self.backend_record.company_id.partner_id
+        return {'partner_id': default_partner.id}
 
     @mapping
     def backend_id(self, record):
@@ -80,7 +63,7 @@ class DeliveryCarrierBatchImporter(DelayedBatchImporter):
 
     def run(self, filters=None, **kwargs):
         """ Run the synchronization """
-        record_ids = self.backend_adapter.search()
+        record_ids = self.backend_adapter.search(filters=filters)
         _logger.info('search for prestashop carriers %s returned %s',
                      filters, record_ids)
         for record_id in record_ids:
