@@ -302,6 +302,26 @@ class PrestashopTransactionCase(common.TransactionCase):
             'price_include': False,
         })
 
+    def _create_product_binding(self, name=None,
+                                template_ps_id=None,
+                                variant_ps_id=None):
+        product = self.env['product.product'].create({
+            'name': name
+        })
+        template = product.product_tmpl_id
+        template_binding = self.create_binding_no_export(
+            'prestashop.product.template',
+            template.id,
+            prestashop_id=template_ps_id,
+            default_shop_id=self.shop.id,
+        )
+        return self.create_binding_no_export(
+            'prestashop.product.combination',
+            product.id,
+            prestashop_id=variant_ps_id,
+            main_template_id=template_binding.id,
+        )
+
     @staticmethod
     def xmltodict(xml):
         return xml2dict(xml)
