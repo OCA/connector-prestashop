@@ -14,7 +14,7 @@ from openerp.addons.connector_prestashop.models.\
         import_carriers
     )
 
-from .common import recorder, PrestashopTransactionCase
+from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
 ExpectedCarrier = namedtuple(
@@ -33,6 +33,7 @@ class TestImportCarrier(PrestashopTransactionCase):
         self.shop_group = self.env['prestashop.shop.group'].search([])
         self.shop = self.env['prestashop.shop'].search([])
 
+    @assert_no_job_delayed
     def test_import_carriers(self):
         import_job = ('openerp.addons.connector_prestashop.models'
                       '.prestashop_backend.common'
@@ -44,6 +45,7 @@ class TestImportCarrier(PrestashopTransactionCase):
                 priority=10,
             )
 
+    @assert_no_job_delayed
     def test_import_products_batch(self):
         record_job_path = ('openerp.addons.connector_prestashop.unit'
                            '.importer.import_record')
@@ -68,6 +70,7 @@ class TestImportCarrier(PrestashopTransactionCase):
 
             self.assertEqual(2, import_record_mock.delay.call_count)
 
+    @assert_no_job_delayed
     def test_import_carrier_record(self):
         """ Import a carrier """
         with recorder.use_cassette('test_import_carrier_record_2'):

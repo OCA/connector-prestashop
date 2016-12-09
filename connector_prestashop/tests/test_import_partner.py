@@ -16,7 +16,7 @@ from openerp.addons.connector_prestashop.unit.importer import (
     import_batch,
 )
 
-from .common import recorder, PrestashopTransactionCase
+from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
 ExpectedCategory = namedtuple(
@@ -48,6 +48,7 @@ class TestImportPartner(PrestashopTransactionCase):
         self.shop = self.env['prestashop.shop'].search([])
 
     @freeze_time('2016-09-13 00:00:00')
+    @assert_no_job_delayed
     def test_import_partner_since(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_partners_since = from_date
@@ -63,6 +64,7 @@ class TestImportPartner(PrestashopTransactionCase):
             )
 
     @freeze_time('2016-09-13 00:00:00')
+    @assert_no_job_delayed
     def test_import_partner_batch(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_res_partner_from_date = from_date
@@ -97,6 +99,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
             self.assertEqual(5, import_record_mock.delay.call_count)
 
+    @assert_no_job_delayed
     def test_import_partner_category_record(self):
         """ Import a partner category """
         with recorder.use_cassette('test_import_partner_category_record_1'):
@@ -115,6 +118,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
         self.assert_records(expected, category_bindings)
 
+    @assert_no_job_delayed
     def test_import_partner_record(self):
         """ Import a partner """
 
@@ -158,6 +162,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
         self.assert_records(expected, partner_bindings)
 
+    @assert_no_job_delayed
     def test_import_partner_address_batch(self):
         record_job_path = ('openerp.addons.connector_prestashop.unit'
                            '.importer.import_record')
@@ -186,6 +191,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
             self.assertEqual(2, import_record_mock.delay.call_count)
 
+    @assert_no_job_delayed
     def test_import_partner_address_record(self):
         """ Import a partner address """
 
