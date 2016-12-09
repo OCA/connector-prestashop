@@ -16,7 +16,7 @@ from openerp.addons.connector_prestashop.models.\
         import_orders_since
     )
 
-from .common import recorder, PrestashopTransactionCase
+from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
 ExpectedSale = namedtuple(
@@ -43,6 +43,7 @@ class TestImportSale(PrestashopTransactionCase):
         self.shop = self.env['prestashop.shop'].search([])
 
     @freeze_time('2016-12-09 00:00:00')
+    @assert_no_job_delayed
     def test_import_sales(self):
         from_date = '2016-12-01 00:00:00'
         self.backend_record.import_orders_since = from_date
@@ -58,6 +59,7 @@ class TestImportSale(PrestashopTransactionCase):
             )
 
     @freeze_time('2016-12-09 00:00:00')
+    @assert_no_job_delayed
     def test_import_sale_batch(self):
         from_date = '2016-12-01 00:00:00'
         self.backend_record.import_res_partner_from_date = from_date
@@ -119,6 +121,7 @@ class TestImportSale(PrestashopTransactionCase):
             main_template_id=template_binding.id,
         )
 
+    @assert_no_job_delayed
     def test_import_sale_record(self):
         """ Import a sale order """
         # setup for sale order with id 5, create the dependencies

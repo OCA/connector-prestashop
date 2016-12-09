@@ -6,7 +6,7 @@ import mock
 
 from openerp.addons.connector_prestashop.models.stock_tracking.\
     exporter import export_tracking_number
-from .common import recorder, PrestashopTransactionCase
+from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
 class TestExportPicking(PrestashopTransactionCase):
@@ -100,11 +100,13 @@ class TestExportPicking(PrestashopTransactionCase):
         super(TestExportPicking, self).tearDown()
         self.patch_delay.stop()
 
+    @assert_no_job_delayed
     def test_event_tracking_number__not_prestashop_sale(self):
         """ Test that nothing is exported """
         self.picking.carrier_tracking_ref = 'xyz'
         self.assertEqual(0, self.mock_delay_export.call_count)
 
+    @assert_no_job_delayed
     def test_event_tracking_number__prestashop_sale(self):
         """ Test that tracking number is exported """
         sale_binding = self.create_binding_no_export(
@@ -117,6 +119,7 @@ class TestExportPicking(PrestashopTransactionCase):
             priority=mock.ANY
         )
 
+    @assert_no_job_delayed
     def test_export_tracking_number(self):
         sale_binding = self.create_binding_no_export(
             'prestashop.sale.order', self.sale.id, prestashop_id=2
