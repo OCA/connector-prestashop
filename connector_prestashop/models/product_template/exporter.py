@@ -32,8 +32,8 @@ class ProductInventoryExporter(Exporter):
 @job(default_channel='root.prestashop')
 def export_inventory(session, model_name, record_id, fields=None, **kwargs):
     """ Export the inventory configuration and quantity of a product. """
-    template = session.env[model_name].browse(record_id)
-    backend = template.backend_id
+    binding = session.env[model_name].browse(record_id)
+    backend = binding.backend_id
     env = backend.get_environment(model_name, session=session)
     inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
     return inventory_exporter.run(record_id, fields, **kwargs)
