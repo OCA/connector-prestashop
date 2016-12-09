@@ -31,7 +31,7 @@ ExpectedTemplate = namedtuple(
 
 ExpectedVariant = namedtuple(
     'ExpectedVariant',
-    'default_code standard_price display_name'
+    'default_code standard_price attribute_value_ids'
 )
 
 
@@ -180,36 +180,52 @@ class TestImportProduct(PrestashopTransactionCase):
 
         variants = binding.product_variant_ids
 
+        PSValue = self.env['prestashop.product.combination.option.value']
+        value_s = PSValue.search([('backend_id', '=', self.backend_record.id),
+                                  ('name', '=', 'S')]).odoo_id
+        value_m = PSValue.search([('backend_id', '=', self.backend_record.id),
+                                  ('name', '=', 'M')]).odoo_id
+        value_l = PSValue.search([('backend_id', '=', self.backend_record.id),
+                                  ('name', '=', 'L')]).odoo_id
+        value_orange = PSValue.search(
+            [('backend_id', '=', self.backend_record.id),
+             ('name', '=', 'Orange')]
+        ).odoo_id
+        value_blue = PSValue.search(
+            [('backend_id', '=', self.backend_record.id),
+             ('name', '=', 'Blue')]
+        ).odoo_id
+
         expected_variants = [
             ExpectedVariant(
                 default_code='1_1',
                 standard_price=4.95,
-                display_name='[1_1] Faded Short Sleeves T-shirt (S, Orange)',
+                attribute_value_ids=value_s + value_orange,
             ),
             ExpectedVariant(
                 default_code='1_2',
                 standard_price=4.95,
-                display_name='[1_2] Faded Short Sleeves T-shirt (S, Blue)',
+                attribute_value_ids=value_s + value_blue,
             ),
             ExpectedVariant(
                 default_code='1_3',
                 standard_price=4.95,
-                display_name='[1_3] Faded Short Sleeves T-shirt (M, Orange)',
+                attribute_value_ids=value_m + value_orange,
             ),
             ExpectedVariant(
                 default_code='1_4',
                 standard_price=4.95,
-                display_name='[1_4] Faded Short Sleeves T-shirt (Blue, M)',
+                attribute_value_ids=value_m + value_blue,
             ),
             ExpectedVariant(
                 default_code='1_5',
                 standard_price=4.95,
-                display_name='[1_5] Faded Short Sleeves T-shirt (Orange, L)',
+                attribute_value_ids=value_l + value_orange,
             ),
             ExpectedVariant(
                 default_code='1_6',
                 standard_price=4.95,
-                display_name='[1_6] Faded Short Sleeves T-shirt (L, Blue)',
+                attribute_value_ids=value_l + value_blue,
             ),
         ]
 
