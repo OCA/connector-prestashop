@@ -60,7 +60,6 @@ def quiet_logger(logger_path):
     logger.setLevel(level)
 
 
-
 def assert_no_job_delayed(func):
     def _decorated(self, *args, **kwargs):
         job_count = self.env['queue.job'].search_count([])
