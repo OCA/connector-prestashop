@@ -302,23 +302,25 @@ class ProductInventoryBatchImporter(DelayedBatchImporter):
     def run(self, filters=None, **kwargs):
         if filters is None:
             filters = {}
-        filters['display'] = '[id_product,id_product_attribute]'
+        filters['display'] = '[id,id_product,id_product_attribute]'
         _super = super(ProductInventoryBatchImporter, self)
         return _super.run(filters, **kwargs)
 
     def _run_page(self, filters, **kwargs):
         records = self.backend_adapter.get(filters)
         for record in records['stock_availables']['stock_available']:
-            self._import_record(record, **kwargs)
+            self._import_record(record['id'], record=record, **kwargs)
         return records['stock_availables']['stock_available']
 
-    def _import_record(self, record, **kwargs):
+    def _import_record(self, record_id, record=None, **kwargs):
         """ Delay the import of the records"""
+        assert record
         import_record.delay(
             self.session,
             '_import_stock_available',
             self.backend_record.id,
-            record,
+            record_id,
+            record=record,
             **kwargs
         )
 
@@ -342,14 +344,17 @@ class ProductInventoryImporter(PrestashopImporter):
             all_qty += int(quantity['quantity'])
         return all_qty
 
-    def _get_template(self, record):
+    def _get_binding(self):
+        record = self.prestashop_record
         if record['id_product_attribute'] == '0':
             binder = self.binder_for('prestashop.product.template')
-            return binder.to_odoo(record['id_product'], unwrap=True)
+            return binder.to_odoo(record['id_product'])
         binder = self.binder_for('prestashop.product.combination')
-        return binder.to_odoo(record['id_product_attribute'], unwrap=True)
+        return binder.to_odoo(record['id_product_attribute'])
 
-    def run(self, record, **kwargs):
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        record = self.prestashop_record
         self._import_dependency(
             record['id_product'], 'prestashop.product.template'
         )
@@ -359,14 +364,22 @@ class ProductInventoryImporter(PrestashopImporter):
                 'prestashop.product.combination'
             )
 
+    def run(self, prestashop_id, record=None, **kwargs):
+        assert record
+        self.prestashop_record = record
+        return super(ProductInventoryImporter, self).run(
+            prestashop_id, **kwargs
+        )
+
+    def _import(self, binding, **kwargs):
+        record = self.prestashop_record
         qty = self._get_quantity(record)
         if qty < 0:
             qty = 0
-        template = self._get_template(record)
-        if template._name == 'product.template':
-            products = template.product_variant_ids
+        if binding._name == 'prestashop.product.template':
+            products = binding.odoo_id.product_variant_ids
         else:
-            products = template
+            products = binding.odoo_id
 
         location = (self.backend_record.stock_location_id or
                     self.backend_record.warehouse_id.lot_stock_id)

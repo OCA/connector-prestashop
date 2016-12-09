@@ -189,7 +189,8 @@ class PrestashopImporter(Importer):
         # Keep a lock on this import until the transaction is committed
         self.advisory_lock_or_retry(lock_name,
                                     retry_seconds=RETRY_ON_ADVISORY_LOCK)
-        self.prestashop_record = self._get_prestashop_data()
+        if not self.prestashop_record:
+            self.prestashop_record = self._get_prestashop_data()
         binding = self._get_binding()
         if not binding:
             with self.do_in_new_connector_env() as new_connector_env:
