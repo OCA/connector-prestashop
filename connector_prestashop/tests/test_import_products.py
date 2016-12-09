@@ -93,7 +93,7 @@ class TestImportProduct(PrestashopTransactionCase):
     @freeze_time('2016-09-13 00:00:00')
     def test_import_products_batch(self):
         from_date = '2016-09-01 00:00:00'
-        self.backend_record.import_res_partner_from_date = from_date
+        self.backend_record.import_products_since = from_date
         record_job_path = ('openerp.addons.connector_prestashop.unit'
                            '.importer.import_record')
         # execute the batch job directly and replace the record import
