@@ -2,6 +2,7 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+import functools
 
 import openerp.tests.common as common
 from openerp.addons.connector.session import ConnectorSession
@@ -57,6 +58,18 @@ def quiet_logger(logger_path):
     logger.setLevel(logging.ERROR)
     yield
     logger.setLevel(level)
+
+
+
+def assert_no_job_delayed(func):
+    def _decorated(self, *args, **kwargs):
+        job_count = self.env['queue.job'].search_count([])
+        result = func(self, *args, **kwargs)
+        self.assertEqual(job_count, self.env['queue.job'].search_count([]),
+                         "New jobs have been delayed during the test, this "
+                         "is unexpected.")
+        return result
+    return functools.wraps(func)(_decorated)
 
 
 class PrestashopTransactionCase(common.TransactionCase):

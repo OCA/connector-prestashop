@@ -4,7 +4,9 @@
 
 from collections import namedtuple
 
-from .common import recorder, PrestashopTransactionCase, quiet_logger
+from .common import (
+    recorder, PrestashopTransactionCase, quiet_logger, assert_no_job_delayed
+)
 
 ExpectedShopGroup = namedtuple('ExpectedShopGroup',
                                'name prestashop_id backend_id')
@@ -20,6 +22,7 @@ class TestImportBackendData(PrestashopTransactionCase):
         super(TestImportBackendData, self).setUp()
 
     @recorder.use_cassette
+    @assert_no_job_delayed
     def test_import_metadata(self):
         """ Import shop groups and shops """
         self.backend_record.synchronize_metadata()
@@ -49,6 +52,7 @@ class TestImportBackendData(PrestashopTransactionCase):
         self.assert_records(expected, shops)
 
     @recorder.use_cassette
+    @assert_no_job_delayed
     def test_import_basedata(self):
         """ Import base data (langs, countries, currencies, taxes) """
         # ensure it is created afresh from the sync
