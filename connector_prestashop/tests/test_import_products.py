@@ -16,7 +16,7 @@ from openerp.addons.connector_prestashop.models.\
         import_products
     )
 
-from .common import recorder, PrestashopTransactionCase
+from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
 ExpectedProductCategory = namedtuple(
@@ -76,6 +76,7 @@ class TestImportProduct(PrestashopTransactionCase):
         self.patch_delay_set_image.stop()
 
     @freeze_time('2016-09-13 00:00:00')
+    @assert_no_job_delayed
     def test_import_products(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_products_since = from_date
@@ -91,6 +92,7 @@ class TestImportProduct(PrestashopTransactionCase):
             )
 
     @freeze_time('2016-09-13 00:00:00')
+    @assert_no_job_delayed
     def test_import_products_batch(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_products_since = from_date
@@ -125,6 +127,7 @@ class TestImportProduct(PrestashopTransactionCase):
 
             self.assertEqual(18, import_record_mock.delay.call_count)
 
+    @assert_no_job_delayed
     def test_import_product_record_category(self):
         """ Import a product category """
         with recorder.use_cassette('test_import_product_category_record_1'):
@@ -144,6 +147,7 @@ class TestImportProduct(PrestashopTransactionCase):
 
         self.assert_records(expected, binding)
 
+    @assert_no_job_delayed
     def test_import_product_record(self):
         """ Import a product """
         # product 1 is assigned to categories 1-5 on PrestaShop
