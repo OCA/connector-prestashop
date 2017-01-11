@@ -173,7 +173,10 @@ class PrestashopProductTags(GenericAdapter):
 
     def search(self, filters=None):
         res = self.client.get(self._prestashop_model, options=filters)
-        tags = res[self._prestashop_model][self._export_node_name]
+        tags = res[self._prestashop_model]
+        if not tags:
+            return []
+        tags = tags[self._export_node_name]
         if isinstance(tags, dict):
             return [tags]
         return tags
