@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
+from openerp.addons.connector.unit.mapper import (
+    ImportMapper,
+    mapping,
+    only_create,
+)
 from ...unit.importer import PrestashopImporter, DirectBatchImporter
 from ...backend import prestashop
 
@@ -21,6 +25,15 @@ class TaxGroupMapper(ImportMapper):
     @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
+
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        tax_group = self.env['account.tax.group'].search([
+            ('name', '=', record['name'])
+        ])
+        if tax_group:
+            return {'odoo_id': tax_group.id}
 
 
 @prestashop
