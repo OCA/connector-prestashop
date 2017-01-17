@@ -55,6 +55,8 @@ class MailMessageImporter(PrestashopImporter):
 
     def _has_to_skip(self):
         record = self.prestashop_record
+        if not record.get('id_order'):
+            return 'no id_order'
         binder = self.binder_for('prestashop.sale.order')
         order_binding = binder.to_odoo(record['id_order'])
         return record['id_order'] == '0' or not order_binding
