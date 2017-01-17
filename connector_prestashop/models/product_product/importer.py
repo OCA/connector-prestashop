@@ -262,11 +262,12 @@ class ProductCombinationMapper(ImportMapper):
     @only_create
     @mapping
     def odoo_id(self, record):
-        Propuct = self.env['product.product']
-        product = Propuct.search([
-            ('default_code', '=', record['reference'])
-        ])
-        if Propuct:
+        product = self.env['product.product'].search([
+            ('default_code', '=', record['reference']),
+            ('prestashop_bind_ids', '=', False),
+        ],
+        limit=1)
+        if product:
             return {'odoo_id': product.id}
 
 
