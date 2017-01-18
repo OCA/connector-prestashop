@@ -296,14 +296,15 @@ class SaleOrderImporter(PrestashopImporter):
         shipping_total = (binding.total_shipping_tax_included
                           if self.backend_record.taxes_included
                           else binding.total_shipping_tax_excluded)
-        if shipping_total:
-            sale_line_obj = self.session.env['sale.order.line']
-            sale_line_obj.create({
-                'order_id': binding.odoo_id.id,
-                'product_id': binding.odoo_id.carrier_id.product_id.id,
-                'price_unit': shipping_total,
-                'is_delivery': True
-            })
+        # when we have a carrier_id, even with a 0.0 price,
+        # Odoo will adda a shipping line in the SO when the picking
+        # is done, so we better add the line directly even when the
+        # price is 0.0
+        if binding.odoo_id.carrier_id:
+            binding.odoo_id._create_delivery_line(
+                binding.odoo_id.carrier_id,
+                shipping_total
+            )
         binding.odoo_id.recompute()
 
     def _after_import(self, binding):
