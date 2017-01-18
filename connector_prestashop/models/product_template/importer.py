@@ -364,6 +364,10 @@ class ProductInventoryImporter(PrestashopImporter):
                 'prestashop.product.combination'
             )
 
+    def _check_in_new_connector_env(self):
+        # not needed in this importer
+        return
+
     def run(self, prestashop_id, record=None, **kwargs):
         assert record
         self.prestashop_record = record

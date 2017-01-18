@@ -174,6 +174,55 @@ class PrestashopImporter(Importer):
                     # commit (in a new cursor). Disable the warning.
                     cr.commit()  # pylint: disable=invalid-commit
 
+    def _check_in_new_connector_env(self):
+        with self.do_in_new_connector_env() as new_connector_env:
+            # Even when we use an advisory lock, we may have
+            # concurrent issues.
+            # Explanation:
+            # We import Partner A and B, both of them import a
+            # partner category X.
+            #
+            # The squares represent the duration of the advisory
+            # lock, the transactions starts and ends on the
+            # beginnings and endings of the 'Import Partner'
+            # blocks.
+            # T1 and T2 are the transactions.
+            #
+            # ---Time--->
+            # > T1 /------------------------\
+            # > T1 | Import Partner A       |
+            # > T1 \------------------------/
+            # > T1        /-----------------\
+            # > T1        | Imp. Category X |
+            # > T1        \-----------------/
+            #                     > T2 /------------------------\
+            #                     > T2 | Import Partner B       |
+            #                     > T2 \------------------------/
+            #                     > T2        /-----------------\
+            #                     > T2        | Imp. Category X |
+            #                     > T2        \-----------------/
+            #
+            # As you can see, the locks for Category X do not
+            # overlap, and the transaction T2 starts before the
+            # commit of T1. So no lock prevents T2 to import the
+            # category X and T2 does not see that T1 already
+            # imported it.
+            #
+            # The workaround is to open a new DB transaction at the
+            # beginning of each import (e.g. at the beginning of
+            # "Imp. Category X") and to check if the record has been
+            # imported meanwhile. If it has been imported, we raise
+            # a Retryable error so T2 is rollbacked and retried
+            # later (and the new T3 will be aware of the category X
+            # from the its inception).
+            binder = new_connector_env.get_connector_unit(Binder)
+            if binder.to_odoo(self.prestashop_id):
+                raise RetryableJobError(
+                    'Concurrent error. The job will be retried later',
+                    seconds=RETRY_WHEN_CONCURRENT_DETECTED,
+                    ignore_retry=True
+                )
+
     def run(self, prestashop_id, **kwargs):
         """ Run the synchronization
 
@@ -193,53 +242,7 @@ class PrestashopImporter(Importer):
             self.prestashop_record = self._get_prestashop_data()
         binding = self._get_binding()
         if not binding:
-            with self.do_in_new_connector_env() as new_connector_env:
-                # Even when we use an advisory lock, we may have
-                # concurrent issues.
-                # Explanation:
-                # We import Partner A and B, both of them import a
-                # partner category X.
-                #
-                # The squares represent the duration of the advisory
-                # lock, the transactions starts and ends on the
-                # beginnings and endings of the 'Import Partner'
-                # blocks.
-                # T1 and T2 are the transactions.
-                #
-                # ---Time--->
-                # > T1 /------------------------\
-                # > T1 | Import Partner A       |
-                # > T1 \------------------------/
-                # > T1        /-----------------\
-                # > T1        | Imp. Category X |
-                # > T1        \-----------------/
-                #                     > T2 /------------------------\
-                #                     > T2 | Import Partner B       |
-                #                     > T2 \------------------------/
-                #                     > T2        /-----------------\
-                #                     > T2        | Imp. Category X |
-                #                     > T2        \-----------------/
-                #
-                # As you can see, the locks for Category X do not
-                # overlap, and the transaction T2 starts before the
-                # commit of T1. So no lock prevents T2 to import the
-                # category X and T2 does not see that T1 already
-                # imported it.
-                #
-                # The workaround is to open a new DB transaction at the
-                # beginning of each import (e.g. at the beginning of
-                # "Imp. Category X") and to check if the record has been
-                # imported meanwhile. If it has been imported, we raise
-                # a Retryable error so T2 is rollbacked and retried
-                # later (and the new T3 will be aware of the category X
-                # from the its inception).
-                binder = new_connector_env.get_connector_unit(Binder)
-                if binder.to_odoo(self.prestashop_id):
-                    raise RetryableJobError(
-                        'Concurrent error. The job will be retried later',
-                        seconds=RETRY_WHEN_CONCURRENT_DETECTED,
-                        ignore_retry=True
-                    )
+            self._check_in_new_connector_env()
 
         skip = self._has_to_skip()
         if skip:
