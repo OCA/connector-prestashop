@@ -47,6 +47,7 @@
                     <field name="warehouse_id"/>
                     <field name="stock_location_id"/>
                     <field name="refund_journal_id"/>
+                    <field name="sale_team_id"/>
                     <field name="taxes_included"/>
                     <field name="discount_product_id" />
                     <field name="shipping_product_id" />
