@@ -219,6 +219,11 @@ class SaleOrderMapper(ImportMapper):
         return {'pricelist_id': self.backend_record.pricelist_id.id}
 
     @mapping
+    def sale_team(self, record):
+        if self.backend_record.sale_team_id:
+            return {'team_id': self.backend_record.sale_team_id.id}
+
+    @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 

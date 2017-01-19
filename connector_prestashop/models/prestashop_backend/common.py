@@ -73,6 +73,11 @@ class PrestashopBackend(models.Model):
         default=lambda self: self._default_pricelist_id(),
         help="Pricelist used in sales orders",
     )
+    sale_team_id = fields.Many2one(
+        comodel_name='crm.team',
+        string='Sales Team',
+        help="Sales Team assigned to the imported sales orders.",
+    )
 
     refund_journal_id = fields.Many2one(
         comodel_name='account.journal',
