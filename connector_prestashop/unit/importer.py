@@ -240,6 +240,7 @@ class PrestashopImporter(Importer):
                                     retry_seconds=RETRY_ON_ADVISORY_LOCK)
         if not self.prestashop_record:
             self.prestashop_record = self._get_prestashop_data()
+
         binding = self._get_binding()
         if not binding:
             self._check_in_new_connector_env()
