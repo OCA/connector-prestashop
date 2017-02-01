@@ -272,16 +272,39 @@ class TemplateMapper(ImportMapper):
         mapper = self.unit_for(FeaturesProductImportMapper)
         return mapper.map_record(record).values(**self.options)
 
+    @mapping
+    def extras_manufacturer(self, record):
+        mapper = self.unit_for(ManufacturerProductImportMapper)
+        return mapper.map_record(record).values(**self.options)
+
 
 @prestashop
 class FeaturesProductImportMapper(ImportMapper):
-    # For extend in connector_prestashop_feature module, by this way we
-    # avoid have dependencies of other modules as product_custom_info
+    # To extend in connector_prestashop_feature module. In this way we
+    # dependencies on other modules like product_custom_info
     _model_name = 'prestashop.product.template'
 
     @mapping
     def extras_features(self, record):
         return {}
+
+
+@prestashop
+class ManufacturerProductImportMapper(ImportMapper):
+    # To extend in connector_prestashop_manufacturer module. In this way we
+    # dependencies on other modules like product_manufacturer
+    _model_name = 'prestashop.product.template'
+
+    @mapping
+    def extras_manufacturer(self, record):
+        return {}
+
+
+@prestashop
+class TemplateAdapter(GenericAdapter):
+    _model_name = 'prestashop.product.template'
+    _prestashop_model = 'products'
+    _export_node_name = 'product'
 
 
 class ImportInventory(models.TransientModel):
