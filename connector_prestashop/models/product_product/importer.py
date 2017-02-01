@@ -266,8 +266,7 @@ class ProductCombinationMapper(ImportMapper):
         product = self.env['product.product'].search([
             ('default_code', '=', record['reference']),
             ('prestashop_bind_ids', '=', False),
-        ],
-        limit=1)
+        ], limit=1)
         if product:
             return {'odoo_id': product.id}
 

@@ -110,7 +110,7 @@ class TestImportSale(PrestashopTransactionCase):
         payment_method = self.env.ref(payment_method_xmlid)
         payment_mode = self.env['account.payment.mode'].create({
             'name': 'Bank wire',
-            'company_id':  self.backend_record.company_id.id,
+            'company_id': self.backend_record.company_id.id,
             'bank_account_link': 'fixed',
             'fixed_journal_id': mode_journal.id,
             'payment_type': 'inbound',
@@ -225,6 +225,6 @@ class TestImportSale(PrestashopTransactionCase):
                 price_unit=2.0,
                 product_uom_qty=1.0,
             ),
-            ]
+        ]
 
         self.assert_records(expected, binding.order_line)

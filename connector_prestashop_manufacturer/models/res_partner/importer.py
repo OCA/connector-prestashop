@@ -65,7 +65,13 @@ def import_manufacturers(session, backend_id, since_date):
         filters = {'date': '1',
                    'filter[date_upd]': '>[%s]' % since_date}
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    import_batch(session, 'prestashop.manufacturer', backend_id, filters)
+    result = import_batch(
+        session,
+        'prestashop.manufacturer',
+        backend_id,
+        filters
+    )
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_manufacturers_since': now_fmt
     })
+    return result

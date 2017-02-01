@@ -26,7 +26,7 @@ except:
 # The secret.txt file must not be committed.
 # The API token will be used to record the requests with vcr, but will not be
 # stored in the fixtures files
-prestashop_url = 'http://localhost'
+prestashop_url = 'http://localhost:8080'
 token = 'xxx'
 filename = join(dirname(__file__), 'secret.txt')
 if not exists(filename):
@@ -41,14 +41,20 @@ if exists(filename):
         token = next(fp).strip()
 
 
-recorder = VCR(
-    record_mode='once',
-    cassette_library_dir=join(dirname(__file__), 'fixtures/cassettes'),
-    path_transformer=VCR.ensure_suffix('.yaml'),
-    match_on=['method', 'path', 'query'],
-    filter_headers=['Authorization'],
-    decode_compressed_response=True,
-)
+def get_recorder(**kw):
+    defaults = dict(
+        record_mode='once',
+        cassette_library_dir=join(dirname(__file__), 'fixtures/cassettes'),
+        path_transformer=VCR.ensure_suffix('.yaml'),
+        match_on=['method', 'path', 'query'],
+        filter_headers=['Authorization'],
+        decode_compressed_response=True,
+    )
+    defaults.update(kw)
+    return VCR(**kw)
+
+
+recorder = get_recorder()
 
 
 @contextmanager

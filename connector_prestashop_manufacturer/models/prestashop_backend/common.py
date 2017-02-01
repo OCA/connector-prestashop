@@ -18,9 +18,13 @@ class PrestashopBackend(models.Model):
         session = ConnectorSession(
             self.env.cr, self.env.uid, context=self.env.context)
         for backend_record in self:
-            since_date = self._date_as_user_tz(
-                backend_record.import_manufacturers_since)
-            import_manufacturers.delay(session, backend_record.id, since_date)
+            since_date = backend_record.import_manufacturers_since
+            import_manufacturers.delay(
+                session,
+                backend_record.id,
+                since_date=since_date,
+                priority=10,
+            )
         return True
 
     @api.model
