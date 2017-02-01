@@ -141,7 +141,13 @@ class ProductTemplateExport(TranslationPrestashopExporter):
             image_binder = self.binder_for('prestashop.product.image')
             for image in self.binding.image_ids:
                 image_ext_id = image_binder.to_backend(image.id, wrap=True)
-                if not image_ext_id:
+                # `image_ext_id` is ZERO as long as the image is not exported.
+                # Here we delay the export so,
+                # if we don't check this we create 2 records to be sync'ed
+                # and this leads to:
+                # ValueError:
+                #   Expected singleton: prestashop.product.image(x, y)
+                if image_ext_id is None:
                     image_ext_id = self.session.env[
                         'prestashop.product.image'].with_context(
                         connector_no_export=True).create({
