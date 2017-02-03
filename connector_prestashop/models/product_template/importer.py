@@ -607,25 +607,26 @@ def import_products(
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
     now_fmt = fields.Datetime.now()
-    import_batch(
+    result = import_batch(
         session,
         'prestashop.product.category',
         backend_id,
         filters,
         priority=15,
         **kwargs
-    )
-    import_batch(
+    ) or ''
+    result += import_batch(
         session,
         'prestashop.product.template',
         backend_id,
         filters,
         priority=15,
         **kwargs
-    )
+    ) or ''
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_products_since': now_fmt
     })
+    return result
 
 
 @prestashop
