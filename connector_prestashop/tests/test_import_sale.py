@@ -165,10 +165,21 @@ class TestImportSale(PrestashopTransactionCase):
             prestashop_partner_id=partner_binding.id
         )
 
-        # import of the sale
+        # import of the sale order
         with recorder.use_cassette('test_import_sale_record_5'):
-            import_record(self.conn_session, 'prestashop.sale.order',
-                          self.backend_record.id, 5)
+            result = import_record(
+                self.conn_session, 'prestashop.sale.order',
+                self.backend_record.id, 5)
+
+        error_msg = ('Import of the order 5 canceled '
+                     'because it has not been paid since 30 days')
+        self.assertEqual(result, error_msg)
+
+        with recorder.use_cassette('test_import_sale_record_5'):
+            with freeze_time("2016-12-08"):
+                import_record(
+                    self.conn_session, 'prestashop.sale.order',
+                    self.backend_record.id, 5)
 
         domain = [('prestashop_id', '=', 5),
                   ('backend_id', '=', self.backend_record.id)]
@@ -209,7 +220,7 @@ class TestImportSale(PrestashopTransactionCase):
                 product_uom_qty=1.0,
             ),
             ExpectedSaleLine(
-                name='[SHIP] My carrier',
+                name='My carrier',
                 product_id=ship_product,
                 price_unit=2.0,
                 product_uom_qty=1.0,
