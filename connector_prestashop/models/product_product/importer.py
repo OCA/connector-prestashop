@@ -80,6 +80,7 @@ class ProductCombinationImporter(PrestashopImporter):
                         connector_no_export=True).write(
                         {'image_ids': [(6, 0, [x.id for x in images])]})
             except PrestaShopWebServiceError:
+                # TODO: don't we track anything here? Maybe a checkpoint?
                 pass
 
     def import_supplierinfo(self, binding):
