@@ -255,7 +255,14 @@ def import_refunds(session, backend_id, since_date, **kwargs):
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
     now_fmt = fields.Datetime.now()
-    import_batch(session, 'prestashop.refund', backend_id, filters, **kwargs)
+    result = import_batch(
+        session,
+        'prestashop.refund',
+        backend_id,
+        filters,
+        **kwargs
+    )
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_refunds_since': now_fmt
     })
+    return result

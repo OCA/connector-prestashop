@@ -475,7 +475,7 @@ def import_orders_since(session, backend_id, since_date=None, **kwargs):
     filters = None
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
-    import_batch(
+    result = import_batch(
         session,
         'prestashop.sale.order',
         backend_id,
@@ -501,3 +501,4 @@ def import_orders_since(session, backend_id, since_date=None, **kwargs):
     backend_record.write({
         'import_orders_since': now_fmt
     })
+    return result
