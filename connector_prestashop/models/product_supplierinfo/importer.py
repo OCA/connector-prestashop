@@ -167,9 +167,20 @@ def import_suppliers(session, backend_id, since_date, **kwargs):
     if since_date:
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
     now_fmt = fields.Datetime.now()
-    import_batch(session, 'prestashop.supplier', backend_id, filters, **kwargs)
-    import_batch(
-        session, 'prestashop.product.supplierinfo', backend_id, **kwargs)
+    result = import_batch(
+        session,
+        'prestashop.supplier',
+        backend_id,
+        filters,
+        **kwargs
+    ) or ''
+    result += import_batch(
+        session,
+        'prestashop.product.supplierinfo',
+        backend_id,
+        **kwargs
+    ) or ''
     session.env['prestashop.backend'].browse(backend_id).write({
         'import_suppliers_since': now_fmt
     })
+    return result

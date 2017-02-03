@@ -115,7 +115,7 @@ def import_product_image(session, model_name, backend_id, product_tmpl_id,
     env = backend.get_environment(model_name, session=session)
     with env.session.change_context(ctx):
         importer = env.get_connector_unit(PrestashopImporter)
-        importer.run(product_tmpl_id, image_id)
+        return importer.run(product_tmpl_id, image_id)
 
 
 @job(default_channel='root.prestashop')

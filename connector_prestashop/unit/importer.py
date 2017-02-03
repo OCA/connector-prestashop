@@ -500,7 +500,7 @@ def import_batch(session, model_name, backend_id, filters=None, **kwargs):
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
     importer = env.get_connector_unit(BatchImporter)
-    importer.run(filters=filters, **kwargs)
+    return importer.run(filters=filters, **kwargs)
 
 
 @job(default_channel='root.prestashop')
@@ -510,4 +510,4 @@ def import_record(
     backend = session.env['prestashop.backend'].browse(backend_id)
     env = backend.get_environment(model_name, session=session)
     importer = env.get_connector_unit(PrestashopImporter)
-    importer.run(prestashop_id, **kwargs)
+    return importer.run(prestashop_id, **kwargs)
