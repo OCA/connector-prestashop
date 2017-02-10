@@ -8,7 +8,7 @@
     'category': 'Connector',
     'website': 'https://odoo-community.org/',
     'author': 'Tecnativa, '
-              'Camptocamp SA',
+              'Camptocamp SA '
               'Odoo Community Association (OCA)',
     'license': 'AGPL-3',
     'application': False,
