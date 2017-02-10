@@ -140,6 +140,16 @@ class GenericAdapter(PrestaShopCRUDAdapter):
 
     _model_name = None
     _prestashop_model = None
+    # PS WS key for exporting
+    _export_node_name = ''
+    # PS WS key response
+    # When you create a record in PS
+    # you get back a result that is wrapped like this:
+    # {'prestashop': _export_node_name_res: {...}}
+    # For instance: for `manufacturers`
+    # _export_node_name="manufacturers"
+    # _export_node_name_res = "manufacturer"
+    _export_node_name_res = ''
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -169,9 +179,12 @@ class GenericAdapter(PrestaShopCRUDAdapter):
         _logger.debug(
             'method create, model %s, attributes %s',
             self._prestashop_model, unicode(attributes))
-        return self.client.add(self._prestashop_model, {
+        res = self.client.add(self._prestashop_model, {
             self._export_node_name: attributes
         })
+        if self._export_node_name_res:
+            return res['prestashop'][self._export_node_name_res]['id']
+        return res
 
     def write(self, id, attributes=None):
         """ Update records on the external system """
@@ -181,8 +194,11 @@ class GenericAdapter(PrestaShopCRUDAdapter):
             self._prestashop_model,
             unicode(attributes)
         )
-        return self.client.edit(
+        res = self.client.edit(
             self._prestashop_model, {self._export_node_name: attributes})
+        if self._export_node_name_res:
+            return res['prestashop'][self._export_node_name_res]['id']
+        return res
 
     def delete(self, resource, ids):
         _logger.debug('method delete, model %s, ids %s',
