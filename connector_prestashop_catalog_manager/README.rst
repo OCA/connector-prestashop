@@ -54,6 +54,7 @@ Contributors
 * Mikel Arregi <mikelarregi@avanzosc.es>
 * Sergio Teruel <sergio.teruel@tecnativa.com>
 * Pedro M. Baeza <pedro.baeza@tecnativa.com>
+* Simone Orsi <simone.orsi@camptocamp.com>
 
 Maintainer
 ----------

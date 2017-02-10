@@ -15,6 +15,7 @@
     "author": "Akretion,"
               "AvanzOSC,"
               "Tecnativa,"
+              'Camptocamp SA',
               "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
