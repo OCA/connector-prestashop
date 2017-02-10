@@ -18,10 +18,6 @@ from openerp.addons.connector_prestashop.backend import prestashop
 class ProductCategoryExporter(PrestashopExporter):
     _model_name = 'prestashop.product.category'
 
-    def _create(self, record):
-        res = super(ProductCategoryExporter, self)._create(record)
-        return res['prestashop']['category']['id']
-
     def _export_dependencies(self):
         """ Export the dependencies for the category"""
         category_binder = self.binder_for('prestashop.product.category')
