@@ -51,6 +51,7 @@ Contributors
 ------------
 
 * Sergio Teruel <sergio.teruel@tecnativa.com>
+* Simone Orsi <simone.orsi@camptocamp.com>
 
 Maintainer
 ----------
