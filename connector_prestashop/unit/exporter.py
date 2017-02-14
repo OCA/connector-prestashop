@@ -111,7 +111,8 @@ class PrestashopExporter(PrestashopBaseExporter):
 
     def _export_dependency(self, relation, binding_model,
                            exporter_class=None,
-                           binding_field_name='prestashop_bind_ids'):
+                           binding_field_name='prestashop_bind_ids',
+                           bind_values=None):
         """
         Export a dependency. The exporter class is a subclass of
         ``PrestashopExporter``.  A more precise class can be defined.
@@ -144,9 +145,12 @@ class PrestashopExporter(PrestashopBaseExporter):
         :param binding_field_name: name of the one2many towards the bindings
                                    default is 'prestashop_bind_ids'
         :type binding_field_name: str | unicode
+        :param bind_values: override values used to create a new binding
+        :type bind_values: dict
         """
         if not relation:
             return
+        binding = None
         if exporter_class is None:
             exporter_class = PrestashopExporter
         rel_binder = self.binder_for(binding_model)
@@ -167,8 +171,10 @@ class PrestashopExporter(PrestashopBaseExporter):
                 # Example: I created a product.product and its binding
                 # prestashop.product.product, it is exported, but we need to
                 # create the binding for the template.
-                bind_values = {'backend_id': self.backend_record.id,
-                               'openerp_id': relation.id}
+
+                _bind_values = {'backend_id': self.backend_record.id,
+                                self._openerp_field: relation.id}
+                _bind_values.update(bind_values or {})
                 # If 2 jobs create it at the same time, retry
                 # one later. A unique constraint (backend_id,
                 # openerp_id) should exist on the binding model
@@ -176,7 +182,9 @@ class PrestashopExporter(PrestashopBaseExporter):
                     model_c = self.env[binding_model].sudo().with_context(
                         connector_no_export=True
                     )
-                    binding = model_c.create(bind_values)
+                    if not _bind_values.get('backend_id'):
+                        import pdb;pdb.set_trace()
+                    binding = model_c.create(_bind_values)
                     # Eager commit to avoid having 2 jobs
                     # exporting at the same time.
                     self.session.commit()
@@ -189,6 +197,7 @@ class PrestashopExporter(PrestashopBaseExporter):
         if not rel_binder.to_backend(binding):
             exporter = self.unit_for(exporter_class, binding_model)
             exporter.run(binding.id)
+        return binding
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
