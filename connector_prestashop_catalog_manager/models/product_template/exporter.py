@@ -20,11 +20,11 @@ from ...consumer import get_slug
 
 
 @prestashop
-class ProductTemplateExport(TranslationPrestashopExporter):
+class ProductTemplateExporter(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.template'
 
     def _create(self, record):
-        res = super(ProductTemplateExport, self)._create(record)
+        res = super(ProductTemplateExporter, self)._create(record)
         self.write_binging_vals(self.binding, record)
         return res['prestashop']['product']['id']
 
@@ -83,7 +83,7 @@ class ProductTemplateExport(TranslationPrestashopExporter):
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
-        super(ProductTemplateExport, self)._export_dependencies()
+        super(ProductTemplateExporter, self)._export_dependencies()
         attribute_binder = self.binder_for(
             'prestashop.product.combination.option')
         option_binder = self.binder_for(
@@ -270,3 +270,22 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
             ps_image_id = binder.to_backend(default_image, wrap=True)
             if ps_image_id:
                 return {'id_default_image': ps_image_id}
+
+    @mapping
+    def extras_manufacturer(self, record):
+        mapper = self.unit_for(ManufacturerExportMapper)
+        return mapper.map_record(record).values(**self.options)
+
+
+@prestashop
+class ManufacturerExportMapper(TranslationPrestashopExportMapper):
+    # To extend in connector_prestashop_manufacturer module
+    _model_name = 'prestashop.product.template'
+
+    _translatable_fields = [
+        ('name', 'name'),
+    ]
+
+    @mapping
+    def manufacturer(self, record):
+        return {}
