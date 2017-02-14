@@ -30,6 +30,7 @@ class VersionKey_1_6_0_9(VersionKey):
         'image': 'images',
         'combinations': 'combinations',
         'tag': 'tags',
+        'manufacturers': 'manufacturers',
     }
 
 
@@ -54,4 +55,5 @@ class VersionKey_1_6_1_2(VersionKey):
         'product_features': 'product_feature',
         'tag': 'tag',
         'messages': 'customer_messages',
+        'manufacturers': 'manufacturers',
     }
