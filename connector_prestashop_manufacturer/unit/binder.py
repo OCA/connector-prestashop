@@ -8,4 +8,7 @@ from openerp.addons.connector_prestashop.backend import prestashop
 
 @prestashop
 class PrestashopBinderManufacturer(PrestashopBinder):
-    _model_name = 'prestashop.manufacturer'
+    _model_name = [
+        'prestashop.manufacturer',
+        'prestashop.manufacturer.address',
+    ]

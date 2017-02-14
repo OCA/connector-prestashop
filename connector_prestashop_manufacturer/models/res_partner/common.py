@@ -9,17 +9,42 @@ from openerp.addons.connector_prestashop.unit.backend_adapter import \
 from openerp.addons.connector_prestashop.backend import prestashop
 
 
+class ResPartner(models.Model):
+    _inherit = "res.partner"
+
+    prestashop_manufacturer_bind_ids = fields.One2many(
+        comodel_name='prestashop.manufacturer',
+        inverse_name='odoo_id',
+        string='PrestaShop Manufacturer Binding',
+    )
+
+    prestashop_manufacturer_address_bind_ids = fields.One2many(
+        comodel_name='prestashop.manufacturer.address',
+        inverse_name='odoo_id',
+        string='PrestaShop Manufacturer Address Binding',
+    )
+
+
 class PrestashopManufacturer(models.Model):
     _name = 'prestashop.manufacturer'
-    _inherit = 'prestashop.binding.odoo'
-    _inherits = {'res.partner': 'odoo_id'}
     _description = 'PrestaShop Manufacturers'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.partner.mixin',
+    ]
+    _inherits = {'res.partner': 'odoo_id'}
 
+    backend_id = fields.Many2one(
+        comodel_name='prestashop.backend',
+        string='PrestaShop Backend',
+        readonly=True,
+    )
     odoo_id = fields.Many2one(
         comodel_name='res.partner',
-        string='Manufacturer',
+        string='Partner',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
     id_reference = fields.Integer(
         string='Reference ID',
@@ -33,23 +58,28 @@ class PrestashopManufacturer(models.Model):
     active_ext = fields.Boolean(
         string='Active in PrestaShop',
     )
-    date_add = fields.Datetime(
-        string='Created At (on PrestaShop)',
-        readonly=True,
+
+
+class PrestashopManufacturerAddress(models.Model):
+    _name = 'prestashop.manufacturer.address'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.address.mixin',
+    ]
+    _inherits = {'res.partner': 'odoo_id'}
+
+    odoo_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
+        required=True,
+        ondelete='cascade',
+        oldname='openerp_id',
     )
-    date_upd = fields.Datetime(
-        string='Updated At (on PrestaShop)',
-        readonly=True,
-    )
-
-
-class Manufacturer(models.Model):
-    _inherit = "res.partner"
-
-    prestashop_manufacturer_bind_ids = fields.One2many(
+    prestashop_partner_id = fields.Many2one(
         comodel_name='prestashop.manufacturer',
-        inverse_name='odoo_id',
-        string='PrestaShop Manufacturer Binding',
+        string='PrestaShop Manufacturer',
+        required=True,
+        ondelete='cascade',
     )
 
 
@@ -57,8 +87,18 @@ class Manufacturer(models.Model):
 class ManufacturerAdapter(GenericAdapter):
     _model_name = 'prestashop.manufacturer'
     _prestashop_model = 'manufacturers'
+    _export_node_name = 'manufacturers'
+    _export_node_name_res = 'manufacturer'
 
     def search(self, filters=None):
         if filters is None:
             filters = {}
         return super(ManufacturerAdapter, self).search(filters)
+
+
+@prestashop
+class ManufacturerAddressAdapter(GenericAdapter):
+    _model_name = 'prestashop.manufacturer.address'
+    _prestashop_model = 'addresses'
+    _export_node_name = 'address'
+    _export_node_name_res = 'address'

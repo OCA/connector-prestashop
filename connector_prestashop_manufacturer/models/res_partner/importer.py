@@ -45,6 +45,10 @@ class ManufacturerImportMapper(ImportMapper):
         return {'active_ext': record['active'] == '1'}
 
     @mapping
+    def supplier(self, record):
+        return {'supplier': True}
+
+    @mapping
     @only_create
     def assign_partner_category(self, record):
         manufacturer_categ = self.env.ref(

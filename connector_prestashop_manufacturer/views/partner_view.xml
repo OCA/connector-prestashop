@@ -11,8 +11,10 @@
             <xpath expr="//field[@name='prestashop_bind_ids']/.."
                    position="after">
                 <group string="PrestaShop Manufacturer Bindings">
-                    <field name="prestashop_manufacturer_bind_ids"
-                           nolabel="1"/>
+                    <separator string="Manufacturer" colspan="6"/>
+                    <field name="prestashop_manufacturer_bind_ids" nolabel="1" colspan="6"/>
+                    <separator string="Manufacturer address" colspan="6"/>
+                    <field name="prestashop_manufacturer_address_bind_ids" nolabel="1" colspan="6"/>
                 </group>
             </xpath>
         </field>
