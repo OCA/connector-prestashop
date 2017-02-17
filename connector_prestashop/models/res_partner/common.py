@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
+from openerp import models, fields
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
@@ -88,7 +88,25 @@ class PrestashopResPartner(models.Model):
 
 class PrestashopAddressMixin(models.AbstractModel):
     _name = 'prestashop.address.mixin'
-    _rec_name = 'backend_id'
+
+    date_add = fields.Datetime(
+        string='Created At (on PrestaShop)',
+        readonly=True,
+    )
+    date_upd = fields.Datetime(
+        string='Updated At (on PrestaShop)',
+        readonly=True,
+    )
+
+
+class PrestashopAddress(models.Model):
+    _name = 'prestashop.address'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.address.mixin',
+    ]
+    _inherits = {'res.partner': 'odoo_id'}
+    _rec_name = 'odoo_id'
 
     prestashop_partner_id = fields.Many2one(
         comodel_name='prestashop.res.partner',
@@ -103,25 +121,6 @@ class PrestashopAddressMixin(models.AbstractModel):
         store=True,
         readonly=True,
     )
-    date_add = fields.Datetime(
-        string='Created At (on PrestaShop)',
-        readonly=True,
-    )
-    date_upd = fields.Datetime(
-        string='Updated At (on PrestaShop)',
-        readonly=True,
-    )
-    vat_number = fields.Char('PrestaShop VAT')
-
-
-class PrestashopAddress(models.Model):
-    _name = 'prestashop.address'
-    _inherit = [
-        'prestashop.binding.odoo',
-        'prestashop.address.mixin',
-    ]
-    _inherits = {'res.partner': 'odoo_id'}
-
     odoo_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
@@ -136,6 +135,7 @@ class PrestashopAddress(models.Model):
         store=True,
         readonly=True,
     )
+    vat_number = fields.Char('PrestaShop VAT')
 
 
 @prestashop
