@@ -5,8 +5,8 @@ from openerp import _
 from openerp.addons.connector.unit.mapper import (
     ExportMapper,
     mapping,
-    m2o_to_backend,
 )
+from openerp.addons.connector.queue.job import job
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter
@@ -21,18 +21,23 @@ except:
 
 class ExporterMixin(PrestashopExporter):
 
-    def run(self, binding_id, **kwargs):
+    def run(self, binding_id, *args, **kwargs):
         try:
             super(ExporterMixin, self).run(binding_id, **kwargs)
         except PrestaShopWebServiceError as error:
-            binder = self.binder_for('prestashop.manufacturer')
-            manuf = binder.to_odoo(binding_id, unwrap=True)
-            msg = _(
-                'Import of %s `%s` '
-                'with id `%s` failed. '
-                'Error: `%s`'
-            ) % (self.msg_model_name, manuf.name, manuf.id, error.ps_error_msg)
-            self.backend_record.add_checkpoint(message=msg)
+            self._handle_ws_error(binding_id, error, **kwargs)
+
+    def _handle_ws_error(self, binding_id, error, **kwargs):
+        binder = self.binder_for(self._model_name)
+        manuf = binder.to_odoo(binding_id, unwrap=True)
+        msg = _(
+            'Export of %s failed. Error: %s.'
+        ) % (self.msg_model_name, error.ps_error_msg)
+        self.backend_record.add_checkpoint(
+            model=manuf._name,
+            record_id=manuf.id,
+            message=msg,
+        )
 
 
 @prestashop
@@ -40,14 +45,33 @@ class ManufacturerExporter(ExporterMixin):
     _model_name = 'prestashop.manufacturer'
     msg_model_name = 'Manufacturer'
 
+    def _export_addresses(self):
+        partner_record = self.binding.odoo_id
+        addresses = partner_record.child_ids or [partner_record, ]
+        for address in addresses:
+            self._export_dependency(
+                address,
+                'prestashop.manufacturer.address',
+                bind_values={'prestashop_partner_id': self.binding.id},
+                exporter_class=ManufacturerAddressExporter,
+                force_sync=True)
+
+    def _export_dependencies(self):
+        super(ManufacturerExporter, self)._export_dependencies()
+        self._export_addresses()
+
 
 @prestashop
 class ManufacturerExportMapper(ExportMapper):
     _model_name = 'prestashop.manufacturer'
+
     direct = [
         ('name', 'name'),
-        ('active', 'active'),
     ]
+
+    @mapping
+    def active(self, record):
+        return {'active': True}
 
     @mapping
     def associations(self, record):
@@ -60,7 +84,9 @@ class ManufacturerExportMapper(ExportMapper):
     def _get_addresses(self, record):
         res = []
         binder = self.binder_for('prestashop.manufacturer.address')
-        for item in record.child_ids:
+        # address can be the partner itself if no children are there
+        addresses = record.odoo_id.child_ids or [record.odoo_id, ]
+        for item in addresses:
             ext_id = binder.to_backend(item.id, wrap=True)
             if ext_id:
                 res.append({'id': ext_id})
@@ -86,7 +112,7 @@ class AddressExportMapper(ExportMapper):
         ('phone', 'phone'),
         ('mobile', 'phone_mobile'),
         ('zip', 'postcode'),
-        (m2o_to_backend('prestashop_partner_id'), 'id_manufacturer'),
+        # (m2o_to_backend('prestashop_partner_id'), 'id_manufacturer'),
     ]
 
     @mapping
@@ -94,7 +120,8 @@ class AddressExportMapper(ExportMapper):
         # TODO: use partner 1st name last name module (?)
         partner = record.prestashop_partner_id
         parts = [
-            x.strip() for x in partner.display_name.split(' ') if x.strip()
+            x.strip().capitalize()
+            for x in partner.display_name.split(' ') if x.strip()
         ]
         first = ' '.join(parts[:1])
         last = ' '.join(parts[1:]).strip() or first  # can't be null
@@ -107,6 +134,29 @@ class AddressExportMapper(ExportMapper):
     def country(self, record):
         if record.country_id:
             binder = self.binder_for('prestashop.res.country')
-            country_id = binder.to_backend(record.country_id.id)
+            country_id = binder.to_backend(record.country_id.id, wrap=1)
             return {'id_country': country_id}
         return {}
+
+    @mapping
+    def manufacturer(self, record):
+        binder = self.binder_for('prestashop.manufacturer')
+        value = binder.to_backend(record.prestashop_partner_id.id)
+        if value:
+            return {'id_manufacturer': value}
+        return {}
+
+
+@job(default_channel='root.prestashop')
+def export_manufacturer(session, partner_record, fields=None, **kwargs):
+    """ Export supplier partner as manufacturer. """
+
+    binding_model = 'prestashop.manufacturer'
+    # get default backend
+    backend = session.env['prestashop.backend'].search([], limit=1)
+    env = backend.get_environment(binding_model, session=session)
+    exporter = env.get_connector_unit(ManufacturerExporter)
+    binding = exporter._get_or_create_binding(
+        partner_record, binding_model
+    )
+    return exporter.run(binding.id, fields, **kwargs)

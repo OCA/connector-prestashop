@@ -67,6 +67,7 @@ class PrestashopManufacturerAddress(models.Model):
         'prestashop.address.mixin',
     ]
     _inherits = {'res.partner': 'odoo_id'}
+    _rec_name = 'odoo_id'
 
     odoo_id = fields.Many2one(
         comodel_name='res.partner',
@@ -81,13 +82,20 @@ class PrestashopManufacturerAddress(models.Model):
         required=True,
         ondelete='cascade',
     )
+    backend_id = fields.Many2one(
+        comodel_name='prestashop.backend',
+        string='PrestaShop Backend',
+        related='prestashop_partner_id.backend_id',
+        store=True,
+        readonly=True,
+    )
 
 
 @prestashop
 class ManufacturerAdapter(GenericAdapter):
     _model_name = 'prestashop.manufacturer'
     _prestashop_model = 'manufacturers'
-    _export_node_name = 'manufacturers'
+    _export_node_name = 'manufacturer'
     _export_node_name_res = 'manufacturer'
 
     def search(self, filters=None):

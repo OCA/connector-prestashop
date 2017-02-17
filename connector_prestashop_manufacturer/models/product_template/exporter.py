@@ -2,10 +2,7 @@
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 from openerp.addons.connector.unit.mapper import mapping
-from openerp.addons.connector.unit.mapper import m2o_to_backend
-
 from openerp.addons.connector_prestashop.backend import prestashop
-
 from openerp.addons.connector_prestashop_catalog_manager\
     .models.product_template import exporter
 
@@ -16,10 +13,12 @@ class ProductTemplateExportMapper(exporter.ManufacturerExportMapper):
 
     @mapping
     def manufacturer(self, record):
-        mapping_func = m2o_to_backend(
-            'manufacturer', binding='prestashop.manufacturer')
-        value = mapping_func(self, record, 'manufacturer')
-        return {'id_manufacturer': value}
+        if record.manufacturer:
+            binder = self.binder_for('prestashop.manufacturer')
+            value = binder.to_odoo(record.manufacturer.id, unwrap=True)
+            if value:
+                return {'id_manufacturer': value.id}
+        return {}
 
 
 @prestashop(replacing=exporter.ProductTemplateExporter)
@@ -28,9 +27,12 @@ class ProductTemplateExporter(exporter.ProductTemplateExporter):
     def _export_manufacturer(self):
         record = self.binding.manufacturer
         if record:
+            # TODO: can't we use ManufacturerExporter right away?
             manuf_binding = self._export_dependency(
                 record, 'prestashop.manufacturer')
-            for address in record.child_ids:
+            # PS needs an address anyway
+            addresses = record.child_ids or [record, ]
+            for address in addresses:
                 self._export_dependency(
                     address,
                     'prestashop.manufacturer.address',

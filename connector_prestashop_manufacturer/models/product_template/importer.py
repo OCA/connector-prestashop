@@ -5,7 +5,6 @@
 import logging
 
 from openerp.addons.connector.unit.mapper import mapping
-from openerp.addons.connector.unit.mapper import backend_to_m2o
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.models.product_template import \
     importer
@@ -19,14 +18,16 @@ class ManufacturerImportMapper(importer.ManufacturerProductImportMapper):
 
     @mapping
     def extras_manufacturer(self, record):
-        mapping_func = backend_to_m2o(
-            'id_manufacturer', binding='prestashop.manufacturer')
-        value = mapping_func(self, record, 'manufacturer')
-        return {'manufacturer': value}
+        if record.get('id_manufacturer'):
+            binder = self.binder_for('prestashop.res.partner')
+            value = binder.to_odoo(record['id_manufacturer'], unwrap=True)
+            if value:
+                return {'manufacturer': value.id}
+        return {}
 
 
 @prestashop(replacing=importer.ProductTemplateImporter)
-class ProductTemplateImporterManufacturer(importer.ProductTemplateImporter):
+class ManufacturerImporter(importer.ProductTemplateImporter):
 
     def _import_manufacturer(self):
         record = self.prestashop_record
@@ -35,5 +36,5 @@ class ProductTemplateImporterManufacturer(importer.ProductTemplateImporter):
                 record['id_manufacturer'], 'prestashop.manufacturer')
 
     def _import_dependencies(self):
-        super(ProductTemplateImporterManufacturer, self)._import_dependencies()
+        super(ManufacturerImporter, self)._import_dependencies()
         self._import_manufacturer()

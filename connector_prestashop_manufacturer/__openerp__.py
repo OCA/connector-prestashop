@@ -15,6 +15,7 @@
     'installable': True,
     'depends': [
         'connector_prestashop',
+        'connector_prestashop_catalog_manager',
         'product_manufacturer',
     ],
     'data': [

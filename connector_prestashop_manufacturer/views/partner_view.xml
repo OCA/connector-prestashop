@@ -51,6 +51,34 @@
         </field>
     </record>
 
+    <record id="view_prestashop_manufacturer_address_form" model="ir.ui.view">
+        <field name="name">prestashop.manufacturer.address.form</field>
+        <field name="model">prestashop.manufacturer.address</field>
+        <field name="arch" type="xml">
+            <form string="PrestaShop Manufacturer address">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="prestashop_id"/>
+                    <field name="date_add"/>
+                    <field name="date_upd"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_prestashop_manufacturer_address_tree" model="ir.ui.view">
+        <field name="name">prestashop.manufacturer.address.tree</field>
+        <field name="model">prestashop.manufacturer.address</field>
+        <field name="arch" type="xml">
+            <tree string="PrestaShop Manufacturer address">
+                <field name="backend_id"/>
+                <field name="prestashop_id"/>
+                <field name="date_add"/>
+                <field name="date_upd"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="action_prestashop_manufacturer" model="ir.actions.act_window">
         <field name="name">PrestaShop Manufacturers</field>
         <field name="res_model">prestashop.manufacturer</field>

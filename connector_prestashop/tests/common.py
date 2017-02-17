@@ -51,7 +51,7 @@ def get_recorder(**kw):
         decode_compressed_response=True,
     )
     defaults.update(kw)
-    return VCR(**kw)
+    return VCR(**defaults)
 
 
 recorder = get_recorder()
