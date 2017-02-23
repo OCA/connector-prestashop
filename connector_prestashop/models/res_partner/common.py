@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields, api
+from openerp import models, fields
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
@@ -22,11 +22,40 @@ class ResPartner(models.Model):
     )
 
 
-class PrestashopResRartner(models.Model):
-    _name = 'prestashop.res.partner'
-    _inherit = 'prestashop.binding.odoo'
-    _inherits = {'res.partner': 'odoo_id'}
+class PrestashopPartnerMixin(models.AbstractModel):
+    _name = 'prestashop.partner.mixin'
 
+    group_ids = fields.Many2many(
+        comodel_name='prestashop.res.partner.category',
+        relation='prestashop_category_partner',
+        column1='partner_id',
+        column2='category_id',
+        string='PrestaShop Groups',
+    )
+    date_add = fields.Datetime(
+        string='Created At (on PrestaShop)',
+        readonly=True,
+    )
+    date_upd = fields.Datetime(
+        string='Updated At (on PrestaShop)',
+        readonly=True,
+    )
+    default_category_id = fields.Many2one(
+        comodel_name='prestashop.res.partner.category',
+        string='PrestaShop default category',
+        help="This field is synchronized with the field "
+        "'Default customer group' in PrestaShop."
+    )
+    company = fields.Char(string='Company')
+
+
+class PrestashopResPartner(models.Model):
+    _name = 'prestashop.res.partner'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.partner.mixin',
+    ]
+    _inherits = {'res.partner': 'odoo_id'}
     _rec_name = 'shop_group_id'
 
     odoo_id = fields.Many2one(
@@ -53,13 +82,13 @@ class PrestashopResRartner(models.Model):
         comodel_name='prestashop.shop',
         string='PrestaShop Shop',
     )
-    group_ids = fields.Many2many(
-        comodel_name='prestashop.res.partner.category',
-        relation='prestashop_category_partner',
-        column1='partner_id',
-        column2='category_id',
-        string='PrestaShop Groups',
-    )
+    newsletter = fields.Boolean(string='Newsletter')
+    birthday = fields.Date(string='Birthday')
+
+
+class PrestashopAddressMixin(models.AbstractModel):
+    _name = 'prestashop.address.mixin'
+
     date_add = fields.Datetime(
         string='Created At (on PrestaShop)',
         readonly=True,
@@ -67,63 +96,18 @@ class PrestashopResRartner(models.Model):
     date_upd = fields.Datetime(
         string='Updated At (on PrestaShop)',
         readonly=True,
-    )
-    newsletter = fields.Boolean(string='Newsletter')
-    default_category_id = fields.Many2one(
-        comodel_name='prestashop.res.partner.category',
-        string='PrestaShop default category',
-        help="This field is synchronized with the field "
-        "'Default customer group' in PrestaShop."
-    )
-    birthday = fields.Date(string='Birthday')
-    company = fields.Char(string='Company')
-    prestashop_address_bind_ids = fields.One2many(
-        comodel_name='prestashop.address',
-        inverse_name='odoo_id',
-        string='PrestaShop Address Bindings',
     )
 
 
 class PrestashopAddress(models.Model):
     _name = 'prestashop.address'
-    _inherit = 'prestashop.binding.odoo'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.address.mixin',
+    ]
     _inherits = {'res.partner': 'odoo_id'}
+    _rec_name = 'odoo_id'
 
-    _rec_name = 'backend_id'
-
-    @api.multi
-    @api.depends(
-        'prestashop_partner_id',
-        'prestashop_partner_id.backend_id',
-        'prestashop_partner_id.shop_group_id',
-    )
-    def _compute_backend_id(self):
-        for address in self:
-            address.backend_id = address.prestashop_partner_id.backend_id.id
-
-    @api.multi
-    @api.depends('prestashop_partner_id',
-                 'prestashop_partner_id.shop_group_id')
-    def _compute_shop_group_id(self):
-        for address in self:
-            address.shop_group_id = (
-                address.prestashop_partner_id.shop_group_id.id)
-
-    odoo_id = fields.Many2one(
-        comodel_name='res.partner',
-        string='Partner',
-        required=True,
-        ondelete='cascade',
-        oldname='openerp_id',
-    )
-    date_add = fields.Datetime(
-        string='Created At (on PrestaShop)',
-        readonly=True,
-    )
-    date_upd = fields.Datetime(
-        string='Updated At (on PrestaShop)',
-        readonly=True,
-    )
     prestashop_partner_id = fields.Many2one(
         comodel_name='prestashop.res.partner',
         string='PrestaShop Partner',
@@ -131,16 +115,25 @@ class PrestashopAddress(models.Model):
         ondelete='cascade',
     )
     backend_id = fields.Many2one(
-        compute='_compute_backend_id',
         comodel_name='prestashop.backend',
         string='PrestaShop Backend',
+        related='prestashop_partner_id.backend_id',
         store=True,
+        readonly=True,
+    )
+    odoo_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
+        required=True,
+        ondelete='cascade',
+        oldname='openerp_id',
     )
     shop_group_id = fields.Many2one(
-        compute='_compute_shop_group_id',
         comodel_name='prestashop.shop.group',
         string='PrestaShop Shop Group',
+        related='prestashop_partner_id.shop_group_id',
         store=True,
+        readonly=True,
     )
     vat_number = fields.Char('PrestaShop VAT')
 

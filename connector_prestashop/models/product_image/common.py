@@ -42,6 +42,7 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
     _prestashop_image_model = 'products'
     _prestashop_model = '/images/products'
     _export_node_name = '/images/products'
+    _export_node_name_res = 'image'
 
     def read(self, product_tmpl_id, image_id, options=None):
         api = PrestaShopWebServiceImage(self.prestashop.api_url,

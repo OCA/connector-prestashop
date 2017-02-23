@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=8.0)](https://travis-ci.org/OCA/connector-prestashop)
-[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=8.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=8.0)
+[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=9.0)](https://travis-ci.org/OCA/connector-prestashop)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=9.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=9.0)
 
 prestashoperpconnect
 ====================

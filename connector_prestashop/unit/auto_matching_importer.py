@@ -75,10 +75,6 @@ class AutoMatchingImporter(ConnectorUnit):
                         for oe_field, ps_field in self._copy_fields:
                             data[oe_field] = erp_dict[ps_field]
                         record = self.model.create(data)
-                        # try:
-                        #     record = self.model.create(data)
-                        # except:
-                        #     import pdb; pdb.set_trace()
                         binder.bind(ps_id, record)
                         _logger.debug(
                             "[%s] Mapping PrestaShop '%s' (%s) "

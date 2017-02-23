@@ -112,9 +112,53 @@ class PrestashopExporter(PrestashopBaseExporter):
             else:
                 raise
 
+    def _get_or_create_binding(
+            self, relation, binding_model,
+            binding_field_name='prestashop_bind_ids',
+            bind_values=None):
+        binding = None
+        # wrap is typically True if the relation is a 'product.product'
+        # record but the binding model is 'prestashop.product.product'
+        wrap = relation._model._name != binding_model
+        if wrap and hasattr(relation, binding_field_name):
+            domain = [(self._openerp_field, '=', relation.id),
+                      ('backend_id', '=', self.backend_record.id)]
+            model = self.env[binding_model].with_context(active_test=False)
+            binding = model.search(domain)
+            if binding:
+                binding.ensure_one()
+            else:
+                # we are working with a unwrapped record (e.g.
+                # product.template) and the binding does not exist yet.
+                # Example: I created a product.product and its binding
+                # prestashop.product.product, it is exported, but we need to
+                # create the binding for the template.
+
+                _bind_values = {'backend_id': self.backend_record.id,
+                                self._openerp_field: relation.id}
+                _bind_values.update(bind_values or {})
+                # If 2 jobs create it at the same time, retry
+                # one later. A unique constraint (backend_id,
+                # odoo_id) should exist on the binding model
+                with self._retry_unique_violation():
+                    model_c = self.env[binding_model].sudo().with_context(
+                        connector_no_export=True
+                    )
+                    binding = model_c.create(_bind_values)
+                    # Eager commit to avoid having 2 jobs
+                    # exporting at the same time.
+                    self.session.commit()
+        else:
+            # If prestashop_bind_ids does not exist we are typically in a
+            # "direct" binding (the binding record is the same record).
+            # If wrap is True, relation is already a binding record.
+            binding = relation
+        return binding
+
     def _export_dependency(self, relation, binding_model,
                            exporter_class=None,
-                           binding_field_name='prestashop_bind_ids'):
+                           binding_field_name='prestashop_bind_ids',
+                           bind_values=None, force_sync=False):
         """
         Export a dependency. The exporter class is a subclass of
         ``PrestashopExporter``.  A more precise class can be defined.
@@ -147,51 +191,26 @@ class PrestashopExporter(PrestashopBaseExporter):
         :param binding_field_name: name of the one2many towards the bindings
                                    default is 'prestashop_bind_ids'
         :type binding_field_name: str | unicode
+        :param bind_values: override values used to create a new binding
+        :type bind_values: dict
+        :param force_sync: force update of already sync'ed item
+        :type force_sync: bool
         """
         if not relation:
             return
-        if exporter_class is None:
-            exporter_class = PrestashopExporter
+
+        binding = self._get_or_create_binding(
+            relation, binding_model,
+            binding_field_name=binding_field_name,
+            bind_values=bind_values)
+
         rel_binder = self.binder_for(binding_model)
-        # wrap is typically True if the relation is a 'product.product'
-        # record but the binding model is 'prestashop.product.product'
-        wrap = relation._model._name != binding_model
 
-        if wrap and hasattr(relation, binding_field_name):
-            domain = [(self._openerp_field, '=', relation.id),
-                      ('backend_id', '=', self.backend_record.id)]
-            model = self.env[binding_model].with_context(active_test=False)
-            binding = model.search(domain)
-            if binding:
-                binding.ensure_one()
-            else:
-                # we are working with a unwrapped record (e.g.
-                # product.template) and the binding does not exist yet.
-                # Example: I created a product.product and its binding
-                # prestashop.product.product, it is exported, but we need to
-                # create the binding for the template.
-                bind_values = {'backend_id': self.backend_record.id,
-                               self._openerp_field: relation.id}
-                # If 2 jobs create it at the same time, retry
-                # one later. A unique constraint (backend_id,
-                # odoo_id) should exist on the binding model
-                with self._retry_unique_violation():
-                    model_c = self.env[binding_model].sudo().with_context(
-                        connector_no_export=True
-                    )
-                    binding = model_c.create(bind_values)
-                    # Eager commit to avoid having 2 jobs
-                    # exporting at the same time.
-                    self.session.commit()
-        else:
-            # If prestashop_bind_ids does not exist we are typically in a
-            # "direct" binding (the binding record is the same record).
-            # If wrap is True, relation is already a binding record.
-            binding = relation
-
-        if not rel_binder.to_backend(binding):
-            exporter = self.unit_for(exporter_class, binding_model)
+        if not rel_binder.to_backend(binding) or force_sync:
+            exporter = self.unit_for(
+                exporter_class or PrestashopExporter, binding_model)
             exporter.run(binding.id)
+        return binding
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
