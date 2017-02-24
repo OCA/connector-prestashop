@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from . import test_auth
-from . import test_export_stock_quantity
+from . import test_export_stock_qty
+from . import test_export_stock_qty_job
 from . import test_export_tracking
 from . import test_import_carrier
 from . import test_import_backend_data
