@@ -148,7 +148,7 @@ class AddressExportMapper(ExportMapper):
 
 
 @job(default_channel='root.prestashop')
-def export_manufacturer(session, partner_record, fields=None, **kwargs):
+def export_manufacturer(session, partner_record_id, fields=None, **kwargs):
     """ Export supplier partner as manufacturer. """
 
     binding_model = 'prestashop.manufacturer'
@@ -157,6 +157,7 @@ def export_manufacturer(session, partner_record, fields=None, **kwargs):
     env = backend.get_environment(binding_model, session=session)
     exporter = env.get_connector_unit(ManufacturerExporter)
     binding = exporter._get_or_create_binding(
-        partner_record, binding_model
+        session.env['res.partner'].browse(partner_record_id),
+        binding_model
     )
     return exporter.run(binding.id, fields, **kwargs)

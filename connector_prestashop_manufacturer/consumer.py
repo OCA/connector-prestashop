@@ -25,4 +25,4 @@ def prestashop_manufacturer(session, model_name, record_id, fields):
     ps_categ = session.env.ref(
         'connector_prestashop_manufacturer.partner_manufacturer_tag')
     if record.supplier and ps_categ.id in record.category_id.ids:
-        export_manufacturer.delay(session, record, priority=20)
+        export_manufacturer.delay(session, record_id, priority=20)
