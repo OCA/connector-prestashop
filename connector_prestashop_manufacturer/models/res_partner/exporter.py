@@ -71,7 +71,7 @@ class ManufacturerExportMapper(ExportMapper):
 
     @mapping
     def active(self, record):
-        return {'active': True}
+        return {'active': '1'}
 
     @mapping
     def associations(self, record):
