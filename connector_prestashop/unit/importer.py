@@ -23,29 +23,7 @@ RETRY_ON_ADVISORY_LOCK = 1  # seconds
 RETRY_WHEN_CONCURRENT_DETECTED = 1  # seconds
 
 
-class PrestashopImporter(Importer):
-    """ Base importer for PrestaShop """
-
-    def __init__(self, environment):
-        """
-        :param environment: current environment (backend, session, ...)
-        :type environment: :py:class:`connector.connector.ConnectorEnvironment`
-        """
-        super(PrestashopImporter, self).__init__(environment)
-        self.prestashop_id = None
-        self.prestashop_record = None
-
-    def _get_prestashop_data(self):
-        """ Return the raw prestashop data for ``self.prestashop_id`` """
-        return self.backend_adapter.read(self.prestashop_id)
-
-    def _has_to_skip(self):
-        """ Return True if the import can be skipped """
-        return False
-
-    def _import_dependencies(self):
-        """ Import the dependencies for the record"""
-        return
+class PrestashopBaseImporter(Importer):
 
     def _import_dependency(self, prestashop_id, binding_model,
                            importer_class=None, always=False,
@@ -78,6 +56,31 @@ class PrestashopImporter(Importer):
         if always or not binder.to_odoo(prestashop_id):
             importer = self.unit_for(importer_class, model=binding_model)
             importer.run(prestashop_id, **kwargs)
+
+
+class PrestashopImporter(PrestashopBaseImporter):
+    """ Base importer for PrestaShop """
+
+    def __init__(self, environment):
+        """
+        :param environment: current environment (backend, session, ...)
+        :type environment: :py:class:`connector.connector.ConnectorEnvironment`
+        """
+        super(PrestashopImporter, self).__init__(environment)
+        self.prestashop_id = None
+        self.prestashop_record = None
+
+    def _get_prestashop_data(self):
+        """ Return the raw prestashop data for ``self.prestashop_id`` """
+        return self.backend_adapter.read(self.prestashop_id)
+
+    def _has_to_skip(self):
+        """ Return True if the import can be skipped """
+        return False
+
+    def _import_dependencies(self):
+        """ Import the dependencies for the record"""
+        return
 
     def _map_data(self):
         """ Returns an instance of

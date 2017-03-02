@@ -14,6 +14,7 @@ from ...unit.importer import (
     import_record,
     import_batch,
     PrestashopImporter,
+    PrestashopBaseImporter,
     TranslatableRecordImporter,
 )
 from openerp.addons.connector.unit.mapper import backend_to_m2o
@@ -289,7 +290,7 @@ class FeaturesProductImportMapper(ImportMapper):
 
 
 @prestashop
-class ManufacturerProductDependency(PrestashopImporter):
+class ManufacturerProductDependency(PrestashopBaseImporter):
     # To extend in connector_prestashop_feature module. In this way we
     # dependencies on other modules like product_manufacturer
     _model_name = 'prestashop.product.template'
