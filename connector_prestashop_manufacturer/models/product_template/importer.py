@@ -19,22 +19,16 @@ class ManufacturerImportMapper(importer.ManufacturerProductImportMapper):
     @mapping
     def extras_manufacturer(self, record):
         if record.get('id_manufacturer'):
-            binder = self.binder_for('prestashop.res.partner')
+            binder = self.binder_for('prestashop.manufacturer')
             value = binder.to_odoo(record['id_manufacturer'], unwrap=True)
             if value:
                 return {'manufacturer': value.id}
         return {}
 
 
-@prestashop(replacing=importer.ProductTemplateImporter)
-class ManufacturerImporter(importer.ProductTemplateImporter):
+@prestashop(replacing=importer.ManufacturerProductDependency)
+class ManufacturerProductDependency(importer.ManufacturerProductDependency):
 
-    def _import_manufacturer(self):
-        record = self.prestashop_record
-        if int(record['id_manufacturer']):
-            self._import_dependency(
-                record['id_manufacturer'], 'prestashop.manufacturer')
-
-    def _import_dependencies(self):
-        super(ManufacturerImporter, self)._import_dependencies()
-        self._import_manufacturer()
+    def import_manufacturer(self, manufacturer_id):
+        if manufacturer_id and int(manufacturer_id):
+            self._import_dependency(manufacturer_id, 'prestashop.manufacturer')

@@ -289,6 +289,16 @@ class FeaturesProductImportMapper(ImportMapper):
 
 
 @prestashop
+class ManufacturerProductDependency(PrestashopImporter):
+    # To extend in connector_prestashop_feature module. In this way we
+    # dependencies on other modules like product_manufacturer
+    _model_name = 'prestashop.product.template'
+
+    def import_manufacturer(self, manufacturer_id):
+        return
+
+
+@prestashop
 class ManufacturerProductImportMapper(ImportMapper):
     # To extend in connector_prestashop_manufacturer module. In this way we
     # dependencies on other modules like product_manufacturer
@@ -584,6 +594,12 @@ class ProductTemplateImporter(TranslatableRecordImporter):
     def _import_dependencies(self):
         self._import_default_category()
         self._import_categories()
+        self._import_manufacturer()
+
+    def _import_manufacturer(self):
+        self.unit_for(ManufacturerProductDependency).import_manufacturer(
+            self.prestashop_record.get('id_manufacturer')
+        )
 
     def get_template_model_id(self):
         ir_model = self.env['ir.model'].search([
