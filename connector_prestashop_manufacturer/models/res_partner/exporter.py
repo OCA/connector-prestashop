@@ -73,25 +73,6 @@ class ManufacturerExportMapper(PrestashopExportMapper):
     def active(self, record):
         return {'active': '1'}
 
-    @mapping
-    def associations(self, record):
-        return {
-            'associations': {
-                'addresses': self._get_addresses(record),
-            }
-        }
-
-    def _get_addresses(self, record):
-        res = []
-        binder = self.binder_for('prestashop.manufacturer.address')
-        # address can be the partner itself if no children are there
-        addresses = record.odoo_id.child_ids or [record.odoo_id, ]
-        for item in addresses:
-            ext_id = binder.to_backend(item.id, wrap=True)
-            if ext_id:
-                res.append({'id': ext_id})
-        return res
-
 
 @prestashop
 class ManufacturerAddressExporter(ExporterMixin):
