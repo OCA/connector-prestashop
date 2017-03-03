@@ -126,13 +126,14 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
 
     @mapping
     def _unit_price_impact(self, record):
-        dp_obj = self.env['decimal.precision']
-        precision = dp_obj.precision_get('Product Price')
         tax = record.taxes_id[:1]
         if tax.price_include and tax.amount_type == 'percent':
+            # 6 is the rounding precision used by PrestaShop for the
+            # tax excluded price.  we can get back a 2 digits tax included
+            # price from the 6 digits rounded value
             return {
                 'price': round(
-                    record.impact_price / self._get_factor_tax(tax), precision)
+                    record.impact_price / self._get_factor_tax(tax), 6)
             }
         else:
             return {'price': record.impact_price}
