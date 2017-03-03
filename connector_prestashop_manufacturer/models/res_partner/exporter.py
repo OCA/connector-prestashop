@@ -56,7 +56,7 @@ class ManufacturerExporter(ExporterMixin):
                 exporter_class=ManufacturerAddressExporter,
                 force_sync=True)
 
-    def _export_dependencies(self):
+    def _after_export(self):
         super(ManufacturerExporter, self)._export_dependencies()
         self._export_addresses()
 
