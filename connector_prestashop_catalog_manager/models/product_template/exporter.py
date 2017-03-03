@@ -205,19 +205,18 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
     ]
 
     def _get_factor_tax(self, tax):
-        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
-        return factor_tax
+        return (1 + tax.amount / 100) if tax.price_include else 1.0
 
     @mapping
     def list_price(self, record):
-        dp_obj = self.env['decimal.precision']
-        precision = dp_obj.precision_get('Product Price')
         tax = record.taxes_id
         if tax.price_include and tax.amount_type == 'percent':
+            # 6 is the rounding precision used by PrestaShop for the
+            # tax excluded price.  we can get back a 2 digits tax included
+            # price from the 6 digits rounded value
             return {
                 'price': str(
-                    round(record.list_price /
-                          self._get_factor_tax(tax), precision))
+                    round(record.list_price / self._get_factor_tax(tax), 6))
             }
         else:
             return {'price': str(record.list_price)}
