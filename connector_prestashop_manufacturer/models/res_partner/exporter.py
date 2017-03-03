@@ -2,14 +2,14 @@
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 from openerp import _
-from openerp.addons.connector.unit.mapper import (
-    ExportMapper,
-    mapping,
-)
+from openerp.addons.connector.unit.mapper import mapping
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter
+)
+from openerp.addons.connector_prestashop.unit.mapper import (
+    PrestashopExportMapper,
 )
 import logging
 _logger = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ class ManufacturerExporter(ExporterMixin):
 
 
 @prestashop
-class ManufacturerExportMapper(ExportMapper):
+class ManufacturerExportMapper(PrestashopExportMapper):
     _model_name = 'prestashop.manufacturer'
 
     direct = [
@@ -100,7 +100,7 @@ class ManufacturerAddressExporter(ExporterMixin):
 
 
 @prestashop
-class AddressExportMapper(ExportMapper):
+class AddressExportMapper(PrestashopExportMapper):
     _model_name = 'prestashop.manufacturer.address'
     direct = [
         # `alias` in PS is a label for the address and is required
