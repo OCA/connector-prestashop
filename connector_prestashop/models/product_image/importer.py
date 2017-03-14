@@ -46,14 +46,7 @@ class ProductImageMapper(ImportMapper):
 
     @mapping
     def image_url(self, record):
-        url = self.backend_record.location.encode()
-        url += '/img/p/' + '/'.join(list(record['id_image']))
-        extension = ''
-        if record['type'] == 'image/jpeg':
-            extension = '.jpg'
-        url += '/' + record['id_image'] + extension
-        return {'url': url}
-        # return {'storage': 'db'}
+        return {'url': record['full_public_url']}
 
     @mapping
     def filename(self, record):
