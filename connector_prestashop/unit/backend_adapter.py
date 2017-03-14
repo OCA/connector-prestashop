@@ -66,12 +66,23 @@ class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
         else:
             image_content = ''
 
-        return {
+        record = {
             'type': response.headers['content-type'],
             'content': image_content,
             'id_' + resource[:-1]: resource_id,
-            'id_image': image_id
+            'id_image': image_id,
         }
+        record['full_public_url'] = self.get_image_public_url(record)
+        return record
+
+    def get_image_public_url(self, record):
+        url = self._api_url.replace('/api', '')
+        url += '/img/p/' + '/'.join(list(record['id_image']))
+        extension = ''
+        if record['type'] == 'image/jpeg':
+            extension = '.jpg'
+        url += '/' + record['id_image'] + extension
+        return url
 
 
 class PrestaShopLocation(object):
