@@ -19,6 +19,7 @@
         'product_manufacturer',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'data/connector_prestashop_manufacturer_data.xml',
         'data/cron.xml',
         'views/partner_view.xml',
