@@ -55,7 +55,10 @@ class ProductProduct(models.Model):
         for product in self:
             price = product.list_price + product.impact_price
             if 'uom' in self.env.context:
-                uom = product.uos_id or product.uom_id
+                # `uos_id` comes from `product_uos`
+                # which could be not installed
+                uom = hasattr(product, 'uos_id') \
+                    and product.uos_id or product.uom_id
                 price = uom._compute_price(
                     product.uom_id.id, price, self.env.context['uom'])
             product.lst_price = price
