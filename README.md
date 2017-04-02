@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=9.0)](https://travis-ci.org/OCA/connector-prestashop)
-[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=9.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=9.0)
+[![Build Status](https://travis-ci.org/OCA/connector-prestashop.svg?branch=10.0)](https://travis-ci.org/OCA/connector-prestashop)
+[![Coverage Status](https://coveralls.io/repos/OCA/connector-prestashop/badge.png?branch=10.0)](https://coveralls.io/r/OCA/connector-prestashop?branch=10.0)
 
 prestashoperpconnect
 ====================
@@ -54,13 +54,4 @@ Getting started
 
 
 [//]: # (addons)
-
-Unported addons
----------------
-addon | version | summary
---- | --- | ---
-[prestashoperpconnect](prestashoperpconnect/) | 0.3 (unported) | Prestashop-OpenERP connector New Generation
-[prestashoperpconnect_catalog_manager](prestashoperpconnect_catalog_manager/) | 0.2 (unported) | Prestashop-OpenERP Catalog Manager
-[prestashoperpconnect_customize_example](prestashoperpconnect_customize_example/) | 1.0.0 (unported) | Prestashop Connector Customization Example
-
 [//]: # (end addons)
