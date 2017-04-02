@@ -12,7 +12,7 @@
               'Odoo Community Association (OCA)',
     'license': 'AGPL-3',
     'application': False,
-    'installable': True,
+    'installable': False,
     'depends': [
         'connector_prestashop',
         'connector_prestashop_catalog_manager',
