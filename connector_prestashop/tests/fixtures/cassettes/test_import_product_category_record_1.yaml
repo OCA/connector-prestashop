@@ -1,0 +1,262 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/categories/5
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t\
+        <id><![CDATA[5]]></id>\n\t<id_parent xlink:href=\"http://172.22.0.4/api/categories/4\"\
+        ><![CDATA[4]]></id_parent>\n\t<level_depth><![CDATA[4]]></level_depth>\n\t\
+        <nb_products_recursive notFilterable=\"true\"><![CDATA[1]]></nb_products_recursive>\n\
+        \t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\
+        \t<is_root_category><![CDATA[0]]></is_root_category>\n\t<position><![CDATA[0]]></position>\n\
+        \t<date_add><![CDATA[2016-12-07 15:13:51]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
+        \ 15:13:51]]></date_upd>\n\t<name><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[T-shirts]]></language></name>\n\t<link_rewrite><language id=\"1\"\
+        \ xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[tshirts]]></language></link_rewrite>\n\
+        \t<description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[<p>The must have of your wardrobe, take a look at our different\
+        \ colors,</p>\r\n<p>shapes and style of our collection!</p>]]></language></description>\n\
+        \t<meta_title><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_title>\n\t<meta_description><language id=\"\
+        1\" xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_description>\n\
+        \t<meta_keywords><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_keywords>\n<associations>\n<categories nodeType=\"\
+        category\" api=\"categories\"/>\n<products nodeType=\"product\" api=\"products\"\
+        >\n\t<product xlink:href=\"http://172.22.0.4/api/products/1\">\n\t<id><![CDATA[1]]></id>\n\
+        \t</product>\n</products>\n</associations>\n</category>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481126065']
+      connection: [Keep-Alive]
+      content-length: ['1707']
+      content-sha1: [1be41e3521f71a55307ec239da5d7df98b55919e]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Wed, 07 Dec 2016 15:54:25 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TVg4WbxGIqX%2B5U3DAgMJ1t0Pr7pBorWw3fnVRmrjAFlmpNKjkKOIx3%2FFRkqOjZ0uEnswvng%2F50iOW1nVRkv0EYA%3D000079;
+          expires=Tue, 27-Dec-2016 15:54:25 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/categories/4
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t\
+        <id><![CDATA[4]]></id>\n\t<id_parent xlink:href=\"http://172.22.0.4/api/categories/3\"\
+        ><![CDATA[3]]></id_parent>\n\t<level_depth><![CDATA[3]]></level_depth>\n\t\
+        <nb_products_recursive notFilterable=\"true\"><![CDATA[2]]></nb_products_recursive>\n\
+        \t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\
+        \t<is_root_category><![CDATA[0]]></is_root_category>\n\t<position><![CDATA[0]]></position>\n\
+        \t<date_add><![CDATA[2016-12-07 15:13:51]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
+        \ 15:13:51]]></date_upd>\n\t<name><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[Tops]]></language></name>\n\t<link_rewrite><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[tops]]></language></link_rewrite>\n\
+        \t<description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[<p>Choose from t-shirts, tops, blouses, short sleeves, long sleeves,\
+        \ tank tops, 3/4 sleeves and more.</p>\r\n<p>Find the cut that suits you the\
+        \ best!</p>]]></language></description>\n\t<meta_title><language id=\"1\"\
+        \ xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_title>\n\
+        \t<meta_description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_description>\n\t<meta_keywords><language id=\"\
+        1\" xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_keywords>\n\
+        <associations>\n<categories nodeType=\"category\" api=\"categories\">\n\t\
+        <category xlink:href=\"http://172.22.0.4/api/categories/5\">\n\t<id><![CDATA[5]]></id>\n\
+        \t</category>\n\t<category xlink:href=\"http://172.22.0.4/api/categories/7\"\
+        >\n\t<id><![CDATA[7]]></id>\n\t</category>\n</categories>\n<products nodeType=\"\
+        product\" api=\"products\">\n\t<product xlink:href=\"http://172.22.0.4/api/products/1\"\
+        >\n\t<id><![CDATA[1]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/2\"\
+        >\n\t<id><![CDATA[2]]></id>\n\t</product>\n</products>\n</associations>\n\
+        </category>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481126065']
+      connection: [Keep-Alive]
+      content-length: ['2032']
+      content-sha1: [072873031c121847fe4aca62bfdcbe1fc47bbb65]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Wed, 07 Dec 2016 15:54:25 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TVg4WbxGIqX%2B5U3DAgMJ1t0Pr7pBorWw3fnVRmrjAFlmpNKjkKOIx3%2FFRkqOjZ0uEnswvng%2F50iOW1nVRkv0EYA%3D000079;
+          expires=Tue, 27-Dec-2016 15:54:25 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/categories/3
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t\
+        <id><![CDATA[3]]></id>\n\t<id_parent xlink:href=\"http://172.22.0.4/api/categories/2\"\
+        ><![CDATA[2]]></id_parent>\n\t<level_depth><![CDATA[2]]></level_depth>\n\t\
+        <nb_products_recursive notFilterable=\"true\"><![CDATA[7]]></nb_products_recursive>\n\
+        \t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\
+        \t<is_root_category><![CDATA[0]]></is_root_category>\n\t<position><![CDATA[0]]></position>\n\
+        \t<date_add><![CDATA[2016-12-07 15:13:51]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
+        \ 15:13:51]]></date_upd>\n\t<name><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[Women]]></language></name>\n\t<link_rewrite><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[women]]></language></link_rewrite>\n\
+        \t<description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[<p><strong>You will find here all woman fashion collections.</strong></p>\r\
+        \n<p>This category includes all the basics of your wardrobe and much more:</p>\r\
+        \n<p>shoes, accessories, printed t-shirts, feminine dresses, women's jeans!</p>]]></language></description>\n\
+        \t<meta_title><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_title>\n\t<meta_description><language id=\"\
+        1\" xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_description>\n\
+        \t<meta_keywords><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_keywords>\n<associations>\n<categories nodeType=\"\
+        category\" api=\"categories\">\n\t<category xlink:href=\"http://172.22.0.4/api/categories/4\"\
+        >\n\t<id><![CDATA[4]]></id>\n\t</category>\n\t<category xlink:href=\"http://172.22.0.4/api/categories/8\"\
+        >\n\t<id><![CDATA[8]]></id>\n\t</category>\n</categories>\n<products nodeType=\"\
+        product\" api=\"products\">\n\t<product xlink:href=\"http://172.22.0.4/api/products/1\"\
+        >\n\t<id><![CDATA[1]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/2\"\
+        >\n\t<id><![CDATA[2]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/3\"\
+        >\n\t<id><![CDATA[3]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/4\"\
+        >\n\t<id><![CDATA[4]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/5\"\
+        >\n\t<id><![CDATA[5]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/6\"\
+        >\n\t<id><![CDATA[6]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/7\"\
+        >\n\t<id><![CDATA[7]]></id>\n\t</product>\n</products>\n</associations>\n\
+        </category>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481126065']
+      connection: [Keep-Alive]
+      content-length: ['2578']
+      content-sha1: [a16c00036b738aeae3697d4bc29567451b6f95dc]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Wed, 07 Dec 2016 15:54:25 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TVg4WbxGIqX%2B5U3DAgMJ1t0Pr7pBorWw3fnVRmrjAFlmpNKjkKOIx3%2FFRkqOjZ0uEnswvng%2F50iOW1nVRkv0EYA%3D000079;
+          expires=Tue, 27-Dec-2016 15:54:25 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/categories/2
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t\
+        <id><![CDATA[2]]></id>\n\t<id_parent xlink:href=\"http://172.22.0.4/api/categories/1\"\
+        ><![CDATA[1]]></id_parent>\n\t<level_depth><![CDATA[1]]></level_depth>\n\t\
+        <nb_products_recursive notFilterable=\"true\"><![CDATA[7]]></nb_products_recursive>\n\
+        \t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\
+        \t<is_root_category><![CDATA[1]]></is_root_category>\n\t<position><![CDATA[0]]></position>\n\
+        \t<date_add><![CDATA[2016-12-07 15:13:50]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
+        \ 15:13:50]]></date_upd>\n\t<name><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[Home]]></language></name>\n\t<link_rewrite><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[home]]></language></link_rewrite>\n\
+        \t<description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></description>\n\t<meta_title><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_title>\n\
+        \t<meta_description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_description>\n\t<meta_keywords><language id=\"\
+        1\" xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_keywords>\n\
+        <associations>\n<categories nodeType=\"category\" api=\"categories\">\n\t\
+        <category xlink:href=\"http://172.22.0.4/api/categories/3\">\n\t<id><![CDATA[3]]></id>\n\
+        \t</category>\n</categories>\n<products nodeType=\"product\" api=\"products\"\
+        >\n\t<product xlink:href=\"http://172.22.0.4/api/products/1\">\n\t<id><![CDATA[1]]></id>\n\
+        \t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/2\">\n\
+        \t<id><![CDATA[2]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/3\"\
+        >\n\t<id><![CDATA[3]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/4\"\
+        >\n\t<id><![CDATA[4]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/5\"\
+        >\n\t<id><![CDATA[5]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/6\"\
+        >\n\t<id><![CDATA[6]]></id>\n\t</product>\n\t<product xlink:href=\"http://172.22.0.4/api/products/7\"\
+        >\n\t<id><![CDATA[7]]></id>\n\t</product>\n</products>\n</associations>\n\
+        </category>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481126065']
+      connection: [Keep-Alive]
+      content-length: ['2249']
+      content-sha1: [a89d0c5f48e203024a3a90fbd20bcf2defddf0f2]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Wed, 07 Dec 2016 15:54:25 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TVg4WbxGIqX%2B5U3DAgMJ1t0Pr7pBorWw3fnVRmrjAFlmpNKjkKOIx3%2FFRkqOjZ0uEnswvng%2F50iOW1nVRkv0EYA%3D000079;
+          expires=Tue, 27-Dec-2016 15:54:25 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/categories/1
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t\
+        <id><![CDATA[1]]></id>\n\t<id_parent><![CDATA[0]]></id_parent>\n\t<level_depth><![CDATA[0]]></level_depth>\n\
+        \t<nb_products_recursive notFilterable=\"true\"><![CDATA[7]]></nb_products_recursive>\n\
+        \t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\
+        \t<is_root_category><![CDATA[0]]></is_root_category>\n\t<position><![CDATA[0]]></position>\n\
+        \t<date_add><![CDATA[2016-12-07 15:13:50]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
+        \ 15:13:50]]></date_upd>\n\t<name><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[Root]]></language></name>\n\t<link_rewrite><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[root]]></language></link_rewrite>\n\
+        \t<description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></description>\n\t<meta_title><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_title>\n\
+        \t<meta_description><language id=\"1\" xlink:href=\"http://172.22.0.4/api/languages/1\"\
+        ><![CDATA[]]></language></meta_description>\n\t<meta_keywords><language id=\"\
+        1\" xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_keywords>\n\
+        <associations>\n<categories nodeType=\"category\" api=\"categories\">\n\t\
+        <category xlink:href=\"http://172.22.0.4/api/categories/2\">\n\t<id><![CDATA[2]]></id>\n\
+        \t</category>\n</categories>\n<products nodeType=\"product\" api=\"products\"\
+        />\n</associations>\n</category>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481126066']
+      connection: [Keep-Alive]
+      content-length: ['1539']
+      content-sha1: [252be92fe7c9855cac04c8393e6f435122ac4d66]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Wed, 07 Dec 2016 15:54:25 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TRgwTXsdGnjewzMN4nzfxZlrCz08rDFP4pzKy9cM9ynZmD2StFv7ZEPrE40HC26xa3q%2B%2FP%2FbKzjWRbS2Dz4T%2Flw%3D000078;
+          expires=Tue, 27-Dec-2016 15:54:26 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1
