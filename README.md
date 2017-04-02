@@ -55,12 +55,17 @@ Getting started
 
 [//]: # (addons)
 
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[connector_prestashop](connector_prestashop/) | 8.0.1.0.4 | PrestaShop-Odoo connector
+
+
 Unported addons
 ---------------
 addon | version | summary
 --- | --- | ---
-[prestashoperpconnect](prestashoperpconnect/) | 0.3 (unported) | Prestashop-OpenERP connector New Generation
-[prestashoperpconnect_catalog_manager](prestashoperpconnect_catalog_manager/) | 0.2 (unported) | Prestashop-OpenERP Catalog Manager
-[prestashoperpconnect_customize_example](prestashoperpconnect_customize_example/) | 1.0.0 (unported) | Prestashop Connector Customization Example
+[connector_prestashop_customize_example](connector_prestashop_customize_example/) | 8.0.1.0.0 (unported) | Prestashop Connector Customization Example
 
 [//]: # (end addons)
