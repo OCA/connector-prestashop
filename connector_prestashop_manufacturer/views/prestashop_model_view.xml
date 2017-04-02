@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_prestashop_backend_form" model="ir.ui.view">
+        <field name="name">prestashop.backend.form</field>
+        <field name="model">prestashop.backend</field>
+        <field name="inherit_id"
+               ref="connector_prestashop.view_prestashop_backend_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='import_carriers']/../.."
+                   position="after">
+                <group>
+                    <div>
+                       <label string="Import manufacturers since" class="oe_inline"/>
+                       <field name="import_manufacturers_since"
+                            class="oe_inline"
+                            nolabel="1"/>
+                    </div>
+                    <button name="import_manufacturers"
+                        type="object"
+                        class="oe_highlight"
+                        string="Import in background"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>

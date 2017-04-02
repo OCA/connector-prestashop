@@ -1,0 +1,320 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/orders/5
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<order>\n\t<id><![CDATA[5]]></id>\n\
+        \t<id_address_delivery xlink:href=\"http://172.22.0.4/api/addresses/4\"><![CDATA[4]]></id_address_delivery>\n\
+        \t<id_address_invoice xlink:href=\"http://172.22.0.4/api/addresses/4\"><![CDATA[4]]></id_address_invoice>\n\
+        \t<id_cart xlink:href=\"http://172.22.0.4/api/carts/5\"><![CDATA[5]]></id_cart>\n\
+        \t<id_currency xlink:href=\"http://172.22.0.4/api/currencies/1\"><![CDATA[1]]></id_currency>\n\
+        \t<id_lang xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[1]]></id_lang>\n\
+        \t<id_customer xlink:href=\"http://172.22.0.4/api/customers/1\"><![CDATA[1]]></id_customer>\n\
+        \t<id_carrier xlink:href=\"http://172.22.0.4/api/carriers/2\"><![CDATA[2]]></id_carrier>\n\
+        \t<current_state xlink:href=\"http://172.22.0.4/api/order_states/10\"><![CDATA[10]]></current_state>\n\
+        \t<module><![CDATA[bankwire]]></module>\n\t<invoice_number><![CDATA[0]]></invoice_number>\n\
+        \t<invoice_date><![CDATA[0000-00-00 00:00:00]]></invoice_date>\n\t<delivery_number><![CDATA[0]]></delivery_number>\n\
+        \t<delivery_date><![CDATA[0000-00-00 00:00:00]]></delivery_date>\n\t<valid><![CDATA[0]]></valid>\n\
+        \t<date_add><![CDATA[2016-12-07 15:13:53]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
+        \ 15:13:53]]></date_upd>\n\t<shipping_number notFilterable=\"true\"></shipping_number>\n\
+        \t<id_shop_group><![CDATA[1]]></id_shop_group>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
+        \t<secure_key><![CDATA[b44a6d9efd7a0076a0fbce6b15eaf3b1]]></secure_key>\n\t\
+        <payment><![CDATA[Bank wire]]></payment>\n\t<recyclable><![CDATA[0]]></recyclable>\n\
+        \t<gift><![CDATA[0]]></gift>\n\t<gift_message></gift_message>\n\t<mobile_theme><![CDATA[0]]></mobile_theme>\n\
+        \t<total_discounts><![CDATA[0.000000]]></total_discounts>\n\t<total_discounts_tax_incl><![CDATA[0.000000]]></total_discounts_tax_incl>\n\
+        \t<total_discounts_tax_excl><![CDATA[0.000000]]></total_discounts_tax_excl>\n\
+        \t<total_paid><![CDATA[71.510000]]></total_paid>\n\t<total_paid_tax_incl><![CDATA[71.510000]]></total_paid_tax_incl>\n\
+        \t<total_paid_tax_excl><![CDATA[71.510000]]></total_paid_tax_excl>\n\t<total_paid_real><![CDATA[0.000000]]></total_paid_real>\n\
+        \t<total_products><![CDATA[69.510000]]></total_products>\n\t<total_products_wt><![CDATA[69.510000]]></total_products_wt>\n\
+        \t<total_shipping><![CDATA[2.000000]]></total_shipping>\n\t<total_shipping_tax_incl><![CDATA[2.000000]]></total_shipping_tax_incl>\n\
+        \t<total_shipping_tax_excl><![CDATA[2.000000]]></total_shipping_tax_excl>\n\
+        \t<carrier_tax_rate><![CDATA[0.000]]></carrier_tax_rate>\n\t<total_wrapping><![CDATA[0.000000]]></total_wrapping>\n\
+        \t<total_wrapping_tax_incl><![CDATA[0.000000]]></total_wrapping_tax_incl>\n\
+        \t<total_wrapping_tax_excl><![CDATA[0.000000]]></total_wrapping_tax_excl>\n\
+        \t<round_mode><![CDATA[0]]></round_mode>\n\t<round_type><![CDATA[0]]></round_type>\n\
+        \t<conversion_rate><![CDATA[1.000000]]></conversion_rate>\n\t<reference><![CDATA[KHWLILZLL]]></reference>\n\
+        <associations>\n<order_rows nodeType=\"order_row\" virtualEntity=\"true\"\
+        >\n\t<order_row>\n\t<id><![CDATA[13]]></id>\n\t<product_id><![CDATA[1]]></product_id>\n\
+        \t<product_attribute_id><![CDATA[1]]></product_attribute_id>\n\t<product_quantity><![CDATA[1]]></product_quantity>\n\
+        \t<product_name><![CDATA[Faded Short Sleeve T-shirts - Color : Orange, Size\
+        \ : S]]></product_name>\n\t<product_reference><![CDATA[demo_1]]></product_reference>\n\
+        \t<product_ean13></product_ean13>\n\t<product_upc></product_upc>\n\t<product_price><![CDATA[16.510000]]></product_price>\n\
+        \t<unit_price_tax_incl><![CDATA[16.510000]]></unit_price_tax_incl>\n\t<unit_price_tax_excl><![CDATA[16.510000]]></unit_price_tax_excl>\n\
+        \t</order_row>\n\t<order_row>\n\t<id><![CDATA[14]]></id>\n\t<product_id><![CDATA[2]]></product_id>\n\
+        \t<product_attribute_id><![CDATA[7]]></product_attribute_id>\n\t<product_quantity><![CDATA[1]]></product_quantity>\n\
+        \t<product_name><![CDATA[Blouse - Color : Black, Size : S]]></product_name>\n\
+        \t<product_reference><![CDATA[demo_2]]></product_reference>\n\t<product_ean13></product_ean13>\n\
+        \t<product_upc></product_upc>\n\t<product_price><![CDATA[26.999852]]></product_price>\n\
+        \t<unit_price_tax_incl><![CDATA[27.000000]]></unit_price_tax_incl>\n\t<unit_price_tax_excl><![CDATA[27.000000]]></unit_price_tax_excl>\n\
+        \t</order_row>\n\t<order_row>\n\t<id><![CDATA[15]]></id>\n\t<product_id><![CDATA[3]]></product_id>\n\
+        \t<product_attribute_id><![CDATA[13]]></product_attribute_id>\n\t<product_quantity><![CDATA[1]]></product_quantity>\n\
+        \t<product_name><![CDATA[Printed Dress - Color : Orange, Size : S]]></product_name>\n\
+        \t<product_reference><![CDATA[demo_3]]></product_reference>\n\t<product_ean13></product_ean13>\n\
+        \t<product_upc></product_upc>\n\t<product_price><![CDATA[25.999852]]></product_price>\n\
+        \t<unit_price_tax_incl><![CDATA[26.000000]]></unit_price_tax_incl>\n\t<unit_price_tax_excl><![CDATA[26.000000]]></unit_price_tax_excl>\n\
+        \t</order_row>\n</order_rows>\n</associations>\n</order>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481288293']
+      connection: [Keep-Alive]
+      content-length: ['4766']
+      content-sha1: [b0a5f9e0abd4472586374d8ebbb44c3f5fb262f3]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 12:58:13 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/order_payments?filter%5Border_reference%5D=KHWLILZLL
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <order_payments>
+
+        </order_payments>
+
+        </prestashop>
+
+        '}
+    headers:
+      access-time: ['1481288293']
+      connection: [Keep-Alive]
+      content-length: ['144']
+      content-sha1: [1e5e8b6f80106cd18c5dddd6e65ef612feb28673]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 12:58:13 GMT']
+      execution-time: ['0.002']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tb45G5tfuoewgFOGXCa0zqjmkA9hhHGyvwxvbnN6cWseoA1XiyfSBRNxfbcRDI13Wayf7uzmWqLeeredNQhXw5U%3D000078;
+          expires=Thu, 29-Dec-2016 12:58:13 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/order_details/13
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<order_detail>\n\
+        \t<id><![CDATA[13]]></id>\n\t<id_order xlink:href=\"http://172.22.0.4/api/orders/5\"\
+        ><![CDATA[5]]></id_order>\n\t<product_id xlink:href=\"http://172.22.0.4/api/products/1\"\
+        ><![CDATA[1]]></product_id>\n\t<product_attribute_id xlink:href=\"http://172.22.0.4/api/combinations/1\"\
+        ><![CDATA[1]]></product_attribute_id>\n\t<product_quantity_reinjected><![CDATA[0]]></product_quantity_reinjected>\n\
+        \t<group_reduction><![CDATA[0.00]]></group_reduction>\n\t<discount_quantity_applied><![CDATA[0]]></discount_quantity_applied>\n\
+        \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00\
+        \ 00:00:00]]></download_deadline>\n\t<id_order_invoice><![CDATA[0]]></id_order_invoice>\n\
+        \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
+        \t<product_name><![CDATA[Faded Short Sleeve T-shirts - Color : Orange, Size\
+        \ : S]]></product_name>\n\t<product_quantity><![CDATA[1]]></product_quantity>\n\
+        \t<product_quantity_in_stock><![CDATA[1]]></product_quantity_in_stock>\n\t\
+        <product_quantity_return><![CDATA[0]]></product_quantity_return>\n\t<product_quantity_refunded><![CDATA[0]]></product_quantity_refunded>\n\
+        \t<product_price><![CDATA[16.510000]]></product_price>\n\t<reduction_percent><![CDATA[0.00]]></reduction_percent>\n\
+        \t<reduction_amount><![CDATA[0.000000]]></reduction_amount>\n\t<reduction_amount_tax_incl><![CDATA[0.000000]]></reduction_amount_tax_incl>\n\
+        \t<reduction_amount_tax_excl><![CDATA[0.000000]]></reduction_amount_tax_excl>\n\
+        \t<product_quantity_discount><![CDATA[0.000000]]></product_quantity_discount>\n\
+        \t<product_ean13></product_ean13>\n\t<product_upc></product_upc>\n\t<product_reference><![CDATA[demo_1]]></product_reference>\n\
+        \t<product_supplier_reference></product_supplier_reference>\n\t<product_weight><![CDATA[0.000000]]></product_weight>\n\
+        \t<tax_computation_method><![CDATA[0]]></tax_computation_method>\n\t<id_tax_rules_group><![CDATA[0]]></id_tax_rules_group>\n\
+        \t<ecotax><![CDATA[0.000000]]></ecotax>\n\t<ecotax_tax_rate><![CDATA[0.000]]></ecotax_tax_rate>\n\
+        \t<download_nb><![CDATA[0]]></download_nb>\n\t<unit_price_tax_incl><![CDATA[16.510000]]></unit_price_tax_incl>\n\
+        \t<unit_price_tax_excl><![CDATA[16.510000]]></unit_price_tax_excl>\n\t<total_price_tax_incl><![CDATA[16.510000]]></total_price_tax_incl>\n\
+        \t<total_price_tax_excl><![CDATA[16.510000]]></total_price_tax_excl>\n\t<total_shipping_price_tax_excl><![CDATA[0.000000]]></total_shipping_price_tax_excl>\n\
+        \t<total_shipping_price_tax_incl><![CDATA[0.000000]]></total_shipping_price_tax_incl>\n\
+        \t<purchase_supplier_price><![CDATA[0.000000]]></purchase_supplier_price>\n\
+        \t<original_product_price><![CDATA[16.510000]]></original_product_price>\n\
+        \t<original_wholesale_price><![CDATA[4.950000]]></original_wholesale_price>\n\
+        <associations>\n<taxes nodeType=\"tax\" api=\"taxes\"/>\n</associations>\n\
+        </order_detail>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481288293']
+      connection: [Keep-Alive]
+      content-length: ['2844']
+      content-sha1: [9868fe35e73e166c81546b44825f8af2f6598ddb]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 12:58:13 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tb45G5tfuoewgFOGXCa0zqjmkA9hhHGyvwxvbnN6cWseoA1XiyfSBRNxfbcRDI13Wayf7uzmWqLeeredNQhXw5U%3D000078;
+          expires=Thu, 29-Dec-2016 12:58:13 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/order_details/14
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<order_detail>\n\
+        \t<id><![CDATA[14]]></id>\n\t<id_order xlink:href=\"http://172.22.0.4/api/orders/5\"\
+        ><![CDATA[5]]></id_order>\n\t<product_id xlink:href=\"http://172.22.0.4/api/products/2\"\
+        ><![CDATA[2]]></product_id>\n\t<product_attribute_id xlink:href=\"http://172.22.0.4/api/combinations/7\"\
+        ><![CDATA[7]]></product_attribute_id>\n\t<product_quantity_reinjected><![CDATA[0]]></product_quantity_reinjected>\n\
+        \t<group_reduction><![CDATA[0.00]]></group_reduction>\n\t<discount_quantity_applied><![CDATA[0]]></discount_quantity_applied>\n\
+        \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00\
+        \ 00:00:00]]></download_deadline>\n\t<id_order_invoice><![CDATA[0]]></id_order_invoice>\n\
+        \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
+        \t<product_name><![CDATA[Blouse - Color : Black, Size : S]]></product_name>\n\
+        \t<product_quantity><![CDATA[1]]></product_quantity>\n\t<product_quantity_in_stock><![CDATA[1]]></product_quantity_in_stock>\n\
+        \t<product_quantity_return><![CDATA[0]]></product_quantity_return>\n\t<product_quantity_refunded><![CDATA[0]]></product_quantity_refunded>\n\
+        \t<product_price><![CDATA[26.999852]]></product_price>\n\t<reduction_percent><![CDATA[0.00]]></reduction_percent>\n\
+        \t<reduction_amount><![CDATA[0.000000]]></reduction_amount>\n\t<reduction_amount_tax_incl><![CDATA[0.000000]]></reduction_amount_tax_incl>\n\
+        \t<reduction_amount_tax_excl><![CDATA[0.000000]]></reduction_amount_tax_excl>\n\
+        \t<product_quantity_discount><![CDATA[0.000000]]></product_quantity_discount>\n\
+        \t<product_ean13></product_ean13>\n\t<product_upc></product_upc>\n\t<product_reference><![CDATA[demo_2]]></product_reference>\n\
+        \t<product_supplier_reference></product_supplier_reference>\n\t<product_weight><![CDATA[0.000000]]></product_weight>\n\
+        \t<tax_computation_method><![CDATA[0]]></tax_computation_method>\n\t<id_tax_rules_group><![CDATA[0]]></id_tax_rules_group>\n\
+        \t<ecotax><![CDATA[0.000000]]></ecotax>\n\t<ecotax_tax_rate><![CDATA[0.000]]></ecotax_tax_rate>\n\
+        \t<download_nb><![CDATA[0]]></download_nb>\n\t<unit_price_tax_incl><![CDATA[27.000000]]></unit_price_tax_incl>\n\
+        \t<unit_price_tax_excl><![CDATA[27.000000]]></unit_price_tax_excl>\n\t<total_price_tax_incl><![CDATA[27.000000]]></total_price_tax_incl>\n\
+        \t<total_price_tax_excl><![CDATA[27.000000]]></total_price_tax_excl>\n\t<total_shipping_price_tax_excl><![CDATA[0.000000]]></total_shipping_price_tax_excl>\n\
+        \t<total_shipping_price_tax_incl><![CDATA[0.000000]]></total_shipping_price_tax_incl>\n\
+        \t<purchase_supplier_price><![CDATA[0.000000]]></purchase_supplier_price>\n\
+        \t<original_product_price><![CDATA[26.999852]]></original_product_price>\n\
+        \t<original_wholesale_price><![CDATA[8.100000]]></original_wholesale_price>\n\
+        <associations>\n<taxes nodeType=\"tax\" api=\"taxes\"/>\n</associations>\n\
+        </order_detail>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481288293']
+      connection: [Keep-Alive]
+      content-length: ['2822']
+      content-sha1: [7ef075c1027edc3db00d770095791ca896794057]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 12:58:13 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tb45G5tfuoewgFOGXCa0zqjmkA9hhHGyvwxvbnN6cWseoA1XiyfSBRNxfbcRDI13Wayf7uzmWqLeeredNQhXw5U%3D000078;
+          expires=Thu, 29-Dec-2016 12:58:13 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/order_details/15
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<order_detail>\n\
+        \t<id><![CDATA[15]]></id>\n\t<id_order xlink:href=\"http://172.22.0.4/api/orders/5\"\
+        ><![CDATA[5]]></id_order>\n\t<product_id xlink:href=\"http://172.22.0.4/api/products/3\"\
+        ><![CDATA[3]]></product_id>\n\t<product_attribute_id xlink:href=\"http://172.22.0.4/api/combinations/13\"\
+        ><![CDATA[13]]></product_attribute_id>\n\t<product_quantity_reinjected><![CDATA[0]]></product_quantity_reinjected>\n\
+        \t<group_reduction><![CDATA[0.00]]></group_reduction>\n\t<discount_quantity_applied><![CDATA[0]]></discount_quantity_applied>\n\
+        \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00\
+        \ 00:00:00]]></download_deadline>\n\t<id_order_invoice><![CDATA[0]]></id_order_invoice>\n\
+        \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
+        \t<product_name><![CDATA[Printed Dress - Color : Orange, Size : S]]></product_name>\n\
+        \t<product_quantity><![CDATA[1]]></product_quantity>\n\t<product_quantity_in_stock><![CDATA[1]]></product_quantity_in_stock>\n\
+        \t<product_quantity_return><![CDATA[0]]></product_quantity_return>\n\t<product_quantity_refunded><![CDATA[0]]></product_quantity_refunded>\n\
+        \t<product_price><![CDATA[25.999852]]></product_price>\n\t<reduction_percent><![CDATA[0.00]]></reduction_percent>\n\
+        \t<reduction_amount><![CDATA[0.000000]]></reduction_amount>\n\t<reduction_amount_tax_incl><![CDATA[0.000000]]></reduction_amount_tax_incl>\n\
+        \t<reduction_amount_tax_excl><![CDATA[0.000000]]></reduction_amount_tax_excl>\n\
+        \t<product_quantity_discount><![CDATA[0.000000]]></product_quantity_discount>\n\
+        \t<product_ean13></product_ean13>\n\t<product_upc></product_upc>\n\t<product_reference><![CDATA[demo_3]]></product_reference>\n\
+        \t<product_supplier_reference></product_supplier_reference>\n\t<product_weight><![CDATA[0.000000]]></product_weight>\n\
+        \t<tax_computation_method><![CDATA[0]]></tax_computation_method>\n\t<id_tax_rules_group><![CDATA[0]]></id_tax_rules_group>\n\
+        \t<ecotax><![CDATA[0.000000]]></ecotax>\n\t<ecotax_tax_rate><![CDATA[0.000]]></ecotax_tax_rate>\n\
+        \t<download_nb><![CDATA[0]]></download_nb>\n\t<unit_price_tax_incl><![CDATA[26.000000]]></unit_price_tax_incl>\n\
+        \t<unit_price_tax_excl><![CDATA[26.000000]]></unit_price_tax_excl>\n\t<total_price_tax_incl><![CDATA[26.000000]]></total_price_tax_incl>\n\
+        \t<total_price_tax_excl><![CDATA[26.000000]]></total_price_tax_excl>\n\t<total_shipping_price_tax_excl><![CDATA[0.000000]]></total_shipping_price_tax_excl>\n\
+        \t<total_shipping_price_tax_incl><![CDATA[0.000000]]></total_shipping_price_tax_incl>\n\
+        \t<purchase_supplier_price><![CDATA[0.000000]]></purchase_supplier_price>\n\
+        \t<original_product_price><![CDATA[25.999852]]></original_product_price>\n\
+        \t<original_wholesale_price><![CDATA[7.800000]]></original_wholesale_price>\n\
+        <associations>\n<taxes nodeType=\"tax\" api=\"taxes\"/>\n</associations>\n\
+        </order_detail>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481288293']
+      connection: [Keep-Alive]
+      content-length: ['2832']
+      content-sha1: [3319a1c2d924abff869980befca3fd405d00ca50]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 12:58:13 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tb45G5tfuoewgFOGXCa0zqjmkA9hhHGyvwxvbnN6cWseoA1XiyfSBRNxfbcRDI13Wayf7uzmWqLeeredNQhXw5U%3D000078;
+          expires=Thu, 29-Dec-2016 12:58:13 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/order_discounts?filter%5Bid_order%5D=5
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <order_cart_rules>
+
+        </order_cart_rules>
+
+        </prestashop>
+
+        '}
+    headers:
+      access-time: ['1481288293']
+      connection: [Keep-Alive]
+      content-length: ['148']
+      content-sha1: [ede4524a81f46f4c60454b06a47e324a43fc7c35]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 12:58:13 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tb45G5tfuoewgFOGXCa0zqjmkA9hhHGyvwxvbnN6cWseoA1XiyfSBRNxfbcRDI13Wayf7uzmWqLeeredNQhXw5U%3D000078;
+          expires=Thu, 29-Dec-2016 12:58:13 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1

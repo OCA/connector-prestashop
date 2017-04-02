@@ -1,2 +1,7 @@
--e git://github.com/akretion/prestapyt.git#egg=prestapyt
-requests==0.14.2
+html2text
+prestapyt >= 0.7.0
+unidecode
+bs4
+# tests dependencies
+freezegun
+vcrpy

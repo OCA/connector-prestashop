@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_prestashop_prestashop_manufacturer_user,User access on prestashop.manufacturer,model_prestashop_manufacturer,base.group_user,1,0,0,0
+access_prestashop_prestashop_manufacturer_address_user,User access on prestashop.manufacturer.address,model_prestashop_manufacturer_address,base.group_user,1,0,0,0
+access_prestashop_prestashop_manufacturer_full,Full access on prestashop.manufacturer,model_prestashop_manufacturer,connector.group_connector_manager,1,1,1,1
+access_prestashop_prestashop_manufacturer_address_full,Full access on prestashop.manufacturer.address,model_prestashop_manufacturer_address,connector.group_connector_manager,1,1,1,1
