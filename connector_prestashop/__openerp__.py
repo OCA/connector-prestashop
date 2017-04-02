@@ -57,6 +57,6 @@
         'security/prestashop_security.xml',
         'data/ecommerce_data.xml',
     ],
-    "installable": True,
+    'installable': False,
     "application": True,
 }
