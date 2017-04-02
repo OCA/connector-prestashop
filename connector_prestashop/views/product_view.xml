@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_normal_form_view_default_check" model="ir.ui.view">
+           <field name="model">product.product</field>
+           <field name="inherit_id" ref="product.product_normal_form_view" />
+           <field name="arch" type="xml">
+               <field name="default_code" position="after">
+                    <field name="default_on" attrs="{'invisible': [
+                                            ('is_product_variant', '=', True),
+                                            ('product_variant_count', '=', 1)
+                                        ]}"/>
+                    <field name="impact_price" attrs="{'invisible': [
+                            ('is_product_variant', '=', True),
+                            ('product_variant_count', '=', 1)
+                            ]}"/>
+               </field>
+               <xpath expr="//field[@name='lst_price']" position="attributes">
+                   <attribute name="readonly">1</attribute>
+               </xpath>
+           </field>
+        </record>
+
+        <record id="product_product_tree_prestashop_view" model="ir.ui.view">
+            <field name="name">product.product.prestashop.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view" />
+            <field name="arch" type="xml">
+                <field name="lst_price" position="after">
+                    <field name="default_on"/>
+                </field>
+                <field name="lst_price" position="after">
+                    <field name="impact_price"/>
+                </field>
+            </field>
+        </record>
+
+        <!--This is a product inherited form that will be dynamically populated-->
+        <record id="product_normal_form_view" model="ir.ui.view">
+           <field name="model">product.product</field>
+           <field name="inherit_id" ref="connector_base_product.product_normal_form_view" />
+           <field name="arch" type="xml">
+               <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+               </page>
+               <page name="connector" position="inside">
+                   <div attrs="{'invisible': [('product_variant_count', '>', 1)]}">
+                       <p>To show PrestaShop binding go to: <button
+                               name="open_product_template"
+                               type="object"
+                               string="product template"
+                               class="oe_link"/></p>
+                   </div>
+                    <group string="PrestaShop Bindings"
+                           attrs="{'invisible': [('product_variant_count', '=', 1)]}">
+                        <field name="prestashop_combinations_bind_ids"
+                               nolabel="1"/>
+                    </group>
+               </page>
+           </field>
+        </record>
+
+        <!--This is a product inherited form that will be dynamically populated-->
+        <record id="product_template_common_form" model="ir.ui.view">
+           <field name="model">product.template</field>
+           <field name="inherit_id"
+                  ref="connector_base_product.product_template_common_form" />
+           <field name="arch" type="xml">
+               <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+               </page>
+               <page name="connector" position="inside">
+                    <group string="PrestaShop Bindings"
+                           attrs="{'invisible': [('is_product_variant', '=', True)]}">
+                        <field name="prestashop_bind_ids" nolabel="1"/>
+                    </group>
+               </page>
+           </field>
+        </record>
+
+        <record id="product_connector_presta_form_view" model="ir.ui.view">
+           <field name="model">prestashop.product.template</field>
+           <field name="arch" type="xml">
+                <form string="prestashop fields">
+                    <group col="1">
+                        <field name="backend_id"/>
+                        <field name="default_shop_id"/>
+                        <field name="link_rewrite"/>
+                        <field name="description_short_html"/>
+                        <field name="description_html"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="date_add"/>
+                        <field name="date_upd"/>
+                        <field name="sale_ok"/>
+                        <field name="quantity" string="qty"/>
+                        <field name="always_available"/>
+                        <field name="available_for_order"/>
+                        <field name="show_price"/>
+                        <field name="on_sale"/>
+                    </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="product_connector_presta_tree_view" model="ir.ui.view">
+            <field name="model">prestashop.product.template</field>
+            <field name="arch" type="xml">
+                <tree string="prestashop product" create="0">
+                    <field name="backend_id" string="Backend"/>
+                    <field name="date_add"/>
+                    <field name="date_upd"/>
+                    <field name="quantity"/>
+                    <field name="prestashop_id"/>
+                    <field name="reference"/>
+                    <button name="recompute_prestashop_qty"
+                        class="oe_highlight"
+                        type="object"
+                        string="Recompute quantity"/>
+                    <button name="force_export_stock"
+                        class="oe_highlight"
+                        type="object"
+                        string="Export All Stock"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="combination_connector_presta_form_view" model="ir.ui.view">
+           <field name="model">prestashop.product.combination</field>
+           <field name="arch" type="xml">
+                <form string="prestashop fields">
+                    <group col="2">
+                        <field name="backend_id"/>
+                        <field name="quantity"/>
+                    </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="combination_connector_presta_tree_view" model="ir.ui.view">
+            <field name="model">prestashop.product.combination</field>
+            <field name="arch" type="xml">
+                <tree string="prestashop product">
+                    <field name="backend_id" string="Backend"/>
+                    <field name="quantity"/>
+                    <field name="prestashop_id"/>
+                    <field name="reference"/>
+                    <button name="recompute_prestashop_qty"
+                        class="oe_highlight"
+                        type="object"
+                        string="Export quantity"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

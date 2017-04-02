@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
+<openerp>
+<data>
+
+    <record id="account_tax_group_connector_prestashop_tree_view"
+            model="ir.ui.view">
+        <field name="model">prestashop.account.tax.group</field>
+        <field name="arch" type="xml">
+            <tree string="PrestaShop Account Tax Group" create="0">
+                <field name="backend_id" string="Backend"/>
+                <field name="prestashop_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="prestashop_binding_tax_group_form_view"
+            model="ir.ui.view">
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="connector_ecommerce.view_tax_group_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <group string="PrestaShop Binding">
+                    <field name="prestashop_bind_ids"
+                           nolabel="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>

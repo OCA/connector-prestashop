@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  connector_prestashop for Odoo
+  Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="connector.view_partner_connector_form" />
+            <field name="arch" type="xml">
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="PrestaShop Bindings">
+                        <field name="prestashop_bind_ids"
+                               nolabel="1"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_prestashop_res_partner_form" model="ir.ui.view">
+            <field name="name">prestashop.res.partner.form</field>
+            <field name="model">prestashop.res.partner</field>
+            <field name="arch" type="xml">
+                <form string="PrestaShop Partner" version="7.0">
+                    <group>
+                        <field name="shop_group_id"/>
+                        <field name="backend_id"/>
+                        <field name="prestashop_id"/>
+                        <field name="date_add"/>
+                        <field name="date_upd"/>
+                        <field name="group_ids"/>
+                        <field name="newsletter"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_prestashop_res_partner_tree" model="ir.ui.view">
+            <field name="name">prestashop.res.partner.tree</field>
+            <field name="model">prestashop.res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="PrestaShop Partner" version="7.0">
+                    <field name="backend_id"/>
+                    <field name="shop_group_id"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_prestashop_address_form" model="ir.ui.view">
+            <field name="name">prestashop.address.form</field>
+            <field name="model">prestashop.address</field>
+            <field name="arch" type="xml">
+                <form string="PrestaShop Address" version="7.0">
+                    <group>
+                        <field name="shop_group_id"/>
+                        <field name="backend_id"/>
+                        <field name="prestashop_partner_id"/>
+                        <field name="prestashop_id"/>
+                        <field name="date_add"/>
+                        <field name="date_upd"/>
+                        <field name="vat_number"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_prestashop_address_tree" model="ir.ui.view">
+            <field name="name">prestashop.address.tree</field>
+            <field name="model">prestashop.address</field>
+            <field name="arch" type="xml">
+                <tree string="PrestaShop Address" version="7.0">
+                    <field name="backend_id"/>
+                    <field name="shop_group_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_partner_category_form" model="ir.ui.view">
+            <field name="name">res.partner.category.form</field>
+            <field name="model">res.partner.category</field>
+            <field name="inherit_id" ref="base.view_partner_category_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="after">
+                    <group string="PrestaShop Binding">
+                        <field name="prestashop_bind_ids" nolabel="1">
+                            <form string="PrestaShop">
+                                <field name="backend_id"/>
+                                <field name="prestashop_id"/>
+                            </form>
+                            <tree string="PrestaShop">
+                                <field name="backend_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
