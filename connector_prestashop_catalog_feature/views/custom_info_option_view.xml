@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+<record id="custom_info_option_prestashop_form" model="ir.ui.view">
+    <field name="name">Custom Info Option Prestashop Form</field>
+    <field name="model">custom.info.option</field>
+    <field name="inherit_id" ref="base_custom_info.custom_info_option_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//sheet" position="inside">
+            <group string="Prestashop Bindings" colspan="4"
+                   name="prestashop_binding">
+                <field name="prestashop_bind_ids" nolabel="1">
+                    <tree name="prestashop_binding">
+                        <field name="backend_id"/>
+                        <field name="prestashop_id" />
+                    </tree>
+                </field>
+            </group>
+        </xpath>
+    </field>
+</record>
+
+</odoo>
