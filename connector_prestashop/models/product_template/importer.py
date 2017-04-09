@@ -248,11 +248,6 @@ class TemplateMapper(ImportMapper):
         return {}
 
     @mapping
-    def extras_manufacturer(self, record):
-        mapper = self.unit_for(ManufacturerProductImportMapper)
-        return mapper.map_record(record).values(**self.options)
-
-    @mapping
     def tags_to_text(self, record):
         associations = record.get('associations', {})
         tags = associations.get('tags', {}).get(
@@ -267,17 +262,6 @@ class TemplateMapper(ImportMapper):
             })
             if ps_tags:
                 return {'tags': ','.join(x['name'] for x in ps_tags)}
-
-
-@prestashop
-class ManufacturerProductImportMapper(ImportMapper):
-    # For extend in connector_prestashop_manufacturer module, by this way we
-    # avoid have dependencies of other modules as procut_manufacturer
-    _model_name = 'prestashop.product.template'
-
-    @mapping
-    def extras(self, record):
-        return {}
 
 
 class ImportInventory(models.TransientModel):
