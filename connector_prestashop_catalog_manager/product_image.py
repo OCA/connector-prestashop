@@ -5,6 +5,9 @@ import os.path
 from openerp.addons.connector.event import on_record_write, on_record_unlink
 from openerp.addons.connector.unit.mapper import mapping
 
+from openerp.addons.connector_prestashop.unit.backend_adapter import (
+    PrestaShopWebServiceImage
+)
 from openerp.addons.connector_prestashop.unit.binder import PrestashopBinder
 from openerp.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter,
@@ -112,8 +115,25 @@ class ProductImageExport(PrestashopExporter):
             self._validate_data(record)
             self.prestashop_id = self._create(record)
             self._after_export()
+        self._link_image_to_url()
         message = _('Record exported with ID %s on Prestashop.')
         return message % self.prestashop_id
+
+    def _link_image_to_url(self):
+        """Change image storage to a url linked to product prestashop image"""
+        api = PrestaShopWebServiceImage(
+            api_url=self.backend_record.location,
+            api_key=self.backend_record.webservice_key)
+        full_public_url = api.get_image_public_url({
+            'id_image': str(self.prestashop_id),
+            'type': 'image/jpeg',
+        })
+        if self.erp_record.url != full_public_url:
+            self.erp_record.with_context(connector_no_export=True).write({
+                'url': full_public_url,
+                'file_db_store': False,
+                'storage': 'url',
+            })
 
 
 @prestashop
