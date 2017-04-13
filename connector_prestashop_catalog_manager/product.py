@@ -253,7 +253,9 @@ class ProductTemplateExport(TranslationPrestashopExporter):
 
     def export_variants(self):
         combination_obj = self.session.env['prestashop.product.combination']
-        for product in self.erp_record.product_variant_ids:
+        for index, product in enumerate(
+                self.erp_record.product_variant_ids.sorted(
+                    key=lambda r: r.default_on)):
             if not product.attribute_value_ids:
                 continue
             combination_ext_id = combination_obj.search([
@@ -273,7 +275,8 @@ class ProductTemplateExport(TranslationPrestashopExporter):
                 self.session,
                 'prestashop.product.combination',
                 combination_ext_id.id, priority=50,
-                eta=timedelta(seconds=20))
+                eta=timedelta(seconds=10 + (index * 2))
+            )
 
     def _not_in_variant_images(self, image):
         images = []
