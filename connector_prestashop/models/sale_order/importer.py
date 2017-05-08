@@ -100,6 +100,7 @@ class SaleImportRule(ConnectorUnit):
                 "Process or create a new one.") % (ps_payment_method,
                                                    ps_payment_method))
         self._rule_global(record, payment_mode)
+        self._rule_state(record, payment_mode)
         self._rules[payment_mode.import_rule](self, record, payment_mode)
 
     def _rule_global(self, record, mode):
@@ -116,6 +117,31 @@ class SaleImportRule(ConnectorUnit):
             raise NothingToDoJob('Import of the order %s canceled '
                                  'because it has not been paid since %d '
                                  'days' % (order_id, max_days))
+
+    def _rule_state(self, record, mode):
+        """Check if order is importable by its state.
+
+        If `backend_record.importable_order_state_ids` is valued
+        we check if current order is in the list.
+        If not, the job fails gracefully.
+        """
+        if self.backend_record.importable_order_state_ids:
+            ps_state_id = record['current_state']
+            state = self.binder_for(
+                'prestashop.sale.order.state').to_odoo(ps_state_id, unwrap=1)
+            if not state:
+                raise FailedJobError(_(
+                    "The configuration is missing "
+                    "for sale order state with PS ID=%s.\n\n"
+                    "Resolution:\n"
+                    " - Use the automatic import in 'Connectors > PrestaShop "
+                    "Backends', button 'Synchronize base data'."
+                ) % (ps_state_id,))
+            if state not in self.backend_record.importable_order_state_ids:
+                raise NothingToDoJob(_(
+                    'Import of the order with PS ID=%s canceled '
+                    'because its state is not importable'
+                ) % record['id'])
 
 
 @prestashop
