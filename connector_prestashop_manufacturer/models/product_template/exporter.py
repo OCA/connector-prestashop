@@ -15,9 +15,9 @@ class ProductTemplateExportMapper(exporter.ManufacturerExportMapper):
     def manufacturer(self, record):
         if record.manufacturer:
             binder = self.binder_for('prestashop.manufacturer')
-            value = binder.to_odoo(record.manufacturer.id, unwrap=True)
+            value = binder.to_backend(record.manufacturer.id, wrap=True)
             if value:
-                return {'id_manufacturer': value.id}
+                return {'id_manufacturer': value}
         return {}
 
 
