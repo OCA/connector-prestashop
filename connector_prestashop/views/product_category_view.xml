@@ -45,7 +45,7 @@
         <field name="inherit_id" ref="product.product_category_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='first']" position="after">
-                <group string="PrestaShop Binding">
+                <group string="PrestaShop Binding" groups="connector.group_connector_manager">
                     <field name="prestashop_bind_ids"
                            nolabel="1"/>
                 </group>
