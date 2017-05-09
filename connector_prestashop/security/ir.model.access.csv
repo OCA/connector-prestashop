@@ -24,6 +24,7 @@ access_prestashop_sale_order_line_discount_user,User access on prestashop.sale.o
 access_prestashop_sale_order_line_discount_full,Full access on prestashop.sale.order.line.discount,model_prestashop_sale_order_line_discount,connector.group_connector_manager,1,1,1,1
 access_prestashop_delivery_carrier_full,Full access on prestashop.delivery.carrier,model_prestashop_delivery_carrier,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_category_full,Full access on prestashop.product.category,model_prestashop_product_category,connector.group_connector_manager,1,1,1,1
+access_prestashop_product_category_user,User access on prestashop.product.category,model_prestashop_product_category,base.group_user,1,0,0,0
 access_prestashop_product_image_full,Full access on prestashop.product.image,model_prestashop_product_image,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_template_user,User access on prestashop.product.template,model_prestashop_product_template,base.group_user,1,0,0,0
 access_prestashop_product_template,Full access on prestashop.product.template,model_prestashop_product_template,connector.group_connector_manager,1,1,1,1
