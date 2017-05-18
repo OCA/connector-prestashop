@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import api, fields, models
+from openerp import _, exceptions, api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 from ...unit.backend_adapter import GenericAdapter
@@ -118,11 +118,28 @@ class PrestashopProductTemplate(models.Model):
         return True
 
     def _prestashop_qty(self):
+        root_location = (self.backend_id.stock_location_id or
+                         self.backend_id.warehouse_id.lot_stock_id)
         locations = self.env['stock.location'].search([
-            ('id', 'child_of', self.backend_id.warehouse_id.lot_stock_id.id),
+            ('id', 'child_of', root_location.id),
             ('prestashop_synchronized', '=', True),
             ('usage', '=', 'internal'),
         ])
+        # if we choosed a location but none where flagged
+        # 'prestashop_synchronized', consider we want all of them in the tree
+        if not locations:
+            locations = self.env['stock.location'].search([
+                ('id', 'child_of', root_location.id),
+                ('usage', '=', 'internal'),
+            ])
+        if not locations:
+            # we must not pass an empty location or we would have the
+            # stock for every warehouse, which is the last thing we
+            # expect
+            raise exceptions.UserError(
+                _('No internal location found to compute the product '
+                  'quantity.')
+            )
         return self.with_context(location=locations.ids).qty_available
 
 
