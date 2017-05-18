@@ -295,6 +295,32 @@ class PrestashopBackend(models.Model):
         import_record(session, model_name, self.id, ext_id)
         return True
 
+    @api.multi
+    def _get_locations_for_stock_quantities(self):
+        root_location = (self.stock_location_id or
+                         self.warehouse_id.lot_stock_id)
+        locations = self.env['stock.location'].search([
+            ('id', 'child_of', root_location.id),
+            ('prestashop_synchronized', '=', True),
+            ('usage', '=', 'internal'),
+        ])
+        # if we choosed a location but none where flagged
+        # 'prestashop_synchronized', consider we want all of them in the tree
+        if not locations:
+            locations = self.env['stock.location'].search([
+                ('id', 'child_of', root_location.id),
+                ('usage', '=', 'internal'),
+            ])
+        if not locations:
+            # we must not pass an empty location or we would have the
+            # stock for every warehouse, which is the last thing we
+            # expect
+            raise exceptions.UserError(
+                _('No internal location found to compute the product '
+                  'quantity.')
+            )
+        return locations
+
 
 class PrestashopShopGroup(models.Model):
     _name = 'prestashop.shop.group'
