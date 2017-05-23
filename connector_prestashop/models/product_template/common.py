@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from collections import defaultdict
+
 from openerp import _, exceptions, api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
 
@@ -109,17 +111,23 @@ class PrestashopProductTemplate(models.Model):
         digits_compute=dp.get_precision('Product Price'),
     )
 
+    RECOMPUTE_QTY_STEP = 1000
+
     @api.multi
     def recompute_prestashop_qty(self):
-        for product_binding in self:
-            new_qty = product_binding._prestashop_qty()
-            if product_binding.quantity != new_qty:
-                product_binding.quantity = new_qty
+        # group products by backend
+        backends = defaultdict(self.browse)
+        for product in self:
+            backends[product.backend_id] |= product
+
+        for backend, products in backends.iteritems():
+            products._recompute_prestashop_qty_backend(backend)
         return True
 
-    def _prestashop_qty(self):
-        root_location = (self.backend_id.stock_location_id or
-                         self.backend_id.warehouse_id.lot_stock_id)
+    @api.multi
+    def _recompute_prestashop_qty_backend(self, backend):
+        root_location = (backend.stock_location_id or
+                         backend.warehouse_id.lot_stock_id)
         locations = self.env['stock.location'].search([
             ('id', 'child_of', root_location.id),
             ('prestashop_synchronized', '=', True),
@@ -140,8 +148,16 @@ class PrestashopProductTemplate(models.Model):
                 _('No internal location found to compute the product '
                   'quantity.')
             )
-        self_c = self.with_context(location=locations.ids, compute_child=False)
-        return self_c.qty_available
+        self_loc = self.with_context(location=locations.ids,
+                                     compute_child=False)
+        for product in self_loc:
+            new_qty = product._prestashop_qty()
+            if product.quantity != new_qty:
+                product.quantity = new_qty
+        return True
+
+    def _prestashop_qty(self):
+        return self.qty_available
 
 
 @prestashop
