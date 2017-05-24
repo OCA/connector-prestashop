@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from openerp import _, exceptions, api, fields, models
+from openerp import api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 from ...unit.backend_adapter import GenericAdapter
@@ -111,8 +111,6 @@ class PrestashopProductTemplate(models.Model):
         digits_compute=dp.get_precision('Product Price'),
     )
 
-    RECOMPUTE_QTY_STEP = 1000
-
     @api.multi
     def recompute_prestashop_qty(self):
         # group products by backend
@@ -126,28 +124,7 @@ class PrestashopProductTemplate(models.Model):
 
     @api.multi
     def _recompute_prestashop_qty_backend(self, backend):
-        root_location = (backend.stock_location_id or
-                         backend.warehouse_id.lot_stock_id)
-        locations = self.env['stock.location'].search([
-            ('id', 'child_of', root_location.id),
-            ('prestashop_synchronized', '=', True),
-            ('usage', '=', 'internal'),
-        ])
-        # if we choosed a location but none where flagged
-        # 'prestashop_synchronized', consider we want all of them in the tree
-        if not locations:
-            locations = self.env['stock.location'].search([
-                ('id', 'child_of', root_location.id),
-                ('usage', '=', 'internal'),
-            ])
-        if not locations:
-            # we must not pass an empty location or we would have the
-            # stock for every warehouse, which is the last thing we
-            # expect
-            raise exceptions.UserError(
-                _('No internal location found to compute the product '
-                  'quantity.')
-            )
+        locations = backend._get_locations_for_stock_quantities()
         self_loc = self.with_context(location=locations.ids,
                                      compute_child=False)
         for product in self_loc:

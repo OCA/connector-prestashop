@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from collections import defaultdict
 from openerp import api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
 
@@ -162,14 +163,28 @@ class PrestashopProductCombination(models.Model):
 
     @api.multi
     def recompute_prestashop_qty(self):
-        for product_binding in self:
-            if product_binding.quantity != product_binding.qty_available:
-                product_binding.quantity = product_binding.qty_available
+        # group products by backend
+        backends = defaultdict(self.browse)
+        for product in self:
+            backends[product.backend_id] |= product
+
+        for backend, products in backends.iteritems():
+            products._recompute_prestashop_qty_backend(backend)
         return True
 
-    @api.model
-    def _prestashop_qty(self, product):
-        return product.qty_available
+    @api.multi
+    def _recompute_prestashop_qty_backend(self, backend):
+        locations = backend._get_locations_for_stock_quantities()
+        self_loc = self.with_context(location=locations.ids,
+                                     compute_child=False)
+        for product_binding in self_loc:
+            new_qty = product_binding._prestashop_qty()
+            if product_binding.quantity != new_qty:
+                product_binding.quantity = new_qty
+        return True
+
+    def _prestashop_qty(self):
+        return self.qty_available
 
 
 class ProductAttribute(models.Model):
