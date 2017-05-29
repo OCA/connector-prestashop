@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.addons.connector.unit.mapper import mapping
+from odoo.addons.connector.unit.mapper import mapping
 
-from openerp.addons.connector_prestashop.unit.exporter import (
+from odoo.addons.connector_prestashop.unit.exporter import (
     PrestashopExporter,
     export_record,
 )
-from openerp.addons.connector_prestashop.unit.mapper import (
+from odoo.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
 from ...consumer import get_slug
-from openerp.addons.connector_prestashop.backend import prestashop
+from odoo.addons.connector_prestashop.backend import prestashop
 
 
 @prestashop
