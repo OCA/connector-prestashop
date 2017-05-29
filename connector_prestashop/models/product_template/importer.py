@@ -21,6 +21,7 @@ from ..product_image.importer import (
     set_product_image_variant,
     import_product_image
 )
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.mapper import backend_to_m2o
 from ...unit.backend_adapter import GenericAdapter
@@ -347,6 +348,16 @@ class ProductInventoryImport(PrestashopImporter):
 
 
 @prestashop
+class ProductTemplateSpecificPriceImport(ConnectorUnit):
+    _model_name = ['prestashop.product.template']
+
+    def import_product_specific_price(self, ps_id, erp_id):
+        # Hook method to use in connector_prestashop_specific_prices
+        # to avoid replacing TemplateRecordImport class
+        pass
+
+
+@prestashop
 class TemplateRecordImport(TranslatableRecordImporter):
     """ Import one translatable record """
     _model_name = [
@@ -370,6 +381,9 @@ class TemplateRecordImport(TranslatableRecordImporter):
         self.import_combinations()
         self.attribute_line(erp_id)
         self.deactivate_default_product(erp_id)
+        pricelist_mapper = self.unit_for(ProductTemplateSpecificPriceImport)
+        pricelist_mapper.import_product_specific_price(
+            self.prestashop_id, erp_id)
 
     def deactivate_default_product(self, erp_id):
         template = erp_id

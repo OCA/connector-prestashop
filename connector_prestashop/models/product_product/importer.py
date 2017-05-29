@@ -4,6 +4,7 @@
 import logging
 from openerp import models
 
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 
 from ...backend import prestashop
@@ -23,6 +24,16 @@ try:
     from prestapyt import PrestaShopWebServiceError
 except ImportError:
     _logger.debug('Can not `from prestapyt import PrestaShopWebServiceError`.')
+
+
+@prestashop
+class ProductCombinationSpecificPriceImport(ConnectorUnit):
+    _model_name = ['prestashop.product.combination']
+
+    def import_product_specific_price(self, ps_id, erp_id):
+        # Hook method to use in connector_prestashop_specific_prices
+        # to avoid replacing ProductCombinationRecordImport class
+        pass
 
 
 @prestashop
@@ -51,6 +62,9 @@ class ProductCombinationRecordImport(PrestashopImporter):
 
     def _after_import(self, erp_id):
         self.import_supplierinfo(erp_id)
+        pricelist_mapper = self.unit_for(ProductCombinationSpecificPriceImport)
+        pricelist_mapper.import_product_specific_price(
+            self.prestashop_id, erp_id)
 
     def set_variant_images(self, combinations):
         backend_adapter = self.unit_for(

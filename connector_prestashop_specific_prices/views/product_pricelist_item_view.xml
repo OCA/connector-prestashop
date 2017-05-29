@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2017 Hugo Santos <hugo.santos@factorlibre.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html). -->
+<openerp>
+  <data>
+    <record id="product_pricelist_item_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.item.form connector_prestashop_specific_prices</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_max_margin']/.." position="after">
+                <notebook colspan="4">
+                    <page string="Connector" colspan="4">
+                        <group string="PrestaShop Specific Price Bindings">
+                            <field name="prestashop_specific_price_bind_ids" nolabel="1"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</openerp>

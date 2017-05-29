@@ -16,6 +16,7 @@ from openerp.addons.connector_prestashop.unit.exporter import (
 from openerp.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector_prestashop.consumer import (
     delay_export,
     INVENTORY_FIELDS
@@ -130,6 +131,16 @@ class PrestashopProductTemplate(models.Model):
 
 
 @prestashop
+class ProductTemplateSpecificPriceExport(ConnectorUnit):
+    _model_name = ['prestashop.product.template']
+
+    def export_pricelist_items(self, erp_record):
+        # Hook method to use in connector_prestashop_specific_prices
+        # to avoid replacing TemplateRecordExport class
+        pass
+
+
+@prestashop
 class ProductTemplateExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.template'
 
@@ -144,6 +155,8 @@ class ProductTemplateExport(TranslationPrestashopExporter):
         self.export_variants()
         self.check_images()
         self.backend_adapter.write(self.prestashop_id, data)
+        pricelist_mapper = self.unit_for(ProductTemplateSpecificPriceExport)
+        pricelist_mapper.export_pricelist_items(self.erp_record)
 
     def write_binging_vals(self, erp_record, ps_record):
         keys_to_update = [
@@ -311,6 +324,8 @@ class ProductTemplateExport(TranslationPrestashopExporter):
         self.check_images()
         self.export_variants()
         self.update_quantities()
+        pricelist_mapper = self.unit_for(ProductTemplateSpecificPriceExport)
+        pricelist_mapper.export_pricelist_items(self.erp_record)
 
 
 @prestashop

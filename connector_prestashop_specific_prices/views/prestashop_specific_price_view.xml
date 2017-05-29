@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2017 Hugo Santos <hugo.santos@factorlibre.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html). -->
+<openerp>
+  <data>
+    <record id="prestashop_specific_price_tree_view" model="ir.ui.view">
+        <field name="name">prestashop.specific.price.tree</field>
+        <field name="model">prestashop.specific.price</field>
+        <field name="arch" type="xml">
+            <tree string="Prestashop Specific Price">
+                <field name="prestashop_id"/>
+                <field name="backend_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="prestashop_specific_price_form_view" model="ir.ui.view">
+        <field name="name">prestashop.specific.price.form</field>
+        <field name="model">prestashop.specific.price</field>
+        <field name="arch" type="xml">
+            <form string="Prestashop Specific Price">
+                <group>
+                    <field name="prestashop_id" readonly="1"/>
+                    <field name="backend_id" readonly="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+  </data>
+</openerp>

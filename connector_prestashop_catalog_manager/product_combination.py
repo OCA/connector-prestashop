@@ -15,6 +15,8 @@ from openerp.addons.connector_prestashop.unit.mapper import \
 from openerp.addons.connector_prestashop.unit.deleter import (
     export_delete_record
 )
+
+from openerp.addons.connector.connector import ConnectorUnit
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
 from openerp import models, fields
@@ -106,6 +108,16 @@ class PrestashopProductCombination(models.Model):
 
 
 @prestashop
+class ProductCombinationSpecificPriceExport(ConnectorUnit):
+    _model_name = ['prestashop.product.combination']
+
+    def export_pricelist_items(self, erp_record):
+        # Hook method to use in connector_prestashop_specific_prices
+        # to avoid replacing CombinationRecordExport class
+        pass
+
+
+@prestashop
 class ProductCombinationExport(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.combination'
 
@@ -179,8 +191,15 @@ class ProductCombinationExport(TranslationPrestashopExporter):
         self.erp_record.odoo_id.with_context(
             self.session.context).update_prestashop_qty()
 
+    def _update(self, data):
+        super(ProductCombinationExport, self)._update(data)
+        pricelist_mapper = self.unit_for(ProductCombinationSpecificPriceExport)
+        pricelist_mapper.export_pricelist_items(self.erp_record)
+
     def _after_export(self):
         self.update_quantities()
+        pricelist_mapper = self.unit_for(ProductCombinationSpecificPriceExport)
+        pricelist_mapper.export_pricelist_items(self.erp_record)
 
 
 @prestashop
