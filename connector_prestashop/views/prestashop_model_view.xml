@@ -45,6 +45,7 @@
                     <field name="taxes_included"/>
                     <field name="discount_product_id" />
                     <field name="shipping_product_id" />
+                    <field name="pricelist_id" />
                 </group>
                 <notebook>
                     <page name="import" string="Imports">

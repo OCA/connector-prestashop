@@ -97,6 +97,11 @@ class PrestashopBackend(models.Model):
         string='Shipping Product',
     )
 
+    pricelist_id = fields.Many2one(
+        'product.pricelist',
+        string="Main Pricelist"
+    )
+
     @api.multi
     def synchronize_metadata(self):
         session = ConnectorSession(
