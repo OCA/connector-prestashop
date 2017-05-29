@@ -3,10 +3,10 @@
 
 import logging
 
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.unit.backend_adapter import BackendAdapter
+from odoo.addons.connector.connector import ConnectorUnit
+from odoo.addons.connector.unit.backend_adapter import BackendAdapter
 
-from openerp import _, exceptions
+from odoo import _, exceptions
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class AutoMatchingImporter(ConnectorUnit):
         # Loop on all PS IDs
         for ps_id in ps_ids:
             # Check if the PS ID is already mapped to an OE ID
-            record = binder.to_odoo(ps_id)
+            record = binder.to_internal(ps_id)
             if record:
                 # Do nothing for the PS IDs that are already mapped
                 _logger.debug(

@@ -3,9 +3,9 @@
 
 import re
 
-from openerp import fields, _
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import (
+from odoo import fields, _
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.mapper import (
     ImportMapper,
     mapping,
     only_create,
@@ -16,7 +16,7 @@ from ...unit.importer import (
     DelayedBatchImporter,
 )
 from ...backend import prestashop
-from openerp.addons.connector.unit.mapper import backend_to_m2o
+from odoo.addons.connector.unit.mapper import external_to_m2o
 
 
 @prestashop
@@ -31,15 +31,15 @@ class PartnerImportMapper(ImportMapper):
         ('company', 'company'),
         ('active', 'active'),
         ('note', 'comment'),
-        (backend_to_m2o('id_shop_group'), 'shop_group_id'),
-        (backend_to_m2o('id_shop'), 'shop_id'),
-        (backend_to_m2o('id_default_group'), 'default_category_id'),
+        (external_to_m2o('id_shop_group'), 'shop_group_id'),
+        (external_to_m2o('id_shop'), 'shop_id'),
+        (external_to_m2o('id_default_group'), 'default_category_id'),
     ]
 
     @mapping
     def pricelist(self, record):
         binder = self.binder_for('prestashop.groups.pricelist')
-        pricelist = binder.to_odoo(record['id_default_group'], unwrap=True)
+        pricelist = binder.to_internal(record['id_default_group'], unwrap=True)
         if not pricelist:
             return {}
         return {'property_product_pricelist': pricelist.id}
@@ -67,7 +67,7 @@ class PartnerImportMapper(ImportMapper):
         partner_category_bindings = self.env[model_name].browse()
         binder = self.binder_for(model_name)
         for group in groups:
-            partner_category_bindings |= binder.to_odoo(group['id'])
+            partner_category_bindings |= binder.to_internal(group['id'])
 
         result = {'group_ids': [(6, 0, partner_category_bindings.ids)],
                   'category_id': [(4, b.odoo_id.id)
@@ -83,7 +83,7 @@ class PartnerImportMapper(ImportMapper):
         binder = self.binder_for('prestashop.res.lang')
         erp_lang = None
         if record.get('id_lang'):
-            erp_lang = binder.to_odoo(record['id_lang'])
+            erp_lang = binder.to_internal(record['id_lang'])
         if not erp_lang:
             erp_lang = self.env.ref('base.lang_en')
         return {'lang': erp_lang.code}
@@ -121,14 +121,10 @@ class ResPartnerImporter(PrestashopImporter):
     def _after_import(self, binding):
         super(ResPartnerImporter, self)._after_import(binding)
         binder = self.binder_for()
-        ps_id = binder.to_backend(binding)
-        import_batch.delay(
-            self.session,
-            'prestashop.address',
-            self.backend_record.id,
-            filters={'filter[id_customer]': '%d' % (ps_id,)},
-            priority=10,
-        )
+        ps_id = binder.to_external(binding)
+        self.env['prestashop.address'].with_delay(priority=10).import_batch(
+            backend=self.backend_record,
+            filters={'filter[id_customer]': '%d' % (ps_id,)})
 
 
 @prestashop
@@ -150,7 +146,7 @@ class AddressImportMapper(ImportMapper):
         ('postcode', 'zip'),
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
-        (backend_to_m2o('id_customer'), 'prestashop_partner_id'),
+        (external_to_m2o('id_customer'), 'prestashop_partner_id'),
     ]
 
     @mapping
@@ -160,7 +156,7 @@ class AddressImportMapper(ImportMapper):
     @mapping
     def parent_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        parent = binder.to_odoo(record['id_customer'], unwrap=True)
+        parent = binder.to_internal(record['id_customer'], unwrap=True)
         return {'parent_id': parent.id}
 
     @mapping
@@ -179,7 +175,7 @@ class AddressImportMapper(ImportMapper):
     def country(self, record):
         if record.get('id_country'):
             binder = self.binder_for('prestashop.res.country')
-            country = binder.to_odoo(record['id_country'], unwrap=True)
+            country = binder.to_internal(record['id_country'], unwrap=True)
             return {'country_id': country.id}
         return {}
 
@@ -235,8 +231,7 @@ class AddressBatchImporter(DelayedBatchImporter):
 
 
 @job(default_channel='root.prestashop')
-def import_customers_since(
-        session, backend_id, since_date=None, **kwargs):
+def import_customers_since(env, since_date=None, **kwargs):
     """ Prepare the import of partners modified on PrestaShop """
     filters = None
     if since_date:
@@ -244,23 +239,10 @@ def import_customers_since(
             'date': '1',
             'filter[date_upd]': '>[%s]' % since_date}
     now_fmt = fields.Datetime.now()
-    result = import_batch(
-        session,
-        'prestashop.res.partner.category',
-        backend_id,
-        filters,
-        **kwargs
-    ) or ''
-    result += import_batch(
-        session,
-        'prestashop.res.partner',
-        backend_id,
-        filters,
-        priority=15,
-        **kwargs
-    ) or ''
-
-    session.env['prestashop.backend'].browse(backend_id).write({
-        'import_partners_since': now_fmt,
-    })
+    result = import_batch(env, filters, **kwargs) or ''
+    result += import_batch(env, filters, priority=15, **kwargs) or ''
+    env.backend_record.import_partners_since = now_fmt
+    # env['prestashop.backend'].browse(backend_id).write({
+    #     'import_partners_since': now_fmt,
+    # })
     return result

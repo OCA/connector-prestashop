@@ -2,10 +2,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-from openerp import _
-from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.exceptions import UserError
-from openerp.addons.connector.queue.job import job
+from odoo import _
+from odoo.addons.connector.unit.synchronizer import Exporter
+from odoo.exceptions import UserError
+from odoo.addons.queue_job.job import job
 from ...backend import prestashop
 from ...unit.backend_adapter import PrestaShopCRUDAdapter
 
@@ -32,7 +32,7 @@ class PrestashopTrackingExporter(Exporter):
         self.binding = self.model.browse(binding_id)
         tracking = self._get_tracking()
         if tracking:
-            prestashop_order_id = self.binder.to_backend(self.binding)
+            prestashop_order_id = self.binder.to_external(self.binding)
             filters = {
                 'filter[id_order]': prestashop_order_id,
             }

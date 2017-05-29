@@ -4,14 +4,14 @@
 import logging
 from contextlib import closing, contextmanager
 
-import openerp
-from openerp import _
+import odoo
+from odoo import _
 
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import Importer
-from openerp.addons.connector.connector import ConnectorUnit, Binder
-from openerp.addons.connector.session import ConnectorSession
-from openerp.addons.connector.exception import (
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.synchronizer import Importer
+from odoo.addons.connector.connector import ConnectorUnit, Binder
+from odoo.addons.connector.connector import ConnectorEnvironment
+from odoo.addons.queue_job.exception import (
     RetryableJobError,
     FailedJobError,
 )
@@ -53,7 +53,7 @@ class PrestashopBaseImporter(Importer):
         if importer_class is None:
             importer_class = PrestashopImporter
         binder = self.binder_for(binding_model)
-        if always or not binder.to_odoo(prestashop_id):
+        if always or not binder.to_internal(prestashop_id):
             importer = self.unit_for(importer_class, model=binding_model)
             importer.run(prestashop_id, **kwargs)
 
@@ -101,7 +101,7 @@ class PrestashopImporter(PrestashopBaseImporter):
 
     def _get_binding(self):
         """Return the openerp id from the prestashop id"""
-        return self.binder.to_odoo(self.prestashop_id)
+        return self.binder.to_internal(self.prestashop_id)
 
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
@@ -153,18 +153,16 @@ class PrestashopImporter(PrestashopBaseImporter):
         This can be used to make a preemptive check in a new transaction,
         for instance to see if another transaction already made the work.
         """
-        with openerp.api.Environment.manage():
-            registry = openerp.modules.registry.RegistryManager.get(
+        with odoo.api.Environment.manage():
+            registry = odoo.modules.registry.RegistryManager.get(
                 self.env.cr.dbname
             )
             with closing(registry.cursor()) as cr:
                 try:
-                    new_env = openerp.api.Environment(cr, self.env.uid,
+                    new_env = odoo.api.Environment(cr, self.env.uid,
                                                       self.env.context)
-                    new_connector_session = ConnectorSession.from_env(new_env)
                     connector_env = self.connector_env.create_environment(
                         self.backend_record.with_env(new_env),
-                        new_connector_session,
                         model_name or self.model._name,
                         connector_env=self.connector_env
                     )
@@ -219,7 +217,7 @@ class PrestashopImporter(PrestashopBaseImporter):
             # later (and the new T3 will be aware of the category X
             # from the its inception).
             binder = new_connector_env.get_connector_unit(Binder)
-            if binder.to_odoo(self.prestashop_id):
+            if binder.to_internal(self.prestashop_id):
                 raise RetryableJobError(
                     'Concurrent error. The job will be retried later',
                     seconds=RETRY_WHEN_CONCURRENT_DETECTED,
@@ -347,12 +345,9 @@ class DirectBatchImporter(BatchImporter):
 
     def _import_record(self, record):
         """ Import the record directly """
-        import_record(
-            self.session,
-            self.model._name,
-            self.backend_record.id,
-            record
-        )
+        self.env[self.model._name].with_delay().import_record(
+            backend=self.backend_record,
+            prestashop_id=record)
 
 
 class DelayedBatchImporter(BatchImporter):
@@ -361,13 +356,10 @@ class DelayedBatchImporter(BatchImporter):
 
     def _import_record(self, record, **kwargs):
         """ Delay the import of the records"""
-        import_record.delay(
-            self.session,
-            self.model._name,
-            self.backend_record.id,
-            record,
-            **kwargs
-        )
+        self.env[self.model._name].with_delay().import_record(
+            backend=self.backend_record,
+            prestashop_id=record,
+            **kwargs)
 
 
 class TranslatableRecordImporter(PrestashopImporter):
@@ -390,7 +382,7 @@ class TranslatableRecordImporter(PrestashopImporter):
 
     def _get_odoo_language(self, prestashop_id):
         language_binder = self.binder_for('prestashop.res.lang')
-        erp_language = language_binder.to_odoo(prestashop_id)
+        erp_language = language_binder.to_internal(prestashop_id)
         return erp_language
 
     def find_each_language(self, record):
@@ -497,21 +489,16 @@ class TranslatableRecordImporter(PrestashopImporter):
                 connector_no_export=True,
             ).write(map_record.values())
 
-
+# TODO: Remove when all imports has been changed
 @job(default_channel='root.prestashop')
-def import_batch(session, model_name, backend_id, filters=None, **kwargs):
+def import_batch(env, filters=None, **kwargs):
     """ Prepare a batch import of records from PrestaShop """
-    backend = session.env['prestashop.backend'].browse(backend_id)
-    env = backend.get_environment(model_name, session=session)
     importer = env.get_connector_unit(BatchImporter)
     return importer.run(filters=filters, **kwargs)
 
 
 @job(default_channel='root.prestashop')
-def import_record(
-        session, model_name, backend_id, prestashop_id, **kwargs):
+def import_record(env, model_name, backend_id, prestashop_id, **kwargs):
     """ Import a record from PrestaShop """
-    backend = session.env['prestashop.backend'].browse(backend_id)
-    env = backend.get_environment(model_name, session=session)
     importer = env.get_connector_unit(PrestashopImporter)
     return importer.run(prestashop_id, **kwargs)

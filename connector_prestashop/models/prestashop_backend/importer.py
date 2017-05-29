@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import _
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
+from odoo import _
+from odoo.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.importer import PrestashopImporter, DirectBatchImporter
 from ...backend import prestashop
 

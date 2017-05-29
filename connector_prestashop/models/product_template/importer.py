@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import _, models, fields
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import (
+from odoo import _, models, fields
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.mapper import (
     mapping,
     only_create,
     ImportMapper
@@ -17,7 +17,7 @@ from ...unit.importer import (
     PrestashopBaseImporter,
     TranslatableRecordImporter,
 )
-from openerp.addons.connector.unit.mapper import backend_to_m2o
+from odoo.addons.connector.unit.mapper import external_to_m2o
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
 from ..product_image.importer import (
@@ -53,7 +53,7 @@ class TemplateMapper(ImportMapper):
         ('weight', 'weight'),
         ('wholesale_price', 'wholesale_price'),
         ('wholesale_price', 'standard_price'),
-        (backend_to_m2o('id_shop_default'), 'default_shop_id'),
+        (external_to_m2o('id_shop_default'), 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
         ('reference', 'reference'),
         ('available_for_order', 'available_for_order'),
@@ -205,7 +205,7 @@ class TemplateMapper(ImportMapper):
         product_categories = self.env['product.category'].browse()
         binder = self.binder_for('prestashop.product.category')
         for ps_category in categories:
-            product_categories |= binder.to_odoo(
+            product_categories |= binder.to_internal(
                 ps_category['id'],
                 unwrap=True,
             )
@@ -216,7 +216,7 @@ class TemplateMapper(ImportMapper):
         if not int(record['id_category_default']):
             return
         binder = self.binder_for('prestashop.product.category')
-        category = binder.to_odoo(
+        category = binder.to_internal(
             record['id_category_default'],
             unwrap=True,
         )
@@ -246,7 +246,7 @@ class TemplateMapper(ImportMapper):
         # if record['id_tax_rules_group'] == '0':
         #     return {}
         binder = self.binder_for('prestashop.account.tax.group')
-        tax_group = binder.to_odoo(
+        tax_group = binder.to_internal(
             record['id_tax_rules_group'],
             unwrap=True,
         )
@@ -375,9 +375,9 @@ class ProductInventoryImporter(PrestashopImporter):
         record = self.prestashop_record
         if record['id_product_attribute'] == '0':
             binder = self.binder_for('prestashop.product.template')
-            return binder.to_odoo(record['id_product'])
+            return binder.to_internal(record['id_product'])
         binder = self.binder_for('prestashop.product.combination')
-        return binder.to_odoo(record['id_product_attribute'])
+        return binder.to_internal(record['id_product_attribute'])
 
     def _import_dependencies(self):
         """ Import the dependencies for the record"""

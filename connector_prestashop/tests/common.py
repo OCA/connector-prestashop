@@ -5,7 +5,7 @@
 import functools
 
 import openerp.tests.common as common
-from openerp.addons.connector.session import ConnectorSession
+from odoo.addons.connector.connector import ConnectorEnvironment
 
 from contextlib import contextmanager
 from os.path import dirname, exists, join
@@ -82,7 +82,6 @@ class PrestashopTransactionCase(common.TransactionCase):
 
     def setUp(self):
         super(PrestashopTransactionCase, self).setUp()
-        self.conn_session = ConnectorSession.from_env(self.env)
         self.backend_record = self.env.ref(
             'connector_prestashop.prestashop_backend_demo'
         )

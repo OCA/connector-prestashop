@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import _, fields
+from odoo import _, fields
 
-from openerp.addons.connector.exception import MappingError
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import (
+from odoo.addons.connector.exception import MappingError
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.mapper import (
     mapping,
     ImportMapper,
     only_create,
@@ -68,7 +68,7 @@ class RefundMapper(ImportMapper):
 
     def _get_order(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        return binder.to_odoo(record['id_order'])
+        return binder.to_internal(record['id_order'])
 
     @mapping
     def from_sale_order(self, record):
@@ -141,7 +141,7 @@ class RefundMapper(ImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order = binder.to_odoo(record['id_order'], unwrap=True)
+        sale_order = binder.to_internal(record['id_order'], unwrap=True)
         if not sale_order.carrier_id:
             return None
         sale_order_line_ids = self.env['sale.order.line'].search([
@@ -223,13 +223,13 @@ class RefundMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_odoo(record['id_customer'], unwrap=True)
+        partner = binder.to_internal(record['id_customer'], unwrap=True)
         return {'partner_id': partner.id}
 
     @mapping
     def account_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_odoo(record['id_customer'])
+        partner = binder.to_internal(record['id_customer'])
         partner = partner.with_context(
             company_id=self.backend_record.company_id.id,
         )

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models
-from openerp.addons.decimal_precision import decimal_precision as dp
+from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
 
+from odoo.addons.queue_job.job import job
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
+from exporter import CombinationInventoryExporter
 
 
 class ProductProduct(models.Model):
@@ -170,6 +172,21 @@ class PrestashopProductCombination(models.Model):
     @api.model
     def _prestashop_qty(self, product):
         return product.qty_available
+
+    @job(default_channel='root.prestashop')
+    def export_inventory(self, backend, fields=None, **kwargs):
+        """ Export the inventory configuration and quantity of a product. """
+        env = backend.get_environment(self._name)
+        inventory_exporter = env.get_connector_unit(
+            CombinationInventoryExporter)
+        return inventory_exporter.run(self.id, fields, **kwargs)
+
+    @api.model
+    @job(default_channel='root.prestashop')
+    def export_product_quantities(self, backend):
+        self.search([
+            ('backend_id', 'in', backend.ids),
+        ]).recompute_prestashop_qty()
 
 
 class ProductAttribute(models.Model):

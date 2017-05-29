@@ -2,7 +2,7 @@
 # Copyright 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.connector import ConnectorUnit
+from odoo.addons.connector.connector import ConnectorUnit
 from ..backend import prestashop, prestashop_1_6_0_9, prestashop_1_6_1_2
 
 

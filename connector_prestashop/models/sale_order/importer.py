@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import _, fields
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.exception import FailedJobError, NothingToDoJob
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
-from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
+from odoo import _, fields
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.connector import ConnectorUnit
+from odoo.addons.queue_job.exception import FailedJobError, NothingToDoJob
+from odoo.addons.connector.unit.mapper import ImportMapper, mapping
+from odoo.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange,
 )
 from ...unit.backend_adapter import GenericAdapter
@@ -85,7 +85,7 @@ class SaleImportRule(ConnectorUnit):
         """
         ps_payment_method = record['payment']
         mode_binder = self.binder_for('account.payment.mode')
-        payment_mode = mode_binder.to_odoo(ps_payment_method)
+        payment_mode = mode_binder.to_internal(ps_payment_method)
         if not payment_mode:
             raise FailedJobError(_(
                 "The configuration is missing for the Payment Mode '%s'.\n\n"
@@ -199,19 +199,19 @@ class SaleOrderMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_odoo(record['id_customer'], unwrap=True)
+        partner = binder.to_internal(record['id_customer'], unwrap=True)
         return {'partner_id': partner.id}
 
     @mapping
     def partner_invoice_id(self, record):
         binder = self.binder_for('prestashop.address')
-        address = binder.to_odoo(record['id_address_invoice'], unwrap=True)
+        address = binder.to_internal(record['id_address_invoice'], unwrap=True)
         return {'partner_invoice_id': address.id}
 
     @mapping
     def partner_shipping_id(self, record):
         binder = self.binder_for('prestashop.address')
-        shipping = binder.to_odoo(record['id_address_delivery'], unwrap=True)
+        shipping = binder.to_internal(record['id_address_delivery'], unwrap=True)
         return {'partner_shipping_id': shipping.id}
 
     @mapping
@@ -230,7 +230,7 @@ class SaleOrderMapper(ImportMapper):
     @mapping
     def payment(self, record):
         binder = self.binder_for('account.payment.mode')
-        mode = binder.to_odoo(record['payment'])
+        mode = binder.to_internal(record['payment'])
         assert mode, ("import of error fail in SaleImportRule.check "
                       "when the payment mode is missing")
         return {'payment_mode_id': mode.id}
@@ -240,7 +240,7 @@ class SaleOrderMapper(ImportMapper):
         if record['id_carrier'] == '0':
             return {}
         binder = self.binder_for('prestashop.delivery.carrier')
-        carrier = binder.to_odoo(record['id_carrier'], unwrap=True)
+        carrier = binder.to_internal(record['id_carrier'], unwrap=True)
         return {'carrier_id': carrier.id}
 
     @mapping
@@ -381,13 +381,13 @@ class SaleOrderLineMapper(ImportMapper):
             combination_binder = self.binder_for(
                 'prestashop.product.combination'
             )
-            product = combination_binder.to_odoo(
+            product = combination_binder.to_internal(
                 record['product_attribute_id'],
                 unwrap=True,
             )
         else:
             binder = self.binder_for('prestashop.product.template')
-            template = binder.to_odoo(record['product_id'], unwrap=True)
+            template = binder.to_internal(record['product_id'], unwrap=True)
             product = self.env['product.product'].search([
                 ('product_tmpl_id', '=', template.id),
                 ('company_id', '=', self.backend_record.company_id.id)],
@@ -402,7 +402,7 @@ class SaleOrderLineMapper(ImportMapper):
 
     def _find_tax(self, ps_tax_id):
         binder = self.binder_for('prestashop.account.tax')
-        return binder.to_odoo(ps_tax_id, unwrap=True)
+        return binder.to_internal(ps_tax_id, unwrap=True)
 
     @mapping
     def tax_id(self, record):

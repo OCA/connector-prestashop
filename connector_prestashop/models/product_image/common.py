@@ -3,7 +3,7 @@
 
 import base64
 
-from openerp import models, fields
+from odoo import models, fields
 
 from ...unit.backend_adapter import (
     PrestaShopCRUDAdapter,
