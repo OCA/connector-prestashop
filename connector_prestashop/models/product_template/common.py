@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import api, fields, models
-from openerp.addons.decimal_precision import decimal_precision as dp
+from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
 
+from odoo.addons.queue_job.job import job
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
+from exporter import ProductInventoryExporter
 
 import logging
 
@@ -106,7 +108,7 @@ class PrestashopProductTemplate(models.Model):
     on_sale = fields.Boolean(string='Show on sale icon')
     wholesale_price = fields.Float(
         string='Cost Price',
-        digits_compute=dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
     )
 
     @api.multi
@@ -124,6 +126,35 @@ class PrestashopProductTemplate(models.Model):
             ('usage', '=', 'internal'),
         ])
         return self.with_context(location=locations.ids).qty_available
+
+    @job(default_channel='root.prestashop')
+    def import_products(self, backend, since_date=None, **kwargs):
+        filters = None
+        if since_date:
+            filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
+        now_fmt = fields.Datetime.now()
+        self.env['prestashop.product.category'].with_delay(
+            priority=15
+        ).import_batch(backend=backend, filters=filters, **kwargs)
+        self.env['prestashop.product.template'].with_delay(
+            priority=15
+        ).import_batch(backend, filters, **kwargs)
+        backend.import_products_since = now_fmt
+        return True
+
+    @job(default_channel='root.prestashop')
+    def export_inventory(self, backend, fields=None, **kwargs):
+        """ Export the inventory configuration and quantity of a product. """
+        env = backend.get_environment(self._name)
+        inventory_exporter = env.get_connector_unit(ProductInventoryExporter)
+        return inventory_exporter.run(self.id, fields, **kwargs)
+
+    @api.model
+    @job(default_channel='root.prestashop')
+    def export_product_quantities(self, backend):
+        self.search([
+            ('backend_id', 'in', self.env.backend.ids),
+        ]).recompute_prestashop_qty()
 
 
 @prestashop

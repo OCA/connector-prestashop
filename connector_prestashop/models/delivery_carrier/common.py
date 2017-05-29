@@ -3,7 +3,7 @@
 
 import logging
 
-from openerp import models, fields
+from odoo import models, fields
 
 from ...backend import prestashop
 from ...unit.backend_adapter import GenericAdapter

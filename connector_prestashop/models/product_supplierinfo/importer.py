@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import fields
-from openerp.addons.connector.exception import FailedJobError
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
+from odoo import fields
+from odoo.addons.queue_job.exception import FailedJobError
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.mapper import ImportMapper, mapping
 
 from ...unit.backend_adapter import PrestaShopCRUDAdapter
 from ...unit.importer import (
@@ -74,7 +74,7 @@ class SupplierImporter(PrestashopImporter):
     def _after_import(self, binding):
         super(SupplierImporter, self)._after_import(binding)
         binder = self.binder_for()
-        ps_id = binder.to_backend(binding)
+        ps_id = binder.to_external(binding)
         import_batch(
             self.session,
             'prestashop.product.supplierinfo',
@@ -108,14 +108,14 @@ class SupplierInfoMapper(ImportMapper):
     @mapping
     def name(self, record):
         binder = self.binder_for('prestashop.supplier')
-        partner = binder.to_openerp(record['id_supplier'], unwrap=True)
+        partner = binder.to_internal(record['id_supplier'], unwrap=True)
         return {'name': partner.id}
 
     @mapping
     def product_id(self, record):
         if record['id_product_attribute'] != '0':
             binder = self.binder_for('prestashop.product.combination')
-            product = binder.to_openerp(
+            product = binder.to_internal(
                 record['id_product_attribute'],
                 unwrap=True,
             )
@@ -125,7 +125,7 @@ class SupplierInfoMapper(ImportMapper):
     @mapping
     def product_tmpl_id(self, record):
         binder = self.binder_for('prestashop.product.template')
-        template = binder.to_openerp(record['id_product'], unwrap=True)
+        template = binder.to_internal(record['id_product'], unwrap=True)
         return {'product_tmpl_id': template.id}
 
     @mapping
