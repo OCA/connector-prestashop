@@ -1,0 +1,42 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+    method: GET
+    uri: http://172.24.0.3/api/addresses/1
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<address>\n\t<id><![CDATA[1]]></id>\n\
+        \t<id_customer xlink:href=\"http://172.24.0.3/api/customers/1\"><![CDATA[1]]></id_customer>\n\
+        \t<id_manufacturer><![CDATA[0]]></id_manufacturer>\n\t<id_supplier><![CDATA[0]]></id_supplier>\n\
+        \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_country xlink:href=\"\
+        http://172.24.0.3/api/countries/8\"><![CDATA[8]]></id_country>\n\t<id_state><![CDATA[0]]></id_state>\n\
+        \t<alias><![CDATA[My address]]></alias>\n\t<company></company>\n\t<lastname><![CDATA[DOE]]></lastname>\n\
+        \t<firstname><![CDATA[John]]></firstname>\n\t<vat_number></vat_number>\n\t\
+        <address1><![CDATA[16, Main street]]></address1>\n\t<address2><![CDATA[2nd\
+        \ floor]]></address2>\n\t<postcode><![CDATA[75002]]></postcode>\n\t<city><![CDATA[Paris]]></city>\n\
+        \t<other></other>\n\t<phone><![CDATA[0102030405]]></phone>\n\t<phone_mobile></phone_mobile>\n\
+        \t<dni></dni>\n\t<deleted><![CDATA[0]]></deleted>\n\t<date_add><![CDATA[2016-09-02\
+        \ 14:37:21]]></date_add>\n\t<date_upd><![CDATA[2016-09-13 13:15:50]]></date_upd>\n\
+        </address>\n</prestashop>\n"}
+    headers:
+      access-time: ['1473765540']
+      connection: [Keep-Alive]
+      content-length: ['1076']
+      content-sha1: [42ea80e7561153f663f05ccb4da183a5c1e6e106]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 13 Sep 2016 11:19:00 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.6]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkW96S5y6P1Cj2eE4D0MlyGo0TCCQpU2aaufrN6zBe2bp3C0Cr3Iq5VdUosLnSieB8cSRqNfnkvwkpQy3YlPyLr0%3D000079;
+          expires=Mon, 03-Oct-2016 11:19:00 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1

@@ -1,0 +1,86 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/orders?date=1&limit=0%2C1000&filter%5Bdate_upd%5D=%3E%5B2016-12-01+00%3A00%3A00%5D
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <orders>
+
+        <order id="1" xlink:href="http://172.22.0.4/api/orders/1"/>
+
+        <order id="2" xlink:href="http://172.22.0.4/api/orders/2"/>
+
+        <order id="3" xlink:href="http://172.22.0.4/api/orders/3"/>
+
+        <order id="4" xlink:href="http://172.22.0.4/api/orders/4"/>
+
+        <order id="5" xlink:href="http://172.22.0.4/api/orders/5"/>
+
+        </orders>
+
+        </prestashop>
+
+        '}
+    headers:
+      access-time: ['1481279649']
+      connection: [Keep-Alive]
+      content-length: ['428']
+      content-sha1: [3cdffda12e242f64c9988d1659653b619a5a0fec]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 10:34:09 GMT']
+      execution-time: ['0.01']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TUudwQS8kEjsMfUuhE39VPxmVm9HstDaGd1I0cr5wBOpSKwT4%2Buhk3GJTIxujKbBlpvmFJUxyjsWeaNoGE7e6LM%3D000079;
+          expires=Thu, 29-Dec-2016 10:34:09 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/customer_messages?date=1&limit=0%2C1000&filter%5Bdate_add%5D=%3E%5B2016-12-01+00%3A00%3A00%5D
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <customer_messages>
+
+        </customer_messages>
+
+        </prestashop>
+
+        '}
+    headers:
+      access-time: ['1481279649']
+      connection: [Keep-Alive]
+      content-length: ['150']
+      content-sha1: [f785adb02abb8a8536247bfb654e6e7d2304a891]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Fri, 09 Dec 2016 10:34:09 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TUudwQS8kEjsMfUuhE39VPxmVm9HstDaGd1I0cr5wBOpSKwT4%2Buhk3GJTIxujKbBlpvmFJUxyjsWeaNoGE7e6LM%3D000079;
+          expires=Thu, 29-Dec-2016 10:34:09 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1

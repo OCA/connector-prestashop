@@ -1,0 +1,49 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+    method: GET
+    uri: http://172.24.0.3/api/customers/1
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<customer>\n\t\
+        <id><![CDATA[1]]></id>\n\t<id_default_group xlink:href=\"http://172.24.0.3/api/groups/3\"\
+        ><![CDATA[3]]></id_default_group>\n\t<id_lang xlink:href=\"http://172.24.0.3/api/languages/1\"\
+        ><![CDATA[1]]></id_lang>\n\t<newsletter_date_add><![CDATA[2013-12-13 08:19:15]]></newsletter_date_add>\n\
+        \t<ip_registration_newsletter></ip_registration_newsletter>\n\t<last_passwd_gen><![CDATA[2016-09-02\
+        \ 08:37:21]]></last_passwd_gen>\n\t<secure_key><![CDATA[e2aac4f92c46b32d8fad76b68e85af69]]></secure_key>\n\
+        \t<deleted><![CDATA[0]]></deleted>\n\t<passwd><![CDATA[7a93bfb25b8eee73034fad735ae5a4f5]]></passwd>\n\
+        \t<lastname><![CDATA[DOE]]></lastname>\n\t<firstname><![CDATA[John]]></firstname>\n\
+        \t<email><![CDATA[pub@prestashop.com]]></email>\n\t<id_gender><![CDATA[1]]></id_gender>\n\
+        \t<birthday><![CDATA[1970-01-15]]></birthday>\n\t<newsletter><![CDATA[1]]></newsletter>\n\
+        \t<optin><![CDATA[1]]></optin>\n\t<website></website>\n\t<company></company>\n\
+        \t<siret></siret>\n\t<ape></ape>\n\t<outstanding_allow_amount><![CDATA[0.000000]]></outstanding_allow_amount>\n\
+        \t<show_public_prices><![CDATA[0]]></show_public_prices>\n\t<id_risk><![CDATA[0]]></id_risk>\n\
+        \t<max_payment_days><![CDATA[0]]></max_payment_days>\n\t<active><![CDATA[1]]></active>\n\
+        \t<note></note>\n\t<is_guest><![CDATA[0]]></is_guest>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
+        \t<id_shop_group><![CDATA[1]]></id_shop_group>\n\t<date_add><![CDATA[2016-09-02\
+        \ 14:37:21]]></date_add>\n\t<date_upd><![CDATA[2016-09-13 10:57:58]]></date_upd>\n\
+        <associations>\n<groups nodeType=\"group\" api=\"groups\">\n\t<group xlink:href=\"\
+        http://172.24.0.3/api/groups/3\">\n\t<id><![CDATA[3]]></id>\n\t</group>\n\
+        </groups>\n</associations>\n</customer>\n</prestashop>\n"}
+    headers:
+      access-time: ['1473763584']
+      connection: [Keep-Alive]
+      content-length: ['1710']
+      content-sha1: [b210b90bbd5da68baab23e4fc642347377dc959b]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 13 Sep 2016 10:46:24 GMT']
+      execution-time: ['0.003']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.6]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkc%2B6NOanWA%2BLNql8jnO6Fa5RirOCE9bVBUKNzl31LGue13WDLnljyDfOp04pU3EFOz2zE66WXzccKAMzLH%2BL25M%3D000079;
+          expires=Mon, 03-Oct-2016 10:46:24 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1

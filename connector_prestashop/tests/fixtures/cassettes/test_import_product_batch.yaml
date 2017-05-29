@@ -1,0 +1,112 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.11.1]
+    method: GET
+    uri: http://172.20.0.4/api/categories?date=1&limit=0%2C1000&filter%5Bdate_upd%5D=%3E%5B2016-09-01+00%3A00%3A00%5D
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <categories>
+
+        <category id="1" xlink:href="http://172.20.0.4/api/categories/1"/>
+
+        <category id="2" xlink:href="http://172.20.0.4/api/categories/2"/>
+
+        <category id="3" xlink:href="http://172.20.0.4/api/categories/3"/>
+
+        <category id="4" xlink:href="http://172.20.0.4/api/categories/4"/>
+
+        <category id="5" xlink:href="http://172.20.0.4/api/categories/5"/>
+
+        <category id="6" xlink:href="http://172.20.0.4/api/categories/6"/>
+
+        <category id="7" xlink:href="http://172.20.0.4/api/categories/7"/>
+
+        <category id="8" xlink:href="http://172.20.0.4/api/categories/8"/>
+
+        <category id="9" xlink:href="http://172.20.0.4/api/categories/9"/>
+
+        <category id="10" xlink:href="http://172.20.0.4/api/categories/10"/>
+
+        <category id="11" xlink:href="http://172.20.0.4/api/categories/11"/>
+
+        </categories>
+
+        </prestashop>
+
+        '}
+    headers:
+      access-time: ['1476774086']
+      connection: [Keep-Alive]
+      content-length: ['877']
+      content-sha1: [c4d129c8aae2c59cd4cbfc6769e107f5edf79e32]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 18 Oct 2016 07:01:26 GMT']
+      execution-time: ['0.069']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.7]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-bfbe109d475f74a42c8014cc428afcb4=K5cSFnGZ1qrhoBa0L%2F2UqE0IUzQLmgI12bys4v6ciASEImo%2FlQ%2BWt3RpVwk1fnlWGBFBgK99oHtGMqGwEYKZJAH%2BfUwVeE7eIvLioStDrMo%3D000079;
+          expires=Mon, 07-Nov-2016 07:01:26 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.11.1]
+    method: GET
+    uri: http://172.20.0.4/api/products?date=1&limit=0%2C1000&filter%5Bdate_upd%5D=%3E%5B2016-09-01+00%3A00%3A00%5D
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <products>
+
+        <product id="1" xlink:href="http://172.20.0.4/api/products/1"/>
+
+        <product id="2" xlink:href="http://172.20.0.4/api/products/2"/>
+
+        <product id="3" xlink:href="http://172.20.0.4/api/products/3"/>
+
+        <product id="4" xlink:href="http://172.20.0.4/api/products/4"/>
+
+        <product id="5" xlink:href="http://172.20.0.4/api/products/5"/>
+
+        <product id="6" xlink:href="http://172.20.0.4/api/products/6"/>
+
+        <product id="7" xlink:href="http://172.20.0.4/api/products/7"/>
+
+        </products>
+
+        </prestashop>
+
+        '}
+    headers:
+      access-time: ['1476774086']
+      connection: [Keep-Alive]
+      content-length: ['580']
+      content-sha1: [6134ad7d5e7ecb72a43c9e2580584666957aa118]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 18 Oct 2016 07:01:26 GMT']
+      execution-time: ['0.017']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.7]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-bfbe109d475f74a42c8014cc428afcb4=K5cSFnGZ1qrhoBa0L%2F2UqE0IUzQLmgI12bys4v6ciASEImo%2FlQ%2BWt3RpVwk1fnlWGBFBgK99oHtGMqGwEYKZJAH%2BfUwVeE7eIvLioStDrMo%3D000079;
+          expires=Mon, 07-Nov-2016 07:01:26 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1
