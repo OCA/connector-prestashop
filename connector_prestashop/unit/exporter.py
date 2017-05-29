@@ -7,10 +7,11 @@ from contextlib import contextmanager
 import psycopg2
 
 
-from openerp import _, exceptions
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.addons.connector.exception import RetryableJobError
+from odoo import _, exceptions
+from odoo.addons.queue_job.job import job
+from odoo.addons.queue_job.job import related_action
+from odoo.addons.connector.unit.synchronizer import Exporter
+from odoo.addons.connector.exception import RetryableJobError
 from .mapper import TranslationPrestashopExportMapper
 
 
@@ -47,7 +48,7 @@ class PrestashopBaseExporter(Exporter):
         """
         self.binding_id = binding_id
         self.binding = self._get_binding()
-        self.prestashop_id = self.binder.to_backend(self.binding)
+        self.prestashop_id = self.binder.to_external(self.binding)
         result = self._run(*args, **kwargs)
 
         self.binder.bind(self.prestashop_id, self.binding)
@@ -203,7 +204,7 @@ class PrestashopExporter(PrestashopBaseExporter):
 
         rel_binder = self.binder_for(binding_model)
 
-        if not rel_binder.to_backend(binding) or force_sync:
+        if not rel_binder.to_external(binding) or force_sync:
             exporter = self.unit_for(
                 exporter_class or PrestashopExporter, binding_model)
             exporter.run(binding.id)

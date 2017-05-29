@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="excep_order_wrong_total_amount" model="sale.exception">
+    <record id="excep_order_wrong_total_amount" model="exception.rule">
         <field name="name">Total Amount differs from PrestaShop</field>
         <field name="description">The amount computed in Odoo doesn't match with the amount in PrestaShop.
 
@@ -11,13 +11,14 @@ The taxes are probably different between Odoo and PrestaShop. A fiscal position 
 Resolution:
 Check your taxes and fiscal positions configuration and correct them if necessary.</field>
         <field name="sequence">30</field>
+        <field name="rule_group">sale</field>
         <field name="model">sale.order</field>
         <field name="code">if order.prestashop_bind_ids and abs(order.amount_total - order.prestashop_bind_ids[0].total_amount) >= 0.001:
     failed = True</field>
         <field name="active" eval="True"/>
     </record>
 
-    <record id="excep_order_wrong_total_amount_tax" model="sale.exception">
+    <record id="excep_order_wrong_total_amount_tax" model="exception.rule">
         <field name="name">Total Tax Amount differs from PrestaShop</field>
         <field name="description">The tax amount computed in Odoo doesn't match with the tax amount in PrestaShop.
 
@@ -27,6 +28,7 @@ The taxes are probably different between Odoo and PrestaShop. A fiscal position 
 Resolution:
 Check your taxes and fiscal positions configuration and correct them if necessary.</field>
         <field name="sequence">30</field>
+        <field name="rule_group">sale</field>
         <field name="model">sale.order</field>
         <field name="code"># By default, a cent of difference for the tax amount is allowed, feel free to customise it in your own module
 if order.prestashop_bind_ids:
