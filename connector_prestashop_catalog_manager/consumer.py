@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.event import (
+from odoo.addons.connector.event import (
     on_record_create,
     on_record_write,
     on_record_unlink,
 )
-from openerp.addons.connector.connector import Binder
-from openerp.addons.connector_prestashop.unit.exporter import export_record
-from openerp.addons.connector_prestashop.unit.deleter import (
+from odoo.addons.connector.connector import Binder
+from odoo.addons.connector_prestashop.unit.exporter import export_record
+from odoo.addons.connector_prestashop.unit.deleter import (
     export_delete_record
 )
-from openerp.addons.connector_prestashop.consumer import INVENTORY_FIELDS
+from odoo.addons.connector_prestashop.consumer import INVENTORY_FIELDS
 
 import unicodedata
 import re

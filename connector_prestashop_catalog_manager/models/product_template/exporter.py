@@ -3,19 +3,19 @@
 
 from datetime import timedelta
 
-from openerp.addons.connector.unit.mapper import mapping, m2o_to_backend
+from odoo.addons.connector.unit.mapper import mapping, m2o_to_backend
 
-from openerp.addons.connector_prestashop.\
+from odoo.addons.connector_prestashop.\
     models.product_template.importer import ProductTemplateImporter
 
-from openerp.addons.connector_prestashop.unit.exporter import (
+from odoo.addons.connector_prestashop.unit.exporter import (
     export_record,
     TranslationPrestashopExporter
 )
-from openerp.addons.connector_prestashop.unit.mapper import (
+from odoo.addons.connector_prestashop.unit.mapper import (
     TranslationPrestashopExportMapper,
 )
-from openerp.addons.connector_prestashop.backend import prestashop
+from odoo.addons.connector_prestashop.backend import prestashop
 from ...consumer import get_slug
 
 
