@@ -104,7 +104,7 @@
         id="sale_order_state_tree_menu"
         name="Sale Order States"
         action="action_prestashop_sale_order_state_form"
-        parent="base.menu_sale_config"
+        parent="sales_team.menu_sale_config"
         sequence="50"/>
 
     <record id="view_prestashop_sale_order_form" model="ir.ui.view">

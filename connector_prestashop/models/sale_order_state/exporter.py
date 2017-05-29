@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import Exporter
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.synchronizer import Exporter
 from ...backend import prestashop
 
 
