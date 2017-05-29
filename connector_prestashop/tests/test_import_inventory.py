@@ -6,10 +6,10 @@ from collections import namedtuple
 
 import mock
 
-from openerp.addons.connector_prestashop.unit.importer import (
+from odoo.addons.connector_prestashop.unit.importer import (
     import_record,
 )
-from openerp.addons.connector_prestashop.models.\
+from odoo.addons.connector_prestashop.models.\
     product_template.importer import (
         import_inventory
     )

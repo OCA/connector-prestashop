@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import Exporter
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.synchronizer import Exporter
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
@@ -15,7 +15,7 @@ class ProductInventoryExporter(Exporter):
 
     def get_filter(self, template):
         binder = self.binder_for()
-        prestashop_id = binder.to_backend(template.id)
+        prestashop_id = binder.to_external(template.id)
         return {
             'filter[id_product]': prestashop_id,
             'filter[id_product_attribute]': 0
@@ -29,6 +29,8 @@ class ProductInventoryExporter(Exporter):
         adapter.export_quantity(filter, int(template.quantity))
 
 
+# TODO: Remove because it has been moved to prestashop product template and
+# prestashop product combination
 @job(default_channel='root.prestashop')
 def export_inventory(session, model_name, record_id, fields=None, **kwargs):
     """ Export the inventory configuration and quantity of a product. """

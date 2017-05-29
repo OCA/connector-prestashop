@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import (mapping,
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper,
                                                   )
 from ...unit.importer import (
@@ -40,11 +40,6 @@ class CarrierImportMapper(ImportMapper):
             return {'product_id': self.backend_record.shipping_product_id.id}
         product = self.env.ref('connector_ecommerce.product_product_shipping')
         return {'product_id': product.id}
-
-    @mapping
-    def partner_id(self, record):
-        default_partner = self.backend_record.company_id.partner_id
-        return {'partner_id': default_partner.id}
 
     @mapping
     def backend_id(self, record):

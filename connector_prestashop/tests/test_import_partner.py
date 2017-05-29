@@ -8,10 +8,10 @@ import mock
 
 from freezegun import freeze_time
 
-from openerp.addons.connector_prestashop.models.res_partner.importer import (
+from odoo.addons.connector_prestashop.models.res_partner.importer import (
     import_customers_since
 )
-from openerp.addons.connector_prestashop.unit.importer import (
+from odoo.addons.connector_prestashop.unit.importer import (
     import_record,
     import_batch,
 )

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.tools.translate import _
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.synchronizer import Deleter
+from odoo.tools.translate import _
+from odoo.addons.queue_job.job import job
+from odoo.addons.connector.unit.synchronizer import Deleter
 
 
 class PrestashopDeleter(Deleter):

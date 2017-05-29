@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import exceptions, _
-from openerp.addons.connector.exception import NetworkRetryableError
-from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
+from odoo import exceptions, _
+from odoo.addons.connector.exception import NetworkRetryableError
+from odoo.addons.connector.unit.backend_adapter import CRUDAdapter
 
 from contextlib import contextmanager
 from requests.exceptions import HTTPError, RequestException, ConnectionError
