@@ -19,6 +19,7 @@ from ..delivery_carrier.importer import import_carriers
 from ..product_supplierinfo.importer import import_suppliers
 from ..account_invoice.importer import import_refunds
 from ..product_template.importer import import_products
+from ..product_category.importer import import_categories
 from ..sale_order.importer import import_orders_since
 
 from openerp import models, fields, api
@@ -67,6 +68,8 @@ class PrestashopBackend(models.Model):
     )
     taxes_included = fields.Boolean("Use tax included prices")
     import_partners_since = fields.Datetime('Import partners since')
+    import_product_categories_since = fields.Datetime(
+        'Import product categories since')
     import_orders_since = fields.Datetime('Import Orders since')
     import_products_since = fields.Datetime('Import Products since')
     import_refunds_since = fields.Datetime('Import Refunds since')
@@ -153,6 +156,20 @@ class PrestashopBackend(models.Model):
                 since_date,
                 priority=10,
             )
+        return True
+
+    @api.multi
+    def import_product_categories(self):
+        session = ConnectorSession(
+            self.env.cr, self.env.uid, context=self.env.context)
+        for backend_record in self:
+            since_date = self._date_as_user_tz(
+                backend_record.import_product_categories_since)
+            import_categories.delay(
+                session,
+                backend_record.id,
+                since_date,
+                priority=10)
         return True
 
     @api.multi

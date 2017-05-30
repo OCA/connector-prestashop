@@ -6,11 +6,14 @@ from datetime import datetime
 
 from ...backend import prestashop
 from ...unit.importer import (
+    import_batch,
     DelayedBatchImporter,
     TranslatableRecordImporter,
 )
+from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.unit.mapper import ImportMapper, mapping
 from ...unit.mapper import backend_to_m2o
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -98,3 +101,22 @@ class ProductCategoryImport(TranslatableRecordImporter):
 @prestashop
 class ProductCategoryBatchImporter(DelayedBatchImporter):
     _model_name = 'prestashop.product.category'
+
+
+@job(default_channel='root.prestashop')
+def import_categories(session, backend_id, since_date):
+    """ Import prestashop product categories """
+    filters = None
+    if since_date:
+        filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
+    now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+    import_batch(
+        session,
+        'prestashop.product.category',
+        backend_id,
+        filters,
+        priority=15
+    )
+    session.env['prestashop.backend'].browse(backend_id).write({
+        'import_product_categories_since': now_fmt
+    })
