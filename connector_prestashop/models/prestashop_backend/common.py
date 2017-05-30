@@ -99,7 +99,8 @@ class PrestashopBackend(models.Model):
 
     pricelist_id = fields.Many2one(
         'product.pricelist',
-        string="Main Pricelist"
+        string="Main Pricelist",
+        domain=[('type', '=', 'sale')]
     )
 
     @api.multi
