@@ -4,9 +4,26 @@
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.unit.exporter import \
     PrestashopExporter
+from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector_prestashop.unit.mapper import \
     PrestashopExportMapper
 from openerp.addons.connector.unit.mapper import mapping
+from openerp.addons.connector_prestashop.unit.exporter import export_record
+
+
+@on_record_write(model_names='product.pricelist.item')
+def prestashop_specific_price_write(session, model_name, record_id, fields):
+    if session.context.get('connector_no_export'):
+        return
+    specific_price_obj = session.env['prestashop.specific.price']
+    specific_price_ext_ids = specific_price_obj.search([
+        ('odoo_id', '=', record_id),
+    ])
+    for price_id in specific_price_ext_ids:
+        export_record.delay(
+            session,
+            'prestashop.specific.price',
+            price_id.id, priority=50)
 
 
 @prestashop
@@ -60,7 +77,7 @@ class ProductPricelistExportMapper(PrestashopExportMapper):
         dp_obj = self.env['decimal.precision']
         precision = dp_obj.precision_get('Product Price')
         vals = {
-            'price': 0,
+            'price': '-1',
             'reduction': 0,
             'reduction_type': 'amount'
         }
