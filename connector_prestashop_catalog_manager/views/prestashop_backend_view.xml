@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_prestashop_backend_form_inherit" model="ir.ui.view">
+            <field name="name">prestashop.backend.form.inherit</field>
+            <field name="model">prestashop.backend</field>
+            <field name="inherit_id" ref="connector_prestashop.view_prestashop_backend_form"/>
+            <field name="arch" type="xml">
+                <field name="shipping_product_id" position="after">
+                    <field name="prestashop_image_to_url"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

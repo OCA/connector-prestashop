@@ -26,6 +26,8 @@
         'wizard/sync_products_view.xml',
         'wizard/active_deactive_products_view.xml',
         'views/product_image_view.xml',
+        'views/prestashop_backend_view.xml',
+
     ],
     "installable": True,
 }

@@ -115,7 +115,8 @@ class ProductImageExport(PrestashopExporter):
             self._validate_data(record)
             self.prestashop_id = self._create(record)
             self._after_export()
-        self._link_image_to_url()
+        if self.backend_record.prestashop_image_to_url:
+            self._link_image_to_url()
         message = _('Record exported with ID %s on Prestashop.')
         return message % self.prestashop_id
 
