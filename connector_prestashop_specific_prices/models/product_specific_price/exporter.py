@@ -81,7 +81,8 @@ class ProductPricelistExportMapper(PrestashopExportMapper):
         vals = {
             'price': '-1',
             'reduction': 0,
-            'reduction_type': 'amount'
+            'reduction_type': 'amount',
+            'reduction_tax': '0'
         }
         if record.price_discount == -1:
             if record.price_surcharge > 0:
@@ -119,7 +120,10 @@ def export_specific_prices_to_backend(session, backend_id):
     pricelist_item_ids += tmpl_items.ids
     prod_items = pricelist_item_env.search([
         ('price_version_id', 'in', pricelist_version_ids),
-        ('product_id.prestashop_bind_ids.backend_id', '=',
+        ('product_id', '!=', False), '|',
+        ('product_id.prestashop_combinations_bind_ids.backend_id', '=',
+         backend_record.id),
+        ('product_id.product_tmpl_id.prestashop_bind_ids.backend_id', '=',
          backend_record.id),
     ])
     pricelist_item_ids += prod_items.ids
