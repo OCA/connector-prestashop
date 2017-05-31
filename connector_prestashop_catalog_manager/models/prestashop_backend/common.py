@@ -9,6 +9,7 @@ class PrestashopBackend(models.Model):
 
     prestashop_image_to_url = fields.Boolean(
         string="PrestaShop Image Storage Url",
-        help="If this field is checked, PrestaShop images are loaded by url instead Database",
+        help="If this field is checked, PrestaShop images are loaded by url"
+             "instead Database",
         default=True
     )
