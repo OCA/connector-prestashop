@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # © 2017 FactorLibre - Kiko Peiro <francisco.peiro@factorlibre.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+from openerp import exceptions, _
 from openerp.addons.connector_prestashop.backend import prestashop
 from openerp.addons.connector_prestashop.unit.exporter import \
     PrestashopExporter
+from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
 from openerp.addons.connector_prestashop.unit.mapper import \
     PrestashopExportMapper
@@ -94,3 +96,45 @@ class ProductPricelistExportMapper(PrestashopExportMapper):
                 'reduction_type': 'percentage'}
             )
         return vals
+
+
+@job(default_channel='root.prestashop')
+def export_specific_prices_to_backend(session, backend_id):
+    """ Prepare the export of specific prices to PrestaShop """
+    pricelist_item_env = session.env['product.pricelist.item']
+    specific_price_env = session.env['prestashop.specific.price']
+
+    backend_record = session.env['prestashop.backend'].browse(backend_id)
+    if not backend_record.pricelist_id:
+        raise exceptions.Warning(_(
+            'Please configure a pricelist on prestashop backend'))
+    pricelist_version_ids = backend_record.pricelist_id.version_id.ids
+    pricelist_item_ids = []
+    tmpl_items = pricelist_item_env.search([
+        ('price_version_id', 'in', pricelist_version_ids),
+        ('product_tmpl_id.prestashop_bind_ids.backend_id', '=',
+         backend_record.id),
+        ('product_id', '=', False)
+    ])
+    pricelist_item_ids += tmpl_items.ids
+    prod_items = pricelist_item_env.search([
+        ('price_version_id', 'in', pricelist_version_ids),
+        ('product_id.prestashop_bind_ids.backend_id', '=',
+         backend_record.id),
+    ])
+    pricelist_item_ids += prod_items.ids
+    for item_id in pricelist_item_ids:
+        specific_price_ext = specific_price_env.search([
+            ('backend_id', '=', backend_record.id),
+            ('odoo_id', '=', item_id),
+        ], limit=1)
+        if not specific_price_ext:
+            specific_price_ext = specific_price_env.with_context(
+                connector_no_export=True).create({
+                    'backend_id': backend_record.id,
+                    'odoo_id': item_id,
+                })
+        export_record.delay(
+            session,
+            'prestashop.specific.price',
+            specific_price_ext.id, priority=15)

@@ -16,7 +16,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/prestashop_specific_price_view.xml',
-        'views/product_pricelist_item_view.xml'
+        'views/product_pricelist_item_view.xml',
+        'views/prestashop_backend_view.xml'
     ],
     'installable': True,
     'application': False

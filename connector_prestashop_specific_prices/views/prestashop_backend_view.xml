@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2017 Hugo Santos <hugo.santos@factorlibre.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html). -->
+<openerp>
+  <data>
+    <record id="view_prestashop_backend_form" model="ir.ui.view">
+        <field name="name">prestashop.backend.form</field>
+        <field name="model">prestashop.backend</field>
+        <field name="inherit_id" ref="connector_prestashop.view_prestashop_backend_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='import_stock_qty']/.." position="after">
+                <group>
+                    <label string="Export specific prices" class="oe_inline"/>
+                    <button name="export_specific_prices"
+                        type="object"
+                        class="oe_highlight"
+                        string="Export in background"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</openerp>
