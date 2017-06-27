@@ -228,6 +228,13 @@ class ProductCombinationMapper(ImportMapper):
             return {'ean13': record['ean13']}
         return {}
 
+    @mapping
+    def categ_id(self, record):
+        template = self.binder_for('prestashop.product.template').to_odoo(
+            record['id_product'], unwrap=True)
+        if template and template.categ_id:
+            return {'categ_id': template.categ_id.id}
+
     def _get_tax_ids(self, record):
         product_tmpl_binder = self.unit_for(
             GenericAdapter, 'prestashop.product.template')
