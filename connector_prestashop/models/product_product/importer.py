@@ -244,7 +244,8 @@ class ProductCombinationMapper(ImportMapper):
         product_template = self.binder_for(
             'prestashop.product.template').to_odoo(
             record['id_product'], unwrap=True)
-        tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
+        tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(
+            record)[:1]
         factor_tax = tax.price_include and (1 + tax.amount) or 1.0
         impact = float(record['price'] or '0.0') * factor_tax
         cost_price = float(record['wholesale_price'] or '0.0')
