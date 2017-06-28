@@ -167,8 +167,12 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
             ('product_option_values',
                 {'product_option_value':
                  self._get_product_option_value(record)}),
-            ('images', {'image': self._get_combination_image(record) or False})
         ])
+        image = self._get_combination_image(record)
+        if image:
+            associations['images'] = {
+                'image': self._get_combination_image(record)
+            }
         return {'associations': associations}
 
 
