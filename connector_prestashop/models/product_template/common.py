@@ -114,11 +114,12 @@ class PrestashopProductTemplate(models.Model):
     @api.multi
     def recompute_prestashop_qty(self):
         # group products by backend
-        backends = defaultdict(self.browse)
+        backends = defaultdict(set)
         for product in self:
-            backends[product.backend_id] |= product
+            backends[product.backend_id].add(product.id)
 
-        for backend, products in backends.iteritems():
+        for backend, product_ids in backends.iteritems():
+            products = self.browse(product_ids)
             products._recompute_prestashop_qty_backend(backend)
         return True
 
