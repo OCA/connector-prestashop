@@ -11,6 +11,7 @@
     "license": "AGPL-3",
     "depends": [
         "account",
+        "base_vat",  # for vat validation on partner address
         "product",
         "product_multi_category",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
