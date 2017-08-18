@@ -75,13 +75,14 @@ class ProductCombinationExport(TranslationPrestashopExporter):
                 )
             value_ext_id = option_binder.to_backend(value.id, wrap=True)
             if not value_ext_id:
-                value_ext_id = self.session.env[
+                value_binding = self.session.env[
                     'prestashop.product.combination.option.value']\
                     .with_context(connector_no_export=True).create({
                         'backend_id': self.backend_record.id,
-                        'odoo_id': value.val_id.id,
+                        'odoo_id': value.id,
                         'id_attribute_group': attribute_ext_id
                     })
+                value_ext_id = value_binding.id
                 export_record(
                     self.session,
                     'prestashop.product.combination.option.value',
