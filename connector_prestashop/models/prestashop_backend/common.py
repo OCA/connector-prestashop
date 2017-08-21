@@ -115,6 +115,11 @@ class PrestashopBackend(models.Model):
         required=True,
         string='Shipping Product',
     )
+    importable_order_state_ids = fields.Many2many(
+        comodel_name='sale.order.state',
+        string='Importable sale order states',
+        help="If valued only orders matching these states will be imported.",
+    )
 
     @api.model
     def _default_pricelist_id(self):

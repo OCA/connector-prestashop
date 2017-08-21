@@ -51,6 +51,7 @@
                     <field name="taxes_included"/>
                     <field name="discount_product_id" />
                     <field name="shipping_product_id" />
+                    <field name="importable_order_state_ids" widget="many2many_tags" />
                 </group>
                 <notebook>
                     <page name="import" string="Imports">
