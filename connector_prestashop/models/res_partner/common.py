@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
+from openerp import models, fields, api
 
 from ...unit.backend_adapter import GenericAdapter
 from ...backend import prestashop
@@ -20,6 +20,26 @@ class ResPartner(models.Model):
         inverse_name='odoo_id',
         string='PrestaShop Address Bindings',
     )
+    external_company = fields.Char(
+        compute='_compute_external_company',
+        readonly=True,
+    )
+
+    @api.multi
+    @api.depends('prestashop_bind_ids')
+    def _compute_external_company(self):
+        for item in self:
+            item.external_company = item._get_external_company()
+
+    def _get_external_company(self):
+        """Retrieve external company from bindings."""
+        # in most of the cases we'll have only one binding and one company
+        # and this should not be that expensive.
+        companies = [
+            x.strip()
+            for x in self.prestashop_bind_ids.mapped('company')
+            if x and x.strip()]
+        return ', '.join(companies)
 
 
 class PrestashopPartnerMixin(models.AbstractModel):

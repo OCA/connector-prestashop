@@ -7,7 +7,7 @@
 
 <odoo>
 
-    <record id="view_partner_form" model="ir.ui.view">
+    <record id="view_partner_connector_form" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="connector.view_partner_connector_form" />
@@ -20,6 +20,17 @@
                     <field  name="prestashop_bind_ids" nolabel="1"/>
                 </group>
             </page>
+        </field>
+    </record>
+
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="website" position="before">
+                <field name="external_company" />
+            </field>
         </field>
     </record>
 
@@ -36,6 +47,7 @@
                     <field name="date_upd"/>
                     <field name="group_ids" widget="many2many_tags"/>
                     <field name="newsletter"/>
+                    <field name="company"/>
                 </group>
             </form>
         </field>
