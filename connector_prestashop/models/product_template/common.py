@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+from collections import defaultdict
+
 from openerp import api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
 
@@ -111,19 +113,29 @@ class PrestashopProductTemplate(models.Model):
 
     @api.multi
     def recompute_prestashop_qty(self):
-        for product_binding in self:
-            new_qty = product_binding._prestashop_qty()
-            if product_binding.quantity != new_qty:
-                product_binding.quantity = new_qty
+        # group products by backend
+        backends = defaultdict(set)
+        for product in self:
+            backends[product.backend_id].add(product.id)
+
+        for backend, product_ids in backends.iteritems():
+            products = self.browse(product_ids)
+            products._recompute_prestashop_qty_backend(backend)
+        return True
+
+    @api.multi
+    def _recompute_prestashop_qty_backend(self, backend):
+        locations = backend._get_locations_for_stock_quantities()
+        self_loc = self.with_context(location=locations.ids,
+                                     compute_child=False)
+        for product in self_loc:
+            new_qty = product._prestashop_qty()
+            if product.quantity != new_qty:
+                product.quantity = new_qty
         return True
 
     def _prestashop_qty(self):
-        locations = self.env['stock.location'].search([
-            ('id', 'child_of', self.backend_id.warehouse_id.lot_stock_id.id),
-            ('prestashop_synchronized', '=', True),
-            ('usage', '=', 'internal'),
-        ])
-        return self.with_context(location=locations.ids).qty_available
+        return self.qty_available
 
 
 @prestashop
