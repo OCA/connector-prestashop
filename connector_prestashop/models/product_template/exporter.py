@@ -26,7 +26,7 @@ class ProductInventoryExporter(Exporter):
         template = self.model.browse(binding_id)
         adapter = self.unit_for(GenericAdapter, '_import_stock_available')
         filter = self.get_filter(template)
-        adapter.export_quantity(filter, int(template.quantity))
+        return adapter.export_quantity(filter, int(template.quantity))
 
 
 @job(default_channel='root.prestashop')

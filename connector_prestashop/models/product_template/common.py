@@ -147,6 +147,15 @@ class ProductInventoryAdapter(GenericAdapter):
     def get(self, options=None):
         return self.client.get(self._prestashop_model, options=options)
 
+    def get_result_message(self, **kw):
+        filters = kw.get('filters', {})
+        qty = kw.get('quantity', 0)
+        ps_id = filters.get('filter[id_product]')
+        code = self.env['prestashop.product.template'].search([
+            ('prestashop_id', '=', ps_id)]).default_code or 'NOCODE'
+        msg = '[code: %s] [qty: %d] [ps_id: %d]' % (code, qty, ps_id)
+        return msg
+
     def export_quantity(self, filters, quantity):
         self.export_quantity_url(
             filters,
@@ -162,6 +171,8 @@ class ProductInventoryAdapter(GenericAdapter):
             key = self.backend_record.webservice_key
             client = PrestaShopWebServiceDict(url, key)
             self.export_quantity_url(filters, quantity, client=client)
+
+        return self.get_result_message(filters=filters, quantity=quantity)
 
     def export_quantity_url(self, filters, quantity, client=None):
         if client is None:
