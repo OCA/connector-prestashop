@@ -144,6 +144,7 @@ class AddressImportMapper(ImportMapper):
         ('address1', 'street'),
         ('address2', 'street2'),
         ('city', 'city'),
+        ('company', 'company'),
         ('other', 'comment'),
         ('phone', 'phone'),
         ('phone_mobile', 'mobile'),

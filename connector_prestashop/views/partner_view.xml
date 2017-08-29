@@ -19,6 +19,9 @@
                 <group string="PrestaShop Bindings">
                     <field  name="prestashop_bind_ids" nolabel="1"/>
                 </group>
+                <group string="PrestaShop Address Bindings">
+                    <field  name="prestashop_address_bind_ids" nolabel="1"/>
+                </group>
             </page>
         </field>
     </record>
@@ -80,6 +83,7 @@
                     <field name="date_add"/>
                     <field name="date_upd"/>
                     <field name="vat_number"/>
+                    <field name="company"/>
                 </group>
             </form>
         </field>
@@ -92,6 +96,9 @@
             <tree string="PrestaShop Address">
                 <field name="backend_id"/>
                 <field name="shop_group_id"/>
+                <button name="resync"
+                    type="object"
+                    string="Resync" />
             </tree>
         </field>
     </record>

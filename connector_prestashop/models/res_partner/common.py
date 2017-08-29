@@ -26,7 +26,7 @@ class ResPartner(models.Model):
     )
 
     @api.multi
-    @api.depends('prestashop_bind_ids')
+    @api.depends('prestashop_bind_ids', 'prestashop_address_bind_ids')
     def _compute_external_company(self):
         for item in self:
             item.external_company = item._get_external_company()
@@ -35,10 +35,12 @@ class ResPartner(models.Model):
         """Retrieve external company from bindings."""
         # in most of the cases we'll have only one binding and one company
         # and this should not be that expensive.
-        companies = [
-            x.strip()
-            for x in self.prestashop_bind_ids.mapped('company')
-            if x and x.strip()]
+        def get_companies(recordset):
+            return [x.strip()
+                    for x in recordset.mapped('company')
+                    if x and x.strip()]
+        companies = get_companies(self.prestashop_bind_ids)
+        companies += get_companies(self.prestashop_address_bind_ids)
         return ', '.join(companies)
 
 
@@ -117,6 +119,7 @@ class PrestashopAddressMixin(models.AbstractModel):
         string='Updated At (on PrestaShop)',
         readonly=True,
     )
+    company = fields.Char(string='Company')
 
 
 class PrestashopAddress(models.Model):
