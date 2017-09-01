@@ -174,6 +174,9 @@
                                 <field name="name"/>
                             </tree>
                         </field>
+                        <group>
+                            <field name="default_language_id" />
+                        </group>
                     </page>
                 </notebook>
             </sheet>

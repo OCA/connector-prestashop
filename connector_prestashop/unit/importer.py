@@ -126,11 +126,14 @@ class PrestashopImporter(PrestashopBaseImporter):
             '%d created from prestashop %s', binding, self.prestashop_id)
         return binding
 
+    def _write_context(self):
+        return {'connector_no_export': True}
+
     def _update(self, binding, data):
         """ Update an OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        binding.with_context(connector_no_export=True).write(data)
+        binding.with_context(**self._write_context()).write(data)
         _logger.debug(
             '%d updated from prestashop %s', binding, self.prestashop_id)
         return
@@ -375,8 +378,6 @@ class TranslatableRecordImporter(PrestashopImporter):
     _model_name = []
 
     _translatable_fields = {}
-    # TODO set default language on the backend
-    _default_language = 'en_US'
 
     def __init__(self, environment):
         """
@@ -461,12 +462,30 @@ class TranslatableRecordImporter(PrestashopImporter):
             context['lang'] = self.main_lang
         return context
 
+    def _write_context(self):
+        context = super(TranslatableRecordImporter, self)._write_context()
+        if self.main_lang:
+            context['lang'] = self.main_lang
+        return context
+
     def _map_data(self):
         """ Returns an instance of
         :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.main_lang_data)
+
+    @property
+    def _default_language(self):
+        if not self.backend_record.default_language_id:
+            if len(self.backend_record.language_ids) == 1:
+                # just one, rely on it
+                return self.backend_record.language_ids[0].code
+            raise openerp.exceptions.UserError(_(
+                'You must configure a default language '
+                'in Backend -> Languages -> Default language'
+            ))
+        return self.backend_record.default_language_id.code
 
     def _import(self, binding, **kwargs):
         """ Import the external record.

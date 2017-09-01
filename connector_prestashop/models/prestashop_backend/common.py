@@ -95,6 +95,10 @@ class PrestashopBackend(models.Model):
         inverse_name='backend_id',
         string='Languages',
     )
+    default_language_id = fields.Many2one(
+        comodel_name='prestashop.res.lang',
+        string='Default language',
+    )
     company_id = fields.Many2one(
         comodel_name='res.company',
         index=True,
@@ -162,6 +166,8 @@ class PrestashopBackend(models.Model):
 
             import_batch(session, 'prestashop.account.tax.group', backend.id)
             import_batch(session, 'prestashop.sale.order.state', backend.id)
+            if backend.language_ids and not backend.default_language_id:
+                backend.default_language_id = backend.language_ids[0]
         return True
 
     @api.multi
