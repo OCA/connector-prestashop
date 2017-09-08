@@ -58,34 +58,43 @@ class ProductCombinationExport(TranslationPrestashopExporter):
             'prestashop.product.combination.option')
         option_binder = self.binder_for(
             'prestashop.product.combination.option.value')
+        Option = self.env['prestashop.product.combination.option']
+        OptionValue = self.env['prestashop.product.combination.option.value']
         for value in self.binding.attribute_value_ids:
-            attribute_ext_id = attribute_binder.to_backend(
+            prestashop_option_id = attribute_binder.to_backend(
                 value.attribute_id.id, wrap=True)
-            if not attribute_ext_id:
-                attribute_ext_id = self.session.env[
-                    'prestashop.product.combination.option'].with_context(
-                    connector_no_export=True).create({
-                        'backend_id': self.backend_record.id,
-                        'odoo_id': value.attribute_id.id,
-                    })
-                export_record(
-                    self.session,
-                    'prestashop.product.combination.option',
-                    attribute_ext_id
+            if not prestashop_option_id:
+                option_binding = Option.search(
+                    [('backend_id', '=',  self.backend_record.id),
+                     ('odoo_id', '=', value.attribute_id.id)])
+                if not option_binding:
+                    option_binding = Option.with_context(
+                        connector_no_export=True).create({
+                            'backend_id': self.backend_record.id,
+                            'odoo_id': value.attribute_id.id})
+                export_record(self.session,
+                              'prestashop.product.combination.option',
+                              option_binding.id)
+            prestashop_value_id = option_binder.to_backend(
+                value.id, wrap=True)
+            if not prestashop_value_id:
+                value_binding = OptionValue.search(
+                    [('backend_id', '=',  self.backend_record.id),
+                     ('odoo_id', '=', value.id)]
                 )
-            value_ext_id = option_binder.to_backend(value.id, wrap=True)
-            if not value_ext_id:
-                value_ext_id = self.session.env[
-                    'prestashop.product.combination.option.value']\
-                    .with_context(connector_no_export=True).create({
-                        'backend_id': self.backend_record.id,
-                        'odoo_id': value.val_id.id,
-                        'id_attribute_group': attribute_ext_id
-                    })
+                if not value_binding:
+                    option_binding = Option.search(
+                        [('backend_id', '=',  self.backend_record.id),
+                         ('odoo_id', '=', value.attribute_id.id)])
+                    value_binding = OptionValue.with_context(
+                        connector_no_export=True).create({
+                            'backend_id': self.backend_record.id,
+                            'odoo_id': value.id,
+                            'id_attribute_group': option_binding.id})
                 export_record(
                     self.session,
                     'prestashop.product.combination.option.value',
-                    value_ext_id)
+                    value_binding.id)
         # self._export_images()
 
     def update_quantities(self):
