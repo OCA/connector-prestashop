@@ -122,6 +122,16 @@ class PrestashopBackend(models.Model):
     )
     verbose = fields.Boolean(help="Output requests details in the logs")
     debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
+    product_qty_field = fields.Selection(
+        selection=[
+            ('immediately_usable_qty', 'Immediately usable qty'),
+            ('qty_available', 'Qty available'),
+        ],
+        string='Product qty',
+        help='Select how you want to calculate the qty to push to PS. ',
+        default='qty_available',
+        required=True,
+    )
 
     @api.model
     def _default_pricelist_id(self):
