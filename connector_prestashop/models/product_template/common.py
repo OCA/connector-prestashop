@@ -73,7 +73,13 @@ class ProductQtyMixin(models.AbstractModel):
         return True
 
     def _prestashop_qty(self, backend):
-        return self[backend.product_qty_field]
+        qty = self[backend.product_qty_field]
+        if qty < 0:
+            # make sure we never send negative qty to PS
+            # because the overall qty computed at template level
+            # is going to be wrong.
+            qty = 0.0
+        return qty
 
 
 class PrestashopProductTemplate(models.Model):
