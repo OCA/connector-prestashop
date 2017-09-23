@@ -2,27 +2,25 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-from odoo.addons.queue_job.job import job
-from odoo.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper,
-                                                  )
-from ...unit.importer import (
-    DelayedBatchImporter,
-    PrestashopImporter,
-    import_batch,
-)
-from ...backend import prestashop
+from odoo.addons.connector.unit.mapper import mapping, ImportMapper
+from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
 
 
-@prestashop
-class DeliveryCarrierImporter(PrestashopImporter):
+class DeliveryCarrierImporter(Component):
+    _name = 'prestashop.delivery.carrier.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.delivery.carrier'
+
     _model_name = ['prestashop.delivery.carrier']
 
 
-@prestashop
-class CarrierImportMapper(ImportMapper):
+class CarrierImportMapper(Component):
+    _name = 'prestashop.delivery.carrier.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.delivery.carrier'
+
     _model_name = 'prestashop.delivery.carrier'
     direct = [
         ('name', 'name_ext'),
@@ -50,10 +48,13 @@ class CarrierImportMapper(ImportMapper):
         return {'company_id': self.backend_record.company_id.id}
 
 
-@prestashop
-class DeliveryCarrierBatchImporter(DelayedBatchImporter):
+class DeliveryCarrierBatchImporter(Component):
     """ Import the PrestaShop Carriers.
     """
+    _name = 'prestashop.delivery.carrier.delayed.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.delivery.carrier'
+
     _model_name = ['prestashop.delivery.carrier']
 
     def run(self, filters=None, **kwargs):
@@ -63,14 +64,3 @@ class DeliveryCarrierBatchImporter(DelayedBatchImporter):
                      filters, record_ids)
         for record_id in record_ids:
             self._import_record(record_id, **kwargs)
-
-
-@job(default_channel='root.prestashop')
-def import_carriers(session, backend_id, **kwargs):
-    return import_batch(
-        session,
-        'prestashop.delivery.carrier',
-        backend_id,
-        priority=5,
-        **kwargs
-    )
