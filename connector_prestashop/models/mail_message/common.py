@@ -2,9 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields
-
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
 class MailMessage(models.Model):
@@ -31,8 +29,11 @@ class PrestashopMailMessage(models.Model):
     )
 
 
-@prestashop
-class MailMessageAdapter(GenericAdapter):
+class MailMessageAdapter(Component):
+    _name = 'prestashop.mail.message.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'
 
     @property
