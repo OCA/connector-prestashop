@@ -5,7 +5,7 @@ from odoo.addons.connector.unit.mapper import (
     ImportMapper,
     mapping,
 )
-from ...unit.importer import TranslatableRecordImporter
+from ...components.importer import TranslatableRecordImporter
 from ...backend import prestashop
 
 

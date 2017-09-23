@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.connector.unit.mapper import ExportMapper
+from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.unit.mapper import mapping
 
 
-class PrestashopExportMapper(ExportMapper):
+class PrestashopImportMapper(AbstractComponent):
+    _name = 'prestashop.import.mapper'
+    _inherit = ['base.prestashop.connector', 'base.import.mapper']
+    _usage = 'import.mapper'
+
+
+class PrestashopExportMapper(AbstractComponent):
+    _name = 'prestashop.export.mapper'
+    _inherit = ['base.prestashop.connector', 'base.export.mapper']
+    _usage = 'export.mapper'
 
     def _map_direct(self, record, from_attr, to_attr):
         res = super(PrestashopExportMapper, self)._map_direct(record,
@@ -20,7 +29,9 @@ class PrestashopExportMapper(ExportMapper):
         return res
 
 
-class TranslationPrestashopExportMapper(PrestashopExportMapper):
+class TranslationPrestashopExportMapper(AbstractComponent):
+    _name = 'translation.prestashop.export.mapper'
+    _inherit = 'prestashop.export.mapper'
 
     @mapping
     def translatable_fields(self, record):
