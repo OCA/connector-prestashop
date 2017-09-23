@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 
-from ...unit.backend_adapter import GenericAdapter
+from odoo.addons.component.core import Component
 from ...backend import prestashop
 
 
@@ -56,6 +56,9 @@ class PrestashopShop(models.Model):
 
 
 @prestashop
-class ShopAdapter(GenericAdapter):
+class ShopAdapter(Component):
+    _name = 'prestashop.shop'
     _model_name = 'prestashop.shop'
+    _inherit = 'prestashop.adapter'
     _prestashop_model = 'shops'
+    _apply_on = 'prestashop.shop'

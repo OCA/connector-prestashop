@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
-from ...unit.deleter import PrestashopDeleter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class ProductImageDelete(PrestashopDeleter):
+class ProductImageDelete(Component):
+    _name = 'prestashop.product.image.deleter'
+    _inherit = 'prestashop.deleter'
+    _apply_on = 'prestashop.product.image'
+
     _model_name = 'prestashop.product.image'
 
     def delete(self, id):
