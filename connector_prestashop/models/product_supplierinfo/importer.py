@@ -6,8 +6,8 @@ from odoo.addons.queue_job.exception import FailedJobError
 from odoo.addons.queue_job.job import job
 from odoo.addons.connector.unit.mapper import ImportMapper, mapping
 
-from ...unit.backend_adapter import PrestaShopCRUDAdapter
-from ...unit.importer import (
+from ...components.backend_adapter import PrestaShopCRUDAdapter
+from ...components.importer import (
     PrestashopImporter,
     import_batch,
     DelayedBatchImporter,

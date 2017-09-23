@@ -2,12 +2,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.addons.connector.unit.mapper import ImportMapper, mapping
-from ...unit.importer import PrestashopImporter, DelayedBatchImporter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class MailMessageMapper(ImportMapper):
+class MailMessageMapper(Component):
+    _name = 'prestashop.mail.message.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'
 
     direct = [
@@ -40,9 +42,12 @@ class MailMessageMapper(ImportMapper):
         return {}
 
 
-@prestashop
-class MailMessageImporter(PrestashopImporter):
+class MailMessageImporter(Component):
     """ Import one simple record """
+    _name = 'prestashop.mail.message.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'
 
     def _import_dependencies(self):
@@ -62,6 +67,9 @@ class MailMessageImporter(PrestashopImporter):
         return record['id_order'] == '0' or not order_binding
 
 
-@prestashop
-class MailMessageBatchImporter(DelayedBatchImporter):
+class MailMessageBatchImporter(Component):
+    _name = 'prestashop.mail.message.delayed.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'

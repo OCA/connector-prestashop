@@ -5,8 +5,8 @@ from odoo import _
 from odoo.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
 from odoo.addons.connector.unit.mapper import external_to_m2o
-from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
-from ...backend import prestashop
+from ...components.importer import TranslatableRecordImporter, DelayedBatchImporter
+from odoo.addons.component.core import Component
 
 import datetime
 import logging
@@ -17,8 +17,11 @@ except:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-@prestashop
-class ProductCategoryMapper(ImportMapper):
+class ProductCategoryMapper(Component):
+    _name = 'prestashop.product.category.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.product.category'
+
     _model_name = 'prestashop.product.category'
 
     direct = [
@@ -65,11 +68,11 @@ class ProductCategoryMapper(ImportMapper):
         return {'date_upd': record['date_upd']}
 
 
-@prestashop
 class ProductCategoryImporter(TranslatableRecordImporter):
-    _model_name = [
-        'prestashop.product.category',
-    ]
+    _name = 'prestashop.product.category.importer'
+    _inherit = 'translatable.record.importer'
+    _apply_on = 'prestashop.product.category'
+    _model_name = 'prestashop.product.category'
 
     _translatable_fields = {
         'prestashop.product.category': [
@@ -111,6 +114,9 @@ class ProductCategoryImporter(TranslatableRecordImporter):
                 )
 
 
-@prestashop
-class ProductCategoryBatchImporter(DelayedBatchImporter):
+class ProductCategoryBatchImporter(Component):
+    _name = 'prestashop.product.category.delayed.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.product.category'
+
     _model_name = 'prestashop.product.category'
