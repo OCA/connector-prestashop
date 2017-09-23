@@ -8,9 +8,10 @@ import psycopg2
 
 
 from odoo import _, exceptions
+from odoo.addons.component.core import AbstractComponent
+
 from odoo.addons.queue_job.job import job
 from odoo.addons.queue_job.job import related_action
-from odoo.addons.connector.unit.synchronizer import Exporter
 from odoo.addons.connector.exception import RetryableJobError
 from .mapper import TranslationPrestashopExportMapper
 
@@ -25,8 +26,12 @@ _logger = logging.getLogger(__name__)
 # * call the ``bind`` method of the binder to update the last sync date
 
 
-class PrestashopBaseExporter(Exporter):
+class PrestashopBaseExporter(AbstractComponent):
     """ Base exporter for PrestaShop """
+
+    _name = 'prestashop.base.exporter'
+    _inherit = ['base.exporter', 'base.prestashop.connector']
+    _usage = 'record.exporter'
 
     def __init__(self, environment):
         """
@@ -67,8 +72,13 @@ class PrestashopBaseExporter(Exporter):
         return
 
 
-class PrestashopExporter(PrestashopBaseExporter):
+class PrestashopExporter(AbstractComponent):
     """ A common flow for the exports to PrestaShop """
+
+    _name = 'prestashop.exporter'
+    _inherit = 'prestashop.base.exporter'
+
+    _openerp_field = 'odoo_id'
 
     def __init__(self, environment):
         """
@@ -155,6 +165,7 @@ class PrestashopExporter(PrestashopBaseExporter):
 
     def _export_dependency(self, relation, binding_model,
                            exporter_class=None,
+                           component_usage='record.exporter',
                            binding_field_name='prestashop_bind_ids',
                            bind_values=None, force_sync=False):
         """
@@ -186,6 +197,8 @@ class PrestashopExporter(PrestashopBaseExporter):
                              By default: PrestashopExporter
         :type exporter_cls: :py:class:`openerp.addons.connector.\
                                        connector.MetaConnectorUnit`
+        :param component_usage: 'usage' to look for to find the Component to
+                                for the export, by default 'record.exporter'
         :param binding_field_name: name of the one2many towards the bindings
                                    default is 'prestashop_bind_ids'
         :type binding_field_name: str | unicode
@@ -205,9 +218,9 @@ class PrestashopExporter(PrestashopBaseExporter):
         rel_binder = self.binder_for(binding_model)
 
         if not rel_binder.to_external(binding) or force_sync:
-            exporter = self.unit_for(
-                exporter_class or PrestashopExporter, binding_model)
-            exporter.run(binding.id)
+            exporter = self.component(usage=component_usage,
+                                      model_name=binding_model)
+            exporter.run(binding)
         return binding
 
     def _export_dependencies(self):
@@ -311,7 +324,10 @@ class PrestashopExporter(PrestashopBaseExporter):
         return message % self.prestashop_id
 
 
-class TranslationPrestashopExporter(PrestashopExporter):
+class TranslationPrestashopExporter(AbstractComponent):
+
+    _name = 'translation.prestashop.exporter'
+    _inherit = 'prestashop.exporter'
 
     @property
     def mapper(self):

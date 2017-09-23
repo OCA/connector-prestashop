@@ -9,7 +9,7 @@ from odoo.addons.connector.unit.mapper import (
     ImportMapper
 )
 
-from ...unit.importer import (
+from ...components.importer import (
     DelayedBatchImporter,
     import_record,
     import_batch,
@@ -17,12 +17,8 @@ from ...unit.importer import (
     PrestashopBaseImporter,
     TranslatableRecordImporter,
 )
-<<<<<<< HEAD
-from ...unit.mapper import backend_to_m2o
-=======
 from odoo.addons.connector.unit.mapper import external_to_m2o
->>>>>>> [MIG] connector_prestashop: Begin of migration to v10
-from ...unit.backend_adapter import GenericAdapter
+from ...components.backend_adapter import GenericAdapter
 from ...backend import prestashop
 from ..product_image.importer import (
     import_product_image,
@@ -642,35 +638,6 @@ def import_inventory(session, backend_id):
     env = backend.get_environment('_import_stock_available', session=session)
     inventory_importer = env.get_connector_unit(ProductInventoryBatchImporter)
     return inventory_importer.run()
-
-
-@job(default_channel='root.prestashop')
-def import_products(
-        session, backend_id, since_date=None, **kwargs):
-    filters = None
-    if since_date:
-        filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
-    now_fmt = fields.Datetime.now()
-    result = import_batch(
-        session,
-        'prestashop.product.category',
-        backend_id,
-        filters,
-        priority=15,
-        **kwargs
-    ) or ''
-    result += import_batch(
-        session,
-        'prestashop.product.template',
-        backend_id,
-        filters,
-        priority=15,
-        **kwargs
-    ) or ''
-    session.env['prestashop.backend'].browse(backend_id).write({
-        'import_products_since': now_fmt
-    })
-    return result
 
 
 @prestashop
