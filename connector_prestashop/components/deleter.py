@@ -2,12 +2,19 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.tools.translate import _
+from odoo.addons.component.core import AbstractComponent
+
+from odoo.tools.translate import _
 from odoo.addons.queue_job.job import job
 from odoo.addons.connector.unit.synchronizer import Deleter
 
 
-class PrestashopDeleter(Deleter):
+class PrestashopDeleter(AbstractComponent):
     """ Base deleter for PrestaShop """
+
+    _name = 'prestashop.exporter.deleter'
+    _inherit = 'base.deleter'
+    _usage = 'record.exporter.deleter'
 
     def run(self, resource, external_id):
         """ Run the synchronization, delete the record on PrestaShop

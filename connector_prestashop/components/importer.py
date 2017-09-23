@@ -5,25 +5,33 @@ import logging
 from contextlib import closing, contextmanager
 
 import odoo
-from odoo import _
+from odoo import _, fields
 
 from odoo.addons.queue_job.job import job
-from odoo.addons.connector.unit.synchronizer import Importer
-from odoo.addons.connector.connector import ConnectorUnit, Binder
-from odoo.addons.connector.connector import ConnectorEnvironment
 from odoo.addons.queue_job.exception import (
     RetryableJobError,
     FailedJobError,
 )
 
+from odoo.addons.component.core import AbstractComponent, Component
+from odoo.addons.connector.exception import IDMissingInBackend
+from odoo.addons.queue_job.exception import NothingToDoJob
 
 _logger = logging.getLogger(__name__)
 
 RETRY_ON_ADVISORY_LOCK = 1  # seconds
 RETRY_WHEN_CONCURRENT_DETECTED = 1  # seconds
 
+def import_record():
+    pass
+def import_batch():
+    pass
 
-class PrestashopBaseImporter(Importer):
+class PrestashopBaseImporter(AbstractComponent):
+
+    _name = 'prestashop.base.importer'
+    _inherit = ['base.importer', 'base.prestashop.connector']
+    _usage = 'record.importer'
 
     def _import_dependency(self, prestashop_id, binding_model,
                            importer_class=None, always=False,
@@ -58,8 +66,11 @@ class PrestashopBaseImporter(Importer):
             importer.run(prestashop_id, **kwargs)
 
 
-class PrestashopImporter(PrestashopBaseImporter):
+class PrestashopImporter(AbstractComponent):
     """ Base importer for PrestaShop """
+
+    _name = 'prestashop.importer'
+    _inherit = 'prestashop.base.importer'
 
     def __init__(self, environment):
         """
@@ -161,12 +172,14 @@ class PrestashopImporter(PrestashopBaseImporter):
                 try:
                     new_env = odoo.api.Environment(cr, self.env.uid,
                                                       self.env.context)
-                    connector_env = self.connector_env.create_environment(
-                        self.backend_record.with_env(new_env),
-                        model_name or self.model._name,
-                        connector_env=self.connector_env
-                    )
-                    yield connector_env
+                    # connector_env = self.connector_env.create_environment(
+                    #     self.backend_record.with_env(new_env),
+                    #     model_name or self.model._name,
+                    #     connector_env=self.connector_env
+                    # )
+                    with self.backend_record.with_env(
+                        new_env).work_on(self.model._name) as work2:
+                        yield work2
                 except:
                     cr.rollback()
                     raise
@@ -216,7 +229,8 @@ class PrestashopImporter(PrestashopBaseImporter):
             # a Retryable error so T2 is rollbacked and retried
             # later (and the new T3 will be aware of the category X
             # from the its inception).
-            binder = new_connector_env.get_connector_unit(Binder)
+            binder = self.binder_for(model=self.model._name)
+            # binder = new_connector_env.get_connector_unit(Binder)
             if binder.to_internal(self.prestashop_id):
                 raise RetryableJobError(
                     'Concurrent error. The job will be retried later',
@@ -283,11 +297,15 @@ class PrestashopImporter(PrestashopBaseImporter):
         self._after_import(binding)
 
 
-class BatchImporter(Importer):
+class BatchImporter(AbstractComponent):
     """ The role of a BatchImporter is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
     """
+    _name = 'prestashop.batch.importer'
+    _inherit = ['base.importer', 'base.prestashop.connector']
+    _usage = 'batch.importer'
+
     page_size = 1000
 
     def run(self, filters=None, **kwargs):
@@ -320,10 +338,11 @@ class BatchImporter(Importer):
 
 
 # TODO 2016-10-25: is this used at all somewhere???
-class AddCheckpoint(ConnectorUnit):
+class AddCheckpoint(AbstractComponent):
     """ Add a connector.checkpoint on the underlying model
     (not the prestashop.* but the _inherits'ed model) """
 
+    _name = 'connector_prestashop_component'
     _model_name = []
 
     def run(self, binding_id):
@@ -335,23 +354,28 @@ class AddCheckpoint(ConnectorUnit):
         )
 
 
-class DirectBatchImporter(BatchImporter):
+class DirectBatchImporter(AbstractComponent):
     """ Import the PrestaShop Shop Groups + Shops
 
     They are imported directly because this is a rare and fast operation,
     performed from the UI.
     """
+    _name = 'prestashop.direct.batch.importer'
+    _inherit = 'prestashop.batch.importer'
     _model_name = None
 
     def _import_record(self, record):
         """ Import the record directly """
-        self.env[self.model._name].with_delay().import_record(
+        self.env[self.model._name].import_record(
             backend=self.backend_record,
             prestashop_id=record)
 
 
-class DelayedBatchImporter(BatchImporter):
+class DelayedBatchImporter(AbstractComponent):
     """ Delay import of the records """
+
+    _name = 'prestashop.delayed.batch.importer'
+    _inherit = 'prestashop.batch.importer'
     _model_name = None
 
     def _import_record(self, record, **kwargs):
@@ -362,8 +386,11 @@ class DelayedBatchImporter(BatchImporter):
             **kwargs)
 
 
-class TranslatableRecordImporter(PrestashopImporter):
+class TranslatableRecordImporter(AbstractComponent):
     """ Import one translatable record """
+    _name = 'translatable.record.importer'
+    _inherit = 'prestashop.importer'
+
     _model_name = []
 
     _translatable_fields = {}
@@ -488,17 +515,3 @@ class TranslatableRecordImporter(PrestashopImporter):
                 lang=lang_code,
                 connector_no_export=True,
             ).write(map_record.values())
-
-# TODO: Remove when all imports has been changed
-@job(default_channel='root.prestashop')
-def import_batch(env, filters=None, **kwargs):
-    """ Prepare a batch import of records from PrestaShop """
-    importer = env.get_connector_unit(BatchImporter)
-    return importer.run(filters=filters, **kwargs)
-
-
-@job(default_channel='root.prestashop')
-def import_record(env, model_name, backend_id, prestashop_id, **kwargs):
-    """ Import a record from PrestaShop """
-    importer = env.get_connector_unit(PrestashopImporter)
-    return importer.run(prestashop_id, **kwargs)
