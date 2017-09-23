@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo.addons.connector.connector import Binder
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class PaymentModeAdapter(GenericAdapter):
+class PaymentModeAdapter(Component):
+    _name = 'account.payment.mode.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'account.payment.mode'
+
     _model_name = 'account.payment.mode'
     _prestashop_model = 'orders'
     _export_node_name = 'order'
@@ -22,10 +23,12 @@ class PaymentModeAdapter(GenericAdapter):
         return methods
 
 
-@prestashop
-class PaymentModeBinder(Binder):
-    _model_name = 'account.payment.mode'
+class PaymentModeBinder(Component):
+    _name = 'account.payment.mode.binder'
+    _inherit_id = 'prestashop.binder'
+    _apply_on = 'account.payment.mode'
 
+    _model_name = 'account.payment.mode'
     _external_field = 'name'
 
     def to_odoo(self, external_id, unwrap=False, company=None):

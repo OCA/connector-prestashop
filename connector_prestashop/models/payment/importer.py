@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from ...backend import prestashop
-from ...unit.importer import DirectBatchImporter
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class PaymentMethodImporter(DirectBatchImporter):
+class PaymentMethodImporter(Component):
+    _name = 'payment.method.importer'
+    _inherit = 'prestashop.direct.batch.importer'
+    _apply_on = 'payment.method'
+
     _model_name = 'payment.method'
 
     def run(self, filters=None, **kwargs):

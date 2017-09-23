@@ -3,7 +3,7 @@
 
 from odoo import models, fields
 
-from ...unit.backend_adapter import (
+from ...components.backend_adapter import (
     PrestaShopCRUDAdapter,
     PrestaShopWebServiceImage,
     GenericAdapter,

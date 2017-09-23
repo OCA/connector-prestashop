@@ -9,13 +9,13 @@ from odoo.addons.connector.unit.mapper import (
     only_create,
     ImportMapper,
 )
-from ...unit.importer import (
+from ...components.importer import (
     PrestashopImporter,
     import_batch,
     TranslatableRecordImporter,
     DelayedBatchImporter,
 )
-from ...unit.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
+from ...components.backend_adapter import GenericAdapter, PrestaShopCRUDAdapter
 from ...backend import prestashop
 
 import logging

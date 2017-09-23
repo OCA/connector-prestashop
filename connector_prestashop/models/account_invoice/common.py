@@ -3,8 +3,7 @@
 
 from odoo import api, fields, models
 
-from ...backend import prestashop
-from ...unit.backend_adapter import GenericAdapter
+from odoo.addons.component.core import Component
 
 
 class AccountInvoice(models.Model):
@@ -78,8 +77,10 @@ class PrestashopRefund(models.Model):
     )
 
 
-@prestashop
-class RefundAdapter(GenericAdapter):
+class RefundAdapter(Component):
+    _name = 'prestashop.refund.adapter'
+    _apply_on = 'prestashop.refund'
+
     _model_name = 'prestashop.refund'
 
     @property

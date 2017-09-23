@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class PaymentMethodAdapter(GenericAdapter):
+class PaymentMethodAdapter(Component):
+    _name = 'payment.method.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'payment.method'
+
     _model_name = 'payment.method'
     _prestashop_model = 'orders'
     _export_node_name = 'order'

@@ -4,7 +4,7 @@
 
 from odoo import fields, models
 
-from ...unit.backend_adapter import GenericAdapter
+from ...components.backend_adapter import GenericAdapter
 from ...backend import prestashop
 
 

@@ -9,13 +9,13 @@ from odoo.addons.connector.unit.mapper import ImportMapper, mapping
 from odoo.addons.connector_ecommerce.unit.sale_order_onchange import (
     SaleOrderOnChange,
 )
-from ...unit.backend_adapter import GenericAdapter
-from ...unit.importer import (
+from ...components.backend_adapter import GenericAdapter
+from ...components.importer import (
     PrestashopImporter,
     import_batch,
     DelayedBatchImporter,
 )
-from ...unit.exception import OrderImportRuleRetry
+from ...components.exception import OrderImportRuleRetry
 from ...backend import prestashop
 
 from datetime import datetime, timedelta

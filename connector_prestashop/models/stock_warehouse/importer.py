@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.addons.connector.unit.mapper import ImportMapper, mapping
-from ...unit.importer import PrestashopImporter, DirectBatchImporter
+from ...components.importer import PrestashopImporter, DirectBatchImporter
 from odoo.addons.connector.unit.mapper import external_to_m2o
 from ...backend import prestashop
 
