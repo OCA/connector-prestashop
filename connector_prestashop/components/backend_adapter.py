@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from odoo.addons.component.core import AbstractComponent
+
 from odoo import exceptions, _
 from odoo.addons.connector.exception import NetworkRetryableError
-from odoo.addons.connector.unit.backend_adapter import CRUDAdapter
 
 from contextlib import contextmanager
 from requests.exceptions import HTTPError, RequestException, ConnectionError
 import base64
 import logging
+
 _logger = logging.getLogger(__name__)
+
 try:
     from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
 except:
@@ -97,8 +100,12 @@ class PrestaShopLocation(object):
         self.api_url = location
 
 
-class PrestaShopCRUDAdapter(CRUDAdapter):
+class PrestaShopCRUDAdapter(AbstractComponent):
     """ External Records Adapter for PrestaShop """
+
+    _name = 'prestashop.crud.adapter'
+    _inherit = ['base.backend.adapter', 'base.prestashop.connector']
+    _usage = 'backend.adapter'
 
     def __init__(self, environment):
         """
@@ -147,7 +154,9 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
         raise NotImplementedError
 
 
-class GenericAdapter(PrestaShopCRUDAdapter):
+class GenericAdapter(AbstractComponent):
+    _name = 'prestashop.adapter'
+    _inherit = 'prestashop.crud.adapter'
 
     _model_name = None
     _prestashop_model = None

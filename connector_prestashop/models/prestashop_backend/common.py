@@ -2,24 +2,21 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+from odoo.addons.component.core import Component
 from contextlib import contextmanager
 
 from odoo import models, fields, api, exceptions, _
 
 from odoo.addons.connector.connector import ConnectorEnvironment
-from ...unit.importer import import_batch, import_record
-from ...unit.auto_matching_importer import AutoMatchingImporter
-from ...unit.backend_adapter import GenericAdapter, api_handle_errors
-from ...unit.version_key import VersionKey
+from ...components.importer import import_batch, import_record
+from ...components.auto_matching_importer import AutoMatchingImporter
+from ...components.backend_adapter import GenericAdapter, api_handle_errors
+from ...components.version_key import VersionKey
 from ...backend import prestashop
 
-from ..product_template.exporter import export_product_quantities
 from ..product_template.importer import import_inventory
-from ..res_partner.importer import import_customers_since
-from ..delivery_carrier.importer import import_carriers
 from ..product_supplierinfo.importer import import_suppliers
 from ..account_invoice.importer import import_refunds
-from ..product_template.importer import import_products
 from ..sale_order.importer import import_orders_since
 
 
@@ -31,9 +28,8 @@ class PrestashopBackend(models.Model):
     _description = 'PrestaShop Backend Configuration'
     _inherit = 'connector.backend'
 
-    _backend_type = 'prestashop'
-
-    def _select_versions(self):
+    @api.model
+    def select_versions(self):
         """ Available versions
 
         Can be inherited to add custom versions.
@@ -44,8 +40,9 @@ class PrestashopBackend(models.Model):
             ('1.6.0.11', '>= 1.6.0.11 - <1.6.1.2'),
             ('1.6.1.2', '=1.6.1.2')
         ]
+
     version = fields.Selection(
-        selection='_select_versions',
+        selection='select_versions',
         string='Version',
         required=True,
     )
@@ -140,7 +137,7 @@ class PrestashopBackend(models.Model):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
-                self.env[model_name].import_batch(backend=backend)
+                self.env[model_name].import_batch(backend)
         return True
 
     @api.multi
@@ -152,22 +149,20 @@ class PrestashopBackend(models.Model):
                 'prestashop.res.currency',
                 'prestashop.account.tax',
             ]:
-                env = backend.get_environment(model_name)
-                importer = env.get_connector_unit(AutoMatchingImporter)
-                importer.run()
-            self.env['prestashop.account.tax.group'].import_batch(
-                backend=backend)
-            self.env['prestashop.sale.order.state'].import_batch(
-                backend=backend)
+                with backend.work_on(model_name) as work:
+                    importer = work.component(usage='record.importer')
+                    importer.run()
+            self.env['prestashop.account.tax.group'].import_batch(backend)
+            self.env['prestashop.sale.order.state'].import_batch(backend)
         return True
 
     @api.multi
     def _check_connection(self):
         self.ensure_one()
-        env = self.get_environment(self._name)
-        adapter = env.get_connector_unit(GenericAdapter)
-        with api_handle_errors('Connection failed'):
-            adapter.head()
+        with self.work_on('prestashop.backend') as work:
+            component = work.component_by_name(name='prestashop.adapter')
+            with api_handle_errors('Connection failed'):
+                component.head()
 
     @api.multi
     def button_check_connection(self):
@@ -177,12 +172,10 @@ class PrestashopBackend(models.Model):
     @api.multi
     def import_customers_since(self):
         for backend_record in self:
-            connector_env = backend_record.get_environment('res.partner')
             since_date = backend_record.import_partners_since
-            connector_env.env['res.partner'].with_delay(
-                priority=10
-            ).import_customers_since(
-                backend_record=backend_record, since_date=since_date)
+            backend_record.with_delay(priority=10).import_customers_since(
+                backend_record=backend_record,
+                since_date=since_date)
         return True
 
     @api.multi
@@ -195,9 +188,10 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_carriers(self):
-        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            import_carriers.delay(session, backend_record.id, priority=10)
+            self.env['prestashop.delivery.carrier'].import_batch(
+                backend_record,
+            )
         return True
 
     @api.multi
@@ -341,14 +335,17 @@ class PrestashopShopGroup(models.Model):
     )
 
 
-@prestashop
-class NoModelAdapter(GenericAdapter):
+class NoModelAdapter(Component):
     """ Used to test the connection """
+    _name = 'prestashop.adapter.test'
+    _inherit = 'prestashop.adapter'
     _model_name = 'prestashop.backend'
     _prestashop_model = ''
 
 
-@prestashop
-class ShopGroupAdapter(GenericAdapter):
+class ShopGroupAdapter(Component):
+    _name = 'prestashop.shop.group'
+    _inherit = 'prestashop.adapter'
     _model_name = 'prestashop.shop.group'
+    _apply_on = 'prestashop.shop.group'
     _prestashop_model = 'shop_groups'

@@ -7,7 +7,7 @@ from odoo.addons.connector.unit.synchronizer import Exporter
 from odoo.exceptions import UserError
 from odoo.addons.queue_job.job import job
 from ...backend import prestashop
-from ...unit.backend_adapter import PrestaShopCRUDAdapter
+from ...components.backend_adapter import PrestaShopCRUDAdapter
 
 _logger = logging.getLogger(__name__)
 

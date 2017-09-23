@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from ...unit.auto_matching_importer import AutoMatchingImporter
+from ...components.auto_matching_importer import AutoMatchingImporter
 from ...backend import prestashop
 
 

@@ -3,15 +3,18 @@
 
 import logging
 
-from odoo.addons.connector.connector import ConnectorUnit
 from odoo.addons.connector.unit.backend_adapter import BackendAdapter
+from odoo.addons.component.core import Component
 
 from odoo import _, exceptions
 
 _logger = logging.getLogger(__name__)
 
 
-class AutoMatchingImporter(ConnectorUnit):
+class AutoMatchingImporter(Component):
+    _name = 'prestashop.auto.matching.importer'
+    _inherit = 'prestashop.importer'
+
     _model_name = None
     _erp_field = None
     _ps_field = None
@@ -33,12 +36,12 @@ class AutoMatchingImporter(ConnectorUnit):
         model = self.env[erp_model_name].with_context(active_test=False)
         erp_ids = model.search([])
         erp_list_dict = erp_ids.read()
+        # TODO: Fix
         adapter = self.unit_for(BackendAdapter)
         # Get the IDS from PS
         ps_ids = adapter.search()
         if not ps_ids:
             raise exceptions.Warning(
-                _('Error :'),
                 _('Failed to query %s via PS webservice')
                 % adapter.prestashop_model
             )

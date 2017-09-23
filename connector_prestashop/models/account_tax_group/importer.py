@@ -6,12 +6,14 @@ from odoo.addons.connector.unit.mapper import (
     mapping,
     only_create,
 )
-from ...unit.importer import PrestashopImporter, DirectBatchImporter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class TaxGroupMapper(ImportMapper):
+class TaxGroupMapper(Component):
+    _name = 'prestashop.account.tax.group.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.account.tax.group'
+
     _model_name = 'prestashop.account.tax.group'
 
     direct = [
@@ -36,11 +38,17 @@ class TaxGroupMapper(ImportMapper):
             return {'odoo_id': tax_group.id}
 
 
-@prestashop
-class TaxGroupImporter(PrestashopImporter):
+class TaxGroupImporter(Component):
+    _name = 'prestashop.account.tax.group.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.account.tax.group'
+
     _model_name = 'prestashop.account.tax.group'
 
 
-@prestashop
-class TaxGroupBatchImporter(DirectBatchImporter):
+class TaxGroupBatchImporter(Component):
+    _name = 'prestashop.account.tax.group.direct.batch.importer'
+    _inherit = 'prestashop.direct.batch.importer'
+    _apply_on = 'prestashop.account.tax.group'
+
     _model_name = 'prestashop.account.tax.group'

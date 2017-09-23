@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import openerp.addons.connector.backend as backend
+import odoo.addons.connector.backend as backend
 
 
 prestashop = backend.Backend('prestashop')

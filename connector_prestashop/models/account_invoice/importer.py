@@ -10,17 +10,17 @@ from odoo.addons.connector.unit.mapper import (
     ImportMapper,
     only_create,
 )
-
-from ...backend import prestashop
-from ...unit.importer import (
-    PrestashopImporter,
+from ...components.importer import (
     import_batch,
-    DelayedBatchImporter,
 )
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class RefundImporter(PrestashopImporter):
+class RefundImporter(Component):
+    _name = 'prestashop.refund.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.refund'
+
     _model_name = 'prestashop.refund'
 
     def _import_dependencies(self):
@@ -47,8 +47,10 @@ class RefundImporter(PrestashopImporter):
         self._open_refund(binding)
 
 
-@prestashop
-class RefundMapper(ImportMapper):
+class RefundMapper(Component):
+    _name = 'prestashop.refund.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.refund'
     _model_name = 'prestashop.refund'
 
     direct = [
@@ -245,11 +247,15 @@ class RefundMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
 
-@prestashop
-class RefundBatchImporter(DelayedBatchImporter):
+class RefundBatchImporter(Component):
+    _name = 'prestashop.refund.batch.importer'
+    _inherit = 'prestashop.batch.importer'
+    _apply_on = 'prestashop.refund'
+
     _model_name = 'prestashop.refund'
 
 
+# TODO: Move it
 @job(default_channel='root.prestashop')
 def import_refunds(session, backend_id, since_date, **kwargs):
     filters = None

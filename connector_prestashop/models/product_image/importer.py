@@ -5,9 +5,10 @@
 from odoo.addons.queue_job.job import job
 from odoo.addons.connector.unit.mapper import (mapping,
                                                   ImportMapper)
+from odoo.addons.component.core import Component
 
 from ...backend import prestashop
-from ...unit.importer import PrestashopImporter
+from ...components.importer import PrestashopImporter
 
 import mimetypes
 import logging
@@ -21,8 +22,11 @@ except:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-@prestashop
-class ProductImageMapper(ImportMapper):
+class ProductImageMapper(Component):
+    _name = 'prestashop.product.image.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.product.image'
+
     _model_name = 'prestashop.product.image'
 
     direct = [
@@ -62,11 +66,12 @@ class ProductImageMapper(ImportMapper):
         return {'owner_model': 'product.template'}
 
 
-@prestashop
-class ProductImageImporter(PrestashopImporter):
-    _model_name = [
-        'prestashop.product.image',
-    ]
+class ProductImageImporter(Component):
+    _name = 'prestashop.product.image.importer'
+    _importer = 'prestashop.importer'
+    _apply_on = 'prestashop.product.image'
+
+    _model_name = 'prestashop.product.image'
 
     def _get_prestashop_data(self):
         """ Return the raw PrestaShop data for ``self.prestashop_id`` """
@@ -98,7 +103,7 @@ class ProductImageImporter(PrestashopImporter):
                 ) % (image_id, template_id, error.msg)
                 self.backend_record.add_checkpoint(message=msg)
 
-
+# TODO: Continue here
 @job(default_channel='root.prestashop')
 def import_product_image(session, model_name, backend_id, product_tmpl_id,
                          image_id, **kwargs):

@@ -3,8 +3,7 @@
 
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job
-from ...unit.importer import PrestashopImporter, BatchImporter
-from ...unit.importer import import_record
+from ...components.importer import import_record
 
 
 class PrestashopBinding(models.AbstractModel):
@@ -27,19 +26,40 @@ class PrestashopBinding(models.AbstractModel):
     ]
 
     @job(default_channel='root.prestashop')
-    def import_record(self, backend, prestashop_id, **kwargs):
+    @api.model
+    def import_record(self, backend, prestashop_id, force=False):
         """ Import a record from PrestaShop """
-        env = backend.get_environment(self._name)
-        importer = env.get_connector_unit(PrestashopImporter)
-        return importer.run(prestashop_id, **kwargs)
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(prestashop_id, force=force)
 
     @job(default_channel='root.prestashop')
-    def import_batch(self, backend=None, filters=None, **kwargs):
+    @api.model
+    def import_batch(self, backend, filters=None):
         """ Prepare a batch import of records from PrestaShop """
-        env = backend.get_environment(self._name)
-        importer = env.get_connector_unit(BatchImporter)
-        return importer.run(filters=filters, **kwargs)
+        if filters is None:
+            filters = {}
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='batch.importer')
+            return importer.run(filters=filters)
 
+    @job(default_channel='root.prestashop')
+    @api.multi
+    def export_record(self, fields=None):
+        """ Export a record on Magento """
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='record.exporter')
+            return exporter.run(self, fields)
+
+    @job(default_channel='root.prestashop')
+    def export_delete_record(self, backend, external_id):
+        """ Delete a record on Magento """
+        with backend.work_on(self._name) as work:
+            deleter = work.component(usage='record.exporter.deleter')
+            return deleter.run(external_id)
+
+    #TODO: Research
     @api.multi
     def resync(self):
         func = import_record

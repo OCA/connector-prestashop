@@ -10,7 +10,7 @@ from odoo.addons.connector.unit.mapper import (
     mapping,
     only_create,
 )
-from ...unit.importer import (
+from ...components.importer import (
     PrestashopImporter,
     import_batch,
     DelayedBatchImporter,
