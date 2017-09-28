@@ -120,6 +120,8 @@ class PrestashopBackend(models.Model):
         string='Importable sale order states',
         help="If valued only orders matching these states will be imported.",
     )
+    verbose = fields.Boolean(help="Output requests details in the logs")
+    debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
 
     @api.model
     def _default_pricelist_id(self):
