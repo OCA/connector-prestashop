@@ -8,14 +8,8 @@ import mock
 
 from freezegun import freeze_time
 
-from openerp.addons.connector_prestashop.models.res_partner.importer import (
-    import_customers_since
-)
-from openerp.addons.connector_prestashop.unit.importer import (
-    import_record,
-    import_batch,
-)
-
+from ..models.res_partner.importer import import_customers_since
+from ..unit.importer import import_record, import_batch
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 

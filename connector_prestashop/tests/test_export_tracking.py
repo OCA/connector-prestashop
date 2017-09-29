@@ -4,8 +4,7 @@
 
 import mock
 
-from openerp.addons.connector_prestashop.models.stock_tracking.\
-    exporter import export_tracking_number
+from ..models.stock_tracking.exporter import export_tracking_number
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 

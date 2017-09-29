@@ -17,7 +17,7 @@ class VersionKey(ConnectorUnit):
 
 
 @prestashop_1_6_0_9
-class VersionKey_1_6_0_9(VersionKey):
+class VersionKey1609(VersionKey):
 
     keys = {
         'product_option_value': 'product_option_values',
@@ -35,7 +35,7 @@ class VersionKey_1_6_0_9(VersionKey):
 
 
 @prestashop_1_6_1_2
-class VersionKey_1_6_1_2(VersionKey):
+class VersionKey1612(VersionKey):
 
     # keys checked in 1.6.1.9:
     # * customer_messages

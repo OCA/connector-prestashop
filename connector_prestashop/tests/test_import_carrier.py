@@ -6,14 +6,8 @@ from collections import namedtuple
 
 import mock
 
-from openerp.addons.connector_prestashop.unit.importer import (
-    import_record,
-)
-from openerp.addons.connector_prestashop.models.\
-    delivery_carrier.importer import (
-        import_carriers
-    )
-
+from ..unit.importer import import_record
+from ..models.delivery_carrier.importer import import_carriers
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
