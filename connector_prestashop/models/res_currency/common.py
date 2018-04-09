@@ -4,7 +4,7 @@
 
 from odoo import fields, models
 
-from ...components.backend_adapter import GenericAdapter
+from odoo.addons.component.core import Component
 from ...backend import prestashop
 
 
@@ -34,6 +34,9 @@ class ResCurrency(models.Model):
 
 
 @prestashop
-class ResCurrencyAdapter(GenericAdapter):
-    _model_name = 'prestashop.res.currency'
+class ResCurrencyAdapter(Component):
+    _name = 'prestashop.res.currency.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.res.currency'
+
     _prestashop_model = 'currencies'

@@ -25,13 +25,13 @@ class PaymentModeAdapter(Component):
 
 class PaymentModeBinder(Component):
     _name = 'account.payment.mode.binder'
-    _inherit_id = 'prestashop.binder'
+    _inherit = 'prestashop.binder'
     _apply_on = 'account.payment.mode'
 
     _model_name = 'account.payment.mode'
     _external_field = 'name'
 
-    def to_odoo(self, external_id, unwrap=False, company=None):
+    def to_internal(self, external_id, unwrap=False, company=None):
         if company is None:
             company = self.backend_record.company_id
         bindings = self.model.with_context(active_test=False).search(

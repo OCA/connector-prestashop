@@ -2,7 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import base64
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import AbstractComponent
 from ...components.backend_adapter import PrestaShopWebServiceImage
 
@@ -29,6 +30,16 @@ class PrestashopProductImage(models.Model):
         string='Product image',
         oldname='openerp_id',
     )
+
+
+    @job(default_channel='root.prestashop')
+    @api.multi
+    def import_product_image(self, backend, product_tmpl_id, image_id, **kwargs):
+        """Import a product image"""
+        self.ensure_one()
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='prestashop.importer')
+            return importer.run(product_tmpl_id, image_id)
 
 
 class ProductImageAdapter(AbstractComponent):

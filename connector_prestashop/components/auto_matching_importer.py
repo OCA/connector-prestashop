@@ -3,7 +3,6 @@
 
 import logging
 
-from odoo.addons.connector.unit.backend_adapter import BackendAdapter
 from odoo.addons.component.core import Component
 
 from odoo import _, exceptions
@@ -15,7 +14,6 @@ class AutoMatchingImporter(Component):
     _name = 'prestashop.auto.matching.importer'
     _inherit = 'prestashop.importer'
 
-    _model_name = None
     _erp_field = None
     _ps_field = None
     _copy_fields = []
@@ -36,8 +34,7 @@ class AutoMatchingImporter(Component):
         model = self.env[erp_model_name].with_context(active_test=False)
         erp_ids = model.search([])
         erp_list_dict = erp_ids.read()
-        # TODO: Fix
-        adapter = self.unit_for(BackendAdapter)
+        adapter = self.component(usage='backend.adapter')
         # Get the IDS from PS
         ps_ids = adapter.search()
         if not ps_ids:

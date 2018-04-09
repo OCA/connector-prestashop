@@ -76,6 +76,19 @@ class PrestashopRefund(models.Model):
         oldname='openerp_id',
     )
 
+    def import_refunds(self, backend, since_date, **kwargs):
+        filters = None
+        if since_date:
+            filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
+        now_fmt = fields.Datetime.now()
+        self.env['prestashop.refund'].with_delay().import_batch(
+            backend,
+            filters,
+            **kwargs
+        )
+        backend.import_refunds_since = now_fmt
+        return True
+
 
 class RefundAdapter(Component):
     _name = 'prestashop.refund.adapter'
