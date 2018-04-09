@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
 from ...components.auto_matching_importer import AutoMatchingImporter
 from ...backend import prestashop
 
 
 @prestashop
 class CountryImporter(AutoMatchingImporter):
-    _model_name = 'prestashop.res.country'
+    _name = 'prestashop.res.country.importer'
+    _apply_on = 'prestashop.res.country'
+
     _erp_field = 'code'
     _ps_field = 'iso_code'
 

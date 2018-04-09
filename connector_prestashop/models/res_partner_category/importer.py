@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo.addons.connector.unit.mapper import ImportMapper, mapping
-from ...components.importer import (
-    TranslatableRecordImporter,
-    import_record,
-    DelayedBatchImporter,
-)
+from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.component.core import Component
+from ...components.importer import import_record
 from ...backend import prestashop
 
 
 @prestashop
-class PartnerCategoryImportMapper(ImportMapper):
-    _model_name = 'prestashop.res.partner.category'
+class PartnerCategoryImportMapper(Component):
+    _name = 'prestashop.res.partner.category.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.res.partner.category'
 
     direct = [
         ('name', 'name'),
@@ -30,11 +29,11 @@ class PartnerCategoryImportMapper(ImportMapper):
 
 
 @prestashop
-class PartnerCategoryImporter(TranslatableRecordImporter):
+class PartnerCategoryImporter(Component):
     """ Import one translatable record """
-    _model_name = [
-        'prestashop.res.partner.category',
-    ]
+    _name = 'prestashop.res.partner.category.importer'
+    _inherit = 'prestashop.translatable.record.importer'
+    _apply_on = 'prestashop.res.partner.category'
 
     _translatable_fields = {
         'prestashop.res.partner.category': ['name'],
@@ -53,5 +52,7 @@ class PartnerCategoryImporter(TranslatableRecordImporter):
 
 
 @prestashop
-class PartnerCategoryBatchImporter(DelayedBatchImporter):
-    _model_name = 'prestashop.res.partner.category'
+class PartnerCategoryBatchImporter(Component):
+    _name = 'prestashop.res.partner.category.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.res.partner.category'
