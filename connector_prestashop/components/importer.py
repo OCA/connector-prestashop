@@ -31,7 +31,6 @@ class PrestashopBaseImporter(AbstractComponent):
 
     _name = 'prestashop.base.importer'
     _inherit = ['base.importer', 'base.prestashop.connector']
-    _usage = 'record.importer'
 
     def _import_dependency(self, prestashop_id, binding_model,
                            importer_class=None, always=False,
@@ -62,7 +61,7 @@ class PrestashopBaseImporter(AbstractComponent):
             importer_class = PrestashopImporter
         binder = self.binder_for(binding_model)
         if always or not binder.to_internal(prestashop_id):
-            importer = self.unit_for(importer_class, model=binding_model)
+            importer = self.component(usage='prestashop.importer', model_name=binding_model)
             importer.run(prestashop_id, **kwargs)
 
 
@@ -71,6 +70,7 @@ class PrestashopImporter(AbstractComponent):
 
     _name = 'prestashop.importer'
     _inherit = 'prestashop.base.importer'
+    _usage = 'record.importer'
 
     def __init__(self, environment):
         """
@@ -364,11 +364,11 @@ class DirectBatchImporter(AbstractComponent):
     _inherit = 'prestashop.batch.importer'
     _model_name = None
 
-    def _import_record(self, record):
+    def _import_record(self, external_id):
         """ Import the record directly """
         self.env[self.model._name].import_record(
             backend=self.backend_record,
-            prestashop_id=record)
+            prestashop_id=external_id)
 
 
 class DelayedBatchImporter(AbstractComponent):
@@ -378,17 +378,17 @@ class DelayedBatchImporter(AbstractComponent):
     _inherit = 'prestashop.batch.importer'
     _model_name = None
 
-    def _import_record(self, record, **kwargs):
+    def _import_record(self, external_id, **kwargs):
         """ Delay the import of the records"""
         self.env[self.model._name].with_delay().import_record(
             backend=self.backend_record,
-            prestashop_id=record,
+            prestashop_id=external_id,
             **kwargs)
 
 
 class TranslatableRecordImporter(AbstractComponent):
     """ Import one translatable record """
-    _name = 'translatable.record.importer'
+    _name = 'prestashop.translatable.record.importer'
     _inherit = 'prestashop.importer'
 
     _model_name = []
@@ -414,7 +414,7 @@ class TranslatableRecordImporter(AbstractComponent):
 
     def find_each_language(self, record):
         languages = {}
-        for field in self._translatable_fields[self.connector_env.model_name]:
+        for field in self._translatable_fields[self.model._name]:
             # TODO FIXME in prestapyt
             if not isinstance(record[field]['language'], list):
                 record[field]['language'] = [record[field]['language']]
@@ -449,7 +449,7 @@ class TranslatableRecordImporter(AbstractComponent):
                 _('No language mapping defined. '
                   'Run "Synchronize base data".')
             )
-        model_name = self.connector_env.model_name
+        model_name = self.model._name
         for language_id, language_code in languages.iteritems():
             split_record[language_code] = record.copy()
         _fields = self._translatable_fields[model_name]
