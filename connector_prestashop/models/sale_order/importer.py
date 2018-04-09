@@ -3,18 +3,13 @@
 
 from odoo import _, fields
 from odoo.addons.queue_job.job import job
-from odoo.addons.connector.connector import ConnectorUnit
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.queue_job.exception import FailedJobError, NothingToDoJob
-from odoo.addons.connector.unit.mapper import ImportMapper, mapping
-from odoo.addons.connector_ecommerce.unit.sale_order_onchange import (
+from odoo.addons.connector_ecommerce.components.sale_order_onchange import (
     SaleOrderOnChange,
 )
-from ...components.backend_adapter import GenericAdapter
-from ...components.importer import (
-    PrestashopImporter,
-    import_batch,
-    DelayedBatchImporter,
-)
+from ...components.importer import import_batch
 from ...components.exception import OrderImportRuleRetry
 from ...backend import prestashop
 
@@ -35,8 +30,11 @@ class PrestaShopSaleOrderOnChange(SaleOrderOnChange):
 
 
 @prestashop
-class SaleImportRule(ConnectorUnit):
-    _model_name = ['prestashop.sale.order']
+class SaleImportRule(Component):
+    _name = 'prestashop.sale.import.rule'
+    _inherit = 'base.prestashop.connector'
+    _apply_on = 'prestashop.sale.order'
+    _usage = 'sale.import.rule'
 
     def _rule_always(self, record, mode):
         """ Always import the order """
@@ -55,9 +53,8 @@ class SaleImportRule(ConnectorUnit):
                                        'The import will be retried later.')
 
     def _get_paid_amount(self, record):
-        payment_adapter = self.unit_for(
-            GenericAdapter,
-            '__not_exist_prestashop.payment'
+        payment_adapter = self.component(
+            model_name='__not_exist_prestashop.payment'
         )
         payment_ids = payment_adapter.search({
             'filter[order_reference]': record['reference']
@@ -128,7 +125,7 @@ class SaleImportRule(ConnectorUnit):
         if self.backend_record.importable_order_state_ids:
             ps_state_id = record['current_state']
             state = self.binder_for(
-                'prestashop.sale.order.state').to_odoo(ps_state_id, unwrap=1)
+                'prestashop.sale.order.state').to_internal(ps_state_id, unwrap=1)
             if not state:
                 raise FailedJobError(_(
                     "The configuration is missing "
@@ -145,8 +142,10 @@ class SaleImportRule(ConnectorUnit):
 
 
 @prestashop
-class SaleOrderMapper(ImportMapper):
-    _model_name = 'prestashop.sale.order'
+class SaleOrderMapper(Component):
+    _name = 'prestashop.sale.order.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.sale.order'
 
     direct = [
         ('date_add', 'date_order'),
@@ -168,8 +167,10 @@ class SaleOrderMapper(ImportMapper):
     def _get_discounts_lines(self, record):
         if record['total_discounts'] == '0.00':
             return []
-        adapter = self.unit_for(
-            GenericAdapter, 'prestashop.sale.order.line.discount')
+        adapter = self.component(
+            usage='prestashop.adapter',
+            model_name='prestashop.sale.order.line.discount'
+        )
         discount_ids = adapter.search({'filter[id_order]': record['id']})
         discount_mappers = []
         for discount_id in discount_ids:
@@ -193,7 +194,9 @@ class SaleOrderMapper(ImportMapper):
 
         children = []
         for child_record in child_records:
-            adapter = self.unit_for(GenericAdapter, model_name)
+            adapter = self.component(
+                usage='prestashop.adapter', model_name=model_name
+            )
             detail_record = adapter.read(child_record['id'])
 
             mapper = self._get_map_child_unit(model_name)
@@ -276,13 +279,15 @@ class SaleOrderMapper(ImportMapper):
         return {'total_amount_tax': tax}
 
     def finalize(self, map_record, values):
-        onchange = self.unit_for(SaleOrderOnChange)
+        onchange = self.component('ecommerce.onchange.manager.sale.order')
         return onchange.play(values, values['prestashop_order_line_ids'])
 
 
 @prestashop
-class SaleOrderImporter(PrestashopImporter):
-    _model_name = ['prestashop.sale.order']
+class SaleOrderImporter(Component):
+    _name = 'prestashop.sale.order.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.sale.order'
 
     def __init__(self, environment):
         """
@@ -357,7 +362,7 @@ class SaleOrderImporter(PrestashopImporter):
         """ Return True if the import can be skipped """
         if self._get_binding():
             return True
-        rules = self.unit_for(SaleImportRule)
+        rules = self.component(usage='sale.import.rule')
         try:
             return rules.check(self.prestashop_record)
         except NothingToDoJob as err:
@@ -368,13 +373,17 @@ class SaleOrderImporter(PrestashopImporter):
 
 
 @prestashop
-class SaleOrderBatchImporter(DelayedBatchImporter):
-    _model_name = 'prestashop.sale.order'
+class SaleOrderBatchImporter(Component):
+    _name = 'prestashop.sale.order.batch.importer'
+    _inherit = 'prestashop.direct.batch.importer'
+    _apply_on = 'prestashop.sale.order'
 
 
 @prestashop
-class SaleOrderLineMapper(ImportMapper):
-    _model_name = 'prestashop.sale.order.line'
+class SaleOrderLineMapper(Component):
+    _name = 'prestashop.sale.order.line.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.sale.order.line'
 
     direct = [
         ('product_name', 'name'),
@@ -449,8 +458,10 @@ class SaleOrderLineMapper(ImportMapper):
 
 
 @prestashop
-class SaleOrderLineDiscountImporter(ImportMapper):
-    _model_name = 'prestashop.sale.order.line.discount'
+class SaleOrderLineDiscountMapper(Component):
+    _name = 'prestashop.sale.order.discount.importer'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.sale.order.line.discount'
 
     direct = []
 
@@ -492,39 +503,3 @@ class SaleOrderLineDiscountImporter(ImportMapper):
     @mapping
     def prestashop_id(self, record):
         return {'prestashop_id': record['id']}
-
-
-@job(default_channel='root.prestashop')
-def import_orders_since(session, backend_id, since_date=None, **kwargs):
-    """ Prepare the import of orders modified on PrestaShop """
-    backend_record = session.env['prestashop.backend'].browse(backend_id)
-    filters = None
-    if since_date:
-        filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
-    result = import_batch(
-        session,
-        'prestashop.sale.order',
-        backend_id,
-        filters,
-        priority=10,
-        max_retries=0,
-        **kwargs
-    )
-    if since_date:
-        filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
-    try:
-        import_batch(session, 'prestashop.mail.message', backend_id, filters)
-    except Exception as error:
-        msg = _(
-            'Mail messages import failed with filters `%s`. '
-            'Error: `%s`'
-        ) % (str(filters), str(error))
-        backend_record.add_checkpoint(
-            message=msg
-        )
-
-    now_fmt = fields.Datetime.now()
-    backend_record.write({
-        'import_orders_since': now_fmt
-    })
-    return result
