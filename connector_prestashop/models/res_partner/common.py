@@ -4,7 +4,7 @@
 from odoo import models, fields
 
 from odoo.addons.queue_job.job import job
-from ...components.backend_adapter import GenericAdapter
+from odoo.addons.component.core import Component
 from ...backend import prestashop
 from ...components.importer import import_batch
 
@@ -159,12 +159,16 @@ class PrestashopAddress(models.Model):
 
 
 @prestashop
-class PartnerAdapter(GenericAdapter):
-    _model_name = 'prestashop.res.partner'
+class PartnerAdapter(Component):
+    _name = 'prestashop.res.partner.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.res.partner'
     _prestashop_model = 'customers'
 
 
 @prestashop
-class PartnerAddressAdapter(GenericAdapter):
-    _model_name = 'prestashop.address'
+class PartnerAddressAdapter(Component):
+    _name = 'prestashop.address.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.address'
     _prestashop_model = 'addresses'

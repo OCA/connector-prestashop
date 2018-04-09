@@ -5,7 +5,7 @@
 from odoo.addons.queue_job.job import job
 from odoo.addons.connector.unit.synchronizer import Exporter
 
-from ...components.backend_adapter import GenericAdapter
+from odoo.addons.component.core import Component
 from ...backend import prestashop
 
 
@@ -24,7 +24,9 @@ class ProductInventoryExporter(Exporter):
     def run(self, binding_id, fields, **kwargs):
         """ Export the product inventory to PrestaShop """
         template = self.model.browse(binding_id)
-        adapter = self.unit_for(GenericAdapter, '_import_stock_available')
+        adapter = self.component(
+            usage='prestashop.adapter', model_name='_import_stock_available'
+        )
         filter = self.get_filter(template)
         adapter.export_quantity(filter, int(template.quantity))
 

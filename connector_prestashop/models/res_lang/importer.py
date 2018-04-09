@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
 from ...components.auto_matching_importer import AutoMatchingImporter
 from ...backend import prestashop
 
 
 @prestashop
 class LangImporter(AutoMatchingImporter):
-    _model_name = 'prestashop.res.lang'
+    _name = 'prestashop.res.lang.importer'
+    _apply_on = 'prestashop.res.lang'
+
     _erp_field = 'code'
     _ps_field = 'language_code'
     _copy_fields = [

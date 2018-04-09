@@ -2,13 +2,21 @@
 # Copyright 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo.addons.connector.connector import ConnectorUnit
+from odoo import models
+from odoo.addons.component.core import Component
 from ..backend import prestashop, prestashop_1_6_0_9, prestashop_1_6_1_2
 
 
+class VersionKeyModel(models.TransientModel):
+    # In actual connector version is mandatory use a model
+    _name = '_prestashop.version.key'
+
+
 @prestashop
-class VersionKey(ConnectorUnit):
-    _model_name = '_prestashop.version.key'
+class VersionKey(Component):
+    _name = '_prestashop.version.key'
+    _apply_on = '_prestashop.version.key'
+    _usage = 'prestashop.version.key'
 
     keys = {}
 
@@ -17,7 +25,10 @@ class VersionKey(ConnectorUnit):
 
 
 @prestashop_1_6_0_9
-class VersionKey_1_6_0_9(VersionKey):
+class VersionKey_1_6_0_9(Component):
+    _name = '_prestashop.version.key.1.6.0.9'
+    _inherit = '_prestashop.version.key'
+    _usage = 'prestashop.version.key.1.6.0.9'
 
     keys = {
         'product_option_value': 'product_option_values',
@@ -35,7 +46,10 @@ class VersionKey_1_6_0_9(VersionKey):
 
 
 @prestashop_1_6_1_2
-class VersionKey_1_6_1_2(VersionKey):
+class VersionKey_1_6_1_2(Component):
+    _name = '_prestashop.version.key.1.6.1.2'
+    _inherit = '_prestashop.version.key'
+    _usage = 'prestashop.version.key.1.6.1.2'
 
     # keys checked in 1.6.1.9:
     # * customer_messages

@@ -12,7 +12,7 @@ from odoo.addons.connector.unit.synchronizer import Deleter
 class PrestashopDeleter(AbstractComponent):
     """ Base deleter for PrestaShop """
 
-    _name = 'prestashop.exporter.deleter'
+    _name = 'prestashop.deleter'
     _inherit = 'base.deleter'
     _usage = 'record.exporter.deleter'
 
