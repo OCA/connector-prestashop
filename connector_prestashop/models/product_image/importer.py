@@ -66,14 +66,14 @@ class ProductImageMapper(Component):
 
 class ProductImageImporter(Component):
     _name = 'prestashop.product.image.importer'
-    _importer = 'prestashop.importer'
+    _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.product.image'
-
-    _model_name = 'prestashop.product.image'
 
     def _get_prestashop_data(self):
         """ Return the raw PrestaShop data for ``self.prestashop_id`` """
-        return self.backend_adapter.read(self.template_id, self.image_id)
+        adapter = self.component(
+            usage='backend.adapter', model_name=self.model._name)
+        return adapter.read(self.template_id, self.image_id)
 
     def run(self, template_id, image_id, **kwargs):
         self.template_id = template_id

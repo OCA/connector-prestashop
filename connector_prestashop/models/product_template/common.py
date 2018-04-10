@@ -157,8 +157,8 @@ class PrestashopProductTemplate(models.Model):
     @job(default_channel='root.prestashop')
     def import_inventory(sel, backend):
         with backend.work_on('_import_stock_available') as work:
-            importer = work.component(usage='prestashop.importer')
-            return importer.set_variant_images()
+            importer = work.component(usage='batch.importer')
+            return importer.run()
 
 
 class ProductInventoryAdapter(Component):
@@ -200,6 +200,11 @@ class ProductInventoryAdapter(Component):
             client.edit(self._prestashop_model, {
                 self._export_node_name: stock
             })
+
+
+class PrestashopProductTagsModel(models.TransientModel):
+    # In actual connector version is mandatory use a model
+    _name = '_prestashop_product_tag'
 
 
 class PrestashopProductTags(Component):
