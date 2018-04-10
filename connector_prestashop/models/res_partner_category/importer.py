@@ -1,15 +1,27 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.component.core import Component
-from ...components.importer import import_record
+from odoo.addons.connector.unit.mapper import ImportMapper, mapping
+from ...components.importer import (
+    TranslatableRecordImporter,
+    import_record,
+    DelayedBatchImporter,
+)
 from ...backend import prestashop
 
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 
-@prestashop
+
+class PartnerCategoryBatchImporter(Component):
+    _name = 'prestashop.res.partner.category.batch.importer'
+    _inherit = 'prestashop.batch.importer'
+    _apply_on = 'prestashop.res.partner.category'
+
+
+
 class PartnerCategoryImportMapper(Component):
-    _name = 'prestashop.res.partner.category.mapper'
+    _name = 'prestashop.res.partner.category.import.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.res.partner.category'
 
@@ -28,17 +40,16 @@ class PartnerCategoryImportMapper(Component):
         return {'backend_id': self.backend_record.id}
 
 
-@prestashop
-class PartnerCategoryImporter(Component):
+class PartnerCategoryImporter(TranslatableRecordImporter):
     """ Import one translatable record """
     _name = 'prestashop.res.partner.category.importer'
     _inherit = 'prestashop.translatable.record.importer'
     _apply_on = 'prestashop.res.partner.category'
-
+ 
     _translatable_fields = {
         'prestashop.res.partner.category': ['name'],
     }
-
+ 
     def _after_import(self, binding):
         super(PartnerCategoryImporter, self)._after_import(binding)
         record = self.prestashop_record
@@ -49,10 +60,3 @@ class PartnerCategoryImporter(Component):
                 self.backend_record.id,
                 record['id']
             )
-
-
-@prestashop
-class PartnerCategoryBatchImporter(Component):
-    _name = 'prestashop.res.partner.category.batch.importer'
-    _inherit = 'prestashop.delayed.batch.importer'
-    _apply_on = 'prestashop.res.partner.category'

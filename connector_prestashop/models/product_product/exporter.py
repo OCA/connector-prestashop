@@ -5,7 +5,7 @@ from ...backend import prestashop
 from ..product_template.exporter import ProductInventoryExporter
 
 
-@prestashop
+# # @prestashop
 class CombinationInventoryExporter(ProductInventoryExporter):
     _model_name = ['prestashop.product.combination']
 

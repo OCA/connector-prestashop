@@ -150,7 +150,7 @@ class TestImportPartner(PrestashopTransactionCase):
         expected = [
             ExpectedPartner(
                 name='John DOE',
-                email='pub@prestashop.com',
+                email='pub# # @prestashop.com',
                 newsletter=True,
                 company=False,
                 active=True,

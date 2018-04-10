@@ -7,12 +7,18 @@ from contextlib import contextmanager
 
 from odoo import models, fields, api, exceptions, _
 
+from odoo.addons.connector.connector import ConnectorEnvironment
 from ...components.importer import import_batch, import_record
 from ...components.auto_matching_importer import AutoMatchingImporter
-from ...components.backend_adapter import api_handle_errors
+from ...components.backend_adapter import GenericAdapter, api_handle_errors
 from ...components.version_key import VersionKey
 from ...backend import prestashop
-from odoo.addons.connector.checkpoint import checkpoint
+
+from ..product_template.importer import import_inventory
+from ..product_supplierinfo.importer import import_suppliers
+from ..account_invoice.importer import import_refunds
+from ..sale_order.importer import import_orders_since
+
 
 _logger = logging.getLogger(__name__)
 
@@ -21,13 +27,6 @@ class PrestashopBackend(models.Model):
     _name = 'prestashop.backend'
     _description = 'PrestaShop Backend Configuration'
     _inherit = 'connector.backend'
-
-    _versions = {
-        '1.5': 'prestashop.version.key',
-        '1.6.0.9': 'prestashop.version.key.1.6.0.9',
-        '1.6.0.11': 'prestashop.version.key.1.6.0.9',
-        '1.6.1.2': 'prestashop.version.key.1.6.1.2'
-    }
 
     @api.model
     def select_versions(self):
@@ -41,6 +40,14 @@ class PrestashopBackend(models.Model):
             ('1.6.0.11', '>= 1.6.0.11 - <1.6.1.2'),
             ('1.6.1.2', '=1.6.1.2')
         ]
+        
+    @api.model
+    def _select_state(self):
+        """Available States for this Backend"""
+        return [('draft', 'Draft'),
+                ('checked', 'Checked'),
+                ('production', 'In Production'),]
+        
 
     version = fields.Selection(
         selection='select_versions',
@@ -118,17 +125,32 @@ class PrestashopBackend(models.Model):
         string='Importable sale order states',
         help="If valued only orders matching these states will be imported.",
     )
+    active = fields.Boolean(
+        string='Active',
+        default=True
+    )
+    state = fields.Selection(
+        selection='_select_state',
+        string='State',
+        default='draft'
+    )
+
+    verbose = fields.Boolean(help="Output requests details in the logs")
+    debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
 
     @api.model
     def _default_pricelist_id(self):
         return self.env['product.pricelist'].search([], limit=1)
 
     @api.multi
-    def add_checkpoint(self, record):
+    def get_environment(self, model_name,):
         self.ensure_one()
-        record.ensure_one()
-        return checkpoint.add_checkpoint(self.env, record._name, record.id,
-                                         self._name, self.id)
+        return ConnectorEnvironment(self, model_name)
+
+    @api.multi
+    def button_reset_to_draft(self):
+        self.ensure_one()
+        self.write({'state': 'draft'})
 
     @api.multi
     def synchronize_metadata(self):
@@ -158,6 +180,8 @@ class PrestashopBackend(models.Model):
             self.env['prestashop.account.tax.group'].import_batch(backend)
             self.env['prestashop.sale.order.state'].import_batch(backend)
         return True
+    
+
 
     @api.multi
     def _check_connection(self):
@@ -166,17 +190,19 @@ class PrestashopBackend(models.Model):
             component = work.component_by_name(name='prestashop.adapter')
             with api_handle_errors('Connection failed'):
                 component.head()
+                
 
     @api.multi
     def button_check_connection(self):
         self._check_connection()
-        raise exceptions.UserError(_('Connection successful'))
+        #raise exceptions.UserError(_('Connection successful'))
+        self.write({'state': 'checked'})
 
     @api.multi
     def import_customers_since(self):
         for backend_record in self:
             since_date = backend_record.import_partners_since
-            self.env['prestashop.res.partner'].import_customers_since(
+            backend_record.with_delay(priority=10).import_customers_since(
                 backend_record=backend_record,
                 since_date=since_date)
         return True
@@ -185,8 +211,8 @@ class PrestashopBackend(models.Model):
     def import_products(self):
         for backend_record in self:
             since_date = backend_record.import_products_since
-            self.env['prestashop.product.template'].import_products(
-                backend_record, since_date)
+            backend_record.env['prestashop.product.template'].with_delay(
+                priority=10).import_products(backend_record, since_date)
         return True
 
     @api.multi
@@ -208,16 +234,18 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_stock_qty(self):
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            backend_record.env['prestashop.product.template']\
-                .with_delay().import_inventory(backend_record)
+            import_inventory.delay(session, backend_record.id)
 
     @api.multi
     def import_sale_orders(self):
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_orders_since
-            backend_record.env['prestashop.sale.order'].import_orders_since(
-                backend_record,
+            import_orders_since.delay(
+                session,
+                backend_record.id,
                 since_date,
                 priority=5,
             )
@@ -225,6 +253,7 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_payment_modes(self):
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             with backend_record.work_on('account.payment.mode') as work:
                 importer = work.component(usage='batch.importer')
@@ -233,25 +262,25 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_refunds(self):
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_refunds_since
-            backend_record.env['prestashop.refund'].import_refunds(
-                backend_record, since_date)
+            import_refunds.delay(session, backend_record.id, since_date)
         return True
 
     @api.multi
     def import_suppliers(self):
+        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_suppliers_since
-            backend_record.env['prestashop.supplier'].import_suppliers(
-                backend_record, since_date)
+            import_suppliers.delay(session, backend_record.id, since_date)
         return True
 
     def get_version_ps_key(self, key):
         self.ensure_one()
-        with self.work_on('_prestashop.version.key') as work:
-            keys = work.component(usage=self._versions[self.version])
-            return keys.get_key(key)
+        env = self.get_environment('_prestashop.version.key')
+        keys = env.get_connector_unit(VersionKey)
+        return keys.get_key(key)
 
     @api.model
     def _scheduler_update_product_stock_qty(self, domain=None):
@@ -317,24 +346,6 @@ class PrestashopBackend(models.Model):
         return locations
 
 
-class PrestashopShopGroup(models.Model):
-    _name = 'prestashop.shop.group'
-    _inherit = 'prestashop.binding'
-    _description = 'PrestaShop Shop Group'
-
-    name = fields.Char('Name', required=True)
-    shop_ids = fields.One2many(
-        comodel_name='prestashop.shop',
-        inverse_name='shop_group_id',
-        readonly=True,
-        string="Shops",
-    )
-    company_id = fields.Many2one(
-        related='backend_id.company_id',
-        comodel_name="res.company",
-        string='Company'
-    )
-
 
 class NoModelAdapter(Component):
     """ Used to test the connection """
@@ -344,9 +355,3 @@ class NoModelAdapter(Component):
     _prestashop_model = ''
 
 
-class ShopGroupAdapter(Component):
-    _name = 'prestashop.shop.group'
-    _inherit = 'prestashop.adapter'
-    _model_name = 'prestashop.shop.group'
-    _apply_on = 'prestashop.shop.group'
-    _prestashop_model = 'shop_groups'

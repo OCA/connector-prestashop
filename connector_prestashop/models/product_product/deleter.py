@@ -6,7 +6,7 @@ from ...components.deleter import PrestashopDeleter
 from ...backend import prestashop
 
 
-@prestashop
+# # @prestashop
 class ProductCombinationDelete(PrestashopDeleter):
     _model_name = 'prestashop.product.combination'
 

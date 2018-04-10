@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- Copyright (C) 2013 Akretion (http://www.akretion.com/) @author Alexis 
+		de Lattre <alexis.delattre@akretion.com> The licence is in the file __openerp__.py -->
+
+	<record id="view_prestashop_backend_form" model="ir.ui.view">
+		<field name="name">prestashop.backend.form</field>
+		<field name="model">prestashop.backend</field>
+		<field name="arch" type="xml">
+			<form string="PrestaShop Backend">
+				<header>
+					<button name="button_check_connection" type="object" class="oe_highlight"
+						string="Check Connection" attrs="{'invisible':[('state', 'not in', ['draft'])]}" />
+					<button name="synchronize_metadata" type="object" class="oe_highlight"
+						help="Synchonize shop and shop groups" string="Synchronize Metadata" />
+					<button name="synchronize_basedata" type="object" class="oe_highlight"
+						help="Synchonize datas like language, country, currency, tax"
+						string="Synchronize Base Data" />
+
+					<button name="button_reset_to_draft" type="object"
+						string="Reset To draft Connection" attrs="{'invisible':[('state', 'in', ['draft'])]}" />
+
+					<field name="state" widget="statusbar" readonly="1" />
+				</header>
+				<sheet>
+					<h1>
+						<field name="name" class="oe_inline" />
+					</h1>
+
+					<group>
+						<field name="company_id" />
+					</group>
+					<group>
+
+						<group col="4">
+							<field name="location" colspan="4" />
+							<field name="webservice_key" colspan="4" />
+
+						</group>
+						<group>
+							<field name="version" />
+							<field name="verbose" />
+							<field name="debug" />
+						</group>
+					</group>
+					<group name="main_configuration" string="Main Configuration">
+						<field name="pricelist_id" />
+						<field name="warehouse_id" />
+						<field name="stock_location_id" />
+						<field name="refund_journal_id" />
+						<field name="sale_team_id" />
+						<field name="taxes_included" />
+						<field name="discount_product_id" />
+						<field name="shipping_product_id" />
+						<field name="importable_order_state_ids" widget="many2many_tags" />
+					</group>
+					<notebook>
+						<page name="import" string="Imports">
+							<p class="oe_grey oe_inline">
+								By clicking on the buttons,
+								you will initiate the synchronizations
+								with PrestaShop.
+								Note that the import or exports
+								won't be done directly,
+								they will create 'Jobs'
+								executed as soon as possible.
+							</p>
+							<p class="oe_grey oe_inline">
+								Once imported,
+								some types of records,
+								like the products or categories,
+								need a manual review.
+								You will find the list
+								of the new records to review
+								in the menu 'Connectors > Checkpoint'.
+							</p>
+							<group>
+								<div>
+									<label string="Import customer groups and customers since"
+										class="oe_inline" />
+									<field name="import_partners_since" class="oe_inline"
+										nolabel="1" />
+								</div>
+								<button name="import_customers_since" type="object"
+									class="oe_highlight" string="Import in background" />
+							</group>
+							<group>
+								<div>
+									<label string="Import product categories and products"
+										class="oe_inline" />
+									<field name="import_products_since" class="oe_inline"
+										nolabel="1" />
+								</div>
+								<button name="import_products" type="object" class="oe_highlight"
+									string="Import in background" />
+							</group>
+							<group>
+								<div>
+									<label string="Import payment modes" class="oe_inline" />
+								</div>
+								<button name="import_payment_modes" type="object" class="oe_highlight"
+									string="Import in background" />
+							</group>
+							<group>
+								<div>
+									<label string="Import sale orders since" class="oe_inline" />
+									<field name="import_orders_since" class="oe_inline"
+										nolabel="1" />
+								</div>
+								<button name="import_sale_orders" type="object" class="oe_highlight"
+									string="Import in background" />
+							</group>
+							<group>
+								<div>
+									<label string="Import refunds" class="oe_inline" />
+									<field name="import_refunds_since" class="oe_inline"
+										nolabel="1" />
+								</div>
+								<button name="import_refunds" type="object" class="oe_highlight"
+									string="Import in background" />
+							</group>
+							<group>
+								<div>
+									<label string="Import suppliers" class="oe_inline" />
+									<field name="import_suppliers_since" class="oe_inline"
+										nolabel="1" />
+								</div>
+								<button name="import_suppliers" type="object" class="oe_highlight"
+									string="Import in background" />
+							</group>
+							<group>
+								<label string="Import carriers" class="oe_inline" />
+								<div>
+									<button name="import_carriers" type="object" class="oe_highlight"
+										string="Import in background" />
+								</div>
+							</group>
+							<group>
+								<label string="Export stock quantities" class="oe_inline" />
+								<button name="update_product_stock_qty" type="object"
+									class="oe_highlight" string="Export in background" />
+							</group>
+							<group>
+								<label string="Import stock quantities" class="oe_inline" />
+								<button name="import_stock_qty" type="object" class="oe_highlight"
+									string="Import in background" />
+							</group>
+						</page>
+						<page string="Languages">
+							<field name="language_ids" nolabel="1">
+								<tree>
+									<field name="active" />
+									<field name="code" />
+									<field name="name" />
+								</tree>
+							</field>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="view_prestashop_backend_tree" model="ir.ui.view">
+		<field name="name">prestashop.backend.tree</field>
+		<field name="model">prestashop.backend</field>
+		<field name="arch" type="xml">
+			<tree string="PrestaShop Backend">
+				<field name="name" />
+				<field name="location" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_prestashop_backend" model="ir.actions.act_window">
+		<field name="name">PrestaShop Backends</field>
+		<field name="res_model">prestashop.backend</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+	<record id="view_prestashop_shop_group_form" model="ir.ui.view">
+		<field name="name">prestashop.shop.group.form</field>
+		<field name="model">prestashop.shop.group</field>
+		<field name="arch" type="xml">
+			<form string="PrestaShop Shop Group">
+				<h1>
+					<field name="name" class="oe_inline" />
+				</h1>
+				<group>
+					<field name="backend_id" />
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record id="view_prestashop_shop_group_tree" model="ir.ui.view">
+		<field name="name">prestashop.shop.group.tree</field>
+		<field name="model">prestashop.shop.group</field>
+		<field name="arch" type="xml">
+			<tree string="PrestaShop Shop Group">
+				<field name="name" />
+				<field name="backend_id" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_prestashop_shop_group" model="ir.actions.act_window">
+		<field name="name">PrestaShop Shop Groups</field>
+		<field name="res_model">prestashop.shop.group</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+	<record id="view_prestashop_shop_form" model="ir.ui.view">
+		<field name="name">prestashop.shop.form</field>
+		<field name="model">prestashop.shop</field>
+		<field name="arch" type="xml">
+			<form string="PrestaShop Shop">
+				<sheet>
+					<h1>
+						<field name="name" class="oe_inline" />
+					</h1>
+					<group>
+						<field name="shop_group_id" />
+						<field name="odoo_id" />
+					</group>
+					<group>
+						<field name="default_url" />
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="view_prestashop_shop_tree" model="ir.ui.view">
+		<field name="name">prestashop.shop.tree</field>
+		<field name="model">prestashop.shop</field>
+		<field name="arch" type="xml">
+			<tree string="PrestaShop Shop">
+				<field name="name" />
+				<field name="shop_group_id" />
+				<field name="odoo_id" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_prestashop_shop" model="ir.actions.act_window">
+		<field name="name">PrestaShop Shops</field>
+		<field name="res_model">prestashop.shop</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+</odoo>

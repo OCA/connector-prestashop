@@ -42,7 +42,7 @@ class TaxGroupImporter(Component):
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.account.tax.group'
 
-    _model_name = 'prestashop.account.tax.group'
+#     _model_name = 'prestashop.account.tax.group'
 
 
 class TaxGroupBatchImporter(Component):
@@ -50,4 +50,4 @@ class TaxGroupBatchImporter(Component):
     _inherit = 'prestashop.direct.batch.importer'
     _apply_on = 'prestashop.account.tax.group'
 
-    _model_name = 'prestashop.account.tax.group'
+#     _model_name = 'prestashop.account.tax.group'

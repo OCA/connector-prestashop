@@ -2,10 +2,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.component.core import Component
+from odoo.addons.queue_job.job import job
 
-from ...backend import prestashop
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping, external_to_m2o
+
 
 import mimetypes
 import logging
@@ -99,3 +100,5 @@ class ProductImageImporter(Component):
                     'Error: `%s`'
                 ) % (image_id, template_id, error.msg)
                 self.backend_record.add_checkpoint(message=msg)
+
+
