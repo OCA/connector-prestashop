@@ -7,11 +7,9 @@
        <field name="arch" type="xml">
            <field name="default_code" position="after">
                 <field name="default_on" attrs="{'invisible': [
-                                        ('is_product_variant', '=', True),
                                         ('product_variant_count', '=', 1)
                                     ]}"/>
                 <field name="impact_price" attrs="{'invisible': [
-                        ('is_product_variant', '=', True),
                         ('product_variant_count', '=', 1)
                         ]}"/>
            </field>
@@ -70,8 +68,7 @@
                 <attribute name="invisible">0</attribute>
            </page>
            <page name="connector" position="inside">
-                <group string="PrestaShop Bindings"
-                       attrs="{'invisible': [('is_product_variant', '=', True)]}">
+                <group string="PrestaShop Bindings">
                     <field name="prestashop_bind_ids" nolabel="1"/>
                 </group>
            </page>

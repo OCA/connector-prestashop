@@ -2,9 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo import api, fields, models
-
 from odoo.addons.component.core import Component
-# from ...backend import prestashop
 
 
 class StockWarehouse(models.Model):
@@ -56,7 +54,6 @@ class PrestashopShop(models.Model):
     default_url = fields.Char('Default url')
 
 
-# # @prestashop
 class ShopAdapter(Component):
     _name = 'prestashop.shop'
     _model_name = 'prestashop.shop'

@@ -7,8 +7,8 @@ from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
 
 from odoo.addons.queue_job.job import job
-from odoo.addons.component.core import Component
 from exporter import CombinationInventoryExporter
+from odoo.addons.component.core import Component
 
 
 class ProductProduct(models.Model):
@@ -204,6 +204,18 @@ class PrestashopProductCombination(models.Model):
             ('backend_id', 'in', backend.ids),
         ]).recompute_prestashop_qty()
 
+    @job(default_channel='root.prestashop')
+    def set_product_image_variant(self, backend, combination_ids, **kwargs):
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.set_variant_images(combination_ids, **kwargs)
+
+    @job(default_channel='root.prestashop')
+    def set_product_image_variant(self, backend, combination_ids, **kwargs):
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.set_variant_images(combination_ids, **kwargs)
+
 
 class ProductAttribute(models.Model):
     _inherit = 'product.attribute'
@@ -265,26 +277,23 @@ class PrestashopProductCombinationOptionValue(models.Model):
         comodel_name='prestashop.product.combination.option')
 
 
-# # @prestashop
 class ProductCombinationAdapter(Component):
     _name = 'prestashop.product.combination.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.product.combination'
-    
     _prestashop_model = 'combinations'
     _export_node_name = 'combination'
 
 
-# # @prestashop
 class ProductCombinationOptionAdapter(Component):
     _name = 'prestashop.product.combination.option.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.product.combination.option'
-    
+
     _prestashop_model = 'product_options'
     _export_node_name = 'product_options'
-    
-    
+
+
 class ProductCombinationOptionValueAdapter(Component):
     _name = 'prestashop.product.combination.option.value.adapter'
     _inherit = 'prestashop.adapter'

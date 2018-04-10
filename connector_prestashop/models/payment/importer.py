@@ -9,8 +9,6 @@ class PaymentMethodImporter(Component):
     _inherit = 'prestashop.direct.batch.importer'
     _apply_on = 'payment.method'
 
-    _model_name = 'payment.method'
-
     def run(self, filters=None, **kwargs):
         if filters is None:
             filters = {}

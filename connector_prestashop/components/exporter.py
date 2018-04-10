@@ -59,7 +59,7 @@ class PrestashopBaseExporter(AbstractComponent):
         self.binder.bind(self.prestashop_id, self.binding)
         # commit so we keep the external ID if several cascading exports
         # are called and one of them fails
-        self.session.commit()
+        self._cr.commit()
         self._after_export()
         return result
 
@@ -155,7 +155,7 @@ class PrestashopExporter(AbstractComponent):
                     binding = model_c.create(_bind_values)
                     # Eager commit to avoid having 2 jobs
                     # exporting at the same time.
-                    self.session.commit()
+                    self._cr.commit()
         else:
             # If prestashop_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
