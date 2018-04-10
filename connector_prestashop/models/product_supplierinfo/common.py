@@ -3,12 +3,10 @@
 
 from odoo import models, fields
 
+from odoo.addons.component.core import Component
 from ...components.backend_adapter import (
-    PrestaShopCRUDAdapter,
     PrestaShopWebServiceImage,
-    GenericAdapter,
 )
-from ...backend import prestashop
 
 
 class ResPartner(models.Model):
@@ -33,6 +31,23 @@ class PrestashopSupplier(models.Model):
         ondelete='cascade',
         oldname='openerp_id',
     )
+
+    def import_suppliers(self, backend, since_date, **kwargs):
+        filters = None
+        if since_date:
+            filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
+        now_fmt = fields.Datetime.now()
+        self.env['prestashop.supplier'].with_delay().import_batch(
+            backend,
+            filters,
+            **kwargs
+        )
+        self.env['prestashop.product.supplierinfo'].with_delay().import_batch(
+            backend,
+            **kwargs
+        )
+        backend.import_suppliers_since = now_fmt
+        return True
 
 
 class ProductSupplierinfo(models.Model):
@@ -64,8 +79,12 @@ class PrestashopProductSupplierinfo(models.Model):
     ]
 
 
-@prestashop
-class SupplierImageAdapter(PrestaShopCRUDAdapter):
+class SupplierImageModel(models.TransientModel):
+    # In actual connector version is mandatory use a model
+    _name = 'prestashop.supplier.image'
+
+
+class SupplierImageAdapter(Component):
     _name = 'prestashop.supplier.image.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.supplier.image'
@@ -87,7 +106,6 @@ class SupplierAdapter(Component):
     _name = 'prestashop.supplier.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.supplier'
-    
     _prestashop_model = 'suppliers'
 
 
@@ -95,6 +113,4 @@ class SupplierInfoAdapter(Component):
     _name = 'prestashop.product.supplierinfo.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.product.supplierinfo'
-
-    
     _prestashop_model = 'product_suppliers'

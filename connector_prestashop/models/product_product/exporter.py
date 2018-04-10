@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from ...backend import prestashop
 from ..product_template.exporter import ProductInventoryExporter
 
 
-# # @prestashop
 class CombinationInventoryExporter(ProductInventoryExporter):
     _model_name = ['prestashop.product.combination']
 

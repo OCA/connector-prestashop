@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 class AutoMatchingImporter(Component):
     _name = 'prestashop.auto.matching.importer'
     _inherit = 'prestashop.importer'
+    _usage = 'auto.matching.importer'
 
     _model_name = None
     _erp_field = None

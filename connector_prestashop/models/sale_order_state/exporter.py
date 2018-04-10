@@ -4,10 +4,8 @@
 
 from odoo.addons.queue_job.job import job
 from odoo.addons.connector.unit.synchronizer import Exporter
-from ...backend import prestashop
 
 
-# # @prestashop
 class SaleStateExporter(Exporter):
     _model_name = ['prestashop.sale.order']
 

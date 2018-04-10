@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo import models, fields, api
-from odoo.addons.queue_job.job import job
+from odoo.addons.queue_job.job import job, related_action
 from ...components.importer import import_record
 
 
@@ -44,9 +44,10 @@ class PrestashopBinding(models.AbstractModel):
             return importer.run(filters=filters)
 
     @job(default_channel='root.prestashop')
+    @related_action(action='related_action_record')
     @api.multi
     def export_record(self, fields=None):
-        """ Export a record on Magento """
+        """ Export a record on PrestaShop """
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')
@@ -54,7 +55,7 @@ class PrestashopBinding(models.AbstractModel):
 
     @job(default_channel='root.prestashop')
     def export_delete_record(self, backend, external_id):
-        """ Delete a record on Magento """
+        """ Delete a record on PrestaShop """
         with backend.work_on(self._name) as work:
             deleter = work.component(usage='record.exporter.deleter')
             return deleter.run(external_id)

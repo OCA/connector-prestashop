@@ -4,14 +4,13 @@
 from odoo import fields
 from odoo.addons.queue_job.exception import FailedJobError
 from odoo.addons.queue_job.job import job
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 
 from ...components.backend_adapter import PrestaShopCRUDAdapter
 from ...components.importer import (
-    PrestashopImporter,
     import_batch,
-    DelayedBatchImporter,
 )
-from ...backend import prestashop
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -21,12 +20,10 @@ except:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-# # @prestashop
 class SupplierMapper(Component):
     _name = 'prestashop.supplier.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.supplier'
-
 
     direct = [
         ('name', 'name'),
@@ -52,8 +49,8 @@ class SupplierMapper(Component):
 
     @mapping
     def image(self, record):
-        supplier_image_adapter = self.unit_for(
-            PrestaShopCRUDAdapter, 'prestashop.supplier.image'
+        supplier_image_adapter = self.component(
+            usage='backend.adapter', model_name='prestashop.supplier.image'
         )
         try:
             return {'image': supplier_image_adapter.read(record['id'])}
@@ -61,13 +58,11 @@ class SupplierMapper(Component):
             return {}
 
 
-# # @prestashop
 class SupplierImporter(Component):
     """ Import one simple record """
     _name = 'prestashop.supplier.importer'
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.supplier'
-
 
 
     def _create(self, record):
@@ -96,13 +91,10 @@ class SupplierBatchImporter(Component):
     _apply_on = 'prestashop.supplier'
 
 
-
 class SupplierInfoMapper(Component):
     _name = 'prestashop.product.supplierinfo.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.product.supplierinfo'
-
-
 
     direct = [
         ('product_supplier_reference', 'product_code'),
@@ -144,10 +136,7 @@ class SupplierInfoMapper(Component):
         return {'min_qty': 0.0, 'delay': 1}
 
 
-# # @prestashop
 class SupplierInfoImporter(Component):
-    #_model_name = 'prestashop.product.supplierinfo'
-    
     _name = 'prestashop.product.supplierinfo.importer'
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.product.supplierinfo'
@@ -175,6 +164,3 @@ class SupplierInfoBatchImporter(Component):
     _name = 'prestashop.product.supplierinfo.batch.importer'
     _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = 'prestashop.product.supplierinfo'
-
-
-
