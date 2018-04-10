@@ -3,17 +3,34 @@
 
 from odoo import _, models, fields
 from odoo.addons.queue_job.job import job
-from odoo.addons.connector.components.mapper import (
+
+from odoo.addons.connector.unit.mapper import (
     mapping,
     only_create,
+    ImportMapper
 )
+
 from ...components.importer import (
+    DelayedBatchImporter,
     import_record,
     import_batch,
+    PrestashopImporter,
+    PrestashopBaseImporter,
+    TranslatableRecordImporter,
 )
-from odoo.addons.connector.unit.mapper import external_to_m2o
-from odoo.addons.component.core import Component
+from ...components.backend_adapter import GenericAdapter
 from ...backend import prestashop
+from ..product_image.importer import (
+    import_product_image,
+    set_product_image_variant,
+)
+
+
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import (
+    mapping, external_to_m2o, only_create)
+
+
 
 import datetime
 import logging
@@ -35,11 +52,13 @@ except ImportError:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-@prestashop
+# # @prestashop
 class TemplateMapper(Component):
+    #_model_name = 'prestashop.product.template'
     _name = 'prestashop.product.template.mapper'
     _inherit = 'prestashop.import.mapper'
-    _apply_on = 'prestashop.product.template'
+    _apply_on = ['prestashop.product.template']
+    
 
     direct = [
         ('weight', 'weight'),
@@ -77,9 +96,7 @@ class TemplateMapper(Component):
         associations = record.get('associations', {})
         tags = associations.get('tags', {}).get(
             self.backend_record.get_version_ps_key('tag'), [])
-        tag_adapter = self.component(
-            usage='prestashop.adapter', model_name='_prestashop_product_tag'
-        )
+        tag_adapter = self.unit_for(GenericAdapter, '_prestashop_product_tag')
         if not isinstance(tags, list):
             tags = [tags]
         if tags:
@@ -264,54 +281,59 @@ class TemplateMapper(Component):
 
     @mapping
     def extras_features(self, record):
-        mapper = self.component(usage='feature.product.import.mapper')
+        mapper = self.unit_for(FeaturesProductImportMapper)
         return mapper.map_record(record).values(**self.options)
 
     @mapping
     def extras_manufacturer(self, record):
-        mapper = self.component(usage='manufacturer.product.import.mapper')
+        mapper = self.unit_for(ManufacturerProductImportMapper)
         return mapper.map_record(record).values(**self.options)
 
 
-@prestashop
-class FeaturesProductImportMapper(Component):
+# # @prestashop
+class FeaturesProductImportMapper(ImportMapper):
     # To extend in connector_prestashop_feature module. In this way we
     # dependencies on other modules like product_custom_info
-    _name = 'prestashop.product.template.mapper'
-    _inherit = 'prestashop.import.mapper'
-    _apply_on = 'prestashop.product.template'
-    _usage = 'feature.product.import.mapper'
+    _model_name = 'prestashop.product.template'
 
     @mapping
     def extras_features(self, record):
         return {}
 
 
-@prestashop
-class ManufacturerProductDependency(Component):
+# # @prestashop
+class ManufacturerProductDependency(PrestashopBaseImporter):
     # To extend in connector_prestashop_feature module. In this way we
     # dependencies on other modules like product_manufacturer
-    _name = 'prestashop.product.template.manufacturer.importer'
-    _inherit = 'prestashop.importer'
-    _apply_on = 'prestashop.product.template'
-    _usage = 'manufacturer.product.importer'
+    _model_name = 'prestashop.product.template'
 
     def import_manufacturer(self, manufacturer_id):
         return
 
 
-@prestashop
+# # @prestashop
 class ManufacturerProductImportMapper(Component):
     # To extend in connector_prestashop_manufacturer module. In this way we
     # dependencies on other modules like product_manufacturer
-    _name = 'prestashop.product.template.mapper'
-    _inherit = 'prestashop.import.mapper'
-    _apply_on = 'prestashop.product.template'
-    _usage = 'manufacturer.product.import.mapper'
-
+    _model_name = 'prestashop.product.template'
+    _name= "TODO"
+    
+    
     @mapping
     def extras_manufacturer(self, record):
         return {}
+
+
+# # @prestashop
+class TemplateAdapter(Component):
+    _name = 'prestashop.product.template.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.product.template'
+
+    _prestashop_model = 'products'
+    _export_node_name = 'product'
+
+    
 
 
 class ImportInventory(models.TransientModel):
@@ -319,11 +341,13 @@ class ImportInventory(models.TransientModel):
     _name = '_import_stock_available'
 
 
-@prestashop
+# # @prestashop
 class ProductInventoryBatchImporter(Component):
-    _name = '_import_stock_available.batch.importer'
+#     _model_name = ['_import_stock_available']
+    _name = 'prestashop._import_stock_available.batch.importer'
     _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = '_import_stock_available'
+    
 
     def run(self, filters=None, **kwargs):
         if filters is None:
@@ -351,11 +375,13 @@ class ProductInventoryBatchImporter(Component):
         )
 
 
-@prestashop
-class ProductInventoryImporter(Component):
-    _name = 'prestashop.product.inventory.importer'
+# # @prestashop
+class ProductInventoryImporter(PrestashopImporter):
+    _model_name = ['_import_stock_available']
+    _name = 'prestashop._import_stock_available.importer'
     _inherit = 'prestashop.importer'
-    _apply_on = ['_import_stock_available']
+    _apply_on = '_import_stock_available'
+    
 
     def _get_quantity(self, record):
         filters = {
@@ -428,12 +454,17 @@ class ProductInventoryImporter(Component):
             ).change_product_qty()
 
 
-@prestashop
+# # @prestashop
 class ProductTemplateImporter(Component):
     """ Import one translatable record """
+    _model_name = [
+        'prestashop.product.template',
+    ]
     _name = 'prestashop.product.template.importer'
-    _inherit = 'prestashop.translatable.record.importer'
+    _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.product.template'
+    
+    
 
     _base_mapper = TemplateMapper
 
@@ -518,11 +549,14 @@ class ProductTemplateImporter(Component):
                                 **kwargs)
 
     def _delay_product_image_variant(self, combinations, **kwargs):
-        delayable = self.env['prestashop.product.combination'].with_delay(priority=15)
-        delayable.set_product_image_variant(
-            self.backend_record,
+        set_product_image_variant.delay(
+            self.session,
+            'prestashop.product.combination',
+            self.backend_record.id,
             combinations,
-            **kwargs)
+            priority=15,
+            **kwargs
+        )
 
     def import_combinations(self):
         prestashop_record = self._get_prestashop_data()
@@ -547,6 +581,17 @@ class ProductTemplateImporter(Component):
             if combinations and associations['images'].get('image'):
                 self._delay_product_image_variant(combinations)
 
+    def _delay_import_product_image(self, prestashop_record, image, **kwargs):
+        import_product_image.delay(
+            self.session,
+            'prestashop.product.image',
+            self.backend_record.id,
+            prestashop_record['id'],
+            image['id'],
+            priority=10,
+            **kwargs
+        )
+
     def import_images(self, binding):
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get('associations', {})
@@ -556,12 +601,7 @@ class ProductTemplateImporter(Component):
             images = [images]
         for image in images:
             if image.get('id'):
-                delayable = self.env['prestashop.product.image'].with_delay(priority=10)
-                delayable.import_product_image(
-                    self.backend_record,
-                    prestashop_record['id'],
-                    image['id'],
-                    **kwargs)
+                self._delay_import_product_image(prestashop_record, image)
 
     def import_supplierinfo(self, binding):
         ps_id = self._get_prestashop_data()['id']
@@ -590,7 +630,7 @@ class ProductTemplateImporter(Component):
         self._import_manufacturer()
 
     def _import_manufacturer(self):
-        self.component(usage='manufacturer.product.importer').import_manufacturer(
+        self.unit_for(ManufacturerProductDependency).import_manufacturer(
             self.prestashop_record.get('id_manufacturer')
         )
 
@@ -623,8 +663,20 @@ class ProductTemplateImporter(Component):
                                     'prestashop.product.category')
 
 
-@prestashop
+@job(default_channel='root.prestashop')
+def import_inventory(session, backend_id):
+    backend = session.env['prestashop.backend'].browse(backend_id)
+    env = backend.get_environment('_import_stock_available', session=session)
+    inventory_importer = env.get_connector_unit(ProductInventoryBatchImporter)
+    return inventory_importer.run()
+
+
+# # @prestashop
 class ProductTemplateBatchImporter(Component):
+    #_model_name = 'prestashop.product.template'
+    
     _name = 'prestashop.product.template.batch.importer'
     _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = 'prestashop.product.template'
+    
+    

@@ -9,7 +9,7 @@ from odoo.addons.component.core import Component
 from ...backend import prestashop
 
 
-@prestashop
+# # @prestashop
 class ProductInventoryExporter(Exporter):
     _model_name = ['prestashop.product.template']
 
