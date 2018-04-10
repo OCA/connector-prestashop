@@ -1,5 +1,5 @@
 html2text
-prestapyt >= 0.7.0
+prestapyt >= 0.9.0
 unidecode
 bs4
 # tests dependencies

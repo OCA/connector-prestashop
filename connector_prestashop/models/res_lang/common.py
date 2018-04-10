@@ -5,8 +5,6 @@
 from odoo import models, fields
 
 from odoo.addons.component.core import Component
-from ...backend import prestashop
-
 
 class PrestashopResLang(models.Model):
     _name = 'prestashop.res.lang'
@@ -37,10 +35,9 @@ class ResLang(models.Model):
     )
 
 
-@prestashop
 class ResLangAdapter(Component):
     _name = 'prestashop.res.lang.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.res.lang'
-
+    
     _prestashop_model = 'languages'

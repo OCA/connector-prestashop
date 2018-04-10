@@ -5,7 +5,6 @@
 from odoo import fields, models
 
 from odoo.addons.component.core import Component
-from ...backend import prestashop
 
 
 class PrestashopResCountry(models.Model):
@@ -32,11 +31,9 @@ class ResCountry(models.Model):
         string='prestashop Bindings',
     )
 
-
-@prestashop
 class ResCountryAdapter(Component):
     _name = 'prestashop.res.country.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.res.country'
-
+    
     _prestashop_model = 'countries'

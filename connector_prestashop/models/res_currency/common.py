@@ -5,8 +5,6 @@
 from odoo import fields, models
 
 from odoo.addons.component.core import Component
-from ...backend import prestashop
-
 
 class PrestashopResCurrency(models.Model):
     _name = 'prestashop.res.currency'
@@ -32,11 +30,9 @@ class ResCurrency(models.Model):
         readonly=True
     )
 
-
-@prestashop
 class ResCurrencyAdapter(Component):
     _name = 'prestashop.res.currency.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.res.currency'
-
+    
     _prestashop_model = 'currencies'

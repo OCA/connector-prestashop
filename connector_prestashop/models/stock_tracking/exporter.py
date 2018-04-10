@@ -12,7 +12,7 @@ from ...components.backend_adapter import PrestaShopCRUDAdapter
 _logger = logging.getLogger(__name__)
 
 
-@prestashop
+# # @prestashop
 class PrestashopTrackingExporter(Exporter):
     _model_name = ['prestashop.sale.order']
 
