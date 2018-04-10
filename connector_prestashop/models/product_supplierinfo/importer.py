@@ -4,12 +4,12 @@
 from odoo import fields
 from odoo.addons.queue_job.exception import FailedJobError
 from odoo.addons.queue_job.job import job
-from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping
 
 from ...components.backend_adapter import PrestaShopCRUDAdapter
 from ...components.importer import (
+    PrestashopImporter,
     import_batch,
+    DelayedBatchImporter,
 )
 from ...backend import prestashop
 
@@ -21,11 +21,12 @@ except:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-@prestashop
+# # @prestashop
 class SupplierMapper(Component):
     _name = 'prestashop.supplier.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.supplier'
+
 
     direct = [
         ('name', 'name'),
@@ -51,8 +52,8 @@ class SupplierMapper(Component):
 
     @mapping
     def image(self, record):
-        supplier_image_adapter = self.component(
-            usage='prestashop.adapter', model_name='prestashop.supplier.image'
+        supplier_image_adapter = self.unit_for(
+            PrestaShopCRUDAdapter, 'prestashop.supplier.image'
         )
         try:
             return {'image': supplier_image_adapter.read(record['id'])}
@@ -60,12 +61,14 @@ class SupplierMapper(Component):
             return {}
 
 
-@prestashop
+# # @prestashop
 class SupplierImporter(Component):
     """ Import one simple record """
     _name = 'prestashop.supplier.importer'
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.supplier'
+
+
 
     def _create(self, record):
         try:
@@ -87,18 +90,19 @@ class SupplierImporter(Component):
         )
 
 
-@prestashop
 class SupplierBatchImporter(Component):
     _name = 'prestashop.supplier.batch.importer'
     _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = 'prestashop.supplier'
 
 
-@prestashop
+
 class SupplierInfoMapper(Component):
     _name = 'prestashop.product.supplierinfo.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.product.supplierinfo'
+
+
 
     direct = [
         ('product_supplier_reference', 'product_code'),
@@ -140,8 +144,10 @@ class SupplierInfoMapper(Component):
         return {'min_qty': 0.0, 'delay': 1}
 
 
-@prestashop
+# # @prestashop
 class SupplierInfoImporter(Component):
+    #_model_name = 'prestashop.product.supplierinfo'
+    
     _name = 'prestashop.product.supplierinfo.importer'
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.product.supplierinfo'
@@ -165,8 +171,10 @@ class SupplierInfoImporter(Component):
             raise FailedJobError('Error fetching a dependency')
 
 
-@prestashop
 class SupplierInfoBatchImporter(Component):
     _name = 'prestashop.product.supplierinfo.batch.importer'
     _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = 'prestashop.product.supplierinfo'
+
+
+

@@ -5,7 +5,7 @@ from odoo.addons.component.core import Component
 from ...backend import prestashop
 
 
-@prestashop
+# # @prestashop
 class PaymentModeBatchImporter(Component):
     _name = 'account.payment.mode.importer'
     _inherit = 'prestashop.batch.importer'
