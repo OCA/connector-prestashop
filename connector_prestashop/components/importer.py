@@ -28,7 +28,6 @@ def import_batch():
     pass
 
 class PrestashopBaseImporter(AbstractComponent):
-
     _name = 'prestashop.base.importer'
     _inherit = ['base.importer', 'base.prestashop.connector']
 
@@ -61,7 +60,12 @@ class PrestashopBaseImporter(AbstractComponent):
             importer_class = PrestashopImporter
         binder = self.binder_for(binding_model)
         if always or not binder.to_internal(prestashop_id):
+<<<<<<< HEAD
             importer = self.component(usage='prestashop.importer', model_name=binding_model)
+=======
+            
+            importer = self.unit_for(importer_class, model=binding_model)
+>>>>>>> 29848b8... [REF]Migrate new components structure
             importer.run(prestashop_id, **kwargs)
 
 

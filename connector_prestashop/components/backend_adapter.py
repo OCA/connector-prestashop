@@ -121,6 +121,8 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         self.client = PrestaShopWebServiceDict(
             self.prestashop.api_url,
             self.prestashop.webservice_key,
+            debug=self.backend_record.debug,
+            verbose=self.backend_record.verbose
         )
 
     def search(self, filters=None):

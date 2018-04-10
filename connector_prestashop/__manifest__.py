@@ -44,7 +44,8 @@
     'data': [
         'data/cron.xml',
         'data/product_decimal_precision.xml',
-        'views/prestashop_model_view.xml',
+        'data/ecommerce_data.xml',
+        'views/prestashop_backend_view.xml',
         'views/product_view.xml',
         'views/product_category_view.xml',
         'views/image_view.xml',
@@ -56,7 +57,7 @@
         'views/stock_view.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
-        'data/ecommerce_data.xml',
+
     ],
     'installable': True,
     "application": True,
