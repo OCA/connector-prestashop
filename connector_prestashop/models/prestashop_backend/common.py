@@ -175,7 +175,7 @@ class PrestashopBackend(models.Model):
                 'prestashop.account.tax',
             ]:
                 with backend.work_on(model_name) as work:
-                    importer = work.component(usage='record.importer')
+                    importer = work.component(usage='auto.matching.importer')
                     importer.run()
             self.env['prestashop.account.tax.group'].import_batch(backend)
             self.env['prestashop.sale.order.state'].import_batch(backend)
@@ -313,13 +313,6 @@ class PrestashopBackend(models.Model):
         self.search(domain or []).import_suppliers()
 
     @api.multi
-    def import_record(self, model_name, ext_id):
-        self.ensure_one()
-        session = ConnectorSession.from_env(self.env)
-        import_record(session, model_name, self.id, ext_id)
-        return True
-
-    @api.multi
     def _get_locations_for_stock_quantities(self):
         root_location = (self.stock_location_id or
                          self.warehouse_id.lot_stock_id)
@@ -351,7 +344,7 @@ class NoModelAdapter(Component):
     """ Used to test the connection """
     _name = 'prestashop.adapter.test'
     _inherit = 'prestashop.adapter'
-    _model_name = 'prestashop.backend'
+    _apply_on = 'prestashop.backend'
     _prestashop_model = ''
 
 

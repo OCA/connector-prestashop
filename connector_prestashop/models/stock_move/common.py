@@ -38,11 +38,11 @@ class StockQuant(models.Model):
         ps_locations = location_obj.get_prestashop_stock_locations()
         for quant in self:
             location = quant.location_id
-            res = super(StockQuant, self).write(vals)
+            super(StockQuant, self).write(vals)
             if location in ps_locations:
                 quant.invalidate_cache()
                 quant.product_id.update_prestashop_qty()
-        return res
+        return True
 
     @api.multi
     def unlink(self):
