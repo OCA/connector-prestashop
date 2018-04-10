@@ -6,13 +6,11 @@ from odoo import _
 from odoo.addons.connector.unit.synchronizer import Exporter
 from odoo.exceptions import UserError
 from odoo.addons.queue_job.job import job
-from ...backend import prestashop
 from ...components.backend_adapter import PrestaShopCRUDAdapter
 
 _logger = logging.getLogger(__name__)
 
 
-# # @prestashop
 class PrestashopTrackingExporter(Exporter):
     _model_name = ['prestashop.sale.order']
 
@@ -24,10 +22,10 @@ class PrestashopTrackingExporter(Exporter):
         return ';'.join(trackings) if trackings else None
 
     def run(self, binding_id, **kwargs):
-        """ Export the tracking number of a picking to Magento """
-        # verify the picking is done + magento id exists
+        """ Export the tracking number of a picking to PrestaShop """
+        # verify the picking is done + prestashop id exists
         tracking_adapter = self.component(
-            usage='prestashop.adapter',
+            usage='backend.adapter',
             model_name='__not_exit_prestashop.order_carrier')
 
         self.binding = self.model.browse(binding_id)
