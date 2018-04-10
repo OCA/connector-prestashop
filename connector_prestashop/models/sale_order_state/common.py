@@ -3,7 +3,6 @@
 
 from odoo import models, fields
 from odoo.addons.component.core import Component
-from ...backend import prestashop
 
 
 class SaleOrderState(models.Model):
@@ -71,10 +70,10 @@ class SaleOrderStateList(models.Model):
     )
 
 
-@prestashop
 class SaleOrderStateAdapter(Component):
     _name = 'prestashop.sale.order.state.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.sale.order.state'
-
+    
+    
     _prestashop_model = 'order_states'
