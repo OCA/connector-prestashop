@@ -2,8 +2,10 @@
 # © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-from odoo import models, fields
+from odoo import models, fields, api
 import openerp.addons.decimal_precision as dp
+from odoo.addons.component.core import Component
+from odoo.addons.component_event import skip_if
 
 
 class PrestashopProductTemplate(models.Model):
@@ -28,7 +30,7 @@ class PrestashopProductTemplate(models.Model):
     online_only = fields.Boolean(string='Online Only')
     additional_shipping_cost = fields.Float(
         string='Additional Shipping Price',
-        digits_compute=dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
         help="Additionnal Shipping Price for the product on Prestashop")
     available_now = fields.Char(
         string='Available Now',
@@ -44,3 +46,41 @@ class PrestashopProductTemplate(models.Model):
         help='Minimal Sale quantity',
         default=1,
     )
+
+
+class PrestashopProductTemplateListener(Component):
+    _name = 'prestashop.product.template.event.listener'
+    _inherit = 'prestashop.connector.listener'
+    _apply_on = 'prestashop.product.template'
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
+    def on_record_create(self, record, fields=None):
+        """ Called when a record is created """
+        record.with_delay().export_record(fields=fields)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
+    def on_record_write(self, record, fields=None):
+        """ Called when a record is written """
+        record.with_delay().export_record(fields=fields)
+        if 'minimal_quantity' in fields:
+            ps_template = session.env[model_name].browse(record_id)
+            for binding in ps_template.prestashop_bind_ids:
+                binding.odoo_id.mapped(
+                    'product_variant_ids.prestashop_bind_ids').write({
+                        'minimal_quantity': binding.minimal_quantity
+                })
+
+
+class ProductTemplateListener(Component):
+    _name = 'product.template.event.listener'
+    _inherit = 'prestashop.connector.listener'
+    _apply_on = 'product.template'
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record.prestashop_bind_ids, **kwargs))
+    def on_record_write(self, record, fields=None):
+        """ Called when a record is written """
+        for binding in record.prestashop_bind_ids:
+            binding.with_delay().export_record(fields=fields)
