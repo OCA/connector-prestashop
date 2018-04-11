@@ -28,7 +28,7 @@ class PrestashopProductTemplate(models.Model):
     online_only = fields.Boolean(string='Online Only')
     additional_shipping_cost = fields.Float(
         string='Additional Shipping Price',
-        digits_compute=dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
         help="Additionnal Shipping Price for the product on Prestashop")
     available_now = fields.Char(
         string='Available Now',
