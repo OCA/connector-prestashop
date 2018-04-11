@@ -2,26 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, fields, api
-import unicodedata
-import re
-
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-
-def get_slug(name):
-    if slugify_lib:
-        try:
-            return slugify_lib.slugify(name)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', name).encode(
-        'ascii', 'ignore').decode('ascii')
-    slug = re.sub(r'[\W_]', ' ', uni).strip().lower()
-    slug = re.sub(r'[-\s]+', '-', slug)
-    return slug
+from ..models.product_template.exporter import get_slug
 
 
 class PrestashopExportCategory(models.TransientModel):

@@ -7,8 +7,8 @@ from odoo.addons.connector.event import (
     on_record_unlink,
 )
 from odoo.addons.connector.connector import Binder
-from odoo.addons.connector_prestashop.unit.exporter import export_record
-from odoo.addons.connector_prestashop.unit.deleter import (
+from odoo.addons.connector_prestashop.components.exporter import export_record
+from odoo.addons.connector_prestashop.components.deleter import (
     export_delete_record
 )
 from odoo.addons.connector_prestashop.consumer import INVENTORY_FIELDS
@@ -206,8 +206,6 @@ def product_product_write(session, model_name, record_id, fields):
 
     model = session.env[model_name]
     record = model.browse(record_id)
-    if not record.is_product_variant:
-        return
 
     if 'active' in fields and not fields['active']:
         prestashop_product_combination_unlink(session, record_id)

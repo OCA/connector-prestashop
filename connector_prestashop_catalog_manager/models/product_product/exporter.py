@@ -1,54 +1,44 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.connector.unit.mapper import mapping
-
-from odoo.addons.connector_prestashop.unit.exporter import (
-    TranslationPrestashopExporter,
-    export_record,
-    PrestashopExporter,
-)
-from odoo.addons.connector_prestashop.unit.mapper import \
-    TranslationPrestashopExportMapper
-from odoo.addons.connector_prestashop.backend import prestashop
+from odoo.addons.connector.components.mapper import mapping, changed_by
+from odoo.addons.component.core import Component
 from collections import OrderedDict
 import logging
-
 
 _logger = logging.getLogger(__name__)
 
 
-@prestashop
-class ProductCombinationExport(TranslationPrestashopExporter):
-    _model_name = 'prestashop.product.combination'
+class ProductCombinationExporter(Component):
+    _name = 'prestashop.product.combination.exporter'
+    _inherit = 'translation.prestashop.exporter'
+    _apply_on = 'prestashop.product.combination'
+
 
     def _create(self, record):
         """
         :param record: browse record to create in prestashop
         :return integer: Prestashop record id
         """
-        res = super(ProductCombinationExport, self)._create(record)
+        res = super(ProductCombinationExporter, self)._create(record)
         return res['prestashop']['combination']['id']
 
     def _export_images(self):
         if self.binding.image_ids:
             image_binder = self.binder_for('prestashop.product.image')
             for image_line in self.binding.image_ids:
-                image_ext_id = image_binder.to_backend(
+                image_ext_id = image_binder.to_external(
                     image_line.id, wrap=True)
                 if not image_ext_id:
-                    image_ext_id = \
-                        self.session.env['prestashop.product.image']\
+                    image_ext = \
+                        self.env['prestashop.product.image']\
                             .with_context(connector_no_export=True).create({
                                 'backend_id': self.backend_record.id,
                                 'odoo_id': image_line.id,
                             }).id
                     image_content = getattr(image_line, "_get_image_from_%s" %
                                             image_line.storage)()
-                    export_record(
-                        self.session,
-                        'prestashop.product.image',
-                        image_ext_id,
+                    image_ext.export_record(
                         image_content)
 
     def _export_dependencies(self):
@@ -61,7 +51,7 @@ class ProductCombinationExport(TranslationPrestashopExporter):
         Option = self.env['prestashop.product.combination.option']
         OptionValue = self.env['prestashop.product.combination.option.value']
         for value in self.binding.attribute_value_ids:
-            prestashop_option_id = attribute_binder.to_backend(
+            prestashop_option_id = attribute_binder.to_external(
                 value.attribute_id.id, wrap=True)
             if not prestashop_option_id:
                 option_binding = Option.search(
@@ -75,7 +65,7 @@ class ProductCombinationExport(TranslationPrestashopExporter):
                 export_record(self.session,
                               'prestashop.product.combination.option',
                               option_binding.id)
-            prestashop_value_id = option_binder.to_backend(
+            prestashop_value_id = option_binder.to_external(
                 value.id, wrap=True)
             if not prestashop_value_id:
                 value_binding = OptionValue.search(
@@ -99,15 +89,16 @@ class ProductCombinationExport(TranslationPrestashopExporter):
 
     def update_quantities(self):
         self.binding.odoo_id.with_context(
-            self.session.context).update_prestashop_qty()
+            self._context).update_prestashop_qty()
 
     def _after_export(self):
         self.update_quantities()
 
 
-@prestashop
-class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
-    _model_name = 'prestashop.product.combination'
+class ProductCombinationExportMapper(Component):
+    _name = 'prestashop.product.combination.mapper'
+    _inherit = 'translation.prestashop.export.mapper'
+    _apply_on = 'prestashop.product.combination'
 
     direct = [
         ('default_code', 'reference'),
@@ -127,7 +118,7 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
 
     def get_main_template_id(self, record):
         template_binder = self.binder_for('prestashop.product.template')
-        return template_binder.to_backend(record.main_template_id.id)
+        return template_binder.to_external(record.main_template_id.id)
 
     @mapping
     def main_template_id(self, record):
@@ -156,7 +147,7 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
         option_binder = self.binder_for(
             'prestashop.product.combination.option.value')
         for value in record.attribute_value_ids:
-            value_ext_id = option_binder.to_backend(value.id, wrap=True)
+            value_ext_id = option_binder.to_external(value.id, wrap=True)
             if value_ext_id:
                 option_value.append({'id': value_ext_id})
         return option_value
@@ -165,38 +156,40 @@ class ProductCombinationExportMapper(TranslationPrestashopExportMapper):
         images = []
         image_binder = self.binder_for('prestashop.product.image')
         for image in record.image_ids:
-            image_ext_id = image_binder.to_backend(image.id, wrap=True)
+            image_ext_id = image_binder.to_external(image.id, wrap=True)
             if image_ext_id:
                 images.append({'id': image_ext_id})
         return images
 
+    @changed_by('attribute_value_ids', 'image_ids')
     @mapping
     def associations(self, record):
-        associations = OrderedDict([
-            ('product_option_values',
-                {'product_option_value':
-                 self._get_product_option_value(record)}),
-        ])
-        image = self._get_combination_image(record)
-        if image:
-            associations['images'] = {
-                'image': self._get_combination_image(record)
+        return {
+            'associations': {
+                'product_option_values': {
+                    'product_option_value': self._get_product_option_value(record)
+                },
+                'images': {
+                    'image': self._get_combination_image(record)
+                }
             }
-        return {'associations': associations}
+        }
 
 
-@prestashop
-class ProductCombinationOptionExport(PrestashopExporter):
-    _model_name = 'prestashop.product.combination.option'
+class ProductCombinationOptionExporter(Component):
+    _name = 'prestashop.product.combination.option.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = 'prestashop.product.combination.option'
 
     def _create(self, record):
-        res = super(ProductCombinationOptionExport, self)._create(record)
+        res = super(ProductCombinationOptionExporter, self)._create(record)
         return res['prestashop']['product_option']['id']
 
 
-@prestashop
-class ProductCombinationOptionExportMapper(TranslationPrestashopExportMapper):
-    _model_name = 'prestashop.product.combination.option'
+class ProductCombinationOptionExportMapper(Component):
+    _name = 'prestashop.product.combination.option.mapper'
+    _inherit = 'translation.prestashop.export.mapper'
+    _apply_on = 'prestashop.product.combination.option'
 
     direct = [
         ('prestashop_position', 'position'),
@@ -209,31 +202,32 @@ class ProductCombinationOptionExportMapper(TranslationPrestashopExportMapper):
     ]
 
 
-@prestashop
-class ProductCombinationOptionValueExport(PrestashopExporter):
-    _model_name = 'prestashop.product.combination.option.value'
+class ProductCombinationOptionValueExporter(Component):
+    _name = 'prestashop.product.combination.option.value.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = 'prestashop.product.combination.option.value'
 
     def _create(self, record):
-        res = super(ProductCombinationOptionValueExport, self)._create(record)
+        res = super(ProductCombinationOptionValueExporter, self)._create(record)
         return res['prestashop']['product_option_value']['id']
 
     def _export_dependencies(self):
         """ Export the dependencies for the record"""
         attribute_id = self.binding.attribute_id.id
         # export product attribute
-        binder = self.binder_for('prestashop.product.combination.option')
-        if not binder.to_backend(attribute_id, wrap=True):
-            exporter = self.get_connector_unit_for_model(
-                TranslationPrestashopExporter,
-                'prestashop.product.combination.option')
-            exporter.run(attribute_id)
+        attr_model = 'prestashop.product.combination.option'
+        binder = self.binder_for(attr_model)
+        if not binder.to_external(attribute_id, wrap=True):
+            with self.backend_id.work_on(attr_model) as work:
+                exporter = work.component(usage='record.exporter')
+                exporter.run(attribute_id)
         return
 
 
-@prestashop
-class ProductCombinationOptionValueExportMapper(
-        TranslationPrestashopExportMapper):
-    _model_name = 'prestashop.product.combination.option.value'
+class ProductCombinationOptionValueExportMapper(Component):
+    _name = 'prestashop.product.combination.option.value.mapper'
+    _inherit = 'translation.prestashop.export.mapper'
+    _apply_on= 'prestashop.product.combination.option.value'
 
     direct = [('name', 'value')]
     # handled by base mapping `translatable_fields`
@@ -246,7 +240,7 @@ class ProductCombinationOptionValueExportMapper(
         attribute_binder = self.binder_for(
             'prestashop.product.combination.option.value')
         return {
-            'id_feature': attribute_binder.to_backend(
+            'id_feature': attribute_binder.to_external(
                 record.attribute_id.id, wrap=True)
         }
 
@@ -255,6 +249,6 @@ class ProductCombinationOptionValueExportMapper(
         attribute_binder = self.binder_for(
             'prestashop.product.combination.option')
         return {
-            'id_attribute_group': attribute_binder.to_backend(
+            'id_attribute_group': attribute_binder.to_external(
                 record.attribute_id.id, wrap=True),
         }
