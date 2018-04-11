@@ -3,12 +3,12 @@
 
 from odoo.addons.connector.unit.mapper import mapping
 
-from odoo.addons.connector_prestashop.unit.exporter import (
+from odoo.addons.connector_prestashop.components.exporter import (
     TranslationPrestashopExporter,
     export_record,
     PrestashopExporter,
 )
-from odoo.addons.connector_prestashop.unit.mapper import \
+from odoo.addons.connector_prestashop.components.mapper import \
     TranslationPrestashopExportMapper
 from odoo.addons.connector_prestashop.backend import prestashop
 from collections import OrderedDict

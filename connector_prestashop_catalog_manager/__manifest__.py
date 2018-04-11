@@ -28,5 +28,5 @@
         'wizards/active_deactive_products_view.xml',
         'views/product_image_view.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
