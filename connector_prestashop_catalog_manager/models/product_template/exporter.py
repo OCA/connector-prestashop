@@ -3,16 +3,16 @@
 
 from datetime import timedelta
 
-from odoo.addons.connector.unit.mapper import mapping, m2o_to_backend
+from odoo.addons.connector.unit.mapper import mapping, m2o_to_external
 
 from odoo.addons.connector_prestashop.\
     models.product_template.importer import ProductTemplateImporter
 
-from odoo.addons.connector_prestashop.unit.exporter import (
+from odoo.addons.connector_prestashop.components.exporter import (
     export_record,
     TranslationPrestashopExporter
 )
-from odoo.addons.connector_prestashop.unit.mapper import (
+from odoo.addons.connector_prestashop.components.mapper import (
     TranslationPrestashopExportMapper,
 )
 from odoo.addons.connector_prestashop.backend import prestashop
@@ -180,13 +180,13 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('online_only', 'online_only'),
         ('weight', 'weight'),
         ('standard_price', 'wholesale_price'),
-        (m2o_to_backend('default_shop_id'), 'id_shop_default'),
+        (m2o_to_external('default_shop_id'), 'id_shop_default'),
         ('always_available', 'active'),
         ('barcode', 'barcode'),
         ('additional_shipping_cost', 'additional_shipping_cost'),
         ('minimal_quantity', 'minimal_quantity'),
         ('on_sale', 'on_sale'),
-        (m2o_to_backend(
+        (m2o_to_external(
             'prestashop_default_category_id',
             binding='prestashop.product.category'), 'id_category_default'),
     ]

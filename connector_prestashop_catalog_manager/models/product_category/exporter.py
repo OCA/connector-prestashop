@@ -3,11 +3,11 @@
 
 from odoo.addons.connector.unit.mapper import mapping
 
-from odoo.addons.connector_prestashop.unit.exporter import (
+from odoo.addons.connector_prestashop.components.exporter import (
     PrestashopExporter,
     export_record,
 )
-from odoo.addons.connector_prestashop.unit.mapper import (
+from odoo.addons.connector_prestashop.components.mapper import (
     TranslationPrestashopExportMapper,
 )
 from ...consumer import get_slug

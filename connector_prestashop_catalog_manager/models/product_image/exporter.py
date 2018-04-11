@@ -2,9 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.connector.unit.mapper import mapping
-from odoo.addons.connector_prestashop.unit.exporter import \
+from odoo.addons.connector_prestashop.components.exporter import \
     PrestashopExporter
-from odoo.addons.connector_prestashop.unit.mapper import (
+from odoo.addons.connector_prestashop.components.mapper import (
     PrestashopExportMapper
 )
 from openerp.addons.connector_prestashop.unit.backend_adapter import (
