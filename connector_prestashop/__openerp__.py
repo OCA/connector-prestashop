@@ -20,7 +20,7 @@
         "product_variant_supplierinfo",  # oca/product-variant
         # TODO: perhaps not needed:
         # "product_variant_cost_price",  # oca/product-variant
-        'stock_available_immediately', # oca/stock-logistics-warehouse
+        'stock_available_immediately',  # oca/stock-logistics-warehouse
     ],
     "external_dependencies": {
         'python': [

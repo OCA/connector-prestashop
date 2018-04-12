@@ -65,7 +65,7 @@ class ProductCombinationExport(TranslationPrestashopExporter):
                 value.attribute_id.id, wrap=True)
             if not prestashop_option_id:
                 option_binding = Option.search(
-                    [('backend_id', '=',  self.backend_record.id),
+                    [('backend_id', '=', self.backend_record.id),
                      ('odoo_id', '=', value.attribute_id.id)])
                 if not option_binding:
                     option_binding = Option.with_context(
@@ -79,12 +79,12 @@ class ProductCombinationExport(TranslationPrestashopExporter):
                 value.id, wrap=True)
             if not prestashop_value_id:
                 value_binding = OptionValue.search(
-                    [('backend_id', '=',  self.backend_record.id),
+                    [('backend_id', '=', self.backend_record.id),
                      ('odoo_id', '=', value.id)]
                 )
                 if not value_binding:
                     option_binding = Option.search(
-                        [('backend_id', '=',  self.backend_record.id),
+                        [('backend_id', '=', self.backend_record.id),
                          ('odoo_id', '=', value.attribute_id.id)])
                     value_binding = OptionValue.with_context(
                         connector_no_export=True).create({
