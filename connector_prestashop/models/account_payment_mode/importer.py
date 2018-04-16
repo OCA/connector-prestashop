@@ -43,4 +43,4 @@ class PaymentModeBatchImporter(Component):
             'fixed_journal_id': journals.id,
             'payment_method_id': payment_method.id
         })
-        self.backend_record.add_checkpoint(mode)
+        self.backend_record.add_checkpoint(mode, message=None)

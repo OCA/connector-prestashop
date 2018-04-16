@@ -45,9 +45,9 @@ class ProductCategoryMapper(Component):
             return {'name': ''}
         return {'name': record['name']}
 
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
+#     @mapping
+#     def backend_id(self, record):
+#         return {'backend_id': self.backend_record.id}
 
     @mapping
     def parent_id(self, record):
@@ -111,9 +111,7 @@ class ProductCategoryImporter(TranslatableRecordImporter):
                         record, fields=['name', ])
                     name = values[self._default_language]['name']
 
-                self.backend_record.add_checkpoint(
-                    model=category._name,
-                    record_id=category.id,
+                self.backend_record.add_checkpoint(category,
                     message=msg % (name, str(e))
                 )
 
