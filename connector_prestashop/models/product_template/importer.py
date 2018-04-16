@@ -3,14 +3,14 @@
 
 from odoo import _, models, fields, api
 from odoo.addons.queue_job.job import job
-from odoo.addons.connector.components.mapper import (
-    mapping,
-    only_create,
-)
-from ...components.importer import (
-    import_record,
-    import_batch,
-)
+# from odoo.addons.connector.components.mapper import (
+#     mapping,
+#     only_create,
+# )
+# from ...components.importer import (
+#     import_record,
+#     import_batch,
+# )
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, external_to_m2o, only_create)
@@ -470,8 +470,7 @@ class ProductTemplateImporter(Component):
         if self.default_category_error:
             msg = _('The default category could not be imported.')
             self.backend_record.add_checkpoint(
-                model='product.template',
-                record_id=binding.odoo_id.id,
+                binding,
                 message=msg,
             )
 
