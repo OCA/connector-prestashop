@@ -36,8 +36,7 @@ class RefundImporter(Component):
             invoice.signal_workflow('invoice_open')
         else:
             self.backend_record.add_checkpoint(
-                model='account.invoice',
-                record_id=invoice.id,
+                invoice, 
                 message=_('The refund for order %s has a different amount '
                           'in PrestaShop and in Odoo.') % invoice.origin
             )

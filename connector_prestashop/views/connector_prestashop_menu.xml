@@ -1,40 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  prestashoperpconnect for Odoo
-  Copyright (C) 2012 Akretion Benoît Guillot <benoit.guillot@akretion.com>
-  The licence is in the file __openerp__.py
--->
+<!-- prestashoperpconnect for Odoo Copyright (C) 2012 Akretion Benoît Guillot 
+	<benoit.guillot@akretion.com> The licence is in the file __openerp__.py -->
 
 <odoo>
 
-    <menuitem id="menu_prestashop_root"
-        parent="connector.menu_connector_root"
-        name="PrestaShop"
-        sequence="10"
-        groups="connector.group_connector_manager"/>
-    <!-- TODO group: PrestaShop Manager -->
+	<menuitem id="menu_prestashop_root" parent="connector.menu_connector_root"
+		name="PrestaShop" sequence="10" groups="connector.group_connector_manager" />
+	<!-- TODO group: PrestaShop Manager -->
 
-    <menuitem id="menu_prestashop_backend"
-        name="Backends"
-        parent="menu_prestashop_root"
-        action="action_prestashop_backend"/>
+	<menuitem id="menu_prestashop_backend" name="Backends"
+		parent="menu_prestashop_root" action="action_prestashop_backend" />
 
-    <menuitem id="menu_prestashop_shop_group"
-        name="Websites"
-        parent="menu_prestashop_root"
-        sequence="20"
-        action="action_prestashop_shop_group"/>
+	<menuitem id="menu_prestashop_shop_group" name="Websites"
+		parent="menu_prestashop_root" sequence="20" action="action_prestashop_shop_group" />
 
-    <menuitem id="menu_prestashop_shop"
-        name="Stores"
-        parent="menu_prestashop_root"
-        sequence="30"
-        action="action_prestashop_shop"/>
+	<menuitem id="menu_prestashop_shop" name="Stores"
+		parent="menu_prestashop_root" sequence="30" action="action_prestashop_shop" />
 
-    <menuitem id="menu_prestashop_carrier"
-        name="Carriers"
-        parent="menu_prestashop_root"
-        sequence="40"
-        action="action_prestashop_carrier"/>
+	<menuitem id="menu_prestashop_carrier" name="Carriers"
+		parent="menu_prestashop_root" sequence="40" action="action_prestashop_carrier" />
+
+
+
+	<record id="action_prestashop_attributes" model="ir.actions.act_window">
+		<field name="name">Prestashop Options / Attributes</field>
+		<field name="res_model">prestashop.product.combination.option</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<record id="action_prestashop_values" model="ir.actions.act_window">
+		<field name="name">Prestashop Options/Attribute Values</field>
+		<field name="res_model">prestashop.product.combination.option.value</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<record id="action_prestashop_categories" model="ir.actions.act_window">
+		<field name="name">Odoo product Categories</field>
+		<field name="res_model">prestashop.product.category</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+
+	<record id="action_prestashop_products" model="ir.actions.act_window">
+		<field name="name">Prestashop Products</field>
+		<field name="res_model">prestashop.product.combination</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<record id="action_prestashop_product_templates" model="ir.actions.act_window">
+		<field name="name">Odoo Product Templates</field>
+		<field name="res_model">prestashop.product.template</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<record id="action_prestashop_res_langs" model="ir.actions.act_window">
+		<field name="name">Languages</field>
+		<field name="res_model">prestashop.res.lang</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<!-- TODO: Implement security strategy groups="odoo_base.group_oc_manager" -->
+	<menuitem id="menu_prestashop_external_objects" name="External Objects"
+		parent="menu_prestashop_root" 
+		sequence="100"/>
+
+	<!-- <menuitem id="menu_prestashop_external_uom" name="External UOM" parent="menu_prestashop_external_objects" 
+		action="action_prestashop_uom" /> -->
+
+	<menuitem id="menu_prestashop_external_languauges" name="External Languages"
+		parent="menu_prestashop_external_objects" action="action_prestashop_res_langs" />
+	<menuitem id="menu_prestashop_external_attribute" name="External Attributes"
+		parent="menu_prestashop_external_objects" action="action_prestashop_attributes" />
+	<menuitem id="menu_prestashop_external_values" name="External Attribute Values"
+		parent="menu_prestashop_external_objects" action="action_prestashop_values" />
+	<menuitem id="menu_prestashop_external_categories" name="External Categories"
+		parent="menu_prestashop_external_objects" action="action_prestashop_categories" />
+	<menuitem id="menu_prestashop_external_product_templates"
+		name="External Product Templates" parent="menu_prestashop_external_objects"
+		action="action_prestashop_product_templates" />
+	<menuitem id="menu_prestashop_external_products" name="External Products"
+		parent="menu_prestashop_external_objects" action="action_prestashop_products" />
+
+
 
 </odoo>
