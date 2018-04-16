@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from ...components.auto_matching_importer import AutoMatchingImporter
+from odoo.addons.component.core import Component
 
-
-class AccountTaxImporter(AutoMatchingImporter):
+class AccountTaxImporter(Component):
     _name = 'prestashop.account.tax.importer'
+    _inherit= 'prestashop.auto.matching.importer'
     _apply_on = 'prestashop.account.tax'
 
     _erp_field = 'amount'

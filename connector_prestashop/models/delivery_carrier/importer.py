@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
@@ -25,8 +25,18 @@ class CarrierImportMapper(Component):
     direct = [
         ('name', 'name_ext'),
         ('name', 'name'),
-        ('id_reference', 'id_reference'),
     ]
+
+    @only_create
+    @mapping
+    def openerp_id(self, record):
+        #Prevent The duplication of delivery method if id_reference is the same 
+        id_reference = record['id_reference']
+        delivery = self.env['prestashop.delivery.carrier'].search([('id_reference', '=', id_reference)])
+        if len(delivery) == 1 :
+                return {'openerp_id': delivery.openerp_id.id}
+        else:
+            return {'id_reference': id_reference}  
 
     @mapping
     def active(self, record):

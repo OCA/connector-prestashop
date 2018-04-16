@@ -154,6 +154,7 @@ Contributors
 * Mikel Arregi <mikelarregi@avanzosc.es>
 * Pedro M. Baeza <pedro.baeza@tecnativa.com>
 * Simone Orsi <simone.orsi@camptocamp.com>
+* Florent THOMAS <florent.thomas@mind-and-go.com>
 
 Maintainer
 ----------

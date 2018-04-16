@@ -90,8 +90,7 @@ class ProductImageImporter(Component):
                     'Error: `%s`'
                 ) % (image_id, error.msg)
                 self.backend_record.add_checkpoint(
-                    model='product.template',
-                    record_id=template.id,
+                    template,                     
                     message=msg)
             else:
                 msg = _(
@@ -99,6 +98,10 @@ class ProductImageImporter(Component):
                     'with id `%s` failed. '
                     'Error: `%s`'
                 ) % (image_id, template_id, error.msg)
+<<<<<<< HEAD
                 self.backend_record.add_checkpoint(message=msg)
 
 
+=======
+                self.backend_record.add_checkpoint()
+>>>>>>> 2a5e0f4... Clean the add_checkpoint part

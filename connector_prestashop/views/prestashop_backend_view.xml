@@ -45,34 +45,45 @@
 						</group>
 					</group>
 					<group name="main_configuration" string="Main Configuration">
-						<field name="pricelist_id" />
-						<field name="warehouse_id" />
-						<field name="stock_location_id" />
-						<field name="refund_journal_id" />
-						<field name="sale_team_id" />
-						<field name="taxes_included" />
-						<field name="discount_product_id" />
-						<field name="shipping_product_id" />
-						<field name="importable_order_state_ids" widget="many2many_tags" />
+						<group string="Sales">
+							<field name="pricelist_id" />
+							<field name="sale_team_id" />
+							<field name="importable_order_state_ids" widget="many2many_tags" />
+							<field name="discount_product_id" />
+						</group>
+						<group string="Stock">
+							<field name="warehouse_id" />
+							<field name="stock_location_id" />
+							<field name="shipping_product_id" />
+						</group>
+						<group string="Accounting">
+							<field name="refund_journal_id" />
+							<field name="taxes_included" />
+						</group>
+
 					</group>
 					<notebook>
 						<page name="import" string="Imports">
 							<p class="oe_grey oe_inline">
 								By clicking on the buttons,
-								you will initiate the synchronizations
+								you will initiate the
+								synchronizations
 								with PrestaShop.
 								Note that the import or exports
 								won't be done directly,
 								they will create 'Jobs'
-								executed as soon as possible.
+								executed as soon
+								as possible.
 							</p>
 							<p class="oe_grey oe_inline">
 								Once imported,
 								some types of records,
-								like the products or categories,
+								like the products
+								or categories,
 								need a manual review.
 								You will find the list
-								of the new records to review
+								of the
+								new records to review
 								in the menu 'Connectors > Checkpoint'.
 							</p>
 							<group>
@@ -155,6 +166,28 @@
 									<field name="name" />
 								</tree>
 							</field>
+						</page>
+						<page string="Options">
+							<group string="Options" col="4">
+								<field name="quantity_field" colspan="4" />
+							</group>
+							<group colspan="4">
+								<group string="Matching option for Product">
+									<field name="matching_product_template" />
+									<field name="matching_product_ch"
+										attrs="{'invisible':[('matching_product_template', '=', False)],
+                                                    'required':[('matching_product_template', '=', True)]}" />
+
+								</group>
+								<group string="Matching option for partner">
+									<field name="matching_customer"></field>
+									<field name="matching_customer_ch"
+										attrs="{'invisible':[('matching_customer', '=', False)],
+                                                    'required':[('matching_customer', '=', True)]
+                                            }" />
+
+								</group>
+							</group>
 						</page>
 					</notebook>
 				</sheet>
