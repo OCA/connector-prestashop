@@ -6,14 +6,6 @@ from collections import namedtuple
 
 import mock
 
-from odoo.addons.connector_prestashop.unit.importer import (
-    import_record,
-)
-from odoo.addons.connector_prestashop.models.\
-    delivery_carrier.importer import (
-        import_carriers
-    )
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -36,8 +28,8 @@ class TestImportCarrier(PrestashopTransactionCase):
     @assert_no_job_delayed
     def test_import_carriers(self):
         import_job = ('openerp.addons.connector_prestashop.models'
-                      '.prestashop_backend.common'
-                      '.import_carriers')
+                      '.binding.common'
+                      '.import_record')
         with mock.patch(import_job) as import_mock:
             self.backend_record.import_carriers()
             import_mock.delay.assert_called_with(
@@ -47,16 +39,15 @@ class TestImportCarrier(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_products_batch(self):
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        record_job_path = ('openerp.addons.connector_prestashop.models'
+                           '.binding.common.import_record')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette('test_import_carrier_batch') as cassette, \
                 mock.patch(record_job_path) as import_record_mock:
 
-            import_carriers(
-                self.conn_session,
-                self.backend_record.id,
+            self.env['prestashop.delivery.carrier'].import_batch(
+                self.backend_record,
             )
             expected_query = {
                 'filter[deleted]': ['0'],
@@ -74,9 +65,9 @@ class TestImportCarrier(PrestashopTransactionCase):
     def test_import_carrier_record(self):
         """ Import a carrier """
         with recorder.use_cassette('test_import_carrier_record_2'):
-            import_record(self.conn_session, 'prestashop.delivery.carrier',
-                          self.backend_record.id, 2)
-
+            self.env['prestashop.delivery.carrier'].import_record(
+                self.backend_record, 2
+            )
         domain = [('prestashop_id', '=', 2),
                   ('backend_id', '=', self.backend_record.id)]
         binding = self.env['prestashop.delivery.carrier'].search(domain)
