@@ -140,7 +140,9 @@ class PrestashopBackend(models.Model):
 
     matching_product_template = fields.Boolean(string="Match product template")
     
-    matching_product_ch = fields.Selection([('reference','Reference'),('ean13','Barcode')],string="Matching Field for product")
+    matching_product_ch = fields.Selection([('reference','Reference'),
+                                            ('barcode','Barcode')],
+                                            string="Matching Field for product")
     
     matching_customer = fields.Boolean(string="Matching Customer", 
                     help="The selected fields will be matched to the ref field \
@@ -154,7 +156,6 @@ class PrestashopBackend(models.Model):
                         ('virtual_available','Forecast quantity'),
                         ('immediately_usable_qty', 'Available to promise'),
                         ('potential_qty', 'Potential')],
-                        string='Field use for quantity update',
                         help="""
                             Some of this options may need some additionnal
                             modules you'll have to install by yourself from
@@ -177,7 +178,7 @@ class PrestashopBackend(models.Model):
         self.ensure_one()
         
         options={'limit': 1,'display': 'full'}
-             
+        #TODO : Unse new adapter pattern to get a simple partner json
 #         prestashop = PrestaShopLocation(
 #                         self.location.encode(),
 #                         self.webservice_key,
@@ -256,7 +257,7 @@ class PrestashopBackend(models.Model):
     def _check_connection(self):
         self.ensure_one()
         with self.work_on('prestashop.backend') as work:
-            component = work.component_by_name(name='prestashop.adapter')
+            component = work.component_by_name(name='prestashop.adapter.test')
             with api_handle_errors('Connection failed'):
                 component.head()
 

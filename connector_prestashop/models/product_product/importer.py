@@ -206,9 +206,9 @@ class ProductCombinationMapper(Component):
             current_code = '%s_%s' % (code, i)
         return {'default_code': current_code}
 
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
+#     @mapping
+#     def backend_id(self, record):
+#         return {'backend_id': self.backend_record.id}
 
     @mapping
     def barcode(self, record):
@@ -264,12 +264,31 @@ class ProductCombinationMapper(Component):
     @only_create
     @mapping
     def odoo_id(self, record):
-        product = self.env['product.product'].search([
-            ('default_code', '=', record['reference']),
-            ('prestashop_bind_ids', '=', False),
-        ], limit=1)
-        if product:
-            return {'odoo_id': product.id}
+#         product = self.env['product.product'].search([
+#             ('default_code', '=', record['reference']),
+#             ('prestashop_bind_ids', '=', False),
+#         ], limit=1)
+#         if product:
+#             return {'odoo_id': product.id}
+
+
+        """ Will bind the product to an existing one with the same code """
+        if self.backend_record.matching_product_template:
+            code = record.get(self.backend_record.matching_product_ch)            
+            if self.backend_record.matching_product_ch == 'reference':    
+                if code:
+                    product = self.env['product.product'].search(
+                    [('default_code', '=', code)], limit=1)                    
+                    if product:
+                            return {'openerp_id': product.id}
+            if self.backend_record.matching_product_ch == 'barcode':
+                if code:
+                    product = self.env['product.product'].search(
+                    [('barcode', '=', code)], limit=1)
+                    if product:
+                        return {'odoo_id': product.id}                    
+        else:
+            return {}
 
 
 class ProductCombinationOptionImporter(Component):
