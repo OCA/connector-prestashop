@@ -6,14 +6,6 @@ from collections import namedtuple
 
 import mock
 
-from odoo.addons.connector_prestashop.unit.importer import (
-    import_record,
-)
-from odoo.addons.connector_prestashop.models.\
-    product_template.importer import (
-        import_inventory
-    )
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -37,7 +29,7 @@ class TestImportInventory(PrestashopTransactionCase):
     def test_import_inventory_delay(self):
         """ Backend button delay a job to delay inventory import """
         import_job = ('openerp.addons.connector_prestashop.models'
-                      '.prestashop_backend.common'
+                      '.product_template.common'
                       '.import_inventory')
         with mock.patch(import_job) as import_mock:
             self.backend_record.import_stock_qty()
@@ -48,13 +40,13 @@ class TestImportInventory(PrestashopTransactionCase):
     @assert_no_job_delayed
     def test_import_inventory_batch(self):
         record_job_path = ('openerp.addons.connector_prestashop.models'
-                           '.product_template.importer.import_record')
+                           '.product_template.common.import_inventory')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette('test_import_inventory_batch') as cassette,\
                 mock.patch(record_job_path) as import_record_mock:
 
-            import_inventory(self.conn_session, self.backend_record.id)
+            self.env['prestashop.product.template'].import_inventory(self.backend_record)
             expected_query = {
                 'display': ['[id,id_product,id_product_attribute]'],
                 'limit': ['0,1000'],
@@ -82,13 +74,13 @@ class TestImportInventory(PrestashopTransactionCase):
 
         self.assertEqual(0, template.qty_available)
         with recorder.use_cassette('test_import_inventory_record_template_1'):
-            import_record(self.conn_session, '_import_stock_available',
-                          self.backend_record.id, 1,
-                          # id_product_attribute='0' means we
-                          # import the template quantity
-                          record={'id_product_attribute': '0',
-                                  'id': '1',
-                                  'id_product': '1'})
+            self.env['_import_stock_available'].import_record(
+                self.backend_record, 1,
+                # id_product_attribute='0' means we
+                # import the template quantity
+                record={'id_product_attribute': '0',
+                        'id': '1',
+                        'id_product': '1'})
         # cumulative stock of all the variants
         self.assertEqual(1799, template.qty_available)
 
@@ -105,9 +97,9 @@ class TestImportInventory(PrestashopTransactionCase):
 
         self.assertEqual(0, template.qty_available)
         with recorder.use_cassette('test_import_inventory_record_variant_1'):
-            import_record(self.conn_session, '_import_stock_available',
-                          self.backend_record.id, 1,
-                          record={'id_product_attribute': '1',
-                                  'id': '1',
-                                  'id_product': '1'})
+            self.env['_import_stock_available'].import_record(
+                self.backend_record, 1,
+                record={'id_product_attribute': '1',
+                        'id': '1',
+                        'id_product': '1'})
         self.assertEqual(299, template.qty_available)
