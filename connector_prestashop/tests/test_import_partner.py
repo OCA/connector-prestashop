@@ -8,14 +8,6 @@ import mock
 
 from freezegun import freeze_time
 
-from odoo.addons.connector_prestashop.models.res_partner.importer import (
-    import_customers_since
-)
-from odoo.addons.connector_prestashop.unit.importer import (
-    import_record,
-    import_batch,
-)
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -53,8 +45,8 @@ class TestImportPartner(PrestashopTransactionCase):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_partners_since = from_date
         import_since_job = ('openerp.addons.connector_prestashop.models'
-                            '.prestashop_backend.common'
-                            '.import_customers_since')
+                            '.binding.common'
+                            '.import_batch')
         with mock.patch(import_since_job) as import_mock:
             self.backend_record.import_customers_since()
             import_mock.delay.assert_called_with(
@@ -68,16 +60,15 @@ class TestImportPartner(PrestashopTransactionCase):
     def test_import_partner_batch(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_res_partner_from_date = from_date
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        record_job_path = ('openerp.addons.connector_prestashop.models'
+                           '.binding.common.import_record')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette('test_import_partner_batch') as cassette, \
                 mock.patch(record_job_path) as import_record_mock:
 
-            import_customers_since(
-                self.conn_session,
-                self.backend_record.id,
+            self.env['prestashop.res.partner'].import_customers_since(
+                self.backend_record,
                 since_date=from_date,
             )
             expected_query = {
@@ -103,8 +94,8 @@ class TestImportPartner(PrestashopTransactionCase):
     def test_import_partner_category_record(self):
         """ Import a partner category """
         with recorder.use_cassette('test_import_partner_category_record_1'):
-            import_record(self.conn_session, 'prestashop.res.partner.category',
-                          self.backend_record.id, 3)
+            self.env['prestashop.res.partner.category'].import_record(
+                self.backend_record, 3)
 
         domain = [('prestashop_id', '=', 3)]
         category_model = self.env['prestashop.res.partner.category']
@@ -130,11 +121,11 @@ class TestImportPartner(PrestashopTransactionCase):
         )
 
         batch_job_path = ('openerp.addons.connector_prestashop.models'
-                          '.res_partner.importer.import_batch')
+                          '.binding.common.import_batch')
         with recorder.use_cassette('test_import_partner_record_1'), \
                 mock.patch(batch_job_path) as address_batch_mock:
-            import_record(self.conn_session, 'prestashop.res.partner',
-                          self.backend_record.id, 1)
+            self.env['prestashop.res.partner'].import_record(
+                self.backend_record, 1)
             address_batch_mock.delay.assert_called_with(
                 mock.ANY,
                 'prestashop.address',
@@ -164,18 +155,16 @@ class TestImportPartner(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_partner_address_batch(self):
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        record_job_path = ('openerp.addons.connector_prestashop.binding'
+                           '.common.import_record')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         cassette_name = 'test_import_partner_address_batch'
         with recorder.use_cassette(cassette_name) as cassette, \
                 mock.patch(record_job_path) as import_record_mock:
 
-            import_batch(
-                self.conn_session,
-                'prestashop.address',
-                self.backend_record.id,
+            self.env['prestashop.address'].import_batch(
+                self.backend_record,
                 filters={'filter[id_customer]': '1'}
             )
             expected_query = {

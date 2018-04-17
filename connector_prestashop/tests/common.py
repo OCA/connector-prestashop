@@ -4,8 +4,8 @@
 
 import functools
 
-import openerp.tests.common as common
 from odoo.addons.connector.connector import ConnectorEnvironment
+from odoo.addons.component.tests.common import SavepointComponentCase
 
 from contextlib import contextmanager
 from os.path import dirname, exists, join
@@ -77,7 +77,7 @@ def assert_no_job_delayed(func):
     return functools.wraps(func)(_decorated)
 
 
-class PrestashopTransactionCase(common.TransactionCase):
+class PrestashopTransactionCase(SavepointComponentCase):
     """ Base class for Tests with Prestashop """
 
     def setUp(self):
@@ -166,7 +166,7 @@ class PrestashopTransactionCase(common.TransactionCase):
                 record = record[attr]
             return record
 
-        model_name = records._model._name
+        model_name = records._name
         records = list(records)
         assert len(expected_records) > 0, "must have > 0 expected record"
         fields = expected_records[0]._fields
