@@ -13,10 +13,12 @@
 					<button name="button_check_connection" type="object" class="oe_highlight"
 						string="Check Connection" attrs="{'invisible':[('state', 'not in', ['draft'])]}" />
 					<button name="synchronize_metadata" type="object" class="oe_highlight"
-						help="Synchonize shop and shop groups" string="Synchronize Metadata" />
+						help="Synchonize shop and shop groups" string="Synchronize Metadata" 
+						attrs="{'invisible':[('state', 'in', ['draft'])]}" />
 					<button name="synchronize_basedata" type="object" class="oe_highlight"
 						help="Synchonize datas like language, country, currency, tax"
-						string="Synchronize Base Data" />
+						string="Synchronize Base Data" 
+						attrs="{'invisible':[('state', 'in', ['draft'])]}" />
 
 					<button name="button_reset_to_draft" type="object"
 						string="Reset To draft Connection" attrs="{'invisible':[('state', 'in', ['draft'])]}" />
@@ -24,6 +26,13 @@
 					<field name="state" widget="statusbar" readonly="1" />
 				</header>
 				<sheet>
+					<div class="oe_button_box" name="button_box">
+						<button class="oe_stat_button" type="object" name="toggle_active"
+							icon="fa-archive">
+							<field name="active" widget="boolean_button" options='{"terminology": "archive"}' />
+						</button>
+
+					</div>
 					<h1>
 						<field name="name" class="oe_inline" />
 					</h1>
@@ -62,7 +71,7 @@
 						</group>
 
 					</group>
-					<notebook>
+					<notebook attrs="{'invisible':[('state', 'in', ['draft'])]}" >
 						<page name="import" string="Imports">
 							<p class="oe_grey oe_inline">
 								By clicking on the buttons,
