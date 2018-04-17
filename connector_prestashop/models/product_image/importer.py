@@ -90,7 +90,7 @@ class ProductImageImporter(Component):
                     'Error: `%s`'
                 ) % (image_id, error.msg)
                 self.backend_record.add_checkpoint(
-                    template,                     
+                    template,
                     message=msg)
             else:
                 msg = _(
