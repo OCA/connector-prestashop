@@ -57,13 +57,6 @@ class CarrierImportMapper(Component):
         return {'active_ext': record['active'] == '1'}
 
     @mapping
-    def product_id(self, record):
-        if self.backend_record.shipping_product_id:
-            return {'product_id': self.backend_record.shipping_product_id.id}
-        product = self.env.ref('connector_ecommerce.product_product_shipping')
-        return {'product_id': product.id}
-
-    @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
