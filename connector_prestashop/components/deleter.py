@@ -24,13 +24,3 @@ class PrestashopDeleter(AbstractComponent):
         self.backend_adapter.delete(resource, external_id)
         return _('Record %s deleted on PrestaShop on resource %s') % (
             external_id, resource)
-
-
-@job(default_channel='root.prestashop')
-def export_delete_record(
-        session, model_name, backend_id, external_id, resource):
-    """ Delete a record on PrestaShop """
-    backend = session.env['prestashop.backend'].browse(backend_id)
-    env = backend.get_environment(model_name, session=session)
-    deleter = env.get_connector_unit(PrestashopDeleter)
-    return deleter.run(resource, external_id)

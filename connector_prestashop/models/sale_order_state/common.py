@@ -48,12 +48,12 @@ class SaleOrderStateList(models.Model):
     _name = 'sale.order.state.list'
 
     name = fields.Selection(
-        [
+        selection=[
             ('draft', 'Quotation'),
             ('sent', 'Quotation Sent'),
+            ('sale', 'Sales Order'),
+            ('done', 'Locked'),
             ('cancel', 'Cancelled'),
-            ('sale', 'Sale Order'),
-            ('done', 'Done')
         ],
         string='Odoo Sales State',
         required=True,
@@ -74,6 +74,6 @@ class SaleOrderStateAdapter(Component):
     _name = 'prestashop.sale.order.state.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.sale.order.state'
-    
-    
+
+
     _prestashop_model = 'order_states'
