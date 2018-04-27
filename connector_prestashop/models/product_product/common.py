@@ -14,12 +14,6 @@ from odoo.addons.component.core import Component
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    prestashop_bind_ids = fields.One2many(
-        comodel_name='prestashop.product.combination',
-        inverse_name='openerp_id',
-        copy=False,
-        string='PrestaShop Bindings',
-    )
     prestashop_combinations_bind_ids = fields.One2many(
         comodel_name='prestashop.product.combination',
         inverse_name='odoo_id',
@@ -62,8 +56,7 @@ class ProductProduct(models.Model):
                 # which could be not installed
                 uom = hasattr(product, 'uos_id') \
                     and product.uos_id or product.uom_id
-                price = uom._compute_price(
-                    product.uom_id.id, price, self.env.context['uom'])
+                price = uom._compute_price(price, product.uom_id)
             product.lst_price = price
 
     lst_price = fields.Float(
@@ -178,18 +171,18 @@ class PrestashopProductCombination(models.Model):
         return self.qty_available
 
     @job(default_channel='root.prestashop')
-    def export_inventory(self, backend, fields=None, **kwargs):
+    def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
-        env = backend.get_environment(self._name)
-        inventory_exporter = env.get_connector_unit(
-            CombinationInventoryExporter)
-        return inventory_exporter.run(self.id, fields, **kwargs)
+        backend = self.backend_id
+        with backend.work_on('prestashop.product.combination') as work:
+            exporter = work.component(usage='inventory.exporter')
+            return exporter.run(self, fields)
 
     @api.model
     @job(default_channel='root.prestashop')
     def export_product_quantities(self, backend):
         self.search([
-            ('backend_id', 'in', backend.ids),
+            ('backend_id', '=', backend.id),
         ]).recompute_prestashop_qty()
 
     @job(default_channel='root.prestashop')

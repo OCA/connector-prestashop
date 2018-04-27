@@ -122,13 +122,10 @@ class TemplateMapper(Component):
 #             [('default_code', '=', record['reference'])], limit=1)
 #         if product:
 #             return {'odoo_id': product.id}
-        
-        
         if self.backend_record.matching_product_template:            
             if self.has_combinations(record): 
                 #Browse combinations for matching products and find if there
                 #is a potential template to be matched
-                
                 template = self.env['product.template']
                 associations = record.get('associations', {})
                 combinations = associations.get('combinations', {}).get(
@@ -141,17 +138,14 @@ class TemplateMapper(Component):
                                 BackendAdapter, 'prestashop.product.combination')
                     variant = backend_adapter.read(int(prod['id']))
                     code = variant.get(self.backend_record.matching_product_ch)
-                    
                     if self.backend_record.matching_product_ch == 'reference':    
                         product = self.env['product.product'].search(
                         [('default_code', '=', code)])
-                        
                         if len(product) > 1 :
                             raise ValidationError(_('Error! Multiple products ' 
                                         'found with combinations reference %s.' 
                                         'Maybe consider to update you datas') % code)
                         template |= product.product_tmpl_id
-                        
                     if self.backend_record.matching_product_ch == 'barcode':
                         product = self.env['product.product'].search(
                         [('barcode', '=', code)])
@@ -160,7 +154,6 @@ class TemplateMapper(Component):
                                         'found with combinations reference %s.' 
                                         'Maybe consider to update you datas') % code)
                         template |= product.product_tmpl_id
-                        
                 _logger.debug('template %s' % template)
                 if len(template) == 1:
                     return {'odoo_id': template.id}
@@ -168,10 +161,9 @@ class TemplateMapper(Component):
                     raise ValidationError(_('Error! Multiple templates are '
                                     'found with combinations reference.'
                                     'Maybe consider to change matching option'))
-            
             else:
                 code = record.get(self.backend_record.matching_product_ch)
-                if self.backend_record.matching_product_ch == 'reference':    
+                if self.backend_record.matching_product_ch == 'reference':
                     if code:
                         if self._template_code_exists(code):
                             product = self.env['product.template'].search(
@@ -186,12 +178,7 @@ class TemplateMapper(Component):
                         [('barcode', '=', code)], limit=1)
                         if product:
                             return {'odoo_id': product.id}
-        
-        
-        return {}    
-    
-    
-    
+        return {}
 
     def _template_code_exists(self, code):
         model = self.session.env['product.template']
