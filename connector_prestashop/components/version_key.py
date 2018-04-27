@@ -24,7 +24,9 @@ class VersionKey(ConnectorUnit):
     _model_name = '_prestashop.version.key'
 >>>>>>> e218fce... ADD WIP for PR Akretion
 
-    keys = {}
+    keys = {
+        'messages': 'customer_messages',
+    }
 
     def get_key(self, key):
         return self.keys.get(key) or key

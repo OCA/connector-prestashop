@@ -280,7 +280,7 @@ class ProductCombinationMapper(Component):
                     product = self.env['product.product'].search(
                     [('default_code', '=', code)], limit=1)                    
                     if product:
-                            return {'openerp_id': product.id}
+                            return {'odoo_id': product.id}
             if self.backend_record.matching_product_ch == 'barcode':
                 if code:
                     product = self.env['product.product'].search(
@@ -418,6 +418,6 @@ class ProductCombinationOptionValueMapper(Component):
 
 
 class ProductProductBatchImporter(Component):
-    _name = 'prestashop.product.product.batch.importer'
+    _name = 'prestashop.product.combination.batch.importer'
     _inherit = 'prestashop.delayed.batch.importer'
-    _apply_on = 'prestashop.product.product'
+    _apply_on = 'prestashop.product.combination'

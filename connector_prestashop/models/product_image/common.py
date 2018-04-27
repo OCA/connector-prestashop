@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import base64
+from odoo.tools import config
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
@@ -54,9 +55,17 @@ class ProductImageAdapter(Component):
     _export_node_name = '/images/products'
     _export_node_name_res = 'image'
 
+
+    def connect(self):
+        debug = False
+        if config['log_level'] == 'debug':
+            debug = True
+        return PrestaShopWebServiceImage(self.prestashop.api_url,
+                                         self.prestashop.webservice_key,
+                                         debug=debug)
+
     def read(self, product_tmpl_id, image_id, options=None):
-        api = PrestaShopWebServiceImage(self.prestashop.api_url,
-                                        self.prestashop.webservice_key)
+        api = self.connect()
         return api.get_image(
             self._prestashop_image_model,
             product_tmpl_id,
@@ -65,8 +74,7 @@ class ProductImageAdapter(Component):
         )
 
     def create(self, attributes=None):
-        api = PrestaShopWebServiceImage(
-            self.prestashop.api_url, self.prestashop.webservice_key)
+        api = self.connect()
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
         return api.add(url, files=[(
@@ -76,8 +84,7 @@ class ProductImageAdapter(Component):
         )])
 
     def write(self, id, attributes=None):
-        api = PrestaShopWebServiceImage(
-            self.prestashop.api_url, self.prestashop.webservice_key)
+        api = self.connect()
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
         url_del = '{}/{}/{}/{}'.format(
@@ -94,6 +101,5 @@ class ProductImageAdapter(Component):
 
     def delete(self, resource, id):
         """ Delete a record on the external system """
-        api = PrestaShopWebServiceImage(
-            self.prestashop.api_url, self.prestashop.webservice_key)
+        api = self.connect()
         return api.delete(resource, resource_ids=id)

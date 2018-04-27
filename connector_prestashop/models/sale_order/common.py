@@ -2,9 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import openerp.addons.decimal_precision as dp
-
 from odoo import models, fields, api, _
-
+from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 
 import logging
@@ -76,19 +75,46 @@ class PrestashopSaleOrder(models.Model):
             priority=5, max_retries=0).import_batch(backend, filters=filters)
         if since_date:
             filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
-#        try:
-#            self.env['prestashop.mail.message'].import_batch(backend, filters)
-#        except Exception as error:
-#            msg = _(
-#                'Mail messages import failed with filters `%s`. '
-#                'Error: `%s`'
-#            ) % (str(filters), str(error))
-#            backend.add_checkpoint(
-#                message=msg
-#            )
+        self.env['prestashop.mail.message'].import_batch(backend, filters)
 
         backend.import_orders_since = now_fmt
         return True
+
+    @job(default_channel='root.prestashop')
+    @related_action(action='related_action_unwrap_binding')
+    @api.multi
+    def export_tracking_number(self):
+        """ Export the tracking number of a delivery order. """
+        self.ensure_one()
+        with self.backend_id.work_on(self._name) as work:
+            exporter = work.component(usage='tracking.exporter')
+            return exporter.run(self)
+
+    @api.multi
+    def find_prestashop_state(self):
+        self.ensure_one()
+        state_list_model = self.env['sale.order.state.list']
+        state_lists = state_list_model.search(
+            [('name', '=', self.state)]
+        )
+        for state_list in state_lists:
+            if state_list.prestashop_state_id.backend_id == self.backend_id:
+                return state_list.prestashop_state_id.prestashop_id
+        return None
+
+
+    @job(default_channel='root.prestashop')
+    @related_action(action='related_action_unwrap_binding')
+    @api.multi
+    def export_sale_state(self):
+        for sale in self:
+            backend = sale.backend_id
+            new_state = sale.find_prestashop_state()
+            if not new_state:
+                continue
+            with sale.backend_id.work_on(self._name) as work:
+                exporter = work.component(usage='sale.order.state.exporter')
+                return exporter.run(self, new_state)
 
 
 class SaleOrderLine(models.Model):
@@ -169,6 +195,11 @@ class OrderPaymentModel(models.TransientModel):
     _name = '__not_exist_prestashop.payment'
 
 
+class OrderCarrierModel(models.TransientModel):
+    # In actual connector version is mandatory use a model
+    _name = '__not_exit_prestashop.order_carrier'
+
+
 class SaleOrderAdapter(Component):
     _name = 'prestashop.sale.order.adapter'
     _inherit = 'prestashop.adapter'
@@ -199,3 +230,21 @@ class OrderDiscountAdapter(Component):
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.sale.order.line.discount'
     _prestashop_model = 'order_discounts'
+
+
+class PrestashopSaleOrderListener(Component):
+    _name = 'prestashop.sale.order.listener'
+    _inherit = 'base.event.listener'
+    _apply_on = ['sale.order']
+
+    def on_record_write(self, record, fields=None):
+        if 'state' in fields:
+            if not record.prestashop_bind_ids:
+                return
+            # a quick test to see if it is worth trying to export sale state
+            states = self.env['sale.order.state.list'].search(
+                [('name', '=', record.state)]
+            )
+            if states:
+                for binding in record.prestashop_bind_ids:
+                    binding.with_delay(priority=20).export_sale_state()

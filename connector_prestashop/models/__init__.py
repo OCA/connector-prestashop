@@ -16,9 +16,9 @@ from . import prestashop_shop_group
 from . import product_category
 from . import product_image
 from . import product_pricelist
+from . import product_template
 from . import product_product
 from . import product_supplierinfo
-from . import product_template
 from . import res_country
 from . import res_currency
 from . import res_lang

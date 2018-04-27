@@ -55,6 +55,7 @@
 					</group>
 					<group name="main_configuration" string="Main Configuration">
 						<group string="Sales">
+                            <field name="tz"/>
 							<field name="pricelist_id" />
 							<field name="sale_team_id" />
 							<field name="importable_order_state_ids" widget="many2many_tags" />
@@ -190,10 +191,10 @@
 								</group>
 								<group string="Matching option for partner">
 									<field name="matching_customer"></field>
-									<field name="matching_customer_ch"
-										attrs="{'invisible':[('matching_customer', '=', False)],
-                                                    'required':[('matching_customer', '=', True)]
-                                            }" />
+<!--									<field name="matching_customer_ch"-->
+<!--										attrs="{'invisible':[('matching_customer', '=', False)],-->
+<!--                                                    'required':[('matching_customer', '=', True)]-->
+<!--                                            }" />-->
 
 								</group>
 							</group>
