@@ -24,6 +24,7 @@ class PrestashopBinding(models.AbstractModel):
         default=True
     )
     prestashop_id = fields.Integer('ID on PrestaShop')
+    no_export = fields.Boolean('No export to PrestaShop')
 
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
@@ -37,7 +38,6 @@ class PrestashopBinding(models.AbstractModel):
                 'The job will be retried later.' %
                 (backend.name,))
 
-        
     @job(default_channel='root.prestashop')
     @api.model
     def import_record(self, backend, prestashop_id, force=False):
@@ -64,7 +64,7 @@ class PrestashopBinding(models.AbstractModel):
     def export_record(self, fields=None):
         """ Export a record on PrestaShop """
         self.ensure_one()
-        self.check_active(backend)
+        self.check_active(self.backend_id)
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage='record.exporter')
             return exporter.run(self, fields)
