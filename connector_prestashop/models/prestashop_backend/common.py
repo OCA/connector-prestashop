@@ -12,6 +12,7 @@ from ...components.backend_adapter import api_handle_errors
 from ...components.version_key import VersionKey
 from ...backend import prestashop
 from odoo.addons.connector.checkpoint import checkpoint
+from odoo.addons.base.res.res_partner import _tz_get
 
 _logger = logging.getLogger(__name__)
 
@@ -147,8 +148,8 @@ class PrestashopBackend(models.Model):
     matching_customer = fields.Boolean(string="Matching Customer", 
                     help="The selected fields will be matched to the ref field \
                         of the partner. Please adapt your datas consequently.")
-    matching_customer_ch = fields.Many2one(comodel_name='prestashop.partner.field'
-                            , string="Matched field", help="Field that will be matched.")
+#    matching_customer_ch = fields.Many2one(comodel_name='prestashop.partner.field'
+#                            , string="Matched field", help="Field that will be matched.")
 
 
     quantity_field = fields.Selection(
@@ -161,29 +162,30 @@ class PrestashopBackend(models.Model):
                             modules you'll have to install by yourself from
                             https://github.com/OCA/stock-logistics-warehouse/tree/10.0
                         """,
-                            string='Field use for quantity update',
-                            required=True, 
-                            default='virtual_available'
+                        required=True,
+                        default='virtual_available'
                         )
+    tz = fields.Selection(_tz_get,  'Timezone', size=64,
+            help="The timezone of the backend. Used to synchronize the sale order date.")
 
     @api.onchange("matching_customer")
     def change_matching_customer(self):
         #Update the field list so that if you API change you could find the new fields to map
         if self._origin.id:
             self.fill_matched_fields(self._origin.id)
-        
-    
+
+
     @api.multi
     def fill_matched_fields(self, backend_id):
         self.ensure_one()
-        
+
         options={'limit': 1,'display': 'full'}
         #TODO : Unse new adapter pattern to get a simple partner json
 #         prestashop = PrestaShopLocation(
 #                         self.location.encode(),
 #                         self.webservice_key,
 #                     )
-#         
+#
 #         client = PrestaShopWebServiceDict(
 #                     prestashop.api_url,
 #                     prestashop.webservice_key)
@@ -297,7 +299,7 @@ class PrestashopBackend(models.Model):
         for backend_record in self:
             backend_record.env['prestashop.product.template']\
                 .with_delay().export_product_quantities(backend=backend_record)
-            backend_record.env['prestashop.product.product']\
+            backend_record.env['prestashop.product.combination']\
                 .with_delay().export_product_quantities(backend=backend_record)
         return True
 
