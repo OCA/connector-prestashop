@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import logging
-from odoo import _
-from odoo.addons.connector.unit.synchronizer import Exporter
-from odoo.exceptions import UserError
-from odoo.addons.queue_job.job import job
-from ...components.backend_adapter import PrestaShopCRUDAdapter
-
-_logger = logging.getLogger(__name__)
+from odoo.addons.component.core import Component
+from odoo.addons.queue_job.exception import FailedJobError
 
 
-class PrestashopTrackingExporter(Exporter):
-    _model_name = ['prestashop.sale.order']
+class PrestashopTrackingExporter(Component):
+    _name = 'prestashop.stock.tracking.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = ['prestashop.sale.order']
+    _usage = 'tracking.exporter'
 
     def _get_tracking(self):
         trackings = []
@@ -21,14 +18,13 @@ class PrestashopTrackingExporter(Exporter):
                 trackings.append(picking.carrier_tracking_ref)
         return ';'.join(trackings) if trackings else None
 
-    def run(self, binding_id, **kwargs):
+    def run(self, binding, **kwargs):
         """ Export the tracking number of a picking to PrestaShop """
         # verify the picking is done + prestashop id exists
         tracking_adapter = self.component(
             usage='backend.adapter',
             model_name='__not_exit_prestashop.order_carrier')
-
-        self.binding = self.model.browse(binding_id)
+        self.binding = binding
         tracking = self._get_tracking()
         if tracking:
             prestashop_order_id = self.binder.to_external(self.binding)
@@ -43,18 +39,6 @@ class PrestashopTrackingExporter(Exporter):
                 tracking_adapter.write(order_carrier_id, vals)
                 return "Tracking %s exported" % tracking
             else:
-                raise UserError(
-                    _('PrestaShop Error'),
-                    _('No carrier found on sale order'))
+                raise FailedJobError('No carrier found on sale order')
         else:
             return "No tracking to export"
-
-
-@job
-def export_tracking_number(session, model_name, record_id):
-    """ Export the tracking number of a delivery order. """
-    order = session.env[model_name].browse(record_id)
-    backend = order.backend_id
-    env = backend.get_environment(model_name, session=session)
-    tracking_exporter = env.get_connector_unit(PrestashopTrackingExporter)
-    return tracking_exporter.run(record_id)

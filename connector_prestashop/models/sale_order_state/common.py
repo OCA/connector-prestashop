@@ -45,14 +45,11 @@ class SaleOrderStateList(models.Model):
 
     name = fields.Selection(
         selection=[
-            ('draft', 'Draft Quotation'),
+            ('draft', 'Quotation'),
             ('sent', 'Quotation Sent'),
+            ('sale', 'Sales Order'),
+            ('done', 'Locked'),
             ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done')
         ],
         string='Odoo State',
         required=True,

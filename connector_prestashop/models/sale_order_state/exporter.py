@@ -3,42 +3,21 @@
 
 
 from odoo.addons.queue_job.job import job
-from odoo.addons.connector.unit.synchronizer import Exporter
+from odoo.addons.component.core import Component
 
 
-class SaleStateExporter(Exporter):
-    _model_name = ['prestashop.sale.order']
+class SaleStateExporter(Component):
+    _name = 'prestashop.sale.order.state.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = ['prestashop.sale.order']
+    _usage = 'sale.order.state.exporter'
 
-    def run(self, prestashop_id, state, **kwargs):
+
+    def run(self, binding, state, **kwargs):
         datas = {
             'order_history': {
-                'id_order': prestashop_id,
+                'id_order': binding.prestashop_id,
                 'id_order_state': state,
             }
         }
-        self.backend_adapter.update_sale_state(prestashop_id, datas)
-
-
-def find_prestashop_state(session, sale_state, backend):
-    state_list_model = session.env['sale.order.state.list']
-    state_lists = state_list_model.search(
-        [('name', '=', sale_state)]
-    )
-    for state_list in state_lists:
-        if state_list.prestashop_state_id.backend_id == backend:
-            return state_list.prestashop_state_id.prestashop_id
-    return None
-
-
-@job
-def export_sale_state(session, model_name, record_id):
-    binding_model = session.env[model_name]
-    sales = binding_model.search([('odoo_id', '=', record_id)])
-    for sale in sales:
-        backend = sale.backend_id
-        new_state = find_prestashop_state(session, sale.state, backend)
-        if not new_state:
-            continue
-        env = backend.get_environment(binding_model._name, session=session)
-        sale_exporter = env.get_connector_unit(SaleStateExporter)
-        sale_exporter.run(sale.prestashop_id, new_state)
+        self.backend_adapter.update_sale_state(binding.prestashop_id, datas)
