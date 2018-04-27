@@ -23,8 +23,9 @@ access_prestashop_sale_order_line_full,Full access on prestashop.sale.order.line
 access_prestashop_sale_order_line_discount_user,User access on prestashop.sale.order.line.discount,model_prestashop_sale_order_line_discount,base.group_user,1,0,0,0
 access_prestashop_sale_order_line_discount_full,Full access on prestashop.sale.order.line.discount,model_prestashop_sale_order_line_discount,connector.group_connector_manager,1,1,1,1
 access_prestashop_delivery_carrier_full,Full access on prestashop.delivery.carrier,model_prestashop_delivery_carrier,connector.group_connector_manager,1,1,1,1
-access_prestashop_product_category_full,Full access on prestashop.product.category,model_prestashop_product_category,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_category_user,User access on prestashop.product.category,model_prestashop_product_category,base.group_user,1,0,0,0
+access_prestashop_product_category_full,Full access on prestashop.product.category,model_prestashop_product_category,connector.group_connector_manager,1,1,1,1
+access_prestashop_product_image_user,User access on prestashop.product.image,model_prestashop_product_image,base.group_user,1,0,0,0
 access_prestashop_product_image_full,Full access on prestashop.product.image,model_prestashop_product_image,connector.group_connector_manager,1,1,1,1
 access_prestashop_product_template_user,User access on prestashop.product.template,model_prestashop_product_template,base.group_user,1,0,0,0
 access_prestashop_product_template,Full access on prestashop.product.template,model_prestashop_product_template,connector.group_connector_manager,1,1,1,1
@@ -41,3 +42,12 @@ access_prestashop_product_supplierinfo_user,User access on prestashop.product.su
 access_prestashop_product_supplierinfo,Full access on prestashop.product.supplierinfo,model_prestashop_product_supplierinfo,connector.group_connector_manager,1,1,1,1
 access_mail_message,Full access on prestashop.mail.message,model_prestashop_mail_message,connector.group_connector_manager,1,1,1,1
 access_prestashop_groups_pricelist,Full access on prestashop.groups.pricelist,model_prestashop_groups_pricelist,connector.group_connector_manager,1,1,1,1
+access_prestashop_backend_user,User access on prestashop.backend,model_prestashop_backend,base.group_user,1,0,0,0
+access_prestashop_address_user,prestashop_address user,model_prestashop_address,base.group_user,1,0,0,0
+access_sale_order_state_user,sale_order_state user,model_sale_order_state,base.group_user,1,0,0,0
+access_sale_order_state_list_user,sale_order_state_list user,model_sale_order_state_list,base.group_user,1,0,0,0
+access_prestashop_sale_order_state_user,prestashop_sale_order_state user,model_prestashop_sale_order_state,base.group_user,1,0,0,0
+access_prestashop_account_tax_user,User access on prestashop.account.tax,model_prestashop_account_tax,base.group_user,1,0,0,0
+access_prestashop_account_tax_group_user,User access on prestashop.account.tax.group,model_prestashop_account_tax_group,base.group_user,1,0,0,0
+access_prestashop_res_lang_user,User access on prestashop.res.lang,model_prestashop_res_lang,base.group_user,1,0,0,0
+access_prestashop_shop_user,User access on prestashop.shop,model_prestashop_shop,base.group_user,1,0,0,0
