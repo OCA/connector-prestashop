@@ -127,6 +127,7 @@ class PrestashopProductTemplate(models.Model):
         help='Minimal Sale quantity',
         default=1,
     )
+    state = fields.Boolean(string='State', default=True)
 
 
 @prestashop
@@ -329,6 +330,7 @@ class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
         ('additional_shipping_cost', 'additional_shipping_cost'),
         ('minimal_quantity', 'minimal_quantity'),
         ('on_sale', 'on_sale'),
+        ('state', 'state'),
     ]
 
     @mapping
