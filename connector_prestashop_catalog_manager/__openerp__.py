@@ -15,7 +15,6 @@
     ],
     "author": "Akretion,"
               "AvanzOSC,"
-              "Meta IT,"
               "Tecnativa,"
               "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
