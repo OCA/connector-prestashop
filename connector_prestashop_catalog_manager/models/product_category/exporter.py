@@ -1,27 +1,20 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.connector.unit.mapper import mapping
-
-from odoo.addons.connector_prestashop.components.exporter import (
-    PrestashopExporter,
-    export_record,
-)
-from odoo.addons.connector_prestashop.components.mapper import (
-    TranslationPrestashopExportMapper,
-)
-from ...consumer import get_slug
-from odoo.addons.connector_prestashop.backend import prestashop
+from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.component.core import Component
+from ..product_template.exporter import get_slug
 
 
-@prestashop
-class ProductCategoryExporter(PrestashopExporter):
-    _model_name = 'prestashop.product.category'
+class ProductCategoryExporter(Component):
+    _name = 'prestashop.product.category.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = 'prestashop.product.category'
 
     def _export_dependencies(self):
         """ Export the dependencies for the category"""
         category_binder = self.binder_for('prestashop.product.category')
-        categories_obj = self.session.env['prestashop.product.category']
+        categories_obj = self.env['prestashop.product.category']
         for category in self.binding:
             self.export_parent_category(
                 category.odoo_id.parent_id, category_binder, categories_obj)
@@ -29,7 +22,7 @@ class ProductCategoryExporter(PrestashopExporter):
     def export_parent_category(self, category, binder, ps_categ_obj):
         if not category:
             return
-        ext_id = binder.to_backend(category.id, wrap=True)
+        ext_id = binder.to_external(category.id, wrap=True)
         if ext_id:
             return ext_id
         res = {
@@ -37,16 +30,16 @@ class ProductCategoryExporter(PrestashopExporter):
             'odoo_id': category.id,
             'link_rewrite': get_slug(category.name),
         }
-        category_ext_id = ps_categ_obj.with_context(
+        category_ext = ps_categ_obj.with_context(
             connector_no_export=True).create(res)
-        parent_cat_id = export_record(
-            self.session, 'prestashop.product.category', category_ext_id.id)
+        parent_cat_id = category_ext.export_record()
         return parent_cat_id
 
 
-@prestashop
-class ProductCategoryExportMapper(TranslationPrestashopExportMapper):
-    _model_name = 'prestashop.product.category'
+class ProductCategoryExportMapper(Component):
+    _name = 'prestashop.product.category.mapper'
+    _inherit = 'translation.prestashop.export.mapper'
+    _apply_on = 'prestashop.product.category'
 
     direct = [
         ('sequence', 'position'),
@@ -69,6 +62,6 @@ class ProductCategoryExportMapper(TranslationPrestashopExportMapper):
         if not record['parent_id']:
             return {'id_parent': 2}
         category_binder = self.binder_for('prestashop.product.category')
-        ext_categ_id = category_binder.to_backend(
+        ext_categ_id = category_binder.to_external(
             record.parent_id.id, wrap=True)
         return {'id_parent': ext_categ_id}
