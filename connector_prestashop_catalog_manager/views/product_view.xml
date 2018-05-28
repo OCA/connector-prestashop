@@ -25,5 +25,19 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="prestashop_product_template_tree" model="ir.ui.view">
+            <field name="name">connector_prestashop.product.template.tree
+            </field>
+            <field name="model">prestashop.product.template</field>
+            <field name="inherit_id"
+                   ref="connector_prestashop.product_connector_presta_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree" position="attributes">
+                    <attribute name="create">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+<<<<<<< 9d8fe97a202219d3869b8cf23cc50ac31486d802
 from odoo.addons.connector.unit.mapper import mapping
 from odoo.addons.connector_prestashop.components.exporter import \
     PrestashopExporter
@@ -13,21 +14,18 @@ from openerp.addons.connector_prestashop.unit.backend_adapter import (
 from odoo.addons.connector_prestashop.backend import prestashop
 
 from odoo import models, fields
+from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.component.core import Component
 from odoo.tools.translate import _
 
 import os
 import os.path
 
 
-class ProductImage(models.Model):
-    _inherit = 'base_multi_image.image'
-
-    front_image = fields.Boolean(string='Front image')
-
-
-@prestashop
-class ProductImageExport(PrestashopExporter):
-    _model_name = 'prestashop.product.image'
+class ProductImageExporter(Component):
+    _name = 'prestashop.product.image.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = 'prestashop.product.image'
 
     def _run(self, fields=None):
         """ Flow of the synchronization, implemented in inherited classes"""
@@ -77,9 +75,10 @@ class ProductImageExport(PrestashopExporter):
             })
 
 
-@prestashop
-class ProductImageExportMapper(PrestashopExportMapper):
-    _model_name = 'prestashop.product.image'
+class ProductImageExportMapper(Component):
+    _name = 'prestashop.product.image.mapper'
+    _inherit = 'prestashop.export.mapper'
+    _apply_on = 'prestashop.product.image'
 
     direct = [
         ('name', 'name'),
@@ -124,7 +123,7 @@ class ProductImageExportMapper(PrestashopExportMapper):
             product_tmpl = record.env['product.template'].browse(
                 record.odoo_id.owner_id)
         binder = self.binder_for('prestashop.product.template')
-        ps_product_id = binder.to_backend(product_tmpl, wrap=True)
+        ps_product_id = binder.to_external(product_tmpl, wrap=True)
         return {'id_product': ps_product_id}
 
     @mapping
