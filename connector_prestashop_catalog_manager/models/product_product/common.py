@@ -18,15 +18,17 @@ class PrestashopProductCombination(models.Model):
 
 class PrestashopProductProductListener(Component):
     _name = 'prestashop.product.product.event.listener'
-    _inherit = 'base.connector.listener'
+    _inherit = 'prestashop.connector.listener'
     _apply_on = 'prestashop.product.combination'
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_create(self, record, fields=None):
         """ Called when a record is created """
         record.with_delay().export_record(fields=fields)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         work = self.work.work_on(collection=record)
@@ -39,7 +41,7 @@ class PrestashopProductProductListener(Component):
 
 class ProductProductListener(Component):
     _name = 'product.product.event.listener'
-    _inherit = 'base.connector.listener'
+    _inherit = 'prestashop.connector.listener'
     _apply_on = 'product.product'
 
     EXCLUDE_FIELDS = ['list_price']
@@ -53,6 +55,7 @@ class ProductProductListener(Component):
         record.prestashop_combinations_bind_ids.unlink()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record.prestshop_combinations_bind_ids, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         for field in EXCLUDE_FIELDS:
@@ -71,18 +74,20 @@ class ProductProductListener(Component):
 
 class PrestashopAttributeListener(Component):
     _name = 'prestashop.attribute.event.listener'
-    _inherit = 'base.connector.listener'
+    _inherit = 'prestashop.connector.listener'
     _apply_on = [
         'prestashop.product.combination.option',
         'prestashop.product.combination.option.value'
     ]
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_create(self, record, fields=None):
         """ Called when a record is created """
         record.with_delay().export_record(fields=fields)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         record.with_delay().export_record(fields=fields)
@@ -90,13 +95,14 @@ class PrestashopAttributeListener(Component):
 
 class AttributeListener(Component):
     _name = 'attribute.event.listener'
-    _inherit = 'base.connector.listener'
+    _inherit = 'prestashop.connector.listener'
     _apply_on = [
         'product.attribute',
         'product.attribute.value',
     ]
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         for binding in record.prestashop_bind_ids:

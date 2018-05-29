@@ -3,7 +3,8 @@
 
 from datetime import timedelta
 
-from odoo.addons.connector.components.mapper import mapping, m2o_to_external
+from odoo.addons.connector.components.mapper import (
+    mapping, m2o_to_external, changed_by)
 from odoo.addons.component.core import Component
 
 import unicodedata
@@ -208,6 +209,7 @@ class ProductTemplateExportMapper(Component):
     def _get_factor_tax(self, tax):
         return (1 + tax.amount / 100) if tax.price_include else 1.0
 
+    @changed_by('taxes_id', 'list_price')
     @mapping
     def list_price(self, record):
         tax = record.taxes_id
@@ -222,6 +224,7 @@ class ProductTemplateExportMapper(Component):
         else:
             return {'price': str(record.list_price)}
 
+    @changed_by('default_code', 'reference')
     @mapping
     def reference(self, record):
         return {'reference': record.reference or record.default_code or ''}
@@ -234,6 +237,7 @@ class ProductTemplateExportMapper(Component):
                 {'id': binder.to_external(category, wrap=True)})
         return ext_categ_ids
 
+    @changed_by('categ_ids')
     @mapping
     def associations(self, record):
         return {
@@ -243,6 +247,7 @@ class ProductTemplateExportMapper(Component):
             }
         }
 
+    @changed_by('taxes_id')
     @mapping
     def tax_ids(self, record):
         if not record.taxes_id:
@@ -251,6 +256,7 @@ class ProductTemplateExportMapper(Component):
         ext_id = binder.to_external(record.taxes_id[:1].tax_group_id, wrap=True)
         return {'id_tax_rules_group': ext_id}
 
+    @changed_by('available_date')
     @mapping
     def available_date(self, record):
         if record.available_date:
