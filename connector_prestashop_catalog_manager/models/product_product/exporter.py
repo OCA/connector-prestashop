@@ -215,12 +215,12 @@ class ProductCombinationOptionValueExporter(Component):
         """ Export the dependencies for the record"""
         attribute_id = self.binding.attribute_id.id
         # export product attribute
-        binder = self.binder_for('prestashop.product.combination.option')
+        attr_model = 'prestashop.product.combination.option'
+        binder = self.binder_for(attr_model)
         if not binder.to_external(attribute_id, wrap=True):
-            exporter = self.get_connector_unit_for_model(
-                TranslationPrestashopExporter,
-                'prestashop.product.combination.option')
-            exporter.run(attribute_id)
+            with self.backend_id.work_on(attr_model) as work:
+                exporter = work.component(usage='record.exporter')
+                exporter.run(attribute_id)
         return
 
 
