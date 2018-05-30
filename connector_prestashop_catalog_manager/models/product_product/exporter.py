@@ -161,6 +161,7 @@ class ProductCombinationExportMapper(Component):
                 images.append({'id': image_ext_id})
         return images
 
+    @changed_by('attribute_value_ids', 'image_ids')
     @mapping
     def associations(self, record):
         associations = OrderedDict([
