@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from odoo import fields
 from datetime import timedelta
 
 from odoo.addons.connector.components.mapper import (
@@ -169,6 +170,8 @@ class ProductTemplateExporter(Component):
         self.check_images()
         self.export_variants()
         self.update_quantities()
+        if not self.binding.date_add:
+            self.with_context(connector_no_export=True).binding.date_add = fields.Datetime.now()
 
 
 class ProductTemplateExportMapper(Component):
@@ -188,6 +191,7 @@ class ProductTemplateExportMapper(Component):
         ('additional_shipping_cost', 'additional_shipping_cost'),
         ('minimal_quantity', 'minimal_quantity'),
         ('on_sale', 'on_sale'),
+        ('date_add', 'date_add'),
         (m2o_to_external(
             'prestashop_default_category_id',
             binding='prestashop.product.category'), 'id_category_default'),
@@ -237,13 +241,53 @@ class ProductTemplateExportMapper(Component):
                 {'id': binder.to_external(category, wrap=True)})
         return ext_categ_ids
 
-    @changed_by('categ_ids')
+    def _get_template_feature(self, record):
+        template_feature = []
+        attribute_binder = self.binder_for(
+            'prestashop.product.combination.option')
+        option_binder = self.binder_for(
+            'prestashop.product.combination.option.value')
+        for line in record.attribute_line_ids:
+            feature_dict = {}
+            attribute_ext_id = attribute_binder.to_external(
+                line.attribute_id.id, wrap=True)
+            if not attribute_ext_id:
+                continue
+            feature_dict = {'id': attribute_ext_id, 'custom': ''}
+            values_ids = []
+            for value in line.value_ids:
+                value_ext_id = option_binder.to_external(value.id,
+                                                        wrap=True)
+                if not value_ext_id:
+                    continue
+                values_ids.append(value_ext_id)
+            res = {'id_feature_value': values_ids}
+            feature_dict.update(res)
+            template_feature.append(feature_dict)
+        return template_feature
+
+    def _get_product_links(self, record):
+        links = []
+        binder = self.binder_for('prestashop.product.template')
+        for link in record.product_template_link_ids:
+            ext_id = binder.to_external(link.linked_product_template_id.id, wrap=True)
+            if ext_id:
+                links.append({'id': ext_id})
+        return links
+
+    @changed_by(
+        'attribute_line_ids', 'categ_ids', 'categ_id', 'product_link_ids'
+    )
     @mapping
     def associations(self, record):
         return {
             'associations': {
                 'categories': {
                     'category_id': self._get_product_category(record)},
+                'product_features': {
+                    'product_feature': self._get_template_feature(record)},
+                'accessories': {
+                    'accessory': self._get_product_links(record)},
             }
         }
 
@@ -262,11 +306,6 @@ class ProductTemplateExportMapper(Component):
         if record.available_date:
             return {'available_date': record.available_date}
         return {}
-
-    @mapping
-    def date_add(self, record):
-        # When export a record the date_add in PS is null.
-        return {'date_add': record.create_date}
 
     @mapping
     def default_image(self, record):

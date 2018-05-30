@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector.components.mapper import mapping, changed_by
 from odoo.addons.component.core import Component
 from ..product_template.exporter import get_slug
 
@@ -42,7 +42,6 @@ class ProductCategoryExportMapper(Component):
     _apply_on = 'prestashop.product.category'
 
     direct = [
-        ('sequence', 'position'),
         ('default_shop_id', 'id_shop_default'),
         ('active', 'active'),
         ('position', 'position')
@@ -57,6 +56,7 @@ class ProductCategoryExportMapper(Component):
         ('meta_title', 'meta_title'),
     ]
 
+    @changed_by('parent_id')
     @mapping
     def parent_id(self, record):
         if not record['parent_id']:
@@ -65,3 +65,36 @@ class ProductCategoryExportMapper(Component):
         ext_categ_id = category_binder.to_external(
             record.parent_id.id, wrap=True)
         return {'id_parent': ext_categ_id}
+
+
+class CategImageExporter(Component):
+    _name = 'prestashop.product.category.image.exporter'
+    _inherit = 'prestashop.exporter'
+    _apply_on = 'prestashop.categ.image'
+
+    def _create(self, data):
+        """ Create the Prestashop record """
+        if self.backend_adapter.create(data):
+            return 1
+
+    def _update(self, data):
+        return 1
+
+
+class CategImageExportMapper(Component):
+    _name = 'prestashop.product.category.image.mapper'
+    _inherit = 'prestashop.export.mapper'
+    _apply_on = 'prestashop.categ.image'
+
+    @changed_by('image')
+    @mapping
+    def image(self, record):
+        name = record.name.lower() + '.jpg'
+        return {'image': record['image'], 'name': name}
+
+    @changed_by('odoo_id')
+    @mapping
+    def odoo_id(self, record):
+        binder = self.binder_for('prestashop.product.category')
+        ext_categ_id = binder.to_external(record.odoo_id.id, wrap=True)
+        return {'categ_id': ext_categ_id}

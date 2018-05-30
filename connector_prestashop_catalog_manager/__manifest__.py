@@ -10,7 +10,8 @@
     "version": "9.0.1.0.2",
     "license": "AGPL-3",
     "depends": [
-        "connector_prestashop"
+        "connector_prestashop",
+        "product_categ_image",
     ],
     "author": "Akretion,"
               "AvanzOSC,"
@@ -27,6 +28,8 @@
         'wizards/sync_products_view.xml',
         'wizards/active_deactive_products_view.xml',
         'views/product_image_view.xml',
+        'views/product_category_view.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
 }

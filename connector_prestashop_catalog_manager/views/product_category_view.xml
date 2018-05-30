@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="product_category_connector_prestashop_tree_view" model="ir.ui.view">
+    <field name="name">connector_prestashop.product.category.tree</field>
+    <field name="model">prestashop.product.category</field>
+    <field name="inherit_id"
+            ref="connector_prestashop.product_category_connector_prestashop_tree_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="/tree" position="attributes">
+            <attribute name="create">1</attribute>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

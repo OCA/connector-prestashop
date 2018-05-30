@@ -2,7 +2,7 @@
 # © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-from odoo import models, fields
+from odoo import models, fields, api
 import openerp.addons.decimal_precision as dp
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
@@ -63,19 +63,14 @@ class PrestashopProductTemplateListener(Component):
     @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
-        work = self.work.work_on(collection=record)
-        inv_listener = work.component(usage='product.inventory.listener')
-        inventory_fields = inv_listener._get_inventory_fields()
-        fields = list(set(fields).difference(set(inventory_fields)))
-        if fields:
-            record.with_delay().export_record(fields=fields)
-            if 'minimal_quantity' in fields:
-                ps_template = session.env[model_name].browse(record_id)
-                for binding in ps_template.prestashop_bind_ids:
-                    binding.odoo_id.mapped(
-                        'product_variant_ids.prestashop_bind_ids').write({
-                            'minimal_quantity': binding.minimal_quantity
-                    })
+        record.with_delay().export_record(fields=fields)
+        if 'minimal_quantity' in fields:
+            ps_template = session.env[model_name].browse(record_id)
+            for binding in ps_template.prestashop_bind_ids:
+                binding.odoo_id.mapped(
+                    'product_variant_ids.prestashop_bind_ids').write({
+                        'minimal_quantity': binding.minimal_quantity
+                })
 
 
 class ProductTemplateListener(Component):
