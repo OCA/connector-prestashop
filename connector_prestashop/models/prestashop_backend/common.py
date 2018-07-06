@@ -342,7 +342,8 @@ class PrestashopShopGroup(models.Model):
     company_id = fields.Many2one(
         related='backend_id.company_id',
         comodel_name="res.company",
-        string='Company'
+        string='Company',
+        readonly=True,
     )
 
 
