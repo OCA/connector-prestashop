@@ -1,203 +1,136 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * connector_prestashop
+#	* connector_prestashop
 #
-# Translators:
-# Javier García-Panach <panaka7@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-13 17:49+0000\n"
-"PO-Revision-Date: 2017-04-13 17:49+0000\n"
-"Last-Translator: Javier García-Panach <panaka7@gmail.com>, 2017\n"
-"Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
-"Language: es\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: \n"
 
 #. module: connector_prestashop
 #: help:prestashop.refund,state:0
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Invoice.\n"
-" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have "
-"an invoice number.\n"
-" * The 'Open' status is used when user create invoice,a invoice number is "
-"generated.Its in open status till user does not pay invoice.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its "
-"related journal entries may or may not be reconciled.\n"
+msgid " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
+" * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-"* El estado 'Borrador' se utiliza cuando un usuario genera una factura nueva "
-"y por confirmar.\n"
-"* Cuando la factura está en estado 'Pro-forma' no tiene número de factura.\n"
-"* El estado 'Abierta' se utiliza cuando un usuario crea una factura, aquí se "
-"genera un número de factura. La factura permanecerá en estado abierto hasta "
-"que no se pague.\n"
-"* El estado 'Pagada' se establece automáticamente cuándo se paga la factura. "
-"Los apuntes contables relacionados con la factura, pueden o no estar "
-"conciliados.\n"
-"* El estado 'Cancelado' se utiliza cuando el usuario cancela la factura."
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,purchase_count:0
 #: field:prestashop.product.template,purchase_count:0
 msgid "# Purchases"
-msgstr "Nº de Compras"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,sales_count:0
 #: field:prestashop.product.template,sales_count:0
 msgid "# Sales"
-msgstr "Nº de Ventas"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,supplier_invoice_count:0
 #: field:prestashop.res.partner,supplier_invoice_count:0
 #: field:prestashop.supplier,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr "Nº de Facturas de proveedor"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,product_variant_count:0
 #: field:prestashop.product.template,product_variant_count:0
 msgid "# of Product Variants"
-msgstr "Nº de Variantes de Producto"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,purchase_order_count:0
 #: field:prestashop.res.partner,purchase_order_count:0
 #: field:prestashop.supplier,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr "Nº de Pedidos de Compra"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,sale_order_count:0
 #: field:prestashop.res.partner,sale_order_count:0
 #: field:prestashop.supplier,sale_order_count:0
 msgid "# of Sales Order"
-msgstr "Nº de pedidos de Venta"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order.line,state:0
 #: help:prestashop.sale.order.line.discount,state:0
-msgid ""
-"* The 'Draft' status is set when the related sales order in draft "
-"status.                     \n"
-"* The 'Confirmed' status is set when the related sales order is "
-"confirmed.                     \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been "
-"picked.                     \n"
+msgid "* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
-"* El estado 'Borrador' se establece cuando el pedido de venta relacionado "
-"está en estado borrador.                     \n"
-"* El estado 'Confirmado' se establece cuando se confirma el pedido de venta "
-"relacionado.                     \n"
-"* El estado 'Excepción' se establece cuadno el pedido de venta relacionado "
-"está como extensión.                     \n"
-"* El estado 'Realizado' se establece cuando se ha seleccionado la línea del "
-"pedido de venta.                     \n"
-"* El estado 'Cancelado' se establece cuando un usuario cancela el pedido de "
-"venta relacionado."
 
 #. module: connector_prestashop
 #: model:ir.actions.act_window,help:connector_prestashop.action_prestashop_sale_order_state_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
+msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                Here are the sale order states mapped with e-commerce.\n"
 "              </p><p>\n"
 "                Each state can be linked between PrestaShop and Odoo.\n"
-"                When a sale order state change, the connector will update "
-"the sale order in PrestaShop.\n"
+"                When a sale order state change, the connector will update the sale order in PrestaShop.\n"
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Aquí está el pedido de venta mapeado con el e-commerce.\n"
-"              </p><p>\n"
-"                Cada estado puede estar vinculado entre PrestaShop y Odoo.\n"
-"                Cuando cambia el estado de un pedido de venta, el conector "
-"actualizará el pedido de venta en PrestaShop.\n"
-"              </p>\n"
-"            "
 
 #. module: connector_prestashop
 #: help:prestashop.product.category,type:0
-msgid ""
-"A category of the view type is a virtual category that can be used as the "
-"parent of another category to create a hierarchical structure."
+msgid "A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."
 msgstr ""
-"Una categoría de tipo vista es una categoría virtual que se puede utilizar "
-"como padre de otra categoría para crear una estructura jerárquica."
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,description_sale:0
 #: help:prestashop.product.template,description_sale:0
-msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
-"Customer Invoice/Refund"
+msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"
 msgstr ""
-"Descripción del producto a comunicar a los clientes. Esta descripción se "
-"copiará en cada Pedido de Venta, Orden de envío y Factura/Factura "
-"Rectificativa de Cliente."
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,description_purchase:0
 #: help:prestashop.product.template,description_purchase:0
-msgid ""
-"A description of the Product that you want to communicate to your suppliers. "
-"This description will be copied to every Purchase Order, Receipt and "
-"Supplier Invoice/Refund."
+msgid "A description of the Product that you want to communicate to your suppliers. This description will be copied to every Purchase Order, Receipt and Supplier Invoice/Refund."
 msgstr ""
-"Descripción del Producto que se quiere comunicar a sus proveedores. Esta "
-"descripción se copiará a cada Pedido de Compra, Abono y Factura/Factura "
-"Rectificativa de Proveedor."
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,parent_need_cancel:0
-msgid ""
-"A parent sales order has been canceled on the backend and needs to be "
-"canceled."
+msgid "A parent sales order has been canceled on the backend and needs to be canceled."
 msgstr ""
-"Un pedido de venta padre se ha cancelado desde el backend y necesita ser "
-"cancelado."
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,parent_id:0
 msgid "A parent sales order is a sales order replaced by this one."
-msgstr "Un pedido de venta padre es un pedido de venta reemplazado por este."
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,parent_need_cancel:0
 msgid "A parent sales order needs cancel"
-msgstr "Se necesita cancelar un pedido de venta padre"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order.line,address_allotment_id:0
 #: help:prestashop.sale.order.line.discount,address_allotment_id:0
 msgid "A partner to whom the particular product needs to be allotted."
-msgstr "Empresa a quien asignar el producto."
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,description:0
 #: help:prestashop.product.template,description:0
-msgid ""
-"A precise description of the Product, used only for internal information "
-"purposes."
+msgid "A precise description of the Product, used only for internal information purposes."
 msgstr ""
-"Descripción precisa del Producto, utilizada sólo para información interna."
 
 #. module: connector_prestashop
 #: sql_constraint:prestashop.account.tax:0
 #: sql_constraint:prestashop.account.tax.group:0
-#: sql_constraint:prestashop.address:0 sql_constraint:prestashop.binding:0
+#: sql_constraint:prestashop.address:0
+#: sql_constraint:prestashop.binding:0
 #: sql_constraint:prestashop.binding.odoo:0
 #: sql_constraint:prestashop.delivery.carrier:0
 #: sql_constraint:prestashop.groups.pricelist:0
@@ -209,7 +142,8 @@ msgstr ""
 #: sql_constraint:prestashop.product.image:0
 #: sql_constraint:prestashop.product.supplierinfo:0
 #: sql_constraint:prestashop.product.template:0
-#: sql_constraint:prestashop.refund:0 sql_constraint:prestashop.res.country:0
+#: sql_constraint:prestashop.refund:0
+#: sql_constraint:prestashop.res.country:0
 #: sql_constraint:prestashop.res.currency:0
 #: sql_constraint:prestashop.res.lang:0
 #: sql_constraint:prestashop.res.partner:0
@@ -218,42 +152,44 @@ msgstr ""
 #: sql_constraint:prestashop.sale.order.line:0
 #: sql_constraint:prestashop.sale.order.line.discount:0
 #: sql_constraint:prestashop.sale.order.state:0
-#: sql_constraint:prestashop.shop:0 sql_constraint:prestashop.shop.group:0
+#: sql_constraint:prestashop.shop:0
+#: sql_constraint:prestashop.shop.group:0
 #: sql_constraint:prestashop.supplier:0
 msgid "A record with same ID already exists on PrestaShop."
-msgstr "Ya existe un registro con el mismo ID en PrestaShop."
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.refund,account_id:0
 msgid "Account"
-msgstr "Cuenta"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr "Código de impuesto de la base"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,property_account_payable:0
 #: field:prestashop.res.partner,property_account_payable:0
 #: field:prestashop.supplier,property_account_payable:0
 msgid "Account Payable"
-msgstr "Cuenta a Pagar"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,property_account_receivable:0
 #: field:prestashop.res.partner,property_account_receivable:0
 #: field:prestashop.supplier,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Cuenta a Cobrar"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,tax_code_id:0
 msgid "Account Tax Code"
-msgstr "Código de Impuesto de la cuenta"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.account.tax,active:0 field:prestashop.address,active:0
+#: field:prestashop.account.tax,active:0
+#: field:prestashop.address,active:0
 #: field:prestashop.delivery.carrier,active:0
 #: field:prestashop.groups.pricelist,active:0
 #: field:prestashop.product.category,active:0
@@ -265,65 +201,62 @@ msgstr "Código de Impuesto de la cuenta"
 #: field:prestashop.res.partner.category,active:0
 #: field:prestashop.supplier,active:0
 msgid "Active"
-msgstr "Activo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,active_ext:0
 #: field:prestashop.res.lang,active:0
 msgid "Active in PrestaShop"
-msgstr "Activo en PrestaShop"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.refund,comment:0
 msgid "Additional Information"
-msgstr "Información Adicional"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.country,address_format:0
 msgid "Address Format"
-msgstr "Formato de Dirección"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,type:0 field:prestashop.res.partner,type:0
+#: field:prestashop.address,type:0
+#: field:prestashop.res.partner,type:0
 #: field:prestashop.supplier,type:0
 msgid "Address Type"
-msgstr "Tipo de Dirección"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr "Precio Avanzado"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr "Precio Avanzado por Destino"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order.line,address_allotment_id:0
 #: field:prestashop.sale.order.line.discount,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr "Asignación de empresa"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,amount:0
 #: field:prestashop.delivery.carrier,amount:0
 msgid "Amount"
-msgstr "Cantidad"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,amount_paid:0
 msgid "Amount Paid"
-msgstr "Cantidad Pagada"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.delivery.carrier,amount:0
-msgid ""
-"Amount of the order to benefit from a free shipping, expressed in the "
-"company currency"
+msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
 msgstr ""
-"Cantidad del pedido a beneficios de un envío gratuito, expresado en la "
-"moneda de la compañía"
 
 #. module: connector_prestashop
 #: sql_constraint:prestashop.account.tax:0
@@ -339,7 +272,8 @@ msgstr ""
 #: sql_constraint:prestashop.product.image:0
 #: sql_constraint:prestashop.product.supplierinfo:0
 #: sql_constraint:prestashop.product.template:0
-#: sql_constraint:prestashop.refund:0 sql_constraint:prestashop.res.country:0
+#: sql_constraint:prestashop.refund:0
+#: sql_constraint:prestashop.res.country:0
 #: sql_constraint:prestashop.res.currency:0
 #: sql_constraint:prestashop.res.lang:0
 #: sql_constraint:prestashop.res.partner:0
@@ -350,97 +284,89 @@ msgstr ""
 #: sql_constraint:prestashop.sale.order.state:0
 #: sql_constraint:prestashop.supplier:0
 msgid "An ERP record with same ID already exists on PrestaShop."
-msgstr "Ya existe en PrestaShop un registro del ERP con el mismo ID "
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,no_auto_thread:0
-msgid ""
-"Answers do not go in the original document' discussion thread. This has an "
-"impact on the generated message-id."
+msgid "Answers do not go in the original document' discussion thread. This has an impact on the generated message-id."
 msgstr ""
-"Las respuestas no van en el hilo de discusión del documento original. Esto "
-"tiene un impacto en el la ID del mensaje generado."
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,applicable_type:0
 msgid "Applicability"
-msgstr "Aplicabilidad"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,python_applicable:0
 msgid "Applicable Code"
-msgstr "Código Aplicable"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.supplierinfo,sequence:0
 msgid "Assigns the priority to the list of product supplier."
-msgstr "Asigna la prioridad al listado del proveedor del producto."
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.mail.message,attachment_ids:0
 msgid "Attachments"
-msgstr "Adjuntos"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination.option,odoo_id:0
 #: field:prestashop.product.combination.option.value,attribute_id:0
 #: field:prestashop.product.combination.option.value,odoo_id:0
 msgid "Attribute"
-msgstr "Atributo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination.option.value,price_extra:0
 msgid "Attribute Price Extra"
-msgstr "Atributo Precio Extra"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination.option.value,price_ids:0
 msgid "Attribute Prices"
-msgstr "Precios de atributo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,attribute_value_ids:0
 msgid "Attributes"
-msgstr "Atributos"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.mail.message,author_id:0
 msgid "Author"
-msgstr "Autor"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
+msgid "Author of the message. If not set, email_from may hold an email address that did not match any partner."
 msgstr ""
-"Autor del mensaje. Si no está establecido, el campo email_de puede contener "
-"una dirección de email que no se corresponda a ninguna empresa."
 
 #. module: connector_prestashop
 #: field:prestashop.mail.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr "Avatar del Autor"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,workflow_process_id:0
 msgid "Automatic Workflow"
-msgstr "Workflow Automático"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr "Desinfección automática de contenidos HTML"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,available:0
 msgid "Available"
-msgstr "Disponible"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.template,available_for_order:0
 msgid "Available for Order Taking"
-msgstr "Disponible para recepción de pedidos"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.account.tax.group:connector_prestashop.account_tax_group_connector_prestashop_tree_view
@@ -457,37 +383,32 @@ msgid "Backends"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.refund,residual:0 field:prestashop.sale.order,residual:0
+#: field:prestashop.refund,residual:0
+#: field:prestashop.sale.order,residual:0
 msgid "Balance"
-msgstr "Balance"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.refund,partner_bank_id:0
 msgid "Bank Account"
-msgstr "Cuenta Bancaria"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.refund,partner_bank_id:0
-msgid ""
-"Bank Account Number to which the invoice will be paid. A Company bank "
-"account if this is a Customer Invoice or Supplier Refund, otherwise a "
-"Partner bank account number."
+msgid "Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number."
 msgstr ""
-"Número de Cuenta Bancaria de donde se pagará la factura. Si es una Factura "
-"de Cliente o una Factura Rectificativa de Proveedor se utiliza la Cuenta "
-"bancaria de la Compañía, si no, se utiliza la cuenta bancaria del Cliente o "
-"Proveedor. "
 
 #. module: connector_prestashop
-#: field:prestashop.address,bank_ids:0 field:prestashop.res.partner,bank_ids:0
+#: field:prestashop.address,bank_ids:0
+#: field:prestashop.res.partner,bank_ids:0
 #: field:prestashop.supplier,bank_ids:0
 msgid "Banks"
-msgstr "Bancos"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.currency,base:0
 msgid "Base"
-msgstr "Base"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,base_sign:0
@@ -497,28 +418,24 @@ msgstr ""
 #. module: connector_prestashop
 #: help:prestashop.product.combination,list_price:0
 #: help:prestashop.product.template,list_price:0
-msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
+msgid "Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
-"Precio base para calcular el precio del cliente. A veces llamado precio del "
-"catálogo."
 
 #. module: connector_prestashop
 #: field:prestashop.address,birthdate:0
 #: field:prestashop.res.partner,birthdate:0
 #: field:prestashop.supplier,birthdate:0
 msgid "Birthdate"
-msgstr "Fecha de Nacimiento"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.partner,birthday:0
 msgid "Birthday"
-msgstr "Cumpleaños"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
-msgid ""
-"By clicking on the buttons,\n"
+msgid "By clicking on the buttons,\n"
 "                                    you will initiate the synchronizations\n"
 "                                    with PrestaShop.\n"
 "                                    Note that the import or exports\n"
@@ -526,198 +443,174 @@ msgid ""
 "                                    they will create 'Jobs'\n"
 "                                    executed as soon as possible."
 msgstr ""
-"Haciendo click a los botones,\n"
-"Iniciarás las sincronizaciones\n"
-"con PrestaShop.\n"
-"Tenga en cuenta que las importaciones o exportaciones\n"
-"no se realizarán directamente,\n"
-"se crearan 'Trabajos'\n"
-"que se ejecutarán lo antes posible."
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,purchase_ok:0
 #: field:prestashop.product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr "Puede ser comprado"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,rental:0
 #: field:prestashop.product.template,rental:0
 msgid "Can be Rent"
-msgstr "Puede ser alquilado"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,sale_ok:0
 #: field:prestashop.product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr "Puede ser vendido"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,canceled_in_backend:0
 msgid "Canceled in backend"
-msgstr "Cancelado en el backend"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,cancellation_resolved:0
 msgid "Cancellation from the backend resolved"
-msgstr "Cancelación desde el backend resuelta"
+msgstr ""
 
 #. module: connector_prestashop
 #: selection:sale.order.state.list,name:0
 msgid "Cancelled"
-msgstr "Cancelado"
+msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_delivery_carrier
 msgid "Carrier"
-msgstr "Transportista"
+msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_carrier
 msgid "Carriers"
-msgstr "Transportistas"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,loc_case:0
 #: field:prestashop.product.template,loc_case:0
 msgid "Case"
-msgstr "Envoltura"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.partner.category,name:0
 msgid "Category Name"
-msgstr "Nombre de Categoría"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.category,type:0
 msgid "Category Type"
-msgstr "Tipo de Categoría"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,is_company:0
 #: help:prestashop.res.partner,is_company:0
 #: help:prestashop.supplier,is_company:0
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Comprueba si el contacto es una compañía, si no, es una persona"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,vat_subjected:0
 #: help:prestashop.res.partner,vat_subjected:0
 #: help:prestashop.supplier,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
+msgid "Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."
 msgstr ""
-"Seleccione esta casilla si el cliente esta sujeto al IVA. Se utilizará para "
-"la declaración legal de IVA."
 
 #. module: connector_prestashop
-#: help:prestashop.address,customer:0 help:prestashop.res.partner,customer:0
+#: help:prestashop.address,customer:0
+#: help:prestashop.res.partner,customer:0
 #: help:prestashop.supplier,customer:0
 msgid "Check this box if this contact is a customer."
-msgstr "Seleccione esta casilla si el contacto es un cliente"
-
-#. module: connector_prestashop
-#: help:prestashop.address,supplier:0 help:prestashop.res.partner,supplier:0
-#: help:prestashop.supplier,supplier:0
-msgid ""
-"Check this box if this contact is a supplier. If it's not checked, purchase "
-"people will not see it when encoding a purchase order."
 msgstr ""
-"Seleccione esta casilla si el contacto es un proveedor. Si no está "
-"seleccionada, la persona que ha realizado la compra no la podrá ver generada."
 
 #. module: connector_prestashop
-#: help:prestashop.address,employee:0 help:prestashop.res.partner,employee:0
+#: help:prestashop.address,supplier:0
+#: help:prestashop.res.partner,supplier:0
+#: help:prestashop.supplier,supplier:0
+msgid "Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,employee:0
+#: help:prestashop.res.partner,employee:0
 #: help:prestashop.supplier,employee:0
 msgid "Check this box if this contact is an Employee."
-msgstr "Seleccione esta casilla si el contacto es un Empleado"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.delivery.carrier,use_detailed_pricelist:0
-msgid ""
-"Check this box if you want to manage delivery prices that depends on the "
-"destination, the weight, the total of the order, etc."
+msgid "Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."
 msgstr ""
-"Seleccione esta casilla si quiere gestionar los precios de envío que "
-"dependen del destino, del peso, del total del pedido, etc."
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,price_include:0
-msgid ""
-"Check this if the price you use on the product and invoices includes this "
-"tax."
+msgid "Check this if the price you use on the product and invoices includes this tax."
 msgstr ""
-"Seleccione esta casilla si el precio utilizado en el producto y en las "
-"facturas incluye el impuesto"
 
 #. module: connector_prestashop
 #: help:stock.location,prestashop_synchronized:0
 msgid "Check this option to synchronize this location with PrestaShop"
-msgstr "Seleccione esta opción para sincronizar esta ubicación con PrestaShop"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.category,child_id:0
 #: field:prestashop.res.partner.category,child_ids:0
 msgid "Child Categories"
-msgstr "Categorías Hijo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.mail.message,child_ids:0
 msgid "Child Messages"
-msgstr "Mensajes Hijo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,child_ids:0
 msgid "Child Tax Accounts"
-msgstr "Cuentas de Impuestos Hijo"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,group_id:0
 msgid "Choose the tax group. This is needed for example with Prestashop"
 msgstr ""
-"Seleccione el grupo de impuestos. Esto es necesario por ejemplo con "
-"PrestaShop"
 
 #. module: connector_prestashop
-#: field:prestashop.address,city:0 field:prestashop.res.partner,city:0
+#: field:prestashop.address,city:0
+#: field:prestashop.res.partner,city:0
 #: field:prestashop.supplier,city:0
 msgid "City"
-msgstr "Ciudad"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,uos_coeff:0
 #: help:prestashop.product.template,uos_coeff:0
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale\n"
+msgid "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
 msgstr ""
-"Coeficiente para convertir Unidades Unidades de Medida por defecto a "
-"Unidades de Venta\n"
-"uos = uom * coeff"
 
 #. module: connector_prestashop
 #: selection:prestashop.product.combination.option,group_type:0
 msgid "Color"
-msgstr "Color"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,color:0
 #: field:prestashop.product.combination,color:0
 #: field:prestashop.product.template,color:0
-#: field:prestashop.res.partner,color:0 field:prestashop.supplier,color:0
+#: field:prestashop.res.partner,color:0
+#: field:prestashop.supplier,color:0
 msgid "Color Index"
-msgstr "Índice de colores"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.template,combinations_ids:0
 msgid "Combinations"
-msgstr "Combinaciones"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.image,comments:0
 msgid "Comments"
-msgstr "Comentarios"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,commercial_partner_id:0
@@ -725,20 +618,22 @@ msgstr "Comentarios"
 #: field:prestashop.res.partner,commercial_partner_id:0
 #: field:prestashop.supplier,commercial_partner_id:0
 msgid "Commercial Entity"
-msgstr "Entidad Comercial"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,ref_companies:0
 #: field:prestashop.res.partner,ref_companies:0
 #: field:prestashop.supplier,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr "Compañía que refiere a la empresa"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:account.tax.group,company_id:0 field:delivery.carrier,company_id:0
+#: field:account.tax.group,company_id:0
+#: field:delivery.carrier,company_id:0
 #: field:prestashop.account.tax,company_id:0
 #: field:prestashop.account.tax.group,company_id:0
-#: field:prestashop.address,company_id:0 field:prestashop.backend,company_id:0
+#: field:prestashop.address,company_id:0
+#: field:prestashop.backend,company_id:0
 #: field:prestashop.delivery.carrier,company_id:0
 #: field:prestashop.groups.pricelist,company_id:0
 #: field:prestashop.product.combination,company_id:0
@@ -753,76 +648,74 @@ msgstr "Compañía que refiere a la empresa"
 #: field:prestashop.sale.order.line.discount,company_id:0
 #: field:prestashop.sale.order.state,company_id:0
 #: field:prestashop.shop.group,company_id:0
-#: field:prestashop.supplier,company_id:0 field:sale.order.state,company_id:0
+#: field:prestashop.supplier,company_id:0
+#: field:sale.order.state,company_id:0
 msgid "Company"
-msgstr "Compañía"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,contact_address:0
 #: field:prestashop.res.partner,contact_address:0
 #: field:prestashop.supplier,contact_address:0
 msgid "Complete Address"
-msgstr "Dirección Completa"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on picking."
-msgstr "Complete este campo si planea facturar el envío basado en el albarán."
+msgid "Complete this field if you plan to invoice the shipping based on picking."
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.currency,accuracy:0
 msgid "Computational Accuracy"
-msgstr "Precisión decimal"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,quantity:0
 #: field:prestashop.product.template,quantity:0
 msgid "Computed Quantity"
-msgstr "Cantidad calculada"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr "Fecha de confirmación"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:sale.order.state:connector_prestashop.view_sale_order_state_form
 msgid "Connector"
-msgstr "Conector"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,type:0
 #: help:prestashop.product.template,type:0
-msgid ""
-"Consumable: Will not imply stock management for this product. \n"
+msgid "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
 msgstr ""
-"Consumible: No implica gestión de stock para este producto.\n"
-"Producto almacenable: implica gestión de stock para este producto."
 
 #. module: connector_prestashop
-#: field:prestashop.address,ref:0 field:prestashop.res.partner,ref:0
+#: field:prestashop.address,ref:0
+#: field:prestashop.res.partner,ref:0
 #: field:prestashop.supplier,ref:0
 msgid "Contact Reference"
-msgstr "Referencia de Contacto"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,child_ids:0
 #: field:prestashop.res.partner,child_ids:0
 #: field:prestashop.supplier,child_ids:0
 msgid "Contacts"
-msgstr "Contactos"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.mail.message,body:0
 msgid "Contents"
-msgstr "Contenidos"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr "Contrato / Analítica"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,contract_ids:0
@@ -832,41 +725,29 @@ msgstr "Contrato / Analítica"
 #: field:prestashop.supplier,contract_ids:0
 #: field:prestashop.supplier,contracts_count:0
 msgid "Contracts"
-msgstr "Contratos"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,standard_price:0
 #: field:prestashop.product.template,standard_price:0
 msgid "Cost Price"
-msgstr "Precio de coste"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.template,standard_price:0
-msgid ""
-"Cost price of the product template used for standard stock valuation in "
-"accounting and used as a base price on purchase orders. Expressed in the "
-"default unit of measure of the product."
+msgid "Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product."
 msgstr ""
-"Precio de coste de la plantilla de producto utilizado para valoración "
-"estándar  de stock en contabilidad, y utilizado como precio base en pedidos "
-"de compra. Expresado en la unidad de medida por defecto del producto."
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,standard_price:0
-msgid ""
-"Cost price of the product variant used for standard stock valuation in "
-"accounting and used as a base price on purchase orders. Expressed in the "
-"default unit of measure of the product."
+msgid "Cost price of the product variant used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product."
 msgstr ""
-"Precio de coste de la variante del producto utilizado para valoración "
-"estándar  de stock en contabilidad, y utilizado como precio base en pedidos "
-"de compra. Expresado en la unidad de medida por defecto del producto."
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,cost_method:0
 #: field:prestashop.product.template,cost_method:0
 msgid "Costing Method"
-msgstr "Método de coste"
+msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_res_country
@@ -875,27 +756,27 @@ msgstr "Método de coste"
 #: field:prestashop.res.partner,country_id:0
 #: field:prestashop.supplier,country_id:0
 msgid "Country"
-msgstr "País"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.country,code:0
 msgid "Country Code"
-msgstr "Código de País"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.country,country_group_ids:0
 msgid "Country Groups"
-msgstr "Grupos de País"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.country,name:0
 msgid "Country Name"
-msgstr "Nombre del País"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,order_policy:0
 msgid "Create Invoice"
-msgstr "Crear Factura"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,date_add:0
@@ -903,18 +784,19 @@ msgstr "Crear Factura"
 #: field:prestashop.res.partner,date_add:0
 #: field:prestashop.res.partner.category,date_add:0
 msgid "Created At (on PrestaShop)"
-msgstr "Creada en (en PrestaShop)"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.template,date_add:0
 msgid "Created at (in PrestaShop)"
-msgstr "Creado en (en PrestaShop)"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:_import_stock_available,create_uid:0
 #: field:prestashop.account.tax,create_uid:0
 #: field:prestashop.account.tax.group,create_uid:0
-#: field:prestashop.address,create_uid:0 field:prestashop.backend,create_uid:0
+#: field:prestashop.address,create_uid:0
+#: field:prestashop.backend,create_uid:0
 #: field:prestashop.delivery.carrier,create_uid:0
 #: field:prestashop.groups.pricelist,create_uid:0
 #: field:prestashop.mail.message,create_uid:0
@@ -935,11 +817,13 @@ msgstr "Creado en (en PrestaShop)"
 #: field:prestashop.sale.order.line,create_uid:0
 #: field:prestashop.sale.order.line.discount,create_uid:0
 #: field:prestashop.sale.order.state,create_uid:0
-#: field:prestashop.shop,create_uid:0 field:prestashop.shop.group,create_uid:0
-#: field:prestashop.supplier,create_uid:0 field:sale.order.state,create_uid:0
+#: field:prestashop.shop,create_uid:0
+#: field:prestashop.shop.group,create_uid:0
+#: field:prestashop.supplier,create_uid:0
+#: field:sale.order.state,create_uid:0
 #: field:sale.order.state.list,create_uid:0
 msgid "Created by"
-msgstr "Creado por"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:_import_stock_available,create_date:0
@@ -973,14 +857,14 @@ msgstr "Creado por"
 #: field:sale.order.state,create_date:0
 #: field:sale.order.state.list,create_date:0
 msgid "Created on"
-msgstr "Creado en "
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,credit_limit:0
 #: field:prestashop.res.partner,credit_limit:0
 #: field:prestashop.supplier,credit_limit:0
 msgid "Credit Limit"
-msgstr "Límite de Crédito"
+msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_res_currency
@@ -991,107 +875,98 @@ msgstr "Límite de Crédito"
 #: field:prestashop.res.currency,odoo_id:0
 #: field:prestashop.sale.order,currency_id:0
 msgid "Currency"
-msgstr "Moneda"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.currency,name:0
 msgid "Currency Code (ISO 4217)"
-msgstr "Código de la Moneda (ISO 4217)"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.currency,symbol:0
 msgid "Currency sign, to be used when printing amounts."
-msgstr "Signo de la moneda, para utilizar al imprimir cantidades."
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.currency,rate:0
 #: field:prestashop.res.currency,rate_silent:0
 msgid "Current Rate"
-msgstr "Tarifa actual"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,qty_available:0
-msgid ""
-"Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its "
-"children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
+msgid "Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad actual de productos.\n"
-"En un contexto de una única ubicación de stock, esto incluye los productos "
-"almacenados en esta ubicación, o alguno de sus hijos.\n"
-"En un contexto con un almacén único, esto incluye productos almacenados en "
-"la ubicación de stock de este almacén, o en alguno de sus hijos.\n"
-"Si no, esto incluye productos almacenados en cualquier ubicación de stock "
-"con tipo 'Interno'."
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr "El usuario actual a destacado la notificación enlazada a este mensaje"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
 msgstr ""
-"El usuario actual tiene una notificación por leer enlazada a este mensaje"
 
 #. module: connector_prestashop
-#: field:prestashop.address,customer:0 field:prestashop.res.partner,customer:0
+#: field:prestashop.address,customer:0
+#: field:prestashop.res.partner,customer:0
 #: field:prestashop.sale.order,partner_id:0
 #: field:prestashop.sale.order.line,order_partner_id:0
 #: field:prestashop.sale.order.line.discount,order_partner_id:0
 #: field:prestashop.supplier,customer:0
 msgid "Customer"
-msgstr "Cliente"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,sale_delay:0
 #: field:prestashop.product.template,sale_delay:0
 msgid "Customer Lead Time"
-msgstr "Tiempo de entrega del cliente"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,property_stock_customer:0
 #: field:prestashop.res.partner,property_stock_customer:0
 #: field:prestashop.supplier,property_stock_customer:0
 msgid "Customer Location"
-msgstr "Ubicación del cliente"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,property_payment_term:0
 #: field:prestashop.res.partner,property_payment_term:0
 #: field:prestashop.supplier,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr "Términos de pago del cliente"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,taxes_id:0
 #: field:prestashop.product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr "Impuestos del cliente"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,partner_ref:0
 msgid "Customer ref"
-msgstr "Referencia del cliente"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,date:0 field:prestashop.mail.message,date:0
-#: field:prestashop.res.currency,date:0 field:prestashop.res.partner,date:0
-#: field:prestashop.sale.order,date_order:0 field:prestashop.supplier,date:0
+#: field:prestashop.address,date:0
+#: field:prestashop.mail.message,date:0
+#: field:prestashop.res.currency,date:0
+#: field:prestashop.res.partner,date:0
+#: field:prestashop.sale.order,date_order:0
+#: field:prestashop.supplier,date:0
 msgid "Date"
-msgstr "Fecha"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.res.lang,date_format:0
 msgid "Date Format"
-msgstr "Formato de fecha"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,message_last_post:0
@@ -1102,91 +977,72 @@ msgstr "Formato de fecha"
 #: help:prestashop.sale.order,message_last_post:0
 #: help:prestashop.supplier,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Fecha del último mensaje  publicado en el registro"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr "Fecha en la que el pedido se ha confirmado"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,last_reconciliation_date:0
 #: help:prestashop.res.partner,last_reconciliation_date:0
 #: help:prestashop.supplier,last_reconciliation_date:0
-msgid ""
-"Date on which the partner accounting entries were fully reconciled last "
-"time. It differs from the last date where a reconciliation has been made for "
-"this partner, as here we depict the fact that nothing more was to be "
-"reconciled at this date. This can be achieved in 2 different ways: either "
-"the last unreconciled debit/credit entry of this partner was reconciled, "
-"either the user pressed the button \"Nothing more to reconcile\" during the "
-"manual reconciliation process."
+msgid "Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button \"Nothing more to reconcile\" during the manual reconciliation process."
 msgstr ""
-"Fecha en la que los registros contables de la empresa han sido conciliados "
-"completamente por última vez. Se diferencia de la última fecha en la que la "
-"empresa ha hecho una conciliación, aquí se representa el hecho de que no hay "
-"que conciliar nada más en esta fecha. Hay 2 maneras para conseguirlo: o bien "
-"se ha conciliado la última entrada de crédito/débito sin conciliar de esta "
-"empresa, o el usuario ha presionado el botón 'Nada más por conciliar' "
-"durante el proceso de conciliación manual."
 
 #. module: connector_prestashop
 #: field:prestashop.res.lang,decimal_point:0
 msgid "Decimal Separator"
-msgstr "Separador decimal"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,default_on:0
 #: field:product.product,default_on:0
 msgid "Default On"
-msgstr "Por defecto en "
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,uom_id:0
 #: help:prestashop.product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
-"Unidad de medida por defecto utilizada en todas las operaciones de stock"
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,uom_po_id:0
 #: help:prestashop.product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
+msgid "Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."
 msgstr ""
-"La Unidad de medida por defecto para los pedidos de compra debe estar en la "
-"misma categoría que la unidad de medida por defecto."
 
 #. module: connector_prestashop
 #: field:prestashop.product.template,default_shop_id:0
 msgid "Default shop"
-msgstr "Tienda por defecto"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.category,default_shop_id:0
 msgid "Default shop id"
-msgstr "ID de la tienda por defecto"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.shop,default_url:0
 msgid "Default url"
-msgstr "URL por defecto"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,shipped:0
 msgid "Delivered"
-msgstr "Entregado"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,delivery_count:0
 msgid "Delivery"
-msgstr "Entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr "Dirección de entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,grids_id:0
@@ -1198,7 +1054,7 @@ msgstr ""
 #: field:prestashop.sale.order.line,delay:0
 #: field:prestashop.sale.order.line.discount,delay:0
 msgid "Delivery Lead Time"
-msgstr "Plazo de entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,property_delivery_carrier:0
@@ -1207,38 +1063,34 @@ msgstr "Plazo de entrega"
 #: field:prestashop.sale.order,carrier_id:0
 #: field:prestashop.supplier,property_delivery_carrier:0
 msgid "Delivery Method"
-msgstr "Método de entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "Producto de entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr "Dirección de entrega para el pedido de venta actual"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,odoo_id:0
 msgid "Delivery carrier"
-msgstr "Transportista que realiza la entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_form
 #: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
 msgid "Delivery method"
-msgstr "Método de entrega"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,route_ids:0
 #: help:prestashop.product.template,route_ids:0
-msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgid "Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."
 msgstr ""
-"Dependiendo de los módulos instalados, esto le permitirá definir la ruta del "
-"producto si éste va a ser comprado, manufacturado, MTO/MTS,..."
 
 #. module: connector_prestashop
 #: field:prestashop.product.category,description:0
@@ -1248,42 +1100,38 @@ msgstr ""
 #: field:prestashop.sale.order.line,name:0
 #: field:prestashop.sale.order.line.discount,name:0
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_form_view
 msgid "Descriptions"
-msgstr "Descripciones"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination.option.value,sequence:0
 msgid "Determine the display order"
-msgstr "Determinar el pedido a mostrar"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.currency,position:0
-msgid ""
-"Determines where the currency symbol should be placed after or before the "
-"amount."
+msgid "Determines where the currency symbol should be placed after or before the amount."
 msgstr ""
-"Determina dónde se situará el símbolo de la moneda, antes o después de la "
-"cantidad."
 
 #. module: connector_prestashop
 #: field:prestashop.res.lang,direction:0
 msgid "Direction"
-msgstr "Dirección"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order.line,discount:0
 #: field:prestashop.sale.order.line.discount,discount:0
 msgid "Discount (%)"
-msgstr "Descuento (%)"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.backend,discount_product_id:0
 msgid "Discount Product"
-msgstr "Producto para el descuento"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:_import_stock_available,display_name:0
@@ -1320,140 +1168,140 @@ msgstr "Producto para el descuento"
 #: field:sale.order.state,display_name:0
 #: field:sale.order.state.list,display_name:0
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.template,show_price:0
 msgid "Display Price"
-msgstr "Precio a mostrar"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.account.tax,domain:0
 msgid "Domain"
-msgstr "Dominio"
+msgstr ""
 
 #. module: connector_prestashop
 #: selection:sale.order.state.list,name:0
 msgid "Done"
-msgstr "Realizado"
+msgstr ""
 
 #. module: connector_prestashop
 #: selection:sale.order.state.list,name:0
 msgid "Draft Quotation"
-msgstr "Presupuesto en estado borrador"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.refund,date_due:0
 msgid "Due Date"
-msgstr "Fecha de vencimiento"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,ean13:0 field:prestashop.res.partner,ean13:0
+#: field:prestashop.address,ean13:0
+#: field:prestashop.res.partner,ean13:0
 #: field:prestashop.supplier,ean13:0
 msgid "EAN13"
-msgstr "EAN13"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,ean13:0
 #: field:prestashop.product.template,ean13:0
 msgid "EAN13 Barcode"
-msgstr "Código de barras EAN13"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,email:0 field:prestashop.res.partner,email:0
+#: field:prestashop.address,email:0
+#: field:prestashop.res.partner,email:0
 #: field:prestashop.supplier,email:0
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,email_from:0
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found for incoming emails."
+msgid "Email address of the sender. This field is set when no matching partner is found for incoming emails."
 msgstr ""
-"Dirección de email del remitente. Este campo se establece cuando no se "
-"encuentre la empresa en emails recibidos"
 
 #. module: connector_prestashop
-#: field:prestashop.address,employee:0 field:prestashop.res.partner,employee:0
+#: field:prestashop.address,employee:0
+#: field:prestashop.res.partner,employee:0
 #: field:prestashop.supplier,employee:0
 msgid "Employee"
-msgstr "Empleado"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.refund,move_lines:0
 msgid "Entry Lines"
-msgstr "Líneas de entrada"
+msgstr ""
 
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/direct_binder.py:43
 #, python-format
 msgid "Error :"
-msgstr "Error:"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.sale.order,exception_ids:0
 msgid "Exceptions"
-msgstr "Excepciones"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.category,property_account_expense_categ:0
 #: field:prestashop.product.combination,property_account_expense:0
 #: field:prestashop.product.template,property_account_expense:0
 msgid "Expense Account"
-msgstr "Cuenta de gastos"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.product.template:connector_prestashop.product_connector_presta_tree_view
 msgid "Export All Stock"
-msgstr "Exportar todo el stock"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
 msgid "Export in background"
-msgstr "Exportar en segundo plano"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.product.combination:connector_prestashop.combination_connector_presta_tree_view
 msgid "Export quantity"
-msgstr "Exportar cantidad"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
 msgid "Export stock quantities"
-msgstr "Exportar cantidades de stock"
+msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
 msgid "Export tracking"
-msgstr "Seguimiento de exportaciones"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.delivery.carrier,export_tracking:0
 msgid "Export tracking numbers to PrestaShop"
-msgstr "Números de seguimiento de exportaciones a PrestaShop"
+msgstr ""
 
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/direct_binder.py:44
 #, python-format
 msgid "Failed to query %s via PS webservice"
-msgstr "Fallo de la query %s  vía PS webservice"
+msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,fax:0 field:prestashop.res.partner,fax:0
+#: field:prestashop.address,fax:0
+#: field:prestashop.res.partner,fax:0
 #: field:prestashop.supplier,fax:0
 msgid "Fax"
-msgstr "Fax"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.image,extension:0
 msgid "File extension"
-msgstr "Extensión del archivo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.image,filename:0
 msgid "Filename"
-msgstr "Nombre del archivo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,property_account_position:0
@@ -1462,7 +1310,7 @@ msgstr "Nombre del archivo"
 #: field:prestashop.sale.order,fiscal_position:0
 #: field:prestashop.supplier,property_account_position:0
 msgid "Fiscal Position"
-msgstr "Posición Fiscal"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,message_follower_ids:0
@@ -1473,70 +1321,53 @@ msgstr "Posición Fiscal"
 #: field:prestashop.sale.order,message_follower_ids:0
 #: field:prestashop.supplier,message_follower_ids:0
 msgid "Followers"
-msgstr "Seguidores"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
-"Para impuestos con tipo de porcentaje, introduzca el ratio % entre 0-1."
 
 #. module: connector_prestashop
 #: field:prestashop.refund,period_id:0
 msgid "Force Period"
-msgstr "Forzar periodo"
+msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.category,removal_strategy_id:0
 msgid "Force Removal Strategy"
-msgstr "Forzar estrategia de retirada"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,track_incoming:0
 #: help:prestashop.product.template,track_incoming:0
-msgid ""
-"Forces to specify a Serial Number for all moves containing this product and "
-"coming from a Supplier Location"
+msgid "Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"
 msgstr ""
-"Fuerza al especificar un número de serie para todos los movimientos que "
-"contiene este producto y vienen de una Ubicación de Proveedor"
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,track_outgoing:0
 #: help:prestashop.product.template,track_outgoing:0
-msgid ""
-"Forces to specify a Serial Number for all moves containing this product and "
-"going to a Customer Location"
+msgid "Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"
 msgstr ""
-"Fuerza al especificar un número de serie para todos los movimientos que "
-"contiene este producto y vienen de una Ubicación de Cliente"
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,track_all:0
 #: help:prestashop.product.template,track_all:0
-msgid ""
-"Forces to specify a Serial Number on each and every operation related to "
-"this product"
+msgid "Forces to specify a Serial Number on each and every operation related to this product"
 msgstr ""
-"Fuerza al especificar un número de serie en todos los movimientos "
-"relacionados con este producto"
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,virtual_available:0
 #: field:prestashop.product.template,virtual_available:0
 msgid "Forecast Quantity"
-msgstr "Predicción de cantidad"
+msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,virtual_available:0
-msgid ""
-"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
+msgid "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 
 #. module: connector_prestashop
@@ -1574,9 +1405,7 @@ msgstr ""
 #. module: connector_prestashop
 #: help:prestashop.product.combination,packaging_ids:0
 #: help:prestashop.product.template,packaging_ids:0
-msgid ""
-"Gives the different ways to package the same product. This has no impact on "
-"the picking order and is mainly used if you use the EDI module."
+msgid "Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."
 msgstr ""
 
 #. module: connector_prestashop
@@ -1592,14 +1421,9 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,state:0
-msgid ""
-"Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation "
-"occurs               in the invoice validation (Invoice Exception) or in the "
-"picking list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is "
-"confirmed               but waiting for the scheduler to run on the order "
-"date."
+msgid "Gives the status of the quotation or sales order.              \n"
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
 msgstr ""
 
 #. module: connector_prestashop
@@ -1632,33 +1456,43 @@ msgstr ""
 #: help:prestashop.res.partner,message_summary:0
 #: help:prestashop.sale.order,message_summary:0
 #: help:prestashop.supplier,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: connector_prestashop
 #: field:_import_stock_available,id:0
-#: field:connector_prestashop.installed,id:0 field:prestashop.account.tax,id:0
-#: field:prestashop.account.tax.group,id:0 field:prestashop.address,id:0
-#: field:prestashop.backend,id:0 field:prestashop.binding,id:0
-#: field:prestashop.binding.odoo,id:0 field:prestashop.delivery.carrier,id:0
-#: field:prestashop.groups.pricelist,id:0 field:prestashop.mail.message,id:0
+#: field:connector_prestashop.installed,id:0
+#: field:prestashop.account.tax,id:0
+#: field:prestashop.account.tax.group,id:0
+#: field:prestashop.address,id:0
+#: field:prestashop.backend,id:0
+#: field:prestashop.binding,id:0
+#: field:prestashop.binding.odoo,id:0
+#: field:prestashop.delivery.carrier,id:0
+#: field:prestashop.groups.pricelist,id:0
+#: field:prestashop.mail.message,id:0
 #: field:prestashop.product.category,id:0
 #: field:prestashop.product.combination,id:0
 #: field:prestashop.product.combination.option,id:0
 #: field:prestashop.product.combination.option.value,id:0
 #: field:prestashop.product.image,id:0
 #: field:prestashop.product.supplierinfo,id:0
-#: field:prestashop.product.template,id:0 field:prestashop.refund,id:0
-#: field:prestashop.res.country,id:0 field:prestashop.res.currency,id:0
-#: field:prestashop.res.lang,id:0 field:prestashop.res.partner,id:0
-#: field:prestashop.res.partner.category,id:0 field:prestashop.sale.order,id:0
+#: field:prestashop.product.template,id:0
+#: field:prestashop.refund,id:0
+#: field:prestashop.res.country,id:0
+#: field:prestashop.res.currency,id:0
+#: field:prestashop.res.lang,id:0
+#: field:prestashop.res.partner,id:0
+#: field:prestashop.res.partner.category,id:0
+#: field:prestashop.sale.order,id:0
 #: field:prestashop.sale.order.line,id:0
 #: field:prestashop.sale.order.line.discount,id:0
-#: field:prestashop.sale.order.state,id:0 field:prestashop.shop,id:0
-#: field:prestashop.shop.group,id:0 field:prestashop.supplier,id:0
-#: field:sale.order.state,id:0 field:sale.order.state.list,id:0
+#: field:prestashop.sale.order.state,id:0
+#: field:prestashop.shop,id:0
+#: field:prestashop.shop.group,id:0
+#: field:prestashop.supplier,id:0
+#: field:sale.order.state,id:0
+#: field:sale.order.state.list,id:0
 msgid "ID"
 msgstr ""
 
@@ -1727,99 +1561,68 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,applicable_type:0
-msgid ""
-"If not applicable (computed through a Python code), the tax won't appear on "
-"the invoice."
+msgid "If not applicable (computed through a Python code), the tax won't appear on the invoice."
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,opt_out:0 help:prestashop.res.partner,opt_out:0
+#: help:prestashop.address,opt_out:0
+#: help:prestashop.res.partner,opt_out:0
 #: help:prestashop.supplier,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails for mass "
-"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
-"users to filter the partners when performing mass mailing."
+msgid "If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,valuation:0
 #: help:prestashop.product.template,valuation:0
-msgid ""
-"If real-time valuation is enabled for a product, the system will "
-"automatically write journal entries corresponding to stock moves, with "
-"product price as specified by the 'Costing Method'The inventory variation "
-"account set on the product category will represent the current inventory "
-"value, and the stock input and stock output account will hold the "
-"counterpart moves for incoming and outgoing products."
+msgid "If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.delivery.carrier,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the delivery "
-"carrier without removing it."
+msgid "If the active field is set to False, it will allow you to hide the delivery carrier without removing it."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the tax "
-"without removing it."
+msgid "If the active field is set to False, it will allow you to hide the tax without removing it."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.delivery.carrier,free_if_more_than:0
-msgid ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
+msgid "If the order is more expensive than a certain amount, the customer can benefit from a free shipping"
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,lang:0 help:prestashop.res.partner,lang:0
+#: help:prestashop.address,lang:0
+#: help:prestashop.res.partner,lang:0
 #: help:prestashop.supplier,lang:0
-msgid ""
-"If the selected language is loaded in the system, all documents related to "
-"this contact will be printed in this language. If not, it will be English."
+msgid "If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.groups.pricelist,active:0
-msgid ""
-"If unchecked, it will allow you to hide the pricelist without removing it."
+msgid "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,active:0
 #: help:prestashop.product.template,active:0
-msgid ""
-"If unchecked, it will allow you to hide the product without removing it."
+msgid "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.image,product_variant_ids:0
-msgid ""
-"If you leave it empty, all variants will show this image. Selecting one or "
-"several of the available variants, you restrict the availability of the "
-"image to those variants."
+msgid "If you leave it empty, all variants will show this image. Selecting one or several of the available variants, you restrict the availability of the image to those variants."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.refund,payment_term:0
-msgid ""
-"If you use payment terms, the due date will be computed automatically at the "
-"generation of accounting entries. If you keep the payment term and the due "
-"date empty, it means direct payment. The payment term may compute several "
-"due dates, for example 50% now, 50% in one month."
+msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.refund,date_due:0
-msgid ""
-"If you use payment terms, the due date will be computed automatically at the "
-"generation of accounting entries. The payment term may compute several due "
-"dates, for example 50% now and 50% in one month, but if you want to force a "
-"due date, make sure that the payment term is not set on the invoice. If you "
-"keep the payment term and the due date empty, it means direct payment."
+msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."
 msgstr ""
 
 #. module: connector_prestashop
@@ -1828,13 +1631,16 @@ msgid "Ignore Exceptions"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,image:0 field:prestashop.res.country,image:0
-#: field:prestashop.res.partner,image:0 field:prestashop.supplier,image:0
+#: field:prestashop.address,image:0
+#: field:prestashop.res.country,image:0
+#: field:prestashop.res.partner,image:0
+#: field:prestashop.supplier,image:0
 msgid "Image"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.product.image,path:0 help:prestashop.product.image,path:0
+#: field:prestashop.product.image,path:0
+#: help:prestashop.product.image,path:0
 msgid "Image path"
 msgstr ""
 
@@ -1936,9 +1742,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.delivery.carrier,id_reference:0
-msgid ""
-"In PrestaShop, carriers can be copied with the same 'Reference ID' (only the "
-"last copied carrier will be synchronized with the ERP)"
+msgid "In PrestaShop, carriers can be copied with the same 'Reference ID' (only the last copied carrier will be synchronized with the ERP)"
 msgstr ""
 
 #. module: connector_prestashop
@@ -1966,9 +1770,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,include_base_amount:0
-msgid ""
-"Indicates if the amount of tax must be included in the base amount for the "
-"computation of the next taxes"
+msgid "Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"
 msgstr ""
 
 #. module: connector_prestashop
@@ -1995,9 +1797,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,incoterm:0
-msgid ""
-"International Commercial Terms are a series of predefined commercial terms "
-"used in international transactions."
+msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
 msgstr ""
 
 #. module: connector_prestashop
@@ -2137,9 +1937,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.refund,reconciled:0
-msgid ""
-"It indicates that the invoice has been paid and the journal entry of the "
-"invoice has been reconciled with one or several journal entries of payment."
+msgid "It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment."
 msgstr ""
 
 #. module: connector_prestashop
@@ -2148,7 +1946,8 @@ msgid "It indicates that the invoice has been sent."
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,function:0 field:prestashop.res.partner,function:0
+#: field:prestashop.address,function:0
+#: field:prestashop.res.partner,function:0
 #: field:prestashop.supplier,function:0
 msgid "Job Position"
 msgstr ""
@@ -2159,7 +1958,8 @@ msgid "Journal"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.refund,move_id:0 field:prestashop.refund,move_name:0
+#: field:prestashop.refund,move_id:0
+#: field:prestashop.refund,move_name:0
 msgid "Journal Entry"
 msgstr ""
 
@@ -2172,8 +1972,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.delivery.carrier,normal_price:0
-msgid ""
-"Keep empty if the pricing depends on the advanced pricing per destination"
+msgid "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
 
 #. module: connector_prestashop
@@ -2187,8 +1986,10 @@ msgid "Keep empty to use the period of the validation(invoice) date."
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,lang:0 field:prestashop.res.lang,odoo_id:0
-#: field:prestashop.res.partner,lang:0 field:prestashop.supplier,lang:0
+#: field:prestashop.address,lang:0
+#: field:prestashop.res.lang,odoo_id:0
+#: field:prestashop.res.partner,lang:0
+#: field:prestashop.supplier,lang:0
 msgid "Language"
 msgstr ""
 
@@ -2251,7 +2052,8 @@ msgstr ""
 #: field:_import_stock_available,write_uid:0
 #: field:prestashop.account.tax,write_uid:0
 #: field:prestashop.account.tax.group,write_uid:0
-#: field:prestashop.address,write_uid:0 field:prestashop.backend,write_uid:0
+#: field:prestashop.address,write_uid:0
+#: field:prestashop.backend,write_uid:0
 #: field:prestashop.delivery.carrier,write_uid:0
 #: field:prestashop.groups.pricelist,write_uid:0
 #: field:prestashop.mail.message,write_uid:0
@@ -2272,8 +2074,10 @@ msgstr ""
 #: field:prestashop.sale.order.line,write_uid:0
 #: field:prestashop.sale.order.line.discount,write_uid:0
 #: field:prestashop.sale.order.state,write_uid:0
-#: field:prestashop.shop,write_uid:0 field:prestashop.shop.group,write_uid:0
-#: field:prestashop.supplier,write_uid:0 field:sale.order.state,write_uid:0
+#: field:prestashop.shop,write_uid:0
+#: field:prestashop.shop.group,write_uid:0
+#: field:prestashop.supplier,write_uid:0
+#: field:sale.order.state,write_uid:0
 #: field:sale.order.state.list,write_uid:0
 msgid "Last Updated by"
 msgstr ""
@@ -2282,7 +2086,8 @@ msgstr ""
 #: field:_import_stock_available,write_date:0
 #: field:prestashop.account.tax,write_date:0
 #: field:prestashop.account.tax.group,write_date:0
-#: field:prestashop.address,write_date:0 field:prestashop.backend,write_date:0
+#: field:prestashop.address,write_date:0
+#: field:prestashop.backend,write_date:0
 #: field:prestashop.delivery.carrier,write_date:0
 #: field:prestashop.groups.pricelist,write_date:0
 #: field:prestashop.mail.message,write_date:0
@@ -2303,8 +2108,10 @@ msgstr ""
 #: field:prestashop.sale.order.line,write_date:0
 #: field:prestashop.sale.order.line.discount,write_date:0
 #: field:prestashop.sale.order.state,write_date:0
-#: field:prestashop.shop,write_date:0 field:prestashop.shop.group,write_date:0
-#: field:prestashop.supplier,write_date:0 field:sale.order.state,write_date:0
+#: field:prestashop.shop,write_date:0
+#: field:prestashop.shop.group,write_date:0
+#: field:prestashop.supplier,write_date:0
+#: field:sale.order.state,write_date:0
 #: field:sale.order.state.list,write_date:0
 msgid "Last Updated on"
 msgstr ""
@@ -2327,7 +2134,8 @@ msgstr ""
 #. module: connector_prestashop
 #: field:prestashop.account.tax,sync_date:0
 #: field:prestashop.account.tax.group,sync_date:0
-#: field:prestashop.address,sync_date:0 field:prestashop.binding,sync_date:0
+#: field:prestashop.address,sync_date:0
+#: field:prestashop.binding,sync_date:0
 #: field:prestashop.binding.odoo,sync_date:0
 #: field:prestashop.delivery.carrier,sync_date:0
 #: field:prestashop.groups.pricelist,sync_date:0
@@ -2349,7 +2157,8 @@ msgstr ""
 #: field:prestashop.sale.order.line,sync_date:0
 #: field:prestashop.sale.order.line.discount,sync_date:0
 #: field:prestashop.sale.order.state,sync_date:0
-#: field:prestashop.shop,sync_date:0 field:prestashop.shop.group,sync_date:0
+#: field:prestashop.shop,sync_date:0
+#: field:prestashop.shop.group,sync_date:0
 #: field:prestashop.supplier,sync_date:0
 msgid "Last synchronization date"
 msgstr ""
@@ -2363,10 +2172,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.supplierinfo,delay:0
-msgid ""
-"Lead time in days between the confirmation of the purchase order and the "
-"receipt of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
+msgid "Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
 msgstr ""
 
 #. module: connector_prestashop
@@ -2463,18 +2269,12 @@ msgstr ""
 #: help:prestashop.address,image_medium:0
 #: help:prestashop.res.partner,image_medium:0
 #: help:prestashop.supplier,image_medium:0
-msgid ""
-"Medium-sized image of this contact. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
+msgid "Medium-sized image of this contact. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.image,image_medium:0
-msgid ""
-"Medium-sized image. It is automatically resized as a 128 x 128 px image, "
-"with aspect ratio preserved, only when the image exceeds one of those sizes. "
-"Use this field in form views or kanban views."
+msgid "Medium-sized image. It is automatically resized as a 128 x 128 px image, with aspect ratio preserved, only when the image exceeds one of those sizes. Use this field in form views or kanban views."
 msgstr ""
 
 #. module: connector_prestashop
@@ -2490,9 +2290,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,type:0
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
+msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
 msgstr ""
 
 #. module: connector_prestashop
@@ -2553,22 +2351,27 @@ msgid "Minimum Stock Rules"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,mobile:0 field:prestashop.res.partner,mobile:0
+#: field:prestashop.address,mobile:0
+#: field:prestashop.res.partner,mobile:0
 #: field:prestashop.supplier,mobile:0
 msgid "Mobile"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.account.tax.group,name:0 field:prestashop.address,name:0
+#: field:prestashop.account.tax.group,name:0
+#: field:prestashop.address,name:0
 #: field:prestashop.backend,name:0
 #: field:prestashop.product.category,complete_name:0
 #: field:prestashop.product.category,name:0
 #: field:prestashop.product.combination,name:0
 #: field:prestashop.product.combination.option,name:0
-#: field:prestashop.product.template,name:0 field:prestashop.res.lang,name:0
+#: field:prestashop.product.template,name:0
+#: field:prestashop.res.lang,name:0
 #: field:prestashop.res.partner,name:0
-#: field:prestashop.sale.order.state,name:0 field:prestashop.shop,name:0
-#: field:prestashop.shop.group,name:0 field:prestashop.supplier,name:0
+#: field:prestashop.sale.order.state,name:0
+#: field:prestashop.shop,name:0
+#: field:prestashop.shop.group,name:0
+#: field:prestashop.supplier,name:0
 #: field:sale.order.state,name:0
 msgid "Name"
 msgstr ""
@@ -2608,9 +2411,7 @@ msgstr ""
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/importer.py:444
 #, python-format
-msgid ""
-"No language could be found for the Prestashop lang with id \"%s\". Run "
-"\"Synchronize base data\" again."
+msgid "No language could be found for the Prestashop lang with id \"%s\". Run \"Synchronize base data\" again."
 msgstr ""
 
 #. module: connector_prestashop
@@ -2630,7 +2431,8 @@ msgid "Normal Price"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,comment:0 field:prestashop.res.partner,comment:0
+#: field:prestashop.address,comment:0
+#: field:prestashop.res.partner,comment:0
 #: field:prestashop.supplier,comment:0
 msgid "Notes"
 msgstr ""
@@ -2666,9 +2468,7 @@ msgstr ""
 #. module: connector_prestashop
 #: help:prestashop.sale.order.line,delay:0
 #: help:prestashop.sale.order.line.discount,delay:0
-msgid ""
-"Number of days between the order confirmation and the shipping of the "
-"products to the customer"
+msgid "Number of days between the order confirmation and the shipping of the products to the customer"
 msgstr ""
 
 #. module: connector_prestashop
@@ -2693,19 +2493,14 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,order_policy:0
-msgid ""
-"On demand: A draft invoice can be created from the sales order when "
-"needed. \n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
+msgid "On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
 msgstr ""
 
 #. module: connector_prestashop
 #: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
-msgid ""
-"Once imported,\n"
+msgid "Once imported,\n"
 "                                    some types of records,\n"
 "                                    like the products or categories,\n"
 "                                    need a manual review.\n"
@@ -2715,7 +2510,8 @@ msgid ""
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,opt_out:0 field:prestashop.res.partner,opt_out:0
+#: field:prestashop.address,opt_out:0
+#: field:prestashop.res.partner,opt_out:0
 #: field:prestashop.supplier,opt_out:0
 msgid "Opt-Out"
 msgstr ""
@@ -2810,8 +2606,10 @@ msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_res_partner
-#: field:prestashop.address,odoo_id:0 field:prestashop.refund,partner_id:0
-#: field:prestashop.res.partner,odoo_id:0 field:prestashop.supplier,odoo_id:0
+#: field:prestashop.address,odoo_id:0
+#: field:prestashop.refund,partner_id:0
+#: field:prestashop.res.partner,odoo_id:0
+#: field:prestashop.supplier,odoo_id:0
 msgid "Partner"
 msgstr ""
 
@@ -2832,8 +2630,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,notified_partner_ids:0
-msgid ""
-"Partners that have a notification pushing this message in their mailboxes"
+msgid "Partners that have a notification pushing this message in their mailboxes"
 msgstr ""
 
 #. module: connector_prestashop
@@ -2880,15 +2677,15 @@ msgid "Paypal Url"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,phone:0 field:prestashop.res.partner,phone:0
+#: field:prestashop.address,phone:0
+#: field:prestashop.res.partner,phone:0
 #: field:prestashop.supplier,phone:0
 msgid "Phone"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,picking_policy:0
-msgid ""
-"Pick 'Deliver each product when available' if you allow partial delivery."
+msgid "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
 
 #. module: connector_prestashop
@@ -2900,8 +2697,7 @@ msgstr ""
 #: help:prestashop.address,notify_email:0
 #: help:prestashop.res.partner,notify_email:0
 #: help:prestashop.supplier,notify_email:0
-msgid ""
-"Policy to receive emails for new messages pushed to your personal Inbox:\n"
+msgid "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
 msgstr ""
@@ -2971,7 +2767,8 @@ msgstr ""
 #: field:prestashop.sale.order.line,backend_id:0
 #: field:prestashop.sale.order.line.discount,backend_id:0
 #: field:prestashop.sale.order.state,backend_id:0
-#: field:prestashop.shop,backend_id:0 field:prestashop.shop.group,backend_id:0
+#: field:prestashop.shop,backend_id:0
+#: field:prestashop.shop.group,backend_id:0
 #: field:prestashop.supplier,backend_id:0
 msgid "PrestaShop Backend"
 msgstr ""
@@ -3232,9 +3029,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination.option.value,price_extra:0
-msgid ""
-"Price Extra: Extra price for the variant with this attribute value on sale "
-"price. eg. 200 price extra, 1000 + 200 = 1200."
+msgid "Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
 
 #. module: connector_prestashop
@@ -3452,26 +3247,18 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,incoming_qty:0
-msgid ""
-"Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
+msgid "Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,outgoing_qty:0
-msgid ""
-"Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
+msgid "Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 
 #. module: connector_prestashop
@@ -3615,9 +3402,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,reply_to:0
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
+msgid "Reply email address. Setting the reply_to bypasses the automatic thread creation."
 msgstr ""
 
 #. module: connector_prestashop
@@ -3745,7 +3530,8 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,section_id:0 field:prestashop.refund,section_id:0
+#: field:prestashop.address,section_id:0
+#: field:prestashop.refund,section_id:0
 #: field:prestashop.res.partner,section_id:0
 #: field:prestashop.sale.order,section_id:0
 #: field:prestashop.supplier,section_id:0
@@ -3753,7 +3539,8 @@ msgid "Sales Team"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,user_id:0 field:prestashop.refund,user_id:0
+#: field:prestashop.address,user_id:0
+#: field:prestashop.refund,user_id:0
 #: field:prestashop.res.partner,user_id:0
 #: field:prestashop.sale.order,user_id:0
 #: field:prestashop.sale.order.line,salesman_id:0
@@ -3777,9 +3564,7 @@ msgstr ""
 #: help:prestashop.address,use_parent_address:0
 #: help:prestashop.res.partner,use_parent_address:0
 #: help:prestashop.supplier,use_parent_address:0
-msgid ""
-"Select this if you want to set company's address information  for this "
-"contact"
+msgid "Select this if you want to set company's address information  for this contact"
 msgstr ""
 
 #. module: connector_prestashop
@@ -3810,46 +3595,32 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.category,removal_strategy_id:0
-msgid ""
-"Set a specific removal strategy that will be used regardless of the source "
-"location for this product category"
+msgid "Set a specific removal strategy that will be used regardless of the source location for this product category"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,child_depend:0
-msgid ""
-"Set if the tax computation is based on the computation of child taxes rather "
-"than on the total amount."
+msgid "Set if the tax computation is based on the computation of child taxes rather than on the total amount."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,account_collected_id:0
-msgid ""
-"Set the account that will be set by default on invoice tax lines for "
-"invoices. Leave empty to use the expense account."
+msgid "Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,account_paid_id:0
-msgid ""
-"Set the account that will be set by default on invoice tax lines for "
-"refunds. Leave empty to use the expense account."
+msgid "Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,account_analytic_collected_id:0
-msgid ""
-"Set the analytic account that will be used by default on the invoice tax "
-"lines for invoices. Leave empty if you don't want to use an analytic account "
-"on the invoice tax lines by default."
+msgid "Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,account_analytic_paid_id:0
-msgid ""
-"Set the analytic account that will be used by default on the invoice tax "
-"lines for refunds. Leave empty if you don't want to use an analytic account "
-"on the invoice tax lines by default."
+msgid "Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."
 msgstr ""
 
 #. module: connector_prestashop
@@ -3935,30 +3706,24 @@ msgstr ""
 #: help:prestashop.address,image_small:0
 #: help:prestashop.res.partner,image_small:0
 #: help:prestashop.supplier,image_small:0
-msgid ""
-"Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+msgid "Small-sized image of this contact. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.image,image_small:0
-msgid ""
-"Small-sized image. It is automatically resized as a 64 x 64 px image, with "
-"aspect ratio preserved. Use this field anywhere a small image is required."
+msgid "Small-sized image. It is automatically resized as a 64 x 64 px image, with aspect ratio preserved. Use this field anywhere a small image is required."
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.refund,origin:0 field:prestashop.sale.order,origin:0
+#: field:prestashop.refund,origin:0
+#: field:prestashop.sale.order,origin:0
 msgid "Source Document"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,uos_id:0
 #: help:prestashop.product.template,uos_id:0
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
+msgid "Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure."
 msgstr ""
 
 #. module: connector_prestashop
@@ -3975,24 +3740,16 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.template,cost_method:0
-msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+msgid "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,cost_method:0
-msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and "
-"used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing "
-"product (will be use in case of inventory loss for example)."
+msgid "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4001,7 +3758,8 @@ msgid "Starred"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,state_id:0 field:prestashop.res.partner,state_id:0
+#: field:prestashop.address,state_id:0
+#: field:prestashop.res.partner,state_id:0
 #: field:prestashop.supplier,state_id:0
 msgid "State"
 msgstr ""
@@ -4013,7 +3771,8 @@ msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,state:0
-#: field:prestashop.product.template,state:0 field:prestashop.refund,state:0
+#: field:prestashop.product.template,state:0
+#: field:prestashop.refund,state:0
 #: field:prestashop.sale.order,state:0
 #: field:prestashop.sale.order.line,state:0
 #: field:prestashop.sale.order.line.discount,state:0
@@ -4065,13 +3824,15 @@ msgid "Stores"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,street:0 field:prestashop.res.partner,street:0
+#: field:prestashop.address,street:0
+#: field:prestashop.res.partner,street:0
 #: field:prestashop.supplier,street:0
 msgid "Street"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,street2:0 field:prestashop.res.partner,street2:0
+#: field:prestashop.address,street2:0
+#: field:prestashop.res.partner,street2:0
 #: field:prestashop.supplier,street2:0
 msgid "Street2"
 msgstr ""
@@ -4216,7 +3977,8 @@ msgid "Synchronize Metadata"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,vat:0 field:prestashop.res.partner,vat:0
+#: field:prestashop.address,vat:0
+#: field:prestashop.res.partner,vat:0
 #: field:prestashop.supplier,vat:0
 msgid "TIN"
 msgstr ""
@@ -4230,7 +3992,8 @@ msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_account_tax
-#: field:prestashop.account.tax,odoo_id:0 field:prestashop.refund,amount_tax:0
+#: field:prestashop.account.tax,odoo_id:0
+#: field:prestashop.refund,amount_tax:0
 msgid "Tax"
 msgstr ""
 
@@ -4258,11 +4021,10 @@ msgid "Tax Group"
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,vat:0 help:prestashop.res.partner,vat:0
+#: help:prestashop.address,vat:0
+#: help:prestashop.res.partner,vat:0
 #: help:prestashop.supplier,vat:0
-msgid ""
-"Tax Identification Number. Check the box if this contact is subjected to "
-"taxes. Used by the some of the legal statements."
+msgid "Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4306,9 +4068,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.mail.message,notification_ids:0
-msgid ""
-"Technical field holding the message notifications. Use notified_partner_ids "
-"to access notified partners."
+msgid "Technical field holding the message notifications. Use notified_partner_ids to access notified partners."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4328,18 +4088,13 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.country,code:0
-msgid ""
-"The ISO country code in two chars.\n"
+msgid "The ISO country code in two chars.\n"
 "You can use this field for quick search."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.lang,grouping:0
-msgid ""
-"The Separator Format should be like [,n] where 0 < n :starting from Unit "
-"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
-"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
-"106,500. Provided ',' as the thousand separator in each case."
+msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4349,16 +4104,13 @@ msgstr ""
 
 #. module: connector_prestashop
 #: model:sale.exception,description:connector_prestashop.excep_order_wrong_total_amount
-msgid ""
-"The amount computed in Odoo doesn't match with the amount in PrestaShop.\n"
+msgid "The amount computed in Odoo doesn't match with the amount in PrestaShop.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between Odoo and PrestaShop. A fiscal "
-"position could have changed the final price.\n"
+"The taxes are probably different between Odoo and PrestaShop. A fiscal position could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if "
-"necessary."
+"Check your taxes and fiscal positions configuration and correct them if necessary."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4374,16 +4126,12 @@ msgstr ""
 #. module: connector_prestashop
 #: help:prestashop.product.combination,sale_delay:0
 #: help:prestashop.product.template,sale_delay:0
-msgid ""
-"The average delay in days between the confirmation of the customer order and "
-"the delivery of the finished products. It's the time you promise to your "
-"customers."
+msgid "The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.refund,commercial_partner_id:0
-msgid ""
-"The commercial entity that will be used on Journal Entries for this invoice"
+msgid "The commercial entity that will be used on Journal Entries for this invoice"
 msgstr ""
 
 #. module: connector_prestashop
@@ -4395,8 +4143,7 @@ msgstr ""
 #: help:prestashop.address,property_account_position:0
 #: help:prestashop.res.partner,property_account_position:0
 #: help:prestashop.supplier,property_account_position:0
-msgid ""
-"The fiscal position will determine taxes and accounts used for the partner."
+msgid "The fiscal position will determine taxes and accounts used for the partner."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4411,19 +4158,15 @@ msgid "The gross weight in Kg."
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,user_id:0 help:prestashop.res.partner,user_id:0
+#: help:prestashop.address,user_id:0
+#: help:prestashop.res.partner,user_id:0
 #: help:prestashop.supplier,user_id:0
-msgid ""
-"The internal user that is in charge of communicating with this contact if "
-"any."
+msgid "The internal user that is in charge of communicating with this contact if any."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
+msgid "The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4453,19 +4196,15 @@ msgid "The partner that is doing the delivery service."
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,tz:0 help:prestashop.res.partner,tz:0
+#: help:prestashop.address,tz:0
+#: help:prestashop.res.partner,tz:0
 #: help:prestashop.supplier,tz:0
-msgid ""
-"The partner's timezone, used to output proper date and time values inside "
-"printed reports. It is important to set a value for this field. You should "
-"use the same timezone that is otherwise used to pick and render date and "
-"time values: your computer's timezone."
+msgid "The partner's timezone, used to output proper date and time values inside printed reports. It is important to set a value for this field. You should use the same timezone that is otherwise used to pick and render date and time values: your computer's timezone."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.currency,rate_silent:0
-msgid ""
-"The rate of the currency to the currency of rate 1 (0 if no rate defined)."
+msgid "The rate of the currency to the currency of rate 1 (0 if no rate defined)."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4480,25 +4219,18 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,sequence:0
-msgid ""
-"The sequence field is used to order the tax lines from the lowest sequences "
-"to the higher ones. The order is important if you have a tax with several "
-"tax children. In this case, the evaluation order is important."
+msgid "The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."
 msgstr ""
 
 #. module: connector_prestashop
 #: model:sale.exception,description:connector_prestashop.excep_order_wrong_total_amount_tax
-msgid ""
-"The tax amount computed in Odoo doesn't match with the tax amount in "
-"PrestaShop.\n"
+msgid "The tax amount computed in Odoo doesn't match with the tax amount in PrestaShop.\n"
 "\n"
 "Cause:\n"
-"The taxes are probably different between Odoo and PrestaShop. A fiscal "
-"position could have changed the final price.\n"
+"The taxes are probably different between Odoo and PrestaShop. A fiscal position could have changed the final price.\n"
 "\n"
 "Resolution:\n"
-"Check your taxes and fiscal positions configuration and correct them if "
-"necessary."
+"Check your taxes and fiscal positions configuration and correct them if necessary."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4525,17 +4257,13 @@ msgstr ""
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_account_expense:0
 #: help:prestashop.product.template,property_account_expense:0
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
+msgid "This account will be used for invoices instead of the default one to value expenses for the current product."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_account_income:0
 #: help:prestashop.product.template,property_account_income:0
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
+msgid "This account will be used for invoices instead of the default one to value sales for the current product."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4552,18 +4280,14 @@ msgstr ""
 #: help:prestashop.address,property_account_payable:0
 #: help:prestashop.res.partner,property_account_payable:0
 #: help:prestashop.supplier,property_account_payable:0
-msgid ""
-"This account will be used instead of the default one as the payable account "
-"for the current partner"
+msgid "This account will be used instead of the default one as the payable account for the current partner"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,property_account_receivable:0
 #: help:prestashop.res.partner,property_account_receivable:0
 #: help:prestashop.supplier,property_account_receivable:0
-msgid ""
-"This account will be used instead of the default one as the receivable "
-"account for the current partner"
+msgid "This account will be used instead of the default one as the receivable account for the current partner"
 msgstr ""
 
 #. module: connector_prestashop
@@ -4579,32 +4303,25 @@ msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,image:0 help:prestashop.res.partner,image:0
+#: help:prestashop.address,image:0
+#: help:prestashop.res.partner,image:0
 #: help:prestashop.supplier,image:0
-msgid ""
-"This field holds the image used as avatar for this contact, limited to "
-"1024x1024px"
+msgid "This field holds the image used as avatar for this contact, limited to 1024x1024px"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,image_variant:0
-msgid ""
-"This field holds the image used as image for the product variant, limited to "
-"1024x1024px."
+msgid "This field holds the image used as image for the product variant, limited to 1024x1024px."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.account.tax,domain:0
-msgid ""
-"This field is only used if you develop your own module allowing developers "
-"to create specific taxes in a custom domain."
+msgid "This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.partner,default_category_id:0
-msgid ""
-"This field is synchronized with the field 'Default customer group' in "
-"PrestaShop."
+msgid "This field is synchronized with the field 'Default customer group' in PrestaShop."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4626,18 +4343,12 @@ msgstr ""
 #. module: connector_prestashop
 #: help:prestashop.product.combination,seller_delay:0
 #: help:prestashop.product.template,seller_delay:0
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default supplier. It is used "
-"by the scheduler to order requests based on reordering delays."
+msgid "This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.sale.order,invoice_ids:0
-msgid ""
-"This is the list of invoices that have been generated for this sales order. "
-"The same sales order may have been invoiced in several times (by line for "
-"example)."
+msgid "This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4654,92 +4365,70 @@ msgstr ""
 #: help:prestashop.address,property_supplier_payment_term:0
 #: help:prestashop.res.partner,property_supplier_payment_term:0
 #: help:prestashop.supplier,property_supplier_payment_term:0
-msgid ""
-"This payment term will be used instead of the default one for purchase "
-"orders and supplier invoices"
+msgid "This payment term will be used instead of the default one for purchase orders and supplier invoices"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,property_payment_term:0
 #: help:prestashop.res.partner,property_payment_term:0
 #: help:prestashop.supplier,property_payment_term:0
-msgid ""
-"This payment term will be used instead of the default one for sale orders "
-"and customer invoices"
+msgid "This payment term will be used instead of the default one for sale orders and customer invoices"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,property_product_pricelist_purchase:0
 #: help:prestashop.res.partner,property_product_pricelist_purchase:0
 #: help:prestashop.supplier,property_product_pricelist_purchase:0
-msgid ""
-"This pricelist will be used, instead of the default one, for purchases from "
-"the current partner"
+msgid "This pricelist will be used, instead of the default one, for purchases from the current partner"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,property_product_pricelist:0
 #: help:prestashop.res.partner,property_product_pricelist:0
 #: help:prestashop.supplier,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
+msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,property_stock_customer:0
 #: help:prestashop.res.partner,property_stock_customer:0
 #: help:prestashop.supplier,property_stock_customer:0
-msgid ""
-"This stock location will be used, instead of the default one, as the "
-"destination location for goods you send to this partner"
+msgid "This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.address,property_stock_supplier:0
 #: help:prestashop.res.partner,property_stock_supplier:0
 #: help:prestashop.supplier,property_stock_supplier:0
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for goods you receive from the current partner"
+msgid "This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_stock_production:0
 #: help:prestashop.product.template,property_stock_production:0
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated by manufacturing orders."
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by manufacturing orders."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_stock_procurement:0
 #: help:prestashop.product.template,property_stock_procurement:0
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated by procurements."
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by procurements."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_stock_inventory:0
 #: help:prestashop.product.template,property_stock_inventory:0
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated when you do an inventory."
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.supplierinfo,product_code:0
-msgid ""
-"This supplier's product code will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
+msgid "This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.supplierinfo,product_name:0
-msgid ""
-"This supplier's product name will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
+msgid "This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4753,7 +4442,8 @@ msgid "Time Format"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,tz:0 field:prestashop.res.partner,tz:0
+#: field:prestashop.address,tz:0
+#: field:prestashop.res.partner,tz:0
 #: field:prestashop.supplier,tz:0
 msgid "Timezone"
 msgstr ""
@@ -4766,7 +4456,8 @@ msgid "Timezone offset"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,title:0 field:prestashop.res.partner,title:0
+#: field:prestashop.address,title:0
+#: field:prestashop.res.partner,title:0
 #: field:prestashop.supplier,title:0
 msgid "Title"
 msgstr ""
@@ -4805,13 +4496,15 @@ msgid "Total Invoiced"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,debit:0 field:prestashop.res.partner,debit:0
+#: field:prestashop.address,debit:0
+#: field:prestashop.res.partner,debit:0
 #: field:prestashop.supplier,debit:0
 msgid "Total Payable"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,credit:0 field:prestashop.res.partner,credit:0
+#: field:prestashop.address,credit:0
+#: field:prestashop.res.partner,credit:0
 #: field:prestashop.supplier,credit:0
 msgid "Total Receivable"
 msgstr ""
@@ -4827,13 +4520,15 @@ msgid "Total amount in PrestaShop"
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,credit:0 help:prestashop.res.partner,credit:0
+#: help:prestashop.address,credit:0
+#: help:prestashop.res.partner,credit:0
 #: help:prestashop.supplier,credit:0
 msgid "Total amount this customer owes you."
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,debit:0 help:prestashop.res.partner,debit:0
+#: help:prestashop.address,debit:0
+#: help:prestashop.res.partner,debit:0
 #: help:prestashop.supplier,debit:0
 msgid "Total amount you have to pay to this supplier."
 msgstr ""
@@ -4891,9 +4586,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.refund,internal_number:0
-msgid ""
-"Unique number of the invoice, computed automatically when the invoice is "
-"created."
+msgid "Unique number of the invoice, computed automatically when the invoice is created."
 msgstr ""
 
 #. module: connector_prestashop
@@ -4976,15 +4669,15 @@ msgid "Use this code for the tax declaration."
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,type:0 help:prestashop.res.partner,type:0
+#: help:prestashop.address,type:0
+#: help:prestashop.res.partner,type:0
 #: help:prestashop.supplier,type:0
-msgid ""
-"Used to select automatically the right address according to the context in "
-"sales and purchases documents."
+msgid "Used to select automatically the right address according to the context in sales and purchases documents."
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,user_ids:0 field:prestashop.res.partner,user_ids:0
+#: field:prestashop.address,user_ids:0
+#: field:prestashop.res.partner,user_ids:0
 #: field:prestashop.supplier,user_ids:0
 msgid "Users"
 msgstr ""
@@ -5100,13 +4793,15 @@ msgid "Webservice key"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,website:0 field:prestashop.res.partner,website:0
+#: field:prestashop.address,website:0
+#: field:prestashop.res.partner,website:0
 #: field:prestashop.supplier,website:0
 msgid "Website"
 msgstr ""
 
 #. module: connector_prestashop
-#: help:prestashop.address,website:0 help:prestashop.res.partner,website:0
+#: help:prestashop.address,website:0
+#: help:prestashop.res.partner,website:0
 #: help:prestashop.supplier,website:0
 msgid "Website of Partner or Company"
 msgstr ""
@@ -5124,72 +4819,46 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.category,property_stock_account_input_categ:0
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
+msgid "When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account set on the source location. This is the default value for all products in this category. It can also directly be set on each product"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_stock_account_input:0
 #: help:prestashop.product.template,property_stock_account_input:0
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. When not set on the "
-"product, the one from the product category is used."
+msgid "When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.category,property_stock_account_output_categ:0
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
+msgid "When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless there is a specific valuation account set on the destination location. This is the default value for all products in this category. It can also directly be set on each product"
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.combination,property_stock_account_output:0
 #: help:prestashop.product.template,property_stock_account_output:0
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. When not set on "
-"the product, the one from the product category is used."
+msgid "When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.category,property_stock_journal:0
-msgid ""
-"When doing real-time inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
+msgid "When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.category,property_stock_valuation_account_id:0
-msgid ""
-"When real-time inventory valuation is enabled on a product, this account "
-"will hold the current value of the products."
+msgid "When real-time inventory valuation is enabled on a product, this account will hold the current value of the products."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.product.supplierinfo,product_id:0
-msgid ""
-"When this field is filled in, the vendor data will onlyapply to the variant."
+msgid "When this field is filled in, the vendor data will onlyapply to the variant."
 msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.res.country,address_format:0
-msgid ""
-"You can state here the usual format to use for the addresses belonging to "
-"this country.\n"
+msgid "You can state here the usual format to use for the addresses belonging to this country.\n"
 "\n"
-"You can use the python-style string patern with all the field of the address "
-"(for example, use '%(street)s' to display the field 'street') plus\n"
+"You can use the python-style string patern with all the field of the address (for example, use '%(street)s' to display the field 'street') plus\n"
 "            \n"
 "%(state_name)s: the name of the state\n"
 "            \n"
@@ -5202,12 +4871,12 @@ msgstr ""
 
 #. module: connector_prestashop
 #: help:prestashop.backend,webservice_key:0
-msgid ""
-"You have to put it in 'username' of the PrestaShop Webservice api path invite"
+msgid "You have to put it in 'username' of the PrestaShop Webservice api path invite"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,zip:0 field:prestashop.res.partner,zip:0
+#: field:prestashop.address,zip:0
+#: field:prestashop.res.partner,zip:0
 #: field:prestashop.supplier,zip:0
 msgid "Zip"
 msgstr ""
@@ -5265,8 +4934,7 @@ msgstr ""
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/backend_adapter.py:38
 #, python-format
-msgid ""
-"{}API / Network Error:\n"
+msgid "{}API / Network Error:\n"
 "\n"
 "{}"
 msgstr ""
@@ -5274,8 +4942,7 @@ msgstr ""
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/backend_adapter.py:42
 #, python-format
-msgid ""
-"{}Authentication Error:\n"
+msgid "{}Authentication Error:\n"
 "\n"
 "{}"
 msgstr ""
@@ -5283,8 +4950,7 @@ msgstr ""
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/backend_adapter.py:46
 #, python-format
-msgid ""
-"{}Error during synchronization with PrestaShop:\n"
+msgid "{}Error during synchronization with PrestaShop:\n"
 "\n"
 "{}"
 msgstr ""
@@ -5292,8 +4958,8 @@ msgstr ""
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/unit/backend_adapter.py:34
 #, python-format
-msgid ""
-"{}Network Error:\n"
+msgid "{}Network Error:\n"
 "\n"
 "{}"
 msgstr ""
+
