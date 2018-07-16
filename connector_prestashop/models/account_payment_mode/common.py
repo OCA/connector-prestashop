@@ -34,11 +34,13 @@ class PaymentModeBinder(Component):
     def to_internal(self, external_id, unwrap=False, company=None):
         if company is None:
             company = self.backend_record.company_id
-        bindings = self.model.with_context(active_test=False).search(
-            [(self._external_field, '=', external_id),
-             ('company_id', '=', company.id),
-             ]
-        )
+        bindings = self.model
+        for language in self.backend_record.language_ids:
+            bindings |= self.model.with_context(
+                active_test=False,
+                lang=language.code).search([
+                    (self._external_field, '=', external_id),
+                    ('company_id', '=', company.id)])
         if not bindings:
             return self.model.browse()
         bindings.ensure_one()
