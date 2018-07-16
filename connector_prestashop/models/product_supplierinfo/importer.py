@@ -98,6 +98,7 @@ class SupplierInfoMapper(Component):
 
     direct = [
         ('product_supplier_reference', 'product_code'),
+        ('product_supplier_price_te', 'price'),
     ]
 
     @mapping
@@ -130,6 +131,12 @@ class SupplierInfoMapper(Component):
         binder = self.binder_for('prestashop.product.template')
         template = binder.to_internal(record['id_product'], unwrap=True)
         return {'product_tmpl_id': template.id}
+
+    @mapping
+    def currency_id(self, record):
+        binder = self.binder_for('prestashop.res.currency')
+        currency = binder.to_internal(record['id_currency'], unwrap=True)
+        return {'currency_id': currency.id}
 
     @mapping
     def required(self, record):
