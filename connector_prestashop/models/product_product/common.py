@@ -30,7 +30,8 @@ class ProductProduct(models.Model):
         for product in self:
             if product.product_variant_count > 1:
                 # Recompute qty in combination binding
-                for combination_binding in product.prestashop_bind_ids:
+                for combination_binding in \
+                        product.prestashop_combinations_bind_ids:
                     combination_binding.recompute_prestashop_qty()
             # Recompute qty in product template binding if any combination
             # if modified
