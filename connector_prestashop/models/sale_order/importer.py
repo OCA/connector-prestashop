@@ -453,9 +453,7 @@ class SaleOrderLineMapper(Component):
         result = self.env['account.tax'].browse()
         for ps_tax in taxes:
             result |= self._find_tax(ps_tax['id'])
-        if result:
-            return {'tax_id': [(6, 0, result.ids)]}
-        return {}
+        return {'tax_id': [(6, 0, result.ids)]}
 
     @mapping
     def backend_id(self, record):
