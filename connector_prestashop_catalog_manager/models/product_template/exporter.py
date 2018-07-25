@@ -171,7 +171,7 @@ class ProductTemplateExporter(Component):
         self.export_variants()
         self.update_quantities()
         if not self.binding.date_add:
-            self.with_context(connector_no_export=True).binding.date_add = fields.Datetime.now()
+            self.binding.with_context(connector_no_export=True).date_add = fields.Datetime.now()
 
 
 class ProductTemplateExportMapper(Component):
@@ -192,6 +192,7 @@ class ProductTemplateExportMapper(Component):
         ('minimal_quantity', 'minimal_quantity'),
         ('on_sale', 'on_sale'),
         ('date_add', 'date_add'),
+        ('barcode', 'ean13'),
         (m2o_to_external(
             'prestashop_default_category_id',
             binding='prestashop.product.category'), 'id_category_default'),
