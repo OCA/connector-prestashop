@@ -31,7 +31,7 @@
         <field name="arch" type="xml">
             <form string="Account Tax Group">
                 <field name="name" colspan="4"/>
-                <field name="tax_ids" colspan="4"/>
+                <field name="tax_ids" colspan="4" widget="many2many"/>
                 <group string="PrestaShop Binding">
                     <field name="prestashop_bind_ids"
                            nolabel="1"/>
