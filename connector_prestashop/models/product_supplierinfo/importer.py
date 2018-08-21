@@ -76,12 +76,9 @@ class SupplierImporter(Component):
         super(SupplierImporter, self)._after_import(binding)
         binder = self.binder_for()
         ps_id = binder.to_external(binding)
-        import_batch(
-            self.session,
-            'prestashop.product.supplierinfo',
-            self.backend_record.id,
+        self.env['prestashop.product.supplierinfo'].with_delay().import_batch(
+            self.backend_record,
             filters={'filter[id_supplier]': '%d' % ps_id},
-            priority=10,
         )
 
 

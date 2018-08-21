@@ -43,20 +43,6 @@ class PrestashopDeliveryCarrier(models.Model):
          'An ERP record with same ID already exists on PrestaShop with the same id_reference'),
     ]
 
-<<<<<<< HEAD
-=======
-    #Check with @bguillot where is it now 
-    #https://github.com/Tecnativa/connector-prestashop/pull/6/files#diff-befe8c6495c83e59d4cc839009d90adaL41
-    def import_carriers(self, backend, **kwargs):
-        return import_batch(
-            session,
-            'prestashop.delivery.carrier',
-            backend_id,
-            priority=5,
-            **kwargs
-        )
-
->>>>>>> 96513fd... Add WIP for PR Akretion
 
 class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"

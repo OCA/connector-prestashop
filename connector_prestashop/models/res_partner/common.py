@@ -161,7 +161,6 @@ class PartnerAdapter(Component):
     _name = 'prestashop.res.partner.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.res.partner'
-    
     _prestashop_model = 'customers'
 
 
@@ -169,5 +168,4 @@ class PartnerAddressAdapter(Component):
     _name = 'prestashop.address.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.address'
-
     _prestashop_model = 'addresses'

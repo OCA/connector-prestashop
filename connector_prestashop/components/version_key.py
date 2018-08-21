@@ -4,25 +4,17 @@
 
 from odoo import models
 from odoo.addons.component.core import Component
-from ..backend import prestashop, prestashop_1_6_0_9, prestashop_1_6_1_2
 
 
-<<<<<<< HEAD
 class VersionKeyModel(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '_prestashop.version.key'
 
 
-@prestashop
 class VersionKey(Component):
     _name = '_prestashop.version.key'
     _apply_on = '_prestashop.version.key'
     _usage = 'prestashop.version.key'
-=======
-# # @prestashop
-class VersionKey(ConnectorUnit):
-    _model_name = '_prestashop.version.key'
->>>>>>> e218fce... ADD WIP for PR Akretion
 
     keys = {
         'messages': 'customer_messages',
@@ -32,16 +24,10 @@ class VersionKey(ConnectorUnit):
         return self.keys.get(key) or key
 
 
-<<<<<<< HEAD
-@prestashop_1_6_0_9
 class VersionKey_1_6_0_9(Component):
     _name = '_prestashop.version.key.1.6.0.9'
     _inherit = '_prestashop.version.key'
     _usage = 'prestashop.version.key.1.6.0.9'
-=======
-# # @prestashop_1_6_0_9
-class VersionKey_1_6_0_9(VersionKey):
->>>>>>> e218fce... ADD WIP for PR Akretion
 
     keys = {
         'product_option_value': 'product_option_values',
@@ -58,16 +44,10 @@ class VersionKey_1_6_0_9(VersionKey):
     }
 
 
-<<<<<<< HEAD
-@prestashop_1_6_1_2
 class VersionKey_1_6_1_2(Component):
     _name = '_prestashop.version.key.1.6.1.2'
     _inherit = '_prestashop.version.key'
     _usage = 'prestashop.version.key.1.6.1.2'
-=======
-# # @prestashop_1_6_1_2
-class VersionKey_1_6_1_2(VersionKey):
->>>>>>> e218fce... ADD WIP for PR Akretion
 
     # keys checked in 1.6.1.9:
     # * customer_messages

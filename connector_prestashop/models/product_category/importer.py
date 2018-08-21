@@ -3,14 +3,8 @@
 
 from odoo import _
 
-
-#from ...components.importer import TranslatableRecordImporter, DelayedBatchImporter
-
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, external_to_m2o
-
-
-
 
 import datetime
 import logging
@@ -72,7 +66,7 @@ class ProductCategoryMapper(Component):
         return {'date_upd': record['date_upd']}
 
 
-class ProductCategoryImporter(TranslatableRecordImporter):
+class ProductCategoryImporter(Component):
     _name = 'prestashop.product.category.importer'
     _inherit = 'prestashop.translatable.record.importer'
     _apply_on = 'prestashop.product.category'
