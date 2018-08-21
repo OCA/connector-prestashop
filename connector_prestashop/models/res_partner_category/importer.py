@@ -44,9 +44,7 @@ class PartnerCategoryImporter(Component):
         super(PartnerCategoryImporter, self)._after_import(binding)
         record = self.prestashop_record
         if float(record['reduction']):
-            import_record(
-                self.session,
-                'prestashop.groups.pricelist',
-                self.backend_record.id,
+            self.env['prestashop.groups.pricelist'].import_record(
+                self.backend_record,
                 record['id']
             )

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from ...components.auto_matching_importer import AutoMatchingImporter
+from odoo.addons.component.core import Component
 
 class LangImporter(Component):
     _name = 'prestashop.res.lang.importer'
+    _inherit= 'prestashop.auto.matching.importer'
     _apply_on = 'prestashop.res.lang'
 
     _erp_field = 'code'
