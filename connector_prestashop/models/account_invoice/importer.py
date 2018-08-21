@@ -5,9 +5,8 @@ from odoo import _, fields
 
 from odoo.addons.connector.exception import MappingError
 from odoo.addons.queue_job.job import job
-from odoo.addons.connector.unit.mapper import (
+from odoo.addons.connector.components.mapper import (
     mapping,
-    ImportMapper,
     only_create,
 )
 from ...components.importer import (
@@ -252,4 +251,3 @@ class RefundBatchImporter(Component):
     _apply_on = 'prestashop.refund'
 
     _model_name = 'prestashop.refund'
-
