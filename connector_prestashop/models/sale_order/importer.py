@@ -162,7 +162,7 @@ class SaleOrderImportMapper(Component):
         if record['total_discounts'] == '0.00':
             return []
         adapter = self.component(
-            usage='prestashop.adapter',
+            usage='backend.adapter',
             model_name='prestashop.sale.order.line.discount'
         )
         discount_ids = adapter.search({'filter[id_order]': record['id']})
@@ -193,7 +193,7 @@ class SaleOrderImportMapper(Component):
             )
             detail_record = adapter.read(child_record['id'])
 
-            mapper = self._get_map_child_unit(model_name)
+            mapper = self._get_map_child_component(model_name)
             items = mapper.get_items(
                 [detail_record], map_record, to_attr, options=self.options
             )

@@ -7,7 +7,6 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, external_to_m2o
 
-
 import mimetypes
 import logging
 
@@ -98,10 +97,4 @@ class ProductImageImporter(Component):
                     'with id `%s` failed. '
                     'Error: `%s`'
                 ) % (image_id, template_id, error.msg)
-<<<<<<< HEAD
-                self.backend_record.add_checkpoint(message=msg)
-
-
-=======
                 self.backend_record.add_checkpoint()
->>>>>>> 2a5e0f4... Clean the add_checkpoint part
