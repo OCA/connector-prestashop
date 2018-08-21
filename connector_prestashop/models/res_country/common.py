@@ -35,5 +35,4 @@ class ResCountryAdapter(Component):
     _name = 'prestashop.res.country.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.res.country'
-    
     _prestashop_model = 'countries'
