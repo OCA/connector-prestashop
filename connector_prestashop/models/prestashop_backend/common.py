@@ -41,7 +41,8 @@ class PrestashopBackend(models.Model):
             ('1.5', '< 1.6.0.9'),
             ('1.6.0.9', '1.6.0.9 - 1.6.0.10'),
             ('1.6.0.11', '>= 1.6.0.11'),
-            ('1.6.1.2', '>= 1.6.1.2'),
+            ('1.6.1.2', '>= 1.6.1.2 - < 1.6.1.11'),
+            ('1.6.1.11', '>= 1.6.1.11')
         ]
     version = fields.Selection(
         selection='_select_versions',
@@ -264,6 +265,20 @@ class PrestashopBackend(models.Model):
             'tag': 'tag',
             'messages': 'customer_messages',
         },
+        '1.6.1.11': {
+            'product_option_value': 'product_option_value',
+            'category': 'category',
+            'image': 'image',
+            'order_slip': 'order_slip',
+            'order_slip_detail': 'order_slip_detail',
+            'group': 'group',
+            'order_row': 'order_row',
+            'tax': 'tax',
+            'combinations': 'combination',
+            'product_features': 'product_feature',
+            'tag': 'tag',
+            'messages': 'customer_messages',
+        }
     }
 
     @api.multi
@@ -274,7 +289,7 @@ class PrestashopBackend(models.Model):
         return ConnectorEnvironment(self, session, model_name)
 
     def get_version_ps_key(self, key):
-        if self.version in ['1.6.0.9', '1.6.1.2']:
+        if self.version in ['1.6.0.9', '1.6.1.2', '1.6.1.11']:
             return self.keys_conversion[self.version][key]
         return key
 
