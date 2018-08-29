@@ -64,6 +64,7 @@ class TemplateMapper(Component):
             if tax.price_include:
                 return price * factor_tax
 
+    @only_create
     @mapping
     def list_price(self, record):
         price = 0.0
@@ -97,6 +98,7 @@ class TemplateMapper(Component):
             return {'name': record['name']}
         return {'name': 'noname'}
 
+    @only_create
     @mapping
     def date_add(self, record):
         if record['date_add'] == '0000-00-00 00:00:00':
@@ -168,8 +170,8 @@ class TemplateMapper(Component):
                         'combinations reference. Maybe consider to change '
                         'matching option'))
             else:
-                code = record.get(self.backend_record.matching_product_ch)
                 if self.backend_record.matching_product_ch == 'reference':
+                    code = record.get(self.backend_record.matching_product_ch)    
                     if code:
                         if self._template_code_exists(code):
                             product = self.env['product.template'].search(
@@ -178,6 +180,7 @@ class TemplateMapper(Component):
                                 return {'odoo_id': product.id}
 
                 if self.backend_record.matching_product_ch == 'barcode':
+                    code = record.get('ean13')
                     if code:
                         product = self.env['product.template'].search(
                             [('barcode', '=', code)], limit=1)
@@ -193,6 +196,7 @@ class TemplateMapper(Component):
         ], limit=1)
         return len(template_ids) > 0
 
+    @only_create
     @mapping
     def default_code(self, record):
         if self.has_combinations(record):
@@ -238,20 +242,24 @@ class TemplateMapper(Component):
                 record.get('description_short', '')),
         }
 
+    @only_create
     @mapping
     def active(self, record):
         return {'always_available': bool(int(record['active']))}
 
+    @only_create
     @mapping
     def sale_ok(self, record):
         # if this product has combinations, we do not want to sell this
         # product, but its combinations (so sale_ok = False in that case).
         return {'sale_ok': True}
 
+    @only_create
     @mapping
     def purchase_ok(self, record):
         return {'purchase_ok': True}
-
+    
+    @only_create
     @mapping
     def categ_ids(self, record):
         categories = record['associations'].get('categories', {}).get(
@@ -267,6 +275,7 @@ class TemplateMapper(Component):
             )
         return {'categ_ids': [(6, 0, product_categories.ids)]}
 
+    @only_create
     @mapping
     def default_category_id(self, record):
         if not int(record['id_category_default']):
@@ -279,14 +288,17 @@ class TemplateMapper(Component):
         if category:
             return {'prestashop_default_category_id': category.id}
 
+    @only_create
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @only_create
     @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
-
+    
+    @only_create
     @mapping
     def barcode(self, record):
         if self.has_combinations(record):
@@ -308,11 +320,13 @@ class TemplateMapper(Component):
         )
         return tax_group.tax_ids
 
+    @only_create
     @mapping
     def taxes_id(self, record):
         taxes = self._get_tax_ids(record)
         return {'taxes_id': [(6, 0, taxes.ids)]}
-
+    
+    @only_create
     @mapping
     def type(self, record):
         # If the product has combinations, this main product is not a real
