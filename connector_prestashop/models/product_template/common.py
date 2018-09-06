@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
 
 from odoo.addons.queue_job.job import job
@@ -111,12 +111,12 @@ class PrestashopProductTemplate(models.Model):
         string='Cost Price',
         digits=dp.get_precision('Product Price'),
     )
-    out_of_stock = fields.Selection(
-            [('0', 'Refuse order'),
-             ('1', 'Accept order'),
-             ('2', 'Default prestashop')],
-            string='If stock shortage'
-        )
+    out_of_stock = fields.Selection([
+        ('0', 'Refuse order'),
+        ('1', 'Accept order'),
+        ('2', 'Default prestashop')],
+        string='If stock shortage'
+    )
 
     @api.multi
     def recompute_prestashop_qty(self):
@@ -146,17 +146,18 @@ class PrestashopProductTemplate(models.Model):
     def _prestashop_qty(self):
         return self.qty_available
 
+    @job(default_channel='root.prestashop')
     def import_products(self, backend, since_date=None, **kwargs):
         filters = None
         if since_date:
             filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
         now_fmt = fields.Datetime.now()
 
-        self.env['prestashop.product.category'].with_delay(
-            priority=10).import_batch(backend, filters=filters)
+        self.env['prestashop.product.category'].import_batch(
+            backend, filters=filters, priority=10)
 
-        self.env['prestashop.product.template'].with_delay(
-            priority=15).import_batch(backend, filters=filters)
+        self.env['prestashop.product.template'].import_batch(
+            backend, filters=filters, priority=15)
 
         backend.import_products_since = now_fmt
         return True
@@ -167,7 +168,6 @@ class PrestashopProductTemplate(models.Model):
             importer = work.component(usage='batch.importer')
             return importer.run()
 
-
     @job(default_channel='root.prestashop')
     def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
@@ -176,11 +176,10 @@ class PrestashopProductTemplate(models.Model):
             exporter = work.component(usage='inventory.exporter')
             return exporter.run(self, fields)
 
-
     @job(default_channel='root.prestashop')
     def export_product_quantities(self, backend=None):
         self.search([('backend_id', '=', backend.id)]
-            ).recompute_prestashop_qty()
+                    ).recompute_prestashop_qty()
 
 
 class TemplateAdapter(Component):
@@ -258,7 +257,8 @@ class PrestashopProductTags(Component):
 class PrestashopProductQuantityListener(Component):
     _name = 'prestashop.product.quantity.listener'
     _inherit = 'base.connector.listener'
-    _apply_on = ['prestashop.product.combination', 'prestashop.product.template']
+    _apply_on = ['prestashop.product.combination',
+                 'prestashop.product.template']
 
     def _get_inventory_fields(self):
         # fields which should not trigger an export of the products

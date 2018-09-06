@@ -3,9 +3,10 @@
 
 from odoo.addons.component.core import Component
 
+
 class AccountTaxImporter(Component):
     _name = 'prestashop.account.tax.importer'
-    _inherit= 'prestashop.auto.matching.importer'
+    _inherit = 'prestashop.auto.matching.importer'
     _apply_on = 'prestashop.account.tax'
 
     _erp_field = 'amount'

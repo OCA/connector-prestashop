@@ -4,7 +4,6 @@
 
 import mock
 
-from ..models.product_template.exporter import export_inventory
 from .common import (
     ExportStockQuantityCase,
     assert_no_job_delayed,
@@ -27,18 +26,15 @@ class TestExportStockQuantity(ExportStockQuantityCase):
         self.assertEqual(0, base_qty)
         self.assertEqual(0, base_prestashop_qty)
 
-        export_job_path = ('openerp.addons.connector_prestashop.consumer'
-                           '.export_inventory')
-        with mock.patch(export_job_path):
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
+        with mock.patch(delay_record_path):
             self._change_product_qty(variant_binding.odoo_id, 42)
 
         cassette_name = 'test_export_stock_quantity'
         with recorder.use_cassette(cassette_name) as cassette:
-            export_inventory(
-                self.conn_session, 'prestashop.product.template',
-                variant_binding.main_template_id.id,
-                fields=['quantity'],
-            )
+            variant_binding.main_template_id.prestashop_bind_ids.\
+                export_inventory(fields=['quantity'])
             self.assertEqual(len(cassette.requests), 3)
 
             request = cassette.requests[0]
