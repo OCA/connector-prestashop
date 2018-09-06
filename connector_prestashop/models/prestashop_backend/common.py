@@ -3,14 +3,10 @@
 
 import logging
 from odoo.addons.component.core import Component
-from contextlib import contextmanager
 
 from odoo import models, fields, api, exceptions, _
 
-from ...components.importer import import_batch, import_record
 from ...components.backend_adapter import api_handle_errors
-from ...components.version_key import VersionKey
-from ...backend import prestashop
 from odoo.addons.connector.checkpoint import checkpoint
 from odoo.addons.base.res.res_partner import _tz_get
 
@@ -47,7 +43,7 @@ class PrestashopBackend(models.Model):
         """Available States for this Backend"""
         return [('draft', 'Draft'),
                 ('checked', 'Checked'),
-                ('production', 'In Production'),]
+                ('production', 'In Production')]
 
     version = fields.Selection(
         selection='select_versions',
@@ -138,49 +134,48 @@ class PrestashopBackend(models.Model):
     verbose = fields.Boolean(help="Output requests details in the logs")
     debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
 
-
     matching_product_template = fields.Boolean(string="Match product template")
-    
-    matching_product_ch = fields.Selection([('reference','Reference'),
-                                            ('barcode','Barcode')],
-                                            string="Matching Field for product")
-    
-    matching_customer = fields.Boolean(string="Matching Customer", 
-                    help="The selected fields will be matched to the ref field \
-                        of the partner. Please adapt your datas consequently.")
-#    matching_customer_ch = fields.Many2one(comodel_name='prestashop.partner.field'
-#                            , string="Matched field", help="Field that will be matched.")
 
+    matching_product_ch = fields.Selection(
+        [('reference', 'Reference'), ('barcode', 'Barcode')],
+        string="Matching Field for product")
+
+    matching_customer = fields.Boolean(
+        string="Matching Customer",
+        help="The selected fields will be matched to the ref field of the "
+        "partner. Please adapt your datas consequently.")
+    # matching_customer_ch = fields.Many2one(
+    #     comodel_name='prestashop.partner.field', string="Matched field",
+    #     help="Field that will be matched.")
 
     quantity_field = fields.Selection(
-                        [('qty_available','Available Quantity'),
-                        ('virtual_available','Forecast quantity'),
-                        ('immediately_usable_qty', 'Available to promise'),
-                        ('potential_qty', 'Potential')],
-                        help="""
-                            Some of this options may need some additionnal
-                            modules you'll have to install by yourself from
-                            https://github.com/OCA/stock-logistics-warehouse/tree/10.0
-                        """,
-                        required=True,
-                        default='virtual_available'
-                        )
-    tz = fields.Selection(_tz_get,  'Timezone', size=64,
-            help="The timezone of the backend. Used to synchronize the sale order date.")
+        [('qty_available', 'Available Quantity'),
+         ('virtual_available', 'Forecast quantity'),
+         ('immediately_usable_qty', 'Available to promise'),
+         ('potential_qty', 'Potential')],
+        help="Some of this options may need some additionnal modules you'll "
+        "have to install by yourself from "
+        "https://github.com/OCA/stock-logistics-warehouse",
+        required=True,
+        default='virtual_available')
+    tz = fields.Selection(
+        _tz_get, 'Timezone', size=64,
+        help="The timezone of the backend. Used to synchronize the sale order "
+        "date.")
 
     @api.onchange("matching_customer")
     def change_matching_customer(self):
-        #Update the field list so that if you API change you could find the new fields to map
+        # Update the field list so that if you API change you could find the
+        # new fields to map
         if self._origin.id:
             self.fill_matched_fields(self._origin.id)
-
 
     @api.multi
     def fill_matched_fields(self, backend_id):
         self.ensure_one()
 
-        options={'limit': 1,'display': 'full'}
-        #TODO : Unse new adapter pattern to get a simple partner json
+        # options = {'limit': 1, 'display': 'full'}
+        # TODO : Unse new adapter pattern to get a simple partner json
 #         prestashop = PrestaShopLocation(
 #                         self.location.encode(),
 #                         self.webservice_key,
@@ -189,20 +184,19 @@ class PrestashopBackend(models.Model):
 #         client = PrestaShopWebServiceDict(
 #                     prestashop.api_url,
 #                     prestashop.webservice_key)
-# 
+#
 #         customer = client.get('customers', options=options)
 #         tab=customer['customers']['customer'].keys()
 #         for key in tab:
 #             key_present = self.env['prestashop.partner.field'].search(
 #                     [('value', '=', key), ('backend_id', '=', backend_id)])
-# 
+#
 #             if len(key_present) == 0 :
 #                 self.env['prestashop.partner.field'].create({
 #                     'name' : key,
 #                     'value' : key,
 #                     'backend_id': backend_id
 #                 })
-
 
     @api.model
     def _default_pricelist_id(self):
@@ -211,12 +205,13 @@ class PrestashopBackend(models.Model):
     @api.multi
     def add_checkpoint(self, record, message=''):
         """
-        @param message: used with this https://github.com/OCA/connector/issues/37
+        @param message: used with this
+        https://github.com/OCA/connector/issues/37
         """
         self.ensure_one()
         record.ensure_one()
-        chk_point =  checkpoint.add_checkpoint(self.env, record._name, record.id,
-                                         self._name, self.id)
+        chk_point = checkpoint.add_checkpoint(self.env, record._name,
+                                              record.id, self._name, self.id)
         if message:
             chk_point.message_post(body=message)
         return chk_point
@@ -266,30 +261,30 @@ class PrestashopBackend(models.Model):
     @api.multi
     def button_check_connection(self):
         self._check_connection()
-        #raise exceptions.UserError(_('Connection successful'))
+        # raise exceptions.UserError(_('Connection successful'))
         self.write({'state': 'checked'})
 
     @api.multi
     def import_customers_since(self):
         for backend_record in self:
             since_date = backend_record.import_partners_since
-            self.env['prestashop.res.partner'].import_customers_since(
-                backend_record=backend_record,
-                since_date=since_date)
+            self.env['prestashop.res.partner'].with_delay(
+                ).import_customers_since(
+                    backend_record=backend_record, since_date=since_date)
         return True
 
     @api.multi
     def import_products(self):
         for backend_record in self:
             since_date = backend_record.import_products_since
-            self.env['prestashop.product.template'].import_products(
-                backend_record, since_date)
+            self.env['prestashop.product.template'].with_delay(
+                ).import_products(backend_record, since_date)
         return True
 
     @api.multi
     def import_carriers(self):
         for backend_record in self:
-            self.env['prestashop.delivery.carrier'].import_batch(
+            self.env['prestashop.delivery.carrier'].with_delay().import_batch(
                 backend_record,
             )
         return True
@@ -313,11 +308,8 @@ class PrestashopBackend(models.Model):
     def import_sale_orders(self):
         for backend_record in self:
             since_date = backend_record.import_orders_since
-            backend_record.env['prestashop.sale.order'].import_orders_since(
-                backend_record,
-                since_date,
-                priority=5,
-            )
+            backend_record.env['prestashop.sale.order'].with_delay(
+                ).import_orders_since(backend_record, since_date)
         return True
 
     @api.multi
@@ -407,12 +399,9 @@ class PrestashopBackend(models.Model):
         return locations
 
 
-
 class NoModelAdapter(Component):
     """ Used to test the connection """
     _name = 'prestashop.adapter.test'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.backend'
     _prestashop_model = ''
-
-

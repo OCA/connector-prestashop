@@ -4,10 +4,6 @@
 from odoo.tools.translate import _
 from odoo.addons.component.core import AbstractComponent
 
-from odoo.tools.translate import _
-from odoo.addons.queue_job.job import job
-from odoo.addons.connector.unit.synchronizer import Deleter
-
 
 class PrestashopDeleter(AbstractComponent):
     """ Base deleter for PrestaShop """

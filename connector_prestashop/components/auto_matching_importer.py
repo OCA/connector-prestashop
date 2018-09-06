@@ -74,7 +74,7 @@ class AutoMatchingImporter(Component):
                             'backend_id': self.backend_record.id,
                         }
                         for oe_field, ps_field in self._copy_fields:
-                            data[oe_field] = erp_dict[ps_field]
+                            data[oe_field] = ps_dict[ps_field]
                         record = self.model.create(data)
                         binder.bind(ps_id, record)
                         _logger.debug(

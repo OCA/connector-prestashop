@@ -10,10 +10,7 @@ import psycopg2
 from odoo import _, exceptions
 from odoo.addons.component.core import AbstractComponent
 
-from odoo.addons.queue_job.job import job
-from odoo.addons.queue_job.job import related_action
 from odoo.addons.connector.exception import RetryableJobError
-from .mapper import TranslationPrestashopExportMapper
 
 
 _logger = logging.getLogger(__name__)
@@ -59,7 +56,7 @@ class PrestashopBaseExporter(AbstractComponent):
         self.binder.bind(self.prestashop_id, self.binding)
         # commit so we keep the external ID if several cascading exports
         # are called and one of them fails
-        self.env.cr.commit()
+        self.env.cr.commit()  # pylint: disable=invalid-commit
         self._after_export()
         return result
 
@@ -155,7 +152,7 @@ class PrestashopExporter(AbstractComponent):
                     binding = model_c.create(_bind_values)
                     # Eager commit to avoid having 2 jobs
                     # exporting at the same time.
-                    self._cr.commit()
+                    self._cr.commit()  # pylint: disable=invalid-commit
         else:
             # If prestashop_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
