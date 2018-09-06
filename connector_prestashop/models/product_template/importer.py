@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo import _, models, fields, api
+from odoo import _, models, api
 from odoo.addons.queue_job.job import job
 # from odoo.addons.connector.components.mapper import (
 #     mapping,
@@ -14,6 +14,7 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, external_to_m2o, only_create)
+from odoo.exceptions import ValidationError
 
 
 import datetime
@@ -122,60 +123,64 @@ class TemplateMapper(Component):
 #             [('default_code', '=', record['reference'])], limit=1)
 #         if product:
 #             return {'odoo_id': product.id}
-        if self.backend_record.matching_product_template:            
-            if self.has_combinations(record): 
-                #Browse combinations for matching products and find if there
-                #is a potential template to be matched
+        if self.backend_record.matching_product_template:
+            if self.has_combinations(record):
+                # Browse combinations for matching products and find if there
+                # is a potential template to be matched
                 template = self.env['product.template']
                 associations = record.get('associations', {})
                 combinations = associations.get('combinations', {}).get(
-                                'combinations', [])
-                if len(combinations) == 1 :
-                    #Defensive mode when product have no combinations, force the list mode
+                    self.backend_record.get_version_ps_key('combinations'))
+                if len(combinations) == 1:
+                    # Defensive mode when product have no combinations, force
+                    # the list mode
                     combinations = [combinations]
                 for prod in combinations:
-                    backend_adapter = self.unit_for(
-                                BackendAdapter, 'prestashop.product.combination')
+                    backend_adapter = self.component(
+                        usage='backend.adapter',
+                        model_name='prestashop.product.combination')
                     variant = backend_adapter.read(int(prod['id']))
                     code = variant.get(self.backend_record.matching_product_ch)
-                    if self.backend_record.matching_product_ch == 'reference':    
+                    if self.backend_record.matching_product_ch == 'reference':
                         product = self.env['product.product'].search(
-                        [('default_code', '=', code)])
-                        if len(product) > 1 :
-                            raise ValidationError(_('Error! Multiple products ' 
-                                        'found with combinations reference %s.' 
-                                        'Maybe consider to update you datas') % code)
+                            [('default_code', '=', code)])
+                        if len(product) > 1:
+                            raise ValidationError(_(
+                                'Error! Multiple products found with '
+                                'combinations reference %s. Maybe consider to '
+                                'update you datas') % code)
                         template |= product.product_tmpl_id
                     if self.backend_record.matching_product_ch == 'barcode':
                         product = self.env['product.product'].search(
-                        [('barcode', '=', code)])
-                        if len(product) > 1 :
-                            raise ValidationError(_('Error! Multiple products ' 
-                                        'found with combinations reference %s.' 
-                                        'Maybe consider to update you datas') % code)
+                            [('barcode', '=', code)])
+                        if len(product) > 1:
+                            raise ValidationError(_(
+                                'Error! Multiple products found with '
+                                'combinations reference %s. Maybe consider to '
+                                'update you datas') % code)
                         template |= product.product_tmpl_id
                 _logger.debug('template %s' % template)
                 if len(template) == 1:
                     return {'odoo_id': template.id}
-                if len(template) > 1 :
-                    raise ValidationError(_('Error! Multiple templates are '
-                                    'found with combinations reference.'
-                                    'Maybe consider to change matching option'))
+                if len(template) > 1:
+                    raise ValidationError(_(
+                        'Error! Multiple templates are found with '
+                        'combinations reference. Maybe consider to change '
+                        'matching option'))
             else:
                 code = record.get(self.backend_record.matching_product_ch)
                 if self.backend_record.matching_product_ch == 'reference':
                     if code:
                         if self._template_code_exists(code):
                             product = self.env['product.template'].search(
-                        [('default_code', '=', code)], limit=1)
+                                [('default_code', '=', code)], limit=1)
                             if product:
                                 return {'odoo_id': product.id}
-
 
                 if self.backend_record.matching_product_ch == 'barcode':
                     if code:
                         product = self.env['product.template'].search(
-                        [('barcode', '=', code)], limit=1)
+                            [('barcode', '=', code)], limit=1)
                         if product:
                             return {'odoo_id': product.id}
         return {}
@@ -317,7 +322,7 @@ class TemplateMapper(Component):
         if record['type']['value'] and record['type']['value'] == 'virtual':
             return {"type": 'service'}
         return {"type": 'product'}
-#TODO FIXME
+# TODO FIXME
 #    @mapping
 #    def extras_features(self, record):
 #        mapper = self.component(usage='feature.product.import.mapper')
@@ -570,7 +575,8 @@ class ProductTemplateImporter(Component):
                                 **kwargs)
 
     def _delay_product_image_variant(self, combinations, **kwargs):
-        delayable = self.env['prestashop.product.combination'].with_delay(priority=15)
+        delayable = self.env['prestashop.product.combination'].with_delay(
+            priority=15)
         delayable.set_product_image_variant(
             self.backend_record,
             combinations,
@@ -608,7 +614,8 @@ class ProductTemplateImporter(Component):
             images = [images]
         for image in images:
             if image.get('id'):
-                delayable = self.env['prestashop.product.image'].with_delay(priority=10)
+                delayable = self.env['prestashop.product.image'].with_delay(
+                    priority=10)
                 delayable.import_product_image(
                     self.backend_record,
                     prestashop_record['id'],
@@ -639,9 +646,9 @@ class ProductTemplateImporter(Component):
         self._import_manufacturer()
 
     def _import_manufacturer(self):
-        self.component(usage='manufacturer.product.importer').import_manufacturer(
-            self.prestashop_record.get('id_manufacturer')
-        )
+        self.component(
+            usage='manufacturer.product.importer').import_manufacturer(
+                self.prestashop_record.get('id_manufacturer'))
 
     def get_template_model_id(self):
         ir_model = self.env['ir.model'].search([

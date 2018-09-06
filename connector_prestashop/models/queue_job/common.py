@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, exceptions, api, models
+from odoo import _, api, models
+
 
 class QueueJob(models.Model):
     _inherit = 'queue.job'
@@ -10,7 +11,7 @@ class QueueJob(models.Model):
     def related_action_record(self, binding_id_pos=0):
         self.ensure_one()
 
-        model_name = self.model_name
+        binding_model = self.model_name
         binding_id = self.args[binding_id_pos]
         record = self.env[binding_model].browse(binding_id)
         odoo_name = record.odoo_id._name

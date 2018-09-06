@@ -3,11 +3,9 @@
 
 import re
 
-from odoo import fields, _
-from odoo.addons.queue_job.job import job
+from odoo import _
 
 
-from odoo.addons.connector.checkpoint import checkpoint
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, external_to_m2o, only_create)
@@ -221,5 +219,5 @@ class AddressImporter(Component):
 
 class AddressBatchImporter(Component):
     _name = 'prestashop.address.batch.importer'
-    _inherit = 'prestashop.direct.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = 'prestashop.address'
