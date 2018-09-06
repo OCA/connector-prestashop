@@ -3,9 +3,8 @@
 
 from odoo import models, fields
 
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
-from ...components.importer import import_batch
+from odoo.addons.queue_job.job import job
 
 
 class ResPartner(models.Model):
@@ -86,8 +85,9 @@ class PrestashopResPartner(models.Model):
     newsletter = fields.Boolean(string='Newsletter')
     birthday = fields.Date(string='Birthday')
 
-    def import_customers_since(
-        self, backend_record=None, since_date=None, **kwargs):
+    @job(default_channel='root.prestashop')
+    def import_customers_since(self, backend_record=None, since_date=None,
+                               **kwargs):
         """ Prepare the import of partners modified on PrestaShop """
         filters = None
         if since_date:
@@ -95,12 +95,10 @@ class PrestashopResPartner(models.Model):
                 'date': '1',
                 'filter[date_upd]': '>[%s]' % since_date}
         now_fmt = fields.Datetime.now()
-        self.env['prestashop.res.partner.category'].with_delay(
-            priority=10
-        ).import_batch(backend=backend_record, filters=filters, **kwargs)
-        self.env['prestashop.res.partner'].with_delay(
-            priority=15
-        ).import_batch(backend=backend_record, filters=filters, **kwargs)
+        self.env['prestashop.res.partner.category'].import_batch(
+            backend=backend_record, filters=filters, priority=10, **kwargs)
+        self.env['prestashop.res.partner'].import_batch(
+            backend=backend_record, filters=filters, priority=15, **kwargs)
         backend_record.import_partners_since = now_fmt
         return True
 
