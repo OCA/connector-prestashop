@@ -34,6 +34,7 @@ class ResCountry(models.Model):
         string='prestashop Bindings',
     )
 
+
 class ResCountryAdapter(Component):
     _name = 'prestashop.res.country.adapter'
     _inherit = 'prestashop.adapter'
