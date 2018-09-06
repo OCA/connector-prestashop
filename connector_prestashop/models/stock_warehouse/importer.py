@@ -20,10 +20,6 @@ class ShopImportMapper(Component):
         return {'backend_id': self.backend_record.id}
 
     @mapping
-    def company_id(self, record):
-        return {'company_id': self.backend_record.company_id.id}
-
-    @mapping
     def opener_id(self, record):
         return {'openerp_id': self.backend_record.warehouse_id.id}
 

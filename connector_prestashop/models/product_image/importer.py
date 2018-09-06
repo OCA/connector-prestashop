@@ -2,10 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from odoo.addons.queue_job.job import job
-
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping, external_to_m2o
+from odoo.addons.connector.components.mapper import mapping
 
 import mimetypes
 import logging

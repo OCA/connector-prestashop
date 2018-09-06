@@ -7,10 +7,6 @@ from odoo.addons.connector.components.mapper import (
     mapping,
     only_create,
 )
-from ...components.importer import (
-    import_batch,
-)
-from ...components.backend_adapter import PrestaShopCRUDAdapter
 from odoo.addons.component.core import Component
 
 import logging
@@ -159,16 +155,6 @@ class ProductCombinationMapper(Component):
             yield option_value_binding.odoo_id
 
     @mapping
-    def name(self, record):
-        template = self.get_main_template_binding(record)
-        options = []
-        for option_value_object in self._get_option_value(record):
-            key = option_value_object.attribute_id.name
-            value = option_value_object.name
-            options.append('%s:%s' % (key, value))
-        return {'name_template': template.name}
-
-    @mapping
     def attribute_value_ids(self, record):
         results = []
         for option_value_object in self._get_option_value(record):
@@ -227,8 +213,9 @@ class ProductCombinationMapper(Component):
         product_tmpl_adapter = self.component(
             usage='backend.adapter', model_name='prestashop.product.template')
         tax_group = product_tmpl_adapter.read(record['id_product'])
-        tax_group = self.binder_for('prestashop.account.tax.group').to_internal(
-            tax_group['id_tax_rules_group'], unwrap=True)
+        tax_group = self.binder_for(
+            'prestashop.account.tax.group').to_internal(
+                tax_group['id_tax_rules_group'], unwrap=True)
         return tax_group.tax_ids
 
     def _apply_taxes(self, tax, price):
@@ -262,29 +249,28 @@ class ProductCombinationMapper(Component):
     @only_create
     @mapping
     def odoo_id(self, record):
-#         product = self.env['product.product'].search([
-#             ('default_code', '=', record['reference']),
-#             ('prestashop_bind_ids', '=', False),
-#         ], limit=1)
-#         if product:
-#             return {'odoo_id': product.id}
-
+        # product = self.env['product.product'].search([
+        #     ('default_code', '=', record['reference']),
+        #     ('prestashop_bind_ids', '=', False),
+        # ], limit=1)
+        # if product:
+        #     return {'odoo_id': product.id}
 
         """ Will bind the product to an existing one with the same code """
         if self.backend_record.matching_product_template:
-            code = record.get(self.backend_record.matching_product_ch)            
-            if self.backend_record.matching_product_ch == 'reference':    
+            code = record.get(self.backend_record.matching_product_ch)
+            if self.backend_record.matching_product_ch == 'reference':
                 if code:
                     product = self.env['product.product'].search(
-                    [('default_code', '=', code)], limit=1)                    
+                        [('default_code', '=', code)], limit=1)
                     if product:
                             return {'odoo_id': product.id}
             if self.backend_record.matching_product_ch == 'barcode':
                 if code:
                     product = self.env['product.product'].search(
-                    [('barcode', '=', code)], limit=1)
+                        [('barcode', '=', code)], limit=1)
                     if product:
-                        return {'odoo_id': product.id}                    
+                        return {'odoo_id': product.id}
         else:
             return {}
 
@@ -407,7 +393,8 @@ class ProductCombinationOptionValueMapper(Component):
     @mapping
     def attribute_id(self, record):
         binder = self.binder_for('prestashop.product.combination.option')
-        attribute = binder.to_internal(record['id_attribute_group'], unwrap=True)
+        attribute = binder.to_internal(record['id_attribute_group'],
+                                       unwrap=True)
         return {'attribute_id': attribute.id}
 
     @mapping

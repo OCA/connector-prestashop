@@ -49,14 +49,14 @@ class PrestashopBinding(models.AbstractModel):
 
     @job(default_channel='root.prestashop')
     @api.model
-    def import_batch(self, backend, filters=None):
+    def import_batch(self, backend, filters=None, **kwargs):
         """ Prepare a batch import of records from PrestaShop """
         self.check_active(backend)
         if filters is None:
             filters = {}
         with backend.work_on(self._name) as work:
             importer = work.component(usage='batch.importer')
-            return importer.run(filters=filters)
+            return importer.run(filters=filters, **kwargs)
 
     @job(default_channel='root.prestashop')
     @related_action(action='related_action_record')
@@ -77,7 +77,7 @@ class PrestashopBinding(models.AbstractModel):
             deleter = work.component(usage='record.exporter.deleter')
             return deleter.run(external_id)
 
-    #TODO: Research
+    # TODO: Research
     @api.multi
     def resync(self):
         func = import_record

@@ -43,13 +43,12 @@ class PrestashopListener(AbstractComponent):
             if fields:
                 if not exported_fields & set(fields):
                     _logger.debug(
-                        "Skip export of %s because modified fields: %s are not part "
-                        "of exported fields %s",
+                        "Skip export of %s because modified fields: %s are "
+                        "not part of exported fields %s",
                         record, fields, list(exported_fields))
                     return True
         if record.no_export:
             _logger.debug(
-                "Skip export of %s because export is disable for it",
-                 record)
+                "Skip export of %s because export is disable for it", record)
             return True
         return False

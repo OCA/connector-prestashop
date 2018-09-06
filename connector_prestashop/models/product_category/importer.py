@@ -105,9 +105,8 @@ class ProductCategoryImporter(Component):
                         record, fields=['name', ])
                     name = values[self._default_language]['name']
 
-                self.backend_record.add_checkpoint(category,
-                    message=msg % (name, str(e))
-                )
+                self.backend_record.add_checkpoint(
+                    category, message=msg % (name, str(e)))
 
 
 class ProductCategoryBatchImporter(Component):

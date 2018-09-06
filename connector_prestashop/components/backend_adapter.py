@@ -106,6 +106,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
     _name = 'prestashop.crud.adapter'
     _inherit = ['base.backend.adapter', 'base.prestashop.connector']
     _usage = 'backend.adapter'
+    # pylint: disable=method-required-super
 
     def __init__(self, environment):
         """
@@ -122,7 +123,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
             self.prestashop.api_url,
             self.prestashop.webservice_key,
             debug=self.backend_record.debug,
-#            verbose=self.backend_record.verbose
+            # verbose=self.backend_record.verbose
         )
 
     def search(self, filters=None):
@@ -159,6 +160,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
 class GenericAdapter(AbstractComponent):
     _name = 'prestashop.adapter'
     _inherit = 'prestashop.crud.adapter'
+    # pylint: disable=method-required-super
 
     _model_name = None
     _prestashop_model = None

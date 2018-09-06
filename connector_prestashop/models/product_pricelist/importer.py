@@ -2,7 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping, external_to_m2o
+from odoo.addons.connector.components.mapper import mapping
+
 
 class ProductPricelistMapper(Component):
     _name = 'prestashop.groups.pricelist.mapper'
@@ -42,8 +43,7 @@ class ProductPricelistImporter(Component):
     _inherit = 'prestashop.translatable.record.importer'
     _apply_on = 'prestashop.groups.pricelist'
 
-    _usage= "Translate"
-
+    _usage = "Translate"
 
     _translatable_fields = {
         'prestashop.groups.pricelist': ['name'],

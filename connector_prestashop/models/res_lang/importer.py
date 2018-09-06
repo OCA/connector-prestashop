@@ -3,9 +3,10 @@
 
 from odoo.addons.component.core import Component
 
+
 class LangImporter(Component):
     _name = 'prestashop.res.lang.importer'
-    _inherit= 'prestashop.auto.matching.importer'
+    _inherit = 'prestashop.auto.matching.importer'
     _apply_on = 'prestashop.res.lang'
 
     _erp_field = 'code'

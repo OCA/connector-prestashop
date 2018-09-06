@@ -120,8 +120,8 @@ class SaleImportRule(Component):
         """
         if self.backend_record.importable_order_state_ids:
             ps_state_id = record['current_state']
-            state = self.binder_for(
-                'prestashop.sale.order.state').to_internal(ps_state_id, unwrap=1)
+            state = self.binder_for('prestashop.sale.order.state'
+                                    ).to_internal(ps_state_id, unwrap=1)
             if not state:
                 raise FailedJobError(_(
                     "The configuration is missing "
@@ -234,7 +234,8 @@ class SaleOrderImportMapper(Component):
     @mapping
     def partner_shipping_id(self, record):
         binder = self.binder_for('prestashop.address')
-        shipping = binder.to_internal(record['id_address_delivery'], unwrap=True)
+        shipping = binder.to_internal(record['id_address_delivery'],
+                                      unwrap=True)
         return {'partner_shipping_id': shipping.id}
 
     @mapping
@@ -274,10 +275,13 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def date_order(self, record):
-        local = pytz.timezone(self.backend_record.tz)
-        naive = fields.Datetime.from_string(record['date_add'])
-        local_dt = local.localize(naive, is_dst=None)
-        date_order = fields.Datetime.to_string(local_dt.astimezone(pytz.utc))
+        date_order = record['date_add']
+        if self.backend_record.tz:
+            local = pytz.timezone(self.backend_record.tz)
+            naive = fields.Datetime.from_string(date_order)
+            local_dt = local.localize(naive, is_dst=None)
+            date_order = fields.Datetime.to_string(local_dt.astimezone(
+                pytz.utc))
         return {'date_order': date_order}
 
     def finalize(self, map_record, values):

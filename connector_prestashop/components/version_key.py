@@ -24,7 +24,7 @@ class VersionKey(Component):
         return self.keys.get(key) or key
 
 
-class VersionKey_1_6_0_9(Component):
+class VersionKey1609(Component):
     _name = '_prestashop.version.key.1.6.0.9'
     _inherit = '_prestashop.version.key'
     _usage = 'prestashop.version.key.1.6.0.9'
@@ -44,7 +44,7 @@ class VersionKey_1_6_0_9(Component):
     }
 
 
-class VersionKey_1_6_1_2(Component):
+class VersionKey1612(Component):
     _name = '_prestashop.version.key.1.6.1.2'
     _inherit = '_prestashop.version.key'
     _usage = 'prestashop.version.key.1.6.1.2'

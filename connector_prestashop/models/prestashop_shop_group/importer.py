@@ -4,7 +4,7 @@
 from odoo import _
 
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import mapping, external_to_m2o
+from odoo.addons.connector.components.mapper import mapping
 
 
 class ShopGroupImporter(Component):
@@ -17,7 +17,6 @@ class ShopGroupMapper(Component):
     _name = 'prestashop.shop.group.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.shop.group'
-
 
     direct = [('name', 'name')]
 

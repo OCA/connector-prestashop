@@ -59,7 +59,8 @@ class TestImportBackendData(PrestashopTransactionCase):
         self.env['prestashop.res.lang'].search([]).unlink()
         self.configure_taxes()
         auto_import_logger = (
-            'openerp.addons.connector_prestashop.unit.auto_matching_importer'
+            'odoo.addons.connector_prestashop.components.'
+            'auto_matching_importer'
         )
         with quiet_logger('vcr'), quiet_logger('urllib3'):
             with quiet_logger(auto_import_logger):

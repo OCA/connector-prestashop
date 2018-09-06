@@ -33,19 +33,21 @@ class CarrierImportMapper(Component):
         """
         Prevent The duplication of delivery method if id_reference is the same
         Has to be improved
-        """ 
+        """
         id_reference = int(str(record['id_reference']))
         ps_delivery = self.env['prestashop.delivery.carrier'].search([
             ('id_reference', '=', id_reference),
             ('backend_id', '=', self.backend_record.id)])
-        _logger.debug("Found delivery %s for reference %s" % (ps_delivery, id_reference))
-        if len(ps_delivery) == 1 :
-            #Temporary defensive mode so that only a single delivery method still available
+        _logger.debug("Found delivery %s for reference %s" % (ps_delivery,
+                                                              id_reference))
+        if len(ps_delivery) == 1:
+            # Temporary defensive mode so that only a single delivery method
+            # still available
             delivery = ps_delivery.odoo_id
             ps_delivery.unlink()
             return {'odoo_id': delivery.id}
         else:
-            return {}  
+            return {}
 
     @mapping
     def id_reference(self, record):

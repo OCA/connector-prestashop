@@ -1,16 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo import fields
 from odoo.addons.queue_job.exception import FailedJobError
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-
-from ...components.backend_adapter import PrestaShopCRUDAdapter
-from ...components.importer import (
-    import_batch,
-)
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -63,7 +56,6 @@ class SupplierImporter(Component):
     _name = 'prestashop.supplier.importer'
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.supplier'
-
 
     def _create(self, record):
         try:
