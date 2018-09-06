@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 
 
@@ -11,7 +10,6 @@ class SaleStateExporter(Component):
     _inherit = 'prestashop.exporter'
     _apply_on = ['prestashop.sale.order']
     _usage = 'sale.order.state.exporter'
-
 
     def run(self, binding, state, **kwargs):
         datas = {

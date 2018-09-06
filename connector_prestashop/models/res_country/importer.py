@@ -3,9 +3,10 @@
 
 from odoo.addons.component.core import Component
 
+
 class CountryImporter(Component):
     _name = 'prestashop.res.country.importer'
-    _inherit= 'prestashop.auto.matching.importer'
+    _inherit = 'prestashop.auto.matching.importer'
     _apply_on = 'prestashop.res.country'
 
     _erp_field = 'code'

@@ -3,9 +3,10 @@
 
 from odoo.addons.component.core import Component
 
+
 class ResCurrencyImporter(Component):
     _name = 'prestashop.res.currency.importer'
-    _inherit= 'prestashop.auto.matching.importer'
+    _inherit = 'prestashop.auto.matching.importer'
     _apply_on = 'prestashop.res.currency'
 
     _erp_field = 'name'
