@@ -7,7 +7,6 @@ from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
 
 from odoo.addons.queue_job.job import job
-from exporter import CombinationInventoryExporter
 from odoo.addons.component.core import Component
 
 

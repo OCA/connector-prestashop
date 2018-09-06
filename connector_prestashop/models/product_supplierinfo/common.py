@@ -9,6 +9,7 @@ from ...components.backend_adapter import (
 )
 
 
+# pylint: disable=consider-merging-classes-inherited
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -88,6 +89,7 @@ class SupplierImageAdapter(Component):
     _name = 'prestashop.supplier.image.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.supplier.image'
+    # pylint: disable=method-required-super
 
     _prestashop_image_model = 'suppliers'
 

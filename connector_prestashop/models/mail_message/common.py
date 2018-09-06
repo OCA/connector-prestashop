@@ -33,6 +33,7 @@ class MailMessageAdapter(Component):
     _name = 'prestashop.mail.message.adapter'
     _inherit = 'prestashop.adapter'
     _apply_on = 'prestashop.mail.message'
+    # pylint: disable=method-required-super
 
     @property
     def _prestashop_model(self):
@@ -47,7 +48,9 @@ class MailMessageAdapter(Component):
         res = api.get(self._prestashop_model, id, options=attributes)
         first_key = res.keys()[0]
         message_data = res[first_key]
-        thread_data = api.get('customer_threads', message_data['id_customer_thread'], options=attributes)
+        thread_data = api.get('customer_threads',
+                              message_data['id_customer_thread'],
+                              options=attributes)
         first_key = thread_data.keys()[0]
         del thread_data[first_key]['id']
         del thread_data[first_key]['date_add']

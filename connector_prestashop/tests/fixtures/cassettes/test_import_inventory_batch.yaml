@@ -5,181 +5,448 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+      User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: http://172.22.0.4/api/stock_availables?limit=0%2C1000&display=%5Bid%2Cid_product%2Cid_product_attribute%5D
+    uri: http://localhost:8080/api/stock_availables?limit=0%2C1000&display=%5Bid%2Cid_product%2Cid_product_attribute%5D
   response:
-    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_availables>\n\
-        <stock_available>\n\t<id><![CDATA[1]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[8]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/1\"><![CDATA[1]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/1\"\
-        ><![CDATA[1]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[9]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/2\"\
-        ><![CDATA[2]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[10]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/3\"\
-        ><![CDATA[3]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[11]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/4\"\
-        ><![CDATA[4]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[12]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/5\"\
-        ><![CDATA[5]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[13]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/6\"\
-        ><![CDATA[6]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[2]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
-        ><![CDATA[2]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[14]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/2\"><![CDATA[2]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/7\"\
-        ><![CDATA[7]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[15]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
-        ><![CDATA[2]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/8\"\
-        ><![CDATA[8]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[16]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
-        ><![CDATA[2]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/9\"\
-        ><![CDATA[9]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[17]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
-        ><![CDATA[2]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/10\"\
-        ><![CDATA[10]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[18]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
-        ><![CDATA[2]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/11\"\
-        ><![CDATA[11]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[19]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
-        ><![CDATA[2]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/12\"\
-        ><![CDATA[12]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[3]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/3\"\
-        ><![CDATA[3]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[20]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/3\"><![CDATA[3]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/13\"\
-        ><![CDATA[13]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[21]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/3\"\
-        ><![CDATA[3]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/14\"\
-        ><![CDATA[14]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[22]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/3\"\
-        ><![CDATA[3]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/15\"\
-        ><![CDATA[15]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[4]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/4\"\
-        ><![CDATA[4]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[23]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/4\"><![CDATA[4]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/16\"\
-        ><![CDATA[16]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[24]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/4\"\
-        ><![CDATA[4]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/17\"\
-        ><![CDATA[17]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[25]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/4\"\
-        ><![CDATA[4]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/18\"\
-        ><![CDATA[18]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[50]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/4\"\
-        ><![CDATA[4]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/43\"\
-        ><![CDATA[43]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[51]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/4\"\
-        ><![CDATA[4]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/44\"\
-        ><![CDATA[44]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[52]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/4\"\
-        ><![CDATA[4]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/45\"\
-        ><![CDATA[45]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[5]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[26]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/5\"><![CDATA[5]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/19\"\
-        ><![CDATA[19]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[27]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/20\"\
-        ><![CDATA[20]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[28]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/21\"\
-        ><![CDATA[21]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[29]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/22\"\
-        ><![CDATA[22]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[30]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/23\"\
-        ><![CDATA[23]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[31]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/24\"\
-        ><![CDATA[24]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[32]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/25\"\
-        ><![CDATA[25]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[33]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/26\"\
-        ><![CDATA[26]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[34]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/27\"\
-        ><![CDATA[27]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[35]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/28\"\
-        ><![CDATA[28]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[36]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/29\"\
-        ><![CDATA[29]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[37]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/5\"\
-        ><![CDATA[5]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/30\"\
-        ><![CDATA[30]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[6]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/6\"\
-        ><![CDATA[6]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[38]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/6\"><![CDATA[6]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/31\"\
-        ><![CDATA[31]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[39]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/6\"\
-        ><![CDATA[6]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/32\"\
-        ><![CDATA[32]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[40]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/6\"\
-        ><![CDATA[6]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/33\"\
-        ><![CDATA[33]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[47]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/6\"\
-        ><![CDATA[6]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/40\"\
-        ><![CDATA[40]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[48]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/6\"\
-        ><![CDATA[6]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/41\"\
-        ><![CDATA[41]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[49]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/6\"\
-        ><![CDATA[6]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/42\"\
-        ><![CDATA[42]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[7]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/7\"\
-        ><![CDATA[7]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
-        </stock_available>\n<stock_available>\n\t<id><![CDATA[41]]></id>\n\t<id_product\
-        \ xlink:href=\"http://172.22.0.4/api/products/7\"><![CDATA[7]]></id_product>\n\
-        \t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/34\"\
-        ><![CDATA[34]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[42]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/7\"\
-        ><![CDATA[7]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/35\"\
-        ><![CDATA[35]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[43]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/7\"\
-        ><![CDATA[7]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/36\"\
-        ><![CDATA[36]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[44]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/7\"\
-        ><![CDATA[7]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/37\"\
-        ><![CDATA[37]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[45]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/7\"\
-        ><![CDATA[7]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/38\"\
-        ><![CDATA[38]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\
-        \t<id><![CDATA[46]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/7\"\
-        ><![CDATA[7]]></id_product>\n\t<id_product_attribute xlink:href=\"http://172.22.0.4/api/combinations/39\"\
-        ><![CDATA[39]]></id_product_attribute>\n</stock_available>\n</stock_availables>\n\
-        </prestashop>\n"}
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_availables>\n<stock_available>\n\t<id><![CDATA[1]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[8]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/1\"><![CDATA[1]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[9]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/2\"><![CDATA[2]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[10]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/3\"><![CDATA[3]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[11]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/4\"><![CDATA[4]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[12]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/5\"><![CDATA[5]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[13]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/1\"><![CDATA[1]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/6\"><![CDATA[6]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[2]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[14]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/7\"><![CDATA[7]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[15]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/8\"><![CDATA[8]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[16]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/9\"><![CDATA[9]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[17]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/10\"><![CDATA[10]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[18]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/11\"><![CDATA[11]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[19]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/2\"><![CDATA[2]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/12\"><![CDATA[12]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[3]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/3\"><![CDATA[3]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[20]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/3\"><![CDATA[3]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/13\"><![CDATA[13]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[21]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/3\"><![CDATA[3]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/14\"><![CDATA[14]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[22]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/3\"><![CDATA[3]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/15\"><![CDATA[15]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[4]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[23]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/16\"><![CDATA[16]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[24]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/17\"><![CDATA[17]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[25]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/18\"><![CDATA[18]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[50]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/43\"><![CDATA[43]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[51]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/44\"><![CDATA[44]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[52]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/4\"><![CDATA[4]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/45\"><![CDATA[45]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[5]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[26]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/19\"><![CDATA[19]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[27]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/20\"><![CDATA[20]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[28]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/21\"><![CDATA[21]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[29]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/22\"><![CDATA[22]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[30]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/23\"><![CDATA[23]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[31]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/24\"><![CDATA[24]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[32]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/25\"><![CDATA[25]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[33]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/26\"><![CDATA[26]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[34]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/27\"><![CDATA[27]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[35]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/28\"><![CDATA[28]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[36]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/29\"><![CDATA[29]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[37]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/5\"><![CDATA[5]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/30\"><![CDATA[30]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[6]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[38]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/31\"><![CDATA[31]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[39]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/32\"><![CDATA[32]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[40]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/33\"><![CDATA[33]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[47]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/40\"><![CDATA[40]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[48]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/41\"><![CDATA[41]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[49]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/6\"><![CDATA[6]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/42\"><![CDATA[42]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[7]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[41]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/34\"><![CDATA[34]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[42]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/35\"><![CDATA[35]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[43]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/36\"><![CDATA[36]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[44]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/37\"><![CDATA[37]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[45]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/38\"><![CDATA[38]]></id_product_attribute>\n</stock_available>\n<stock_available>\n\t<id><![CDATA[46]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/7\"><![CDATA[7]]></id_product>\n\t<id_product_attribute
+        xlink:href=\"http://localhost:8080/api/combinations/39\"><![CDATA[39]]></id_product_attribute>\n</stock_available>\n</stock_availables>\n</prestashop>\n"}
     headers:
-      access-time: ['1481290492']
-      connection: [Keep-Alive]
-      content-length: ['13277']
-      content-sha1: [7e59ece6cb6ac8781aee1e5491bf305858ed8201]
+      access-time: ['1536828054']
+      connection: [keep-alive]
+      content-sha1: [d3b496c686bdacfbfdeda1b1c0ab00a91ba33351]
       content-type: [text/xml;charset=utf-8]
-      date: ['Fri, 09 Dec 2016 13:34:52 GMT']
+      date: ['Thu, 13 Sep 2018 08:40:54 GMT']
       execution-time: ['0.008']
-      keep-alive: ['timeout=5, max=100']
-      psws-version: [1.6.1.9]
-      server: [Apache/2.4.10 (Debian)]
-      vary: [Accept-Encoding]
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=1
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="8" xlink:href="http://localhost:8080/api/stock_availables/8"/>
+
+        <stock_available id="9" xlink:href="http://localhost:8080/api/stock_availables/9"/>
+
+        <stock_available id="10" xlink:href="http://localhost:8080/api/stock_availables/10"/>
+
+        <stock_available id="11" xlink:href="http://localhost:8080/api/stock_availables/11"/>
+
+        <stock_available id="12" xlink:href="http://localhost:8080/api/stock_availables/12"/>
+
+        <stock_available id="13" xlink:href="http://localhost:8080/api/stock_availables/13"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828054']
+      connection: [keep-alive]
+      content-sha1: [7e162f8f62ab031ff1902bd77a13124ff0538aa9]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:54 GMT']
+      execution-time: ['0.002']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D;
+          expires=Wed, 03-Oct-2018 08:40:54 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=2
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="14" xlink:href="http://localhost:8080/api/stock_availables/14"/>
+
+        <stock_available id="15" xlink:href="http://localhost:8080/api/stock_availables/15"/>
+
+        <stock_available id="16" xlink:href="http://localhost:8080/api/stock_availables/16"/>
+
+        <stock_available id="17" xlink:href="http://localhost:8080/api/stock_availables/17"/>
+
+        <stock_available id="18" xlink:href="http://localhost:8080/api/stock_availables/18"/>
+
+        <stock_available id="19" xlink:href="http://localhost:8080/api/stock_availables/19"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828054']
+      connection: [keep-alive]
+      content-sha1: [5974181b31ec216dbb01fa59b28ac47049d781d2]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:54 GMT']
+      execution-time: ['0.002']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=3
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="20" xlink:href="http://localhost:8080/api/stock_availables/20"/>
+
+        <stock_available id="21" xlink:href="http://localhost:8080/api/stock_availables/21"/>
+
+        <stock_available id="22" xlink:href="http://localhost:8080/api/stock_availables/22"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828054']
+      connection: [keep-alive]
+      content-sha1: [dee923fc0ff84b2f49ed53ff40485fa19e32df31]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:54 GMT']
+      execution-time: ['0.002']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=4
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="23" xlink:href="http://localhost:8080/api/stock_availables/23"/>
+
+        <stock_available id="24" xlink:href="http://localhost:8080/api/stock_availables/24"/>
+
+        <stock_available id="25" xlink:href="http://localhost:8080/api/stock_availables/25"/>
+
+        <stock_available id="50" xlink:href="http://localhost:8080/api/stock_availables/50"/>
+
+        <stock_available id="51" xlink:href="http://localhost:8080/api/stock_availables/51"/>
+
+        <stock_available id="52" xlink:href="http://localhost:8080/api/stock_availables/52"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828054']
+      connection: [keep-alive]
+      content-sha1: [e51fce53d498c64d53c26e6b7752bcce9175e6dc]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:54 GMT']
+      execution-time: ['0.002']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=5
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="26" xlink:href="http://localhost:8080/api/stock_availables/26"/>
+
+        <stock_available id="27" xlink:href="http://localhost:8080/api/stock_availables/27"/>
+
+        <stock_available id="28" xlink:href="http://localhost:8080/api/stock_availables/28"/>
+
+        <stock_available id="29" xlink:href="http://localhost:8080/api/stock_availables/29"/>
+
+        <stock_available id="30" xlink:href="http://localhost:8080/api/stock_availables/30"/>
+
+        <stock_available id="31" xlink:href="http://localhost:8080/api/stock_availables/31"/>
+
+        <stock_available id="32" xlink:href="http://localhost:8080/api/stock_availables/32"/>
+
+        <stock_available id="33" xlink:href="http://localhost:8080/api/stock_availables/33"/>
+
+        <stock_available id="34" xlink:href="http://localhost:8080/api/stock_availables/34"/>
+
+        <stock_available id="35" xlink:href="http://localhost:8080/api/stock_availables/35"/>
+
+        <stock_available id="36" xlink:href="http://localhost:8080/api/stock_availables/36"/>
+
+        <stock_available id="37" xlink:href="http://localhost:8080/api/stock_availables/37"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828055']
+      connection: [keep-alive]
+      content-sha1: [cdd87832c0c5b63ca1ce88c294edf2bb48540c53]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:55 GMT']
+      execution-time: ['0.002']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=6
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="38" xlink:href="http://localhost:8080/api/stock_availables/38"/>
+
+        <stock_available id="39" xlink:href="http://localhost:8080/api/stock_availables/39"/>
+
+        <stock_available id="40" xlink:href="http://localhost:8080/api/stock_availables/40"/>
+
+        <stock_available id="47" xlink:href="http://localhost:8080/api/stock_availables/47"/>
+
+        <stock_available id="48" xlink:href="http://localhost:8080/api/stock_availables/48"/>
+
+        <stock_available id="49" xlink:href="http://localhost:8080/api/stock_availables/49"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828055']
+      connection: [keep-alive]
+      content-sha1: [d940691940e11f2815858dfe0a6a3e7f82161893]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:55 GMT']
+      execution-time: ['0.003']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [PrestaShop-afa88870cc72c3359653551ba256dfd3=a16037d68747712a71b95e0c820029f76721ef066c3ad2057b2e7e346ccb6c85%3AyxxHtEKBxuS%2B68yQm0bfSc70YbwM64IZHcny1T63uSv5RcxVSrzGnimFRaiZ5f7AAdc%2BR481elvDTZaCs5zmYMjRFLGQjnlGkEmWFqYSE0M%3D]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=%3E%5B0%5D&filter%5Bid_product%5D=7
+  response:
+    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <stock_availables>
+
+        <stock_available id="41" xlink:href="http://localhost:8080/api/stock_availables/41"/>
+
+        <stock_available id="42" xlink:href="http://localhost:8080/api/stock_availables/42"/>
+
+        <stock_available id="43" xlink:href="http://localhost:8080/api/stock_availables/43"/>
+
+        <stock_available id="44" xlink:href="http://localhost:8080/api/stock_availables/44"/>
+
+        <stock_available id="45" xlink:href="http://localhost:8080/api/stock_availables/45"/>
+
+        <stock_available id="46" xlink:href="http://localhost:8080/api/stock_availables/46"/>
+
+        </stock_availables>
+
+        </prestashop>
+
+'}
+    headers:
+      access-time: ['1536828055']
+      connection: [keep-alive]
+      content-sha1: [096a97a8e0ce312114a8c45bfe56391d9fce2141]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 13 Sep 2018 08:40:55 GMT']
+      execution-time: ['0.003']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      transfer-encoding: [chunked]
       x-powered-by: [PrestaShop Webservice]
     status: {code: 200, message: OK}
 version: 1

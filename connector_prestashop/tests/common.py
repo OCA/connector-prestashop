@@ -4,7 +4,6 @@
 
 import functools
 
-from odoo.addons.connector.connector import ConnectorEnvironment
 from odoo.addons.component.tests.common import SavepointComponentCase
 
 from contextlib import contextmanager
@@ -96,7 +95,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
         self.env.ref('base.GBP').active = True
 
     def base_mapping(self):
-        self.create_binding_no_export('prestashop.res.lang', 1, 1)
+        self.create_binding_no_export('prestashop.res.lang', 1, 1, active=True)
         countries = [
             (self.env.ref('base.fr'), 8),
             (self.env.ref('base.uk'), 17),
@@ -310,7 +309,8 @@ class PrestashopTransactionCase(SavepointComponentCase):
                                 template_ps_id=None,
                                 variant_ps_id=None):
         product = self.env['product.product'].create({
-            'name': name
+            'name': name,
+            'type': 'product',
         })
         template = product.product_tmpl_id
         template_binding = self.create_binding_no_export(

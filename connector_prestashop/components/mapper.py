@@ -10,7 +10,6 @@ class PrestashopImportMapper(AbstractComponent):
     _inherit = ['base.prestashop.connector', 'base.import.mapper']
     _usage = 'import.mapper'
 
-
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
@@ -44,7 +43,8 @@ class TranslationPrestashopExportMapper(AbstractComponent):
 
         It adds the translatable fields in the set.
         """
-        changed_by = super(TranslationPrestashopExportMapper, self).changed_by_fields()
+        changed_by = super(TranslationPrestashopExportMapper, self
+                           ).changed_by_fields()
         if getattr(self, '_translatable_fields', None):
             for from_attr, __ in self._translatable_fields:
                 fieldname = self._direct_source_field_name(from_attr)
