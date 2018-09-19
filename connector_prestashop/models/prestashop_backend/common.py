@@ -22,7 +22,8 @@ class PrestashopBackend(models.Model):
         '1.5': 'prestashop.version.key',
         '1.6.0.9': 'prestashop.version.key.1.6.0.9',
         '1.6.0.11': 'prestashop.version.key.1.6.0.9',
-        '1.6.1.2': 'prestashop.version.key.1.6.1.2'
+        '1.6.1.2': 'prestashop.version.key.1.6.1.2',
+        '1.6.1.9': 'prestashop.version.key.1.6.1.9',
     }
 
     @api.model
