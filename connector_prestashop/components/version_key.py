@@ -69,3 +69,29 @@ class VersionKey1612(Component):
         'messages': 'customer_messages',
         'manufacturers': 'manufacturers',
     }
+    
+class VersionKey_1_6_1_9(Component):
+    _name = '_prestashop.version.key.1.6.1.9'
+    _inherit = '_prestashop.version.key'
+    _usage = 'prestashop.version.key.1.6.1.9'
+
+    # keys checked in 1.6.1.9:
+    # * customer_messages
+    # * order_slip
+    # * order_slip_detail
+
+    keys = {
+        'product_option_value': 'product_option_value',
+        'category': 'category',
+        'image': 'image',
+        'order_slip': 'order_slip',
+        'order_slip_detail': 'order_slip_detail',
+        'group': 'group',
+        'order_row': 'order_row',
+        'tax': 'tax',
+        'combinations': 'combination',
+        'product_features': 'product_feature',
+        'tag': 'tag',
+        'messages': 'customer_messages',
+        'manufacturers': 'manufacturers',
+    }
