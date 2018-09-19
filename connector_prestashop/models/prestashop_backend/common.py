@@ -31,11 +31,14 @@ class PrestashopBackend(models.Model):
 
         Can be inherited to add custom versions.
         """
+        #TODO: Ease the mapping to the class, prevent the need to have this method and the above 
+        # _version dictionnary
         return [
             ('1.5', '< 1.6.0.9'),
             ('1.6.0.9', '1.6.0.9 - 1.6.0.10'),
             ('1.6.0.11', '>= 1.6.0.11 - <1.6.1.2'),
-            ('1.6.1.2', '=1.6.1.2')
+            ('1.6.1.2', '=1.6.1.2'),
+            ('1.6.1.9', '=1.6.1.9'),
         ]
 
     @api.model
