@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from openerp import exceptions
+from odoo import exceptions
 
 from .common import recorder, PrestashopTransactionCase
 
@@ -12,9 +12,9 @@ class TestAuth(PrestashopTransactionCase):
 
     @recorder.use_cassette
     def test_auth_success(self):
-        with self.assertRaisesRegexp(exceptions.UserError,
-                                     u'Connection successful'):
-            self.backend_record.button_check_connection()
+        self.assertEqual('draft', self.backend_record.state)
+        self.backend_record.button_check_connection()
+        self.assertEqual('checked', self.backend_record.state)
 
     @recorder.use_cassette
     def test_auth_failure(self):

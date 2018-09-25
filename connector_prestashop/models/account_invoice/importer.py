@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import _, fields
+from odoo import _
 
-from openerp.addons.connector.exception import MappingError
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import (
+from odoo.addons.connector.exception import MappingError
+from odoo.addons.connector.components.mapper import (
     mapping,
-    ImportMapper,
     only_create,
 )
-
-from ...backend import prestashop
-from ...unit.importer import (
-    PrestashopImporter,
-    import_batch,
-    DelayedBatchImporter,
-)
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class RefundImporter(PrestashopImporter):
+class RefundImporter(Component):
+    _name = 'prestashop.refund.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.refund'
+
     _model_name = 'prestashop.refund'
 
     def _import_dependencies(self):
@@ -36,8 +31,7 @@ class RefundImporter(PrestashopImporter):
             invoice.signal_workflow('invoice_open')
         else:
             self.backend_record.add_checkpoint(
-                model='account.invoice',
-                record_id=invoice.id,
+                invoice,
                 message=_('The refund for order %s has a different amount '
                           'in PrestaShop and in Odoo.') % invoice.origin
             )
@@ -47,8 +41,10 @@ class RefundImporter(PrestashopImporter):
         self._open_refund(binding)
 
 
-@prestashop
-class RefundMapper(ImportMapper):
+class RefundMapper(Component):
+    _name = 'prestashop.refund.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.refund'
     _model_name = 'prestashop.refund'
 
     direct = [
@@ -68,7 +64,7 @@ class RefundMapper(ImportMapper):
 
     def _get_order(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        return binder.to_odoo(record['id_order'])
+        return binder.to_internal(record['id_order'])
 
     @mapping
     def from_sale_order(self, record):
@@ -141,7 +137,7 @@ class RefundMapper(ImportMapper):
 
     def _get_shipping_order_line(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        sale_order = binder.to_odoo(record['id_order'], unwrap=True)
+        sale_order = binder.to_internal(record['id_order'], unwrap=True)
         if not sale_order.carrier_id:
             return None
         sale_order_line_ids = self.env['sale.order.line'].search([
@@ -223,13 +219,13 @@ class RefundMapper(ImportMapper):
     @mapping
     def partner_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_odoo(record['id_customer'], unwrap=True)
+        partner = binder.to_internal(record['id_customer'], unwrap=True)
         return {'partner_id': partner.id}
 
     @mapping
     def account_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_odoo(record['id_customer'])
+        partner = binder.to_internal(record['id_customer'])
         partner = partner.with_context(
             company_id=self.backend_record.company_id.id,
         )
@@ -244,25 +240,9 @@ class RefundMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
 
-@prestashop
-class RefundBatchImporter(DelayedBatchImporter):
+class RefundBatchImporter(Component):
+    _name = 'prestashop.refund.batch.importer'
+    _inherit = 'prestashop.batch.importer'
+    _apply_on = 'prestashop.refund'
+
     _model_name = 'prestashop.refund'
-
-
-@job(default_channel='root.prestashop')
-def import_refunds(session, backend_id, since_date, **kwargs):
-    filters = None
-    if since_date:
-        filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
-    now_fmt = fields.Datetime.now()
-    result = import_batch(
-        session,
-        'prestashop.refund',
-        backend_id,
-        filters,
-        **kwargs
-    )
-    session.env['prestashop.backend'].browse(backend_id).write({
-        'import_refunds_since': now_fmt
-    })
-    return result

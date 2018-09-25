@@ -2,26 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+from odoo.addons.component.core import Component
 
-from openerp import models, fields, api, exceptions, _
+from odoo import models, fields, api, exceptions, _
 
-from openerp.addons.connector.connector import ConnectorEnvironment
-from openerp.addons.connector.session import ConnectorSession
-from ...unit.importer import import_batch, import_record
-from ...unit.auto_matching_importer import AutoMatchingImporter
-from ...unit.backend_adapter import GenericAdapter, api_handle_errors
-from ...unit.version_key import VersionKey
-from ...backend import prestashop
-
-from ..product_template.exporter import export_product_quantities
-from ..product_template.importer import import_inventory
-from ..res_partner.importer import import_customers_since
-from ..delivery_carrier.importer import import_carriers
-from ..product_supplierinfo.importer import import_suppliers
-from ..account_invoice.importer import import_refunds
-from ..product_template.importer import import_products
-from ..sale_order.importer import import_orders_since
-
+from ...components.backend_adapter import api_handle_errors
+from odoo.addons.connector.checkpoint import checkpoint
+from odoo.addons.base.res.res_partner import _tz_get
 
 _logger = logging.getLogger(__name__)
 
@@ -31,9 +18,15 @@ class PrestashopBackend(models.Model):
     _description = 'PrestaShop Backend Configuration'
     _inherit = 'connector.backend'
 
-    _backend_type = 'prestashop'
+    _versions = {
+        '1.5': 'prestashop.version.key',
+        '1.6.0.9': 'prestashop.version.key.1.6.0.9',
+        '1.6.0.11': 'prestashop.version.key.1.6.0.9',
+        '1.6.1.2': 'prestashop.version.key.1.6.1.2'
+    }
 
-    def _select_versions(self):
+    @api.model
+    def select_versions(self):
         """ Available versions
 
         Can be inherited to add custom versions.
@@ -44,8 +37,16 @@ class PrestashopBackend(models.Model):
             ('1.6.0.11', '>= 1.6.0.11 - <1.6.1.2'),
             ('1.6.1.2', '=1.6.1.2')
         ]
+
+    @api.model
+    def _select_state(self):
+        """Available States for this Backend"""
+        return [('draft', 'Draft'),
+                ('checked', 'Checked'),
+                ('production', 'In Production')]
+
     version = fields.Selection(
-        selection='_select_versions',
+        selection='select_versions',
         string='Version',
         required=True,
     )
@@ -115,35 +116,126 @@ class PrestashopBackend(models.Model):
         required=True,
         string='Shipping Product',
     )
+    importable_order_state_ids = fields.Many2many(
+        comodel_name='sale.order.state',
+        string='Importable sale order states',
+        help="If valued only orders matching these states will be imported.",
+    )
+    active = fields.Boolean(
+        string='Active',
+        default=True
+    )
+    state = fields.Selection(
+        selection='_select_state',
+        string='State',
+        default='draft'
+    )
+
+    verbose = fields.Boolean(help="Output requests details in the logs")
+    debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
+
+    matching_product_template = fields.Boolean(string="Match product template")
+
+    matching_product_ch = fields.Selection(
+        [('reference', 'Reference'), ('barcode', 'Barcode')],
+        string="Matching Field for product")
+
+    matching_customer = fields.Boolean(
+        string="Matching Customer",
+        help="The selected fields will be matched to the ref field of the "
+        "partner. Please adapt your datas consequently.")
+    # matching_customer_ch = fields.Many2one(
+    #     comodel_name='prestashop.partner.field', string="Matched field",
+    #     help="Field that will be matched.")
+
+    quantity_field = fields.Selection(
+        [('qty_available', 'Available Quantity'),
+         ('virtual_available', 'Forecast quantity'),
+         ('immediately_usable_qty', 'Available to promise'),
+         ('potential_qty', 'Potential')],
+        help="Some of this options may need some additionnal modules you'll "
+        "have to install by yourself from "
+        "https://github.com/OCA/stock-logistics-warehouse",
+        required=True,
+        default='virtual_available')
+    tz = fields.Selection(
+        _tz_get, 'Timezone', size=64,
+        help="The timezone of the backend. Used to synchronize the sale order "
+        "date.")
+
+    @api.onchange("matching_customer")
+    def change_matching_customer(self):
+        # Update the field list so that if you API change you could find the
+        # new fields to map
+        if self._origin.id:
+            self.fill_matched_fields(self._origin.id)
+
+    @api.multi
+    def fill_matched_fields(self, backend_id):
+        self.ensure_one()
+
+        # options = {'limit': 1, 'display': 'full'}
+        # TODO : Unse new adapter pattern to get a simple partner json
+#         prestashop = PrestaShopLocation(
+#                         self.location.encode(),
+#                         self.webservice_key,
+#                     )
+#
+#         client = PrestaShopWebServiceDict(
+#                     prestashop.api_url,
+#                     prestashop.webservice_key)
+#
+#         customer = client.get('customers', options=options)
+#         tab=customer['customers']['customer'].keys()
+#         for key in tab:
+#             key_present = self.env['prestashop.partner.field'].search(
+#                     [('value', '=', key), ('backend_id', '=', backend_id)])
+#
+#             if len(key_present) == 0 :
+#                 self.env['prestashop.partner.field'].create({
+#                     'name' : key,
+#                     'value' : key,
+#                     'backend_id': backend_id
+#                 })
 
     @api.model
     def _default_pricelist_id(self):
         return self.env['product.pricelist'].search([], limit=1)
 
     @api.multi
-    def get_environment(self, model_name, session=None):
+    def add_checkpoint(self, record, message=''):
+        """
+        @param message: used with this
+        https://github.com/OCA/connector/issues/37
+        """
         self.ensure_one()
-        if not session:
-            session = ConnectorSession.from_env(self.env)
-        return ConnectorEnvironment(self, session, model_name)
+        record.ensure_one()
+        chk_point = checkpoint.add_checkpoint(self.env, record._name,
+                                              record.id, self._name, self.id)
+        if message:
+            chk_point.message_post(body=message)
+        return chk_point
+
+    @api.multi
+    def button_reset_to_draft(self):
+        self.ensure_one()
+        self.write({'state': 'draft'})
 
     @api.multi
     def synchronize_metadata(self):
-        session = ConnectorSession.from_env(self.env)
         for backend in self:
-            for model in [
+            for model_name in [
                 'prestashop.shop.group',
                 'prestashop.shop'
             ]:
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
-                import_batch(session, model, backend.id)
+                self.env[model_name].import_batch(backend)
         return True
 
     @api.multi
     def synchronize_basedata(self):
-        session = ConnectorSession.from_env(self.env)
         for backend in self:
             for model_name in [
                 'prestashop.res.lang',
@@ -151,114 +243,104 @@ class PrestashopBackend(models.Model):
                 'prestashop.res.currency',
                 'prestashop.account.tax',
             ]:
-                env = backend.get_environment(model_name, session=session)
-                importer = env.get_connector_unit(AutoMatchingImporter)
-                importer.run()
-
-            import_batch(session, 'prestashop.account.tax.group', backend.id)
-            import_batch(session, 'prestashop.sale.order.state', backend.id)
+                with backend.work_on(model_name) as work:
+                    importer = work.component(usage='auto.matching.importer')
+                    importer.run()
+            self.env['prestashop.account.tax.group'].import_batch(backend)
+            self.env['prestashop.sale.order.state'].import_batch(backend)
         return True
 
     @api.multi
     def _check_connection(self):
         self.ensure_one()
-        env = self.get_environment(self._name)
-        adapter = env.get_connector_unit(GenericAdapter)
-        with api_handle_errors('Connection failed'):
-            adapter.head()
+        with self.work_on('prestashop.backend') as work:
+            component = work.component_by_name(name='prestashop.adapter.test')
+            with api_handle_errors('Connection failed'):
+                component.head()
 
     @api.multi
     def button_check_connection(self):
         self._check_connection()
-        raise exceptions.UserError(_('Connection successful'))
+        # raise exceptions.UserError(_('Connection successful'))
+        self.write({'state': 'checked'})
 
     @api.multi
     def import_customers_since(self):
-        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_partners_since
-            import_customers_since.delay(
-                session,
-                backend_record.id,
-                since_date=since_date,
-                priority=10,
-            )
+            self.env['prestashop.res.partner'].with_delay(
+                ).import_customers_since(
+                    backend_record=backend_record, since_date=since_date)
         return True
 
     @api.multi
     def import_products(self):
-        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_products_since
-            import_products.delay(
-                session,
-                backend_record.id,
-                since_date,
-                priority=10)
+            self.env['prestashop.product.template'].with_delay(
+                ).import_products(backend_record, since_date)
         return True
 
     @api.multi
     def import_carriers(self):
-        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
-            import_carriers.delay(session, backend_record.id, priority=10)
-        return True
-
-    @api.multi
-    def update_product_stock_qty(self):
-        session = ConnectorSession.from_env(self.env)
-        for backend_record in self:
-            export_product_quantities.delay(session, backend_record.id)
-        return True
-
-    @api.multi
-    def import_stock_qty(self):
-        session = ConnectorSession.from_env(self.env)
-        for backend_record in self:
-            import_inventory.delay(session, backend_record.id)
-
-    @api.multi
-    def import_sale_orders(self):
-        session = ConnectorSession.from_env(self.env)
-        for backend_record in self:
-            since_date = backend_record.import_orders_since
-            import_orders_since.delay(
-                session,
-                backend_record.id,
-                since_date,
-                priority=5,
+            self.env['prestashop.delivery.carrier'].with_delay().import_batch(
+                backend_record,
             )
         return True
 
     @api.multi
-    def import_payment_modes(self):
-        session = ConnectorSession.from_env(self.env)
+    def update_product_stock_qty(self):
         for backend_record in self:
-            import_batch.delay(session, 'account.payment.mode',
-                               backend_record.id)
+            backend_record.env['prestashop.product.template']\
+                .with_delay().export_product_quantities(backend=backend_record)
+            backend_record.env['prestashop.product.combination']\
+                .with_delay().export_product_quantities(backend=backend_record)
+        return True
+
+    @api.multi
+    def import_stock_qty(self):
+        for backend_record in self:
+            backend_record.env['prestashop.product.template']\
+                .with_delay().import_inventory(backend_record)
+
+    @api.multi
+    def import_sale_orders(self):
+        for backend_record in self:
+            since_date = backend_record.import_orders_since
+            backend_record.env['prestashop.sale.order'].with_delay(
+                ).import_orders_since(backend_record, since_date)
+        return True
+
+    @api.multi
+    def import_payment_modes(self):
+        for backend_record in self:
+            with backend_record.work_on('account.payment.mode') as work:
+                importer = work.component(usage='batch.importer')
+                importer.run(filters={})
         return True
 
     @api.multi
     def import_refunds(self):
-        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_refunds_since
-            import_refunds.delay(session, backend_record.id, since_date)
+            backend_record.env['prestashop.refund'].import_refunds(
+                backend_record, since_date)
         return True
 
     @api.multi
     def import_suppliers(self):
-        session = ConnectorSession.from_env(self.env)
         for backend_record in self:
             since_date = backend_record.import_suppliers_since
-            import_suppliers.delay(session, backend_record.id, since_date)
+            backend_record.env['prestashop.supplier'].import_suppliers(
+                backend_record, since_date)
         return True
 
     def get_version_ps_key(self, key):
         self.ensure_one()
-        env = self.get_environment('_prestashop.version.key')
-        keys = env.get_connector_unit(VersionKey)
-        return keys.get_key(key)
+        with self.work_on('_prestashop.version.key') as work:
+            keys = work.component(usage=self._versions[self.version])
+            return keys.get_key(key)
 
     @api.model
     def _scheduler_update_product_stock_qty(self, domain=None):
@@ -291,40 +373,35 @@ class PrestashopBackend(models.Model):
         self.search(domain or []).import_suppliers()
 
     @api.multi
-    def import_record(self, model_name, ext_id):
-        self.ensure_one()
-        session = ConnectorSession.from_env(self.env)
-        import_record(session, model_name, self.id, ext_id)
-        return True
+    def _get_locations_for_stock_quantities(self):
+        root_location = (self.stock_location_id or
+                         self.warehouse_id.lot_stock_id)
+        locations = self.env['stock.location'].search([
+            ('id', 'child_of', root_location.id),
+            ('prestashop_synchronized', '=', True),
+            ('usage', '=', 'internal'),
+        ])
+        # if we choosed a location but none where flagged
+        # 'prestashop_synchronized', consider we want all of them in the tree
+        if not locations:
+            locations = self.env['stock.location'].search([
+                ('id', 'child_of', root_location.id),
+                ('usage', '=', 'internal'),
+            ])
+        if not locations:
+            # we must not pass an empty location or we would have the
+            # stock for every warehouse, which is the last thing we
+            # expect
+            raise exceptions.UserError(
+                _('No internal location found to compute the product '
+                  'quantity.')
+            )
+        return locations
 
 
-class PrestashopShopGroup(models.Model):
-    _name = 'prestashop.shop.group'
-    _inherit = 'prestashop.binding'
-    _description = 'PrestaShop Shop Group'
-
-    name = fields.Char('Name', required=True)
-    shop_ids = fields.One2many(
-        comodel_name='prestashop.shop',
-        inverse_name='shop_group_id',
-        readonly=True,
-        string="Shops",
-    )
-    company_id = fields.Many2one(
-        related='backend_id.company_id',
-        comodel_name="res.company",
-        string='Company'
-    )
-
-
-@prestashop
-class NoModelAdapter(GenericAdapter):
+class NoModelAdapter(Component):
     """ Used to test the connection """
-    _model_name = 'prestashop.backend'
+    _name = 'prestashop.adapter.test'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.backend'
     _prestashop_model = ''
-
-
-@prestashop
-class ShopGroupAdapter(GenericAdapter):
-    _model_name = 'prestashop.shop.group'
-    _prestashop_model = 'shop_groups'

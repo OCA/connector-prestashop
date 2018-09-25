@@ -8,14 +8,6 @@ import mock
 
 from freezegun import freeze_time
 
-from openerp.addons.connector_prestashop.models.res_partner.importer import (
-    import_customers_since
-)
-from openerp.addons.connector_prestashop.unit.importer import (
-    import_record,
-    import_batch,
-)
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -52,15 +44,14 @@ class TestImportPartner(PrestashopTransactionCase):
     def test_import_partner_since(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_partners_since = from_date
-        import_since_job = ('openerp.addons.connector_prestashop.models'
-                            '.prestashop_backend.common'
-                            '.import_customers_since')
-        with mock.patch(import_since_job) as import_mock:
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
+        with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_customers_since()
-            import_mock.delay.assert_called_with(
-                mock.ANY, self.backend_record.id,
+            delay_record_instance = delay_record_mock.return_value
+            delay_record_instance.import_customers_since.assert_called_with(
+                backend_record=self.backend_record,
                 since_date='2016-09-01 00:00:00',
-                priority=10,
             )
 
     @freeze_time('2016-09-13 00:00:00')
@@ -68,16 +59,15 @@ class TestImportPartner(PrestashopTransactionCase):
     def test_import_partner_batch(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_res_partner_from_date = from_date
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette('test_import_partner_batch') as cassette, \
-                mock.patch(record_job_path) as import_record_mock:
+                mock.patch(delay_record_path) as delay_record_mock:
 
-            import_customers_since(
-                self.conn_session,
-                self.backend_record.id,
+            self.env['prestashop.res.partner'].import_customers_since(
+                self.backend_record,
                 since_date=from_date,
             )
             expected_query = {
@@ -97,14 +87,15 @@ class TestImportPartner(PrestashopTransactionCase):
             self.assertEqual('/api/customers', self.parse_path(request.uri))
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
-            self.assertEqual(5, import_record_mock.delay.call_count)
+            delay_record_instance = delay_record_mock.return_value
+            self.assertEqual(5, delay_record_instance.import_record.call_count)
 
     @assert_no_job_delayed
     def test_import_partner_category_record(self):
         """ Import a partner category """
         with recorder.use_cassette('test_import_partner_category_record_1'):
-            import_record(self.conn_session, 'prestashop.res.partner.category',
-                          self.backend_record.id, 3)
+            self.env['prestashop.res.partner.category'].import_record(
+                self.backend_record, 3)
 
         domain = [('prestashop_id', '=', 3)]
         category_model = self.env['prestashop.res.partner.category']
@@ -129,18 +120,16 @@ class TestImportPartner(PrestashopTransactionCase):
             'prestashop.res.partner.category', category.id, 3
         )
 
-        batch_job_path = ('openerp.addons.connector_prestashop.models'
-                          '.res_partner.importer.import_batch')
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
         with recorder.use_cassette('test_import_partner_record_1'), \
-                mock.patch(batch_job_path) as address_batch_mock:
-            import_record(self.conn_session, 'prestashop.res.partner',
-                          self.backend_record.id, 1)
-            address_batch_mock.delay.assert_called_with(
-                mock.ANY,
-                'prestashop.address',
-                self.backend_record.id,
+                mock.patch(delay_record_path) as delay_record_mock:
+            self.env['prestashop.res.partner'].import_record(
+                self.backend_record, 1)
+            delay_record_instance = delay_record_mock.return_value
+            delay_record_instance.import_batch.assert_called_with(
+                backend=self.backend_record,
                 filters={'filter[id_customer]': '1'},
-                priority=10,
             )
 
         domain = [('prestashop_id', '=', 1)]
@@ -164,18 +153,16 @@ class TestImportPartner(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_partner_address_batch(self):
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         cassette_name = 'test_import_partner_address_batch'
         with recorder.use_cassette(cassette_name) as cassette, \
-                mock.patch(record_job_path) as import_record_mock:
+                mock.patch(delay_record_path) as delay_record_mock:
 
-            import_batch(
-                self.conn_session,
-                'prestashop.address',
-                self.backend_record.id,
+            self.env['prestashop.address'].import_batch(
+                self.backend_record,
                 filters={'filter[id_customer]': '1'}
             )
             expected_query = {
@@ -189,7 +176,8 @@ class TestImportPartner(PrestashopTransactionCase):
             query = self.parse_qs(cassette.requests[0].uri)
             self.assertDictEqual(expected_query, query)
 
-            self.assertEqual(2, import_record_mock.delay.call_count)
+            delay_record_instance = delay_record_mock.return_value
+            self.assertEqual(2, delay_record_instance.import_record.call_count)
 
     @assert_no_job_delayed
     def test_import_partner_address_record(self):
@@ -204,8 +192,8 @@ class TestImportPartner(PrestashopTransactionCase):
             shop_id=self.shop.id,
         )
         with recorder.use_cassette('test_import_partner_address_record_1'):
-            import_record(self.conn_session, 'prestashop.address',
-                          self.backend_record.id, 1)
+            self.env['prestashop.address'].import_record(
+                self.backend_record, 1)
 
         domain = [('prestashop_id', '=', 1)]
         address_bindings = self.env['prestashop.address'].search(domain)

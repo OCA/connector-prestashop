@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
-from ...unit.importer import PrestashopImporter, DelayedBatchImporter
-from ...backend import prestashop
+from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class MailMessageMapper(ImportMapper):
+class MailMessageMapper(Component):
+    _name = 'prestashop.mail.message.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'
 
     direct = [
@@ -25,7 +27,7 @@ class MailMessageMapper(ImportMapper):
     @mapping
     def object_ref(self, record):
         binder = self.binder_for('prestashop.sale.order')
-        order = binder.to_odoo(record['id_order'], unwrap=True)
+        order = binder.to_internal(record['id_order'], unwrap=True)
         return {
             'model': 'sale.order',
             'res_id': order.id,
@@ -35,14 +37,17 @@ class MailMessageMapper(ImportMapper):
     def author_id(self, record):
         if record['id_customer'] != '0':
             binder = self.binder_for('prestashop.res.partner')
-            partner = binder.to_odoo(record['id_customer'], unwrap=True)
+            partner = binder.to_internal(record['id_customer'], unwrap=True)
             return {'author_id': partner.id}
         return {}
 
 
-@prestashop
-class MailMessageImporter(PrestashopImporter):
+class MailMessageImporter(Component):
     """ Import one simple record """
+    _name = 'prestashop.mail.message.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'
 
     def _import_dependencies(self):
@@ -58,10 +63,13 @@ class MailMessageImporter(PrestashopImporter):
         if not record.get('id_order'):
             return 'no id_order'
         binder = self.binder_for('prestashop.sale.order')
-        order_binding = binder.to_odoo(record['id_order'])
+        order_binding = binder.to_internal(record['id_order'])
         return record['id_order'] == '0' or not order_binding
 
 
-@prestashop
-class MailMessageBatchImporter(DelayedBatchImporter):
+class MailMessageBatchImporter(Component):
+    _name = 'prestashop.mail.message.delayed.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.mail.message'
+
     _model_name = 'prestashop.mail.message'

@@ -7,12 +7,10 @@ from contextlib import contextmanager
 import psycopg2
 
 
-from openerp import _, exceptions
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.queue.job import related_action
-from openerp.addons.connector.unit.synchronizer import Exporter
-from openerp.addons.connector.exception import RetryableJobError
-from .mapper import TranslationPrestashopExportMapper
+from odoo import _, exceptions
+from odoo.addons.component.core import AbstractComponent
+
+from odoo.addons.connector.exception import RetryableJobError
 
 
 _logger = logging.getLogger(__name__)
@@ -25,8 +23,12 @@ _logger = logging.getLogger(__name__)
 # * call the ``bind`` method of the binder to update the last sync date
 
 
-class PrestashopBaseExporter(Exporter):
+class PrestashopBaseExporter(AbstractComponent):
     """ Base exporter for PrestaShop """
+
+    _name = 'prestashop.base.exporter'
+    _inherit = ['base.exporter', 'base.prestashop.connector']
+    _usage = 'record.exporter'
 
     def __init__(self, environment):
         """
@@ -41,20 +43,20 @@ class PrestashopBaseExporter(Exporter):
         """ Return the raw Odoo data for ``self.binding_id`` """
         return self.model.browse(self.binding_id)
 
-    def run(self, binding_id, *args, **kwargs):
+    def run(self, binding, *args, **kwargs):
         """ Run the synchronization
 
         :param binding_id: identifier of the binding record to export
         """
-        self.binding_id = binding_id
-        self.binding = self._get_binding()
-        self.prestashop_id = self.binder.to_backend(self.binding)
+        self.binding_id = binding.id
+        self.binding = binding
+        self.prestashop_id = self.binder.to_external(self.binding)
         result = self._run(*args, **kwargs)
 
         self.binder.bind(self.prestashop_id, self.binding)
         # commit so we keep the external ID if several cascading exports
         # are called and one of them fails
-        self.session.commit()
+        self.env.cr.commit()  # pylint: disable=invalid-commit
         self._after_export()
         return result
 
@@ -67,8 +69,11 @@ class PrestashopBaseExporter(Exporter):
         return
 
 
-class PrestashopExporter(PrestashopBaseExporter):
+class PrestashopExporter(AbstractComponent):
     """ A common flow for the exports to PrestaShop """
+
+    _name = 'prestashop.exporter'
+    _inherit = 'prestashop.base.exporter'
 
     _openerp_field = 'odoo_id'
 
@@ -147,7 +152,7 @@ class PrestashopExporter(PrestashopBaseExporter):
                     binding = model_c.create(_bind_values)
                     # Eager commit to avoid having 2 jobs
                     # exporting at the same time.
-                    self.session.commit()
+                    self._cr.commit()  # pylint: disable=invalid-commit
         else:
             # If prestashop_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
@@ -157,6 +162,7 @@ class PrestashopExporter(PrestashopBaseExporter):
 
     def _export_dependency(self, relation, binding_model,
                            exporter_class=None,
+                           component_usage='record.exporter',
                            binding_field_name='prestashop_bind_ids',
                            bind_values=None, force_sync=False):
         """
@@ -188,6 +194,8 @@ class PrestashopExporter(PrestashopBaseExporter):
                              By default: PrestashopExporter
         :type exporter_cls: :py:class:`openerp.addons.connector.\
                                        connector.MetaConnectorUnit`
+        :param component_usage: 'usage' to look for to find the Component to
+                                for the export, by default 'record.exporter'
         :param binding_field_name: name of the one2many towards the bindings
                                    default is 'prestashop_bind_ids'
         :type binding_field_name: str | unicode
@@ -206,10 +214,10 @@ class PrestashopExporter(PrestashopBaseExporter):
 
         rel_binder = self.binder_for(binding_model)
 
-        if not rel_binder.to_backend(binding) or force_sync:
-            exporter = self.unit_for(
-                exporter_class or PrestashopExporter, binding_model)
-            exporter.run(binding.id)
+        if not rel_binder.to_external(binding) or force_sync:
+            exporter = self.component(usage=component_usage,
+                                      model_name=binding_model)
+            exporter.run(binding)
         return binding
 
     def _export_dependencies(self):
@@ -313,40 +321,12 @@ class PrestashopExporter(PrestashopBaseExporter):
         return message % self.prestashop_id
 
 
-class TranslationPrestashopExporter(PrestashopExporter):
+class TranslationPrestashopExporter(AbstractComponent):
+    _name = 'translation.prestashop.exporter'
+    _inherit = 'prestashop.exporter'
 
-    @property
-    def mapper(self):
-        if self._mapper is None:
-            self._mapper = self.connector_env.get_connector_unit(
-                TranslationPrestashopExportMapper)
-        return self._mapper
-
-
-def related_action_record(session, job):
-    binding_model = job.args[0]
-    binding_id = job.args[1]
-    record = session.env[binding_model].browse(binding_id)
-    odoo_name = record.odoo_id._name
-
-    action = {
-        'name': _(odoo_name),
-        'type': 'ir.actions.act_window',
-        'res_model': odoo_name,
-        'view_type': 'form',
-        'view_mode': 'form',
-        'res_id': record.odoo_id.id,
-    }
-    return action
-
-
-@job(default_channel='root.prestashop')
-@related_action(action=related_action_record)
-def export_record(session, model_name, binding_id, fields=None, **kwargs):
-    """ Export a record on PrestaShop """
-    # TODO: FIX PRESTASHOP do not support partial edit
-    fields = None
-    record = session.env[model_name].browse(binding_id)
-    env = record.backend_id.get_environment(model_name, session=session)
-    exporter = env.get_connector_unit(PrestashopExporter)
-    return exporter.run(binding_id, fields=fields, **kwargs)
+#    @property
+#    def mapper(self):
+#        if self._mapper is None:
+#            self._mapper = self.component(usage='translation.export.mapper')
+#        return self._mapper

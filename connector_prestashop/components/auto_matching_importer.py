@@ -3,16 +3,18 @@
 
 import logging
 
-from openerp.addons.connector.connector import ConnectorUnit
-from openerp.addons.connector.unit.backend_adapter import BackendAdapter
+from odoo.addons.component.core import Component
 
-from openerp import _, exceptions
+from odoo import _, exceptions
 
 _logger = logging.getLogger(__name__)
 
 
-class AutoMatchingImporter(ConnectorUnit):
-    _model_name = None
+class AutoMatchingImporter(Component):
+    _name = 'prestashop.auto.matching.importer'
+    _inherit = 'prestashop.importer'
+    _usage = 'auto.matching.importer'
+
     _erp_field = None
     _ps_field = None
     _copy_fields = []
@@ -33,12 +35,11 @@ class AutoMatchingImporter(ConnectorUnit):
         model = self.env[erp_model_name].with_context(active_test=False)
         erp_ids = model.search([])
         erp_list_dict = erp_ids.read()
-        adapter = self.unit_for(BackendAdapter)
+        adapter = self.component(usage='backend.adapter')
         # Get the IDS from PS
         ps_ids = adapter.search()
         if not ps_ids:
             raise exceptions.Warning(
-                _('Error :'),
                 _('Failed to query %s via PS webservice')
                 % adapter.prestashop_model
             )
@@ -47,7 +48,7 @@ class AutoMatchingImporter(ConnectorUnit):
         # Loop on all PS IDs
         for ps_id in ps_ids:
             # Check if the PS ID is already mapped to an OE ID
-            record = binder.to_odoo(ps_id)
+            record = binder.to_internal(ps_id)
             if record:
                 # Do nothing for the PS IDs that are already mapped
                 _logger.debug(
@@ -73,7 +74,7 @@ class AutoMatchingImporter(ConnectorUnit):
                             'backend_id': self.backend_record.id,
                         }
                         for oe_field, ps_field in self._copy_fields:
-                            data[oe_field] = erp_dict[ps_field]
+                            data[oe_field] = ps_dict[ps_field]
                         record = self.model.create(data)
                         binder.bind(ps_id, record)
                         _logger.debug(

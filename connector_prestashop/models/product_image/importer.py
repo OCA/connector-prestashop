@@ -2,17 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from openerp.addons.connector.queue.job import job
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper)
-
-from ...backend import prestashop
-from ...unit.importer import PrestashopImporter
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping
 
 import mimetypes
 import logging
 
-from openerp import _
+from odoo import _
 
 _logger = logging.getLogger(__name__)
 try:
@@ -21,8 +17,11 @@ except:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-@prestashop
-class ProductImageMapper(ImportMapper):
+class ProductImageMapper(Component):
+    _name = 'prestashop.product.image.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.product.image'
+
     _model_name = 'prestashop.product.image'
 
     direct = [
@@ -32,7 +31,7 @@ class ProductImageMapper(ImportMapper):
     @mapping
     def from_template(self, record):
         binder = self.binder_for('prestashop.product.template')
-        template = binder.to_odoo(record['id_product'], unwrap=True)
+        template = binder.to_internal(record['id_product'], unwrap=True)
         name = '%s_%s' % (template.name, record['id_image'])
         return {'owner_id': template.id, 'name': name}
 
@@ -62,15 +61,16 @@ class ProductImageMapper(ImportMapper):
         return {'owner_model': 'product.template'}
 
 
-@prestashop
-class ProductImageImporter(PrestashopImporter):
-    _model_name = [
-        'prestashop.product.image',
-    ]
+class ProductImageImporter(Component):
+    _name = 'prestashop.product.image.importer'
+    _inherit = 'prestashop.importer'
+    _apply_on = 'prestashop.product.image'
 
     def _get_prestashop_data(self):
         """ Return the raw PrestaShop data for ``self.prestashop_id`` """
-        return self.backend_adapter.read(self.template_id, self.image_id)
+        adapter = self.component(
+            usage='backend.adapter', model_name=self.model._name)
+        return adapter.read(self.template_id, self.image_id)
 
     def run(self, template_id, image_id, **kwargs):
         self.template_id = template_id
@@ -80,15 +80,14 @@ class ProductImageImporter(PrestashopImporter):
             super(ProductImageImporter, self).run(image_id, **kwargs)
         except PrestaShopWebServiceError as error:
             binder = self.binder_for('prestashop.product.template')
-            template = binder.to_odoo(template_id, unwrap=True)
+            template = binder.to_internal(template_id, unwrap=True)
             if template:
                 msg = _(
                     'Import of image id `%s` failed. '
                     'Error: `%s`'
                 ) % (image_id, error.msg)
                 self.backend_record.add_checkpoint(
-                    model='product.template',
-                    record_id=template.id,
+                    template,
                     message=msg)
             else:
                 msg = _(
@@ -96,25 +95,4 @@ class ProductImageImporter(PrestashopImporter):
                     'with id `%s` failed. '
                     'Error: `%s`'
                 ) % (image_id, template_id, error.msg)
-                self.backend_record.add_checkpoint(message=msg)
-
-
-@job(default_channel='root.prestashop')
-def import_product_image(session, model_name, backend_id, product_tmpl_id,
-                         image_id, **kwargs):
-    """Import a product image"""
-    ctx = dict(session.context, **kwargs)
-    backend = session.env['prestashop.backend'].browse(backend_id)
-    env = backend.get_environment(model_name, session=session)
-    with env.session.change_context(ctx):
-        importer = env.get_connector_unit(PrestashopImporter)
-        return importer.run(product_tmpl_id, image_id)
-
-
-@job(default_channel='root.prestashop')
-def set_product_image_variant(
-        session, model_name, backend_id, combination_ids, **kwargs):
-    backend = session.env['prestashop.backend'].browse(backend_id)
-    env = backend.get_environment(model_name, session=session)
-    importer = env.get_connector_unit(PrestashopImporter)
-    importer.set_variant_images(combination_ids, **kwargs)
+                self.backend_record.add_checkpoint()

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
-from ...backend import prestashop
-from ...unit.backend_adapter import GenericAdapter
+from odoo.addons.component.core import Component
 
 
 class AccountInvoice(models.Model):
@@ -77,9 +76,24 @@ class PrestashopRefund(models.Model):
         oldname='openerp_id',
     )
 
+    def import_refunds(self, backend, since_date, **kwargs):
+        filters = None
+        if since_date:
+            filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
+        now_fmt = fields.Datetime.now()
+        self.env['prestashop.refund'].with_delay().import_batch(
+            backend,
+            filters,
+            **kwargs
+        )
+        backend.import_refunds_since = now_fmt
+        return True
 
-@prestashop
-class RefundAdapter(GenericAdapter):
+
+class RefundAdapter(Component):
+    _name = 'prestashop.refund.adapter'
+    _apply_on = 'prestashop.refund'
+
     _model_name = 'prestashop.refund'
 
     @property

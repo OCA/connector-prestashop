@@ -2,10 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from openerp import fields, models
+from odoo import fields, models
 
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
 class PrestashopResCountry(models.Model):
@@ -33,7 +32,8 @@ class ResCountry(models.Model):
     )
 
 
-@prestashop
-class ResCountryAdapter(GenericAdapter):
-    _model_name = 'prestashop.res.country'
+class ResCountryAdapter(Component):
+    _name = 'prestashop.res.country.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.res.country'
     _prestashop_model = 'countries'

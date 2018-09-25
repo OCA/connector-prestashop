@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector.unit.mapper import ImportMapper, mapping
-from ...unit.importer import (
-    TranslatableRecordImporter,
-    import_record,
-    DelayedBatchImporter,
-)
-from ...backend import prestashop
+from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class PartnerCategoryImportMapper(ImportMapper):
-    _model_name = 'prestashop.res.partner.category'
+class PartnerCategoryBatchImporter(Component):
+    _name = 'prestashop.res.partner.category.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.res.partner.category'
+
+
+class PartnerCategoryImportMapper(Component):
+    _name = 'prestashop.res.partner.category.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.res.partner.category'
 
     direct = [
         ('name', 'name'),
@@ -29,13 +31,11 @@ class PartnerCategoryImportMapper(ImportMapper):
         return {'backend_id': self.backend_record.id}
 
 
-@prestashop
-class PartnerCategoryImporter(TranslatableRecordImporter):
+class PartnerCategoryImporter(Component):
     """ Import one translatable record """
-    _model_name = [
-        'prestashop.res.partner.category',
-    ]
-
+    _name = 'prestashop.res.partner.category.importer'
+    _inherit = 'prestashop.translatable.record.importer'
+    _apply_on = 'prestashop.res.partner.category'
     _translatable_fields = {
         'prestashop.res.partner.category': ['name'],
     }
@@ -44,14 +44,7 @@ class PartnerCategoryImporter(TranslatableRecordImporter):
         super(PartnerCategoryImporter, self)._after_import(binding)
         record = self.prestashop_record
         if float(record['reduction']):
-            import_record(
-                self.session,
-                'prestashop.groups.pricelist',
-                self.backend_record.id,
+            self.env['prestashop.groups.pricelist'].import_record(
+                self.backend_record,
                 record['id']
             )
-
-
-@prestashop
-class PartnerCategoryBatchImporter(DelayedBatchImporter):
-    _model_name = 'prestashop.res.partner.category'

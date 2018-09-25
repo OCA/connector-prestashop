@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import _
-from openerp.addons.connector.unit.mapper import (mapping,
-                                                  ImportMapper)
-from openerp.addons.connector.unit.mapper import backend_to_m2o
-from ...unit.importer import TranslatableRecordImporter, DelayedBatchImporter
-from ...backend import prestashop
+from odoo import _
+
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping, external_to_m2o
 
 import datetime
 import logging
@@ -17,18 +15,20 @@ except:
     _logger.debug('Cannot import from `prestapyt`')
 
 
-@prestashop
-class ProductCategoryMapper(ImportMapper):
+class ProductCategoryMapper(Component):
+    _name = 'prestashop.product.category.import.mapper'
+    _inherit = 'prestashop.import.mapper'
+    _apply_on = 'prestashop.product.category'
+
     _model_name = 'prestashop.product.category'
 
     direct = [
-        ('position', 'sequence'),
         ('description', 'description'),
         ('link_rewrite', 'link_rewrite'),
         ('meta_description', 'meta_description'),
         ('meta_keywords', 'meta_keywords'),
         ('meta_title', 'meta_title'),
-        (backend_to_m2o('id_shop_default'), 'default_shop_id'),
+        (external_to_m2o('id_shop_default'), 'default_shop_id'),
         ('active', 'active'),
         ('position', 'position')
     ]
@@ -39,15 +39,15 @@ class ProductCategoryMapper(ImportMapper):
             return {'name': ''}
         return {'name': record['name']}
 
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
+#     @mapping
+#     def backend_id(self, record):
+#         return {'backend_id': self.backend_record.id}
 
     @mapping
     def parent_id(self, record):
         if record['id_parent'] == '0':
             return {}
-        category = self.binder_for('prestashop.product.category').to_odoo(
+        category = self.binder_for('prestashop.product.category').to_internal(
             record['id_parent'], unwrap=True)
         return {
             'parent_id': category.id,
@@ -66,11 +66,11 @@ class ProductCategoryMapper(ImportMapper):
         return {'date_upd': record['date_upd']}
 
 
-@prestashop
-class ProductCategoryImporter(TranslatableRecordImporter):
-    _model_name = [
-        'prestashop.product.category',
-    ]
+class ProductCategoryImporter(Component):
+    _name = 'prestashop.product.category.importer'
+    _inherit = 'prestashop.translatable.record.importer'
+    _apply_on = 'prestashop.product.category'
+    _model_name = 'prestashop.product.category'
 
     _translatable_fields = {
         'prestashop.product.category': [
@@ -96,7 +96,7 @@ class ProductCategoryImporter(TranslatableRecordImporter):
                     'Error: %s'
                 )
                 binder = self.binder_for()
-                category = binder.to_odoo(record['id'])
+                category = binder.to_internal(record['id'])
                 if category:
                     name = category.name
                 else:
@@ -106,12 +106,12 @@ class ProductCategoryImporter(TranslatableRecordImporter):
                     name = values[self._default_language]['name']
 
                 self.backend_record.add_checkpoint(
-                    model=category._name,
-                    record_id=category.id,
-                    message=msg % (name, str(e))
-                )
+                    category, message=msg % (name, str(e)))
 
 
-@prestashop
-class ProductCategoryBatchImporter(DelayedBatchImporter):
+class ProductCategoryBatchImporter(Component):
+    _name = 'prestashop.product.category.delayed.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
+    _apply_on = 'prestashop.product.category'
+
     _model_name = 'prestashop.product.category'

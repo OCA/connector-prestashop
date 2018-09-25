@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
-
-from ...unit.backend_adapter import GenericAdapter
-
-from ...backend import prestashop
+from odoo import models, fields
+from odoo.addons.component.core import Component
 
 
 class ProductCategory(models.Model):
@@ -50,8 +47,11 @@ class PrestashopProductCategory(models.Model):
     position = fields.Integer(string='Position')
 
 
-@prestashop
-class ProductCategoryAdapter(GenericAdapter):
+class ProductCategoryAdapter(Component):
+    _name = 'prestashop.product.category.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.product.category'
+
     _model_name = 'prestashop.product.category'
     _prestashop_model = 'categories'
     _export_node_name = 'category'

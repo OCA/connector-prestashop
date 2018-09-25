@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
-from ...unit.auto_matching_importer import AutoMatchingImporter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class ResCurrencyImporter(AutoMatchingImporter):
-    _model_name = 'prestashop.res.currency'
+class ResCurrencyImporter(Component):
+    _name = 'prestashop.res.currency.importer'
+    _inherit = 'prestashop.auto.matching.importer'
+    _apply_on = 'prestashop.res.currency'
+
     _erp_field = 'name'
     _ps_field = 'iso_code'
 

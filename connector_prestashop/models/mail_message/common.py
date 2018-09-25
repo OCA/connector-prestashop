@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
-
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo import models, fields
+from odoo.addons.component.core import Component
 
 
 class MailMessage(models.Model):
@@ -31,10 +29,30 @@ class PrestashopMailMessage(models.Model):
     )
 
 
-@prestashop
-class MailMessageAdapter(GenericAdapter):
-    _model_name = 'prestashop.mail.message'
+class MailMessageAdapter(Component):
+    _name = 'prestashop.mail.message.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.mail.message'
+    # pylint: disable=method-required-super
 
     @property
     def _prestashop_model(self):
         return self.backend_record.get_version_ps_key('messages')
+
+    def read(self, id, attributes=None):
+        """ Merge message and thread datas
+
+        :rtype: dict
+        """
+        api = self.client
+        res = api.get(self._prestashop_model, id, options=attributes)
+        first_key = res.keys()[0]
+        message_data = res[first_key]
+        thread_data = api.get('customer_threads',
+                              message_data['id_customer_thread'],
+                              options=attributes)
+        first_key = thread_data.keys()[0]
+        del thread_data[first_key]['id']
+        del thread_data[first_key]['date_add']
+        message_data.update(thread_data[first_key])
+        return message_data

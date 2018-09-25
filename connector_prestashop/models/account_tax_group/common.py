@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import fields, models
-
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo import fields, models
+from odoo.addons.component.core import Component
 
 
 class AccountTaxGroup(models.Model):
@@ -19,7 +17,6 @@ class AccountTaxGroup(models.Model):
     company_id = fields.Many2one(
         comodel_name='res.company',
         index=True,
-        required=True,
         string='Company',
     )
     tax_ids = fields.One2many(
@@ -43,7 +40,10 @@ class PrestashopAccountTaxGroup(models.Model):
     )
 
 
-@prestashop
-class TaxGroupAdapter(GenericAdapter):
+class TaxGroupAdapter(Component):
+    _name = 'prestashop.account.tax.group.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.account.tax.group'
+
     _model_name = 'prestashop.account.tax.group'
     _prestashop_model = 'tax_rule_groups'

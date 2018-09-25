@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import models, fields
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo import models, fields
+from odoo.addons.component.core import Component
 
 
 class SaleOrderState(models.Model):
@@ -46,14 +45,11 @@ class SaleOrderStateList(models.Model):
 
     name = fields.Selection(
         selection=[
-            ('draft', 'Draft Quotation'),
+            ('draft', 'Quotation'),
             ('sent', 'Quotation Sent'),
+            ('sale', 'Sales Order'),
+            ('done', 'Locked'),
             ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done')
         ],
         string='Odoo State',
         required=True,
@@ -70,7 +66,8 @@ class SaleOrderStateList(models.Model):
     )
 
 
-@prestashop
-class SaleOrderStateAdapter(GenericAdapter):
-    _model_name = 'prestashop.sale.order.state'
+class SaleOrderStateAdapter(Component):
+    _name = 'prestashop.sale.order.state.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.sale.order.state'
     _prestashop_model = 'order_states'

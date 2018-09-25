@@ -8,14 +8,6 @@ import mock
 
 from freezegun import freeze_time
 
-from openerp.addons.connector_prestashop.unit.importer import (
-    import_record,
-)
-from openerp.addons.connector_prestashop.models.\
-    product_template.importer import (
-        import_products
-    )
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -46,66 +38,38 @@ class TestImportProduct(PrestashopTransactionCase):
         self.shop_group = self.env['prestashop.shop.group'].search([])
         self.shop = self.env['prestashop.shop'].search([])
 
-        self.mock_delay_import_image = mock.MagicMock()
-        self.patch_delay_import_image = mock.patch(
-            'openerp.addons.connector_prestashop.models.product_template'
-            '.importer.set_product_image_variant',
-            new=self.mock_delay_import_image
+        mock_delay_record = mock.MagicMock()
+        self.instance_delay_record = mock_delay_record.return_value
+        self.patch_delay_record = mock.patch(
+            'odoo.addons.queue_job.models.base.DelayableRecordset',
+            new=mock_delay_record
         )
-        self.patch_delay_import_image.start()
-
-        self.mock_delay_import_image = mock.MagicMock()
-        self.patch_delay_import_image = mock.patch(
-            'openerp.addons.connector_prestashop.models.product_template'
-            '.importer.import_product_image',
-            new=self.mock_delay_import_image
-        )
-        self.patch_delay_import_image.start()
-
-        self.mock_delay_set_image = mock.MagicMock()
-        self.patch_delay_set_image = mock.patch(
-            'openerp.addons.connector_prestashop.models.product_template'
-            '.importer.set_product_image_variant',
-            new=self.mock_delay_set_image
-        )
-        self.patch_delay_set_image.start()
+        self.patch_delay_record.start()
 
     def tearDown(self):
         super(TestImportProduct, self).tearDown()
-        self.patch_delay_import_image.stop()
-        self.patch_delay_set_image.stop()
+        self.patch_delay_record.stop()
 
     @freeze_time('2016-09-13 00:00:00')
     @assert_no_job_delayed
     def test_import_products(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_products_since = from_date
-        import_job = ('openerp.addons.connector_prestashop.models'
-                      '.prestashop_backend.common'
-                      '.import_products')
-        with mock.patch(import_job) as import_mock:
-            self.backend_record.import_products()
-            import_mock.delay.assert_called_with(
-                mock.ANY, self.backend_record.id,
-                from_date,
-                priority=10,
-            )
+        self.backend_record.import_products()
+        self.instance_delay_record.import_products.assert_called_with(
+            self.backend_record, from_date)
 
     @freeze_time('2016-09-13 00:00:00')
     @assert_no_job_delayed
     def test_import_products_batch(self):
         from_date = '2016-09-01 00:00:00'
         self.backend_record.import_products_since = from_date
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
-        with recorder.use_cassette('test_import_product_batch') as cassette, \
-                mock.patch(record_job_path) as import_record_mock:
+        with recorder.use_cassette('test_import_product_batch') as cassette:
 
-            import_products(
-                self.conn_session,
-                self.backend_record.id,
+            self.env['prestashop.product.template'].import_products(
+                self.backend_record,
                 from_date,
             )
             expected_query = {
@@ -125,14 +89,15 @@ class TestImportProduct(PrestashopTransactionCase):
             self.assertEqual('/api/products', self.parse_path(request.uri))
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
-            self.assertEqual(18, import_record_mock.delay.call_count)
+            self.assertEqual(
+                18, self.instance_delay_record.import_record.call_count)
 
     @assert_no_job_delayed
     def test_import_product_record_category(self):
         """ Import a product category """
         with recorder.use_cassette('test_import_product_category_record_1'):
-            import_record(self.conn_session, 'prestashop.product.category',
-                          self.backend_record.id, 5)
+            self.env['prestashop.product.category'].import_record(
+                self.backend_record, 5)
 
         domain = [('prestashop_id', '=', 5),
                   ('backend_id', '=', self.backend_record.id)]
@@ -162,8 +127,8 @@ class TestImportProduct(PrestashopTransactionCase):
             categs |= cat
 
         with recorder.use_cassette('test_import_product_template_record_1'):
-            import_record(self.conn_session, 'prestashop.product.template',
-                          self.backend_record.id, 1)
+            self.env['prestashop.product.template'].import_record(
+                self.backend_record, 1)
 
         domain = [('prestashop_id', '=', 1),
                   ('backend_id', '=', self.backend_record.id)]

@@ -6,20 +6,12 @@ from collections import namedtuple
 
 import mock
 
-from openerp.addons.connector_prestashop.unit.importer import (
-    import_record,
-)
-from openerp.addons.connector_prestashop.models.\
-    delivery_carrier.importer import (
-        import_carriers
-    )
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
 ExpectedCarrier = namedtuple(
     'ExpectedCarrier',
-    'name partner_id product_id company_id'
+    'name company_id'
 )
 
 
@@ -35,28 +27,25 @@ class TestImportCarrier(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_carriers(self):
-        import_job = ('openerp.addons.connector_prestashop.models'
-                      '.prestashop_backend.common'
-                      '.import_carriers')
-        with mock.patch(import_job) as import_mock:
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
+        with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_carriers()
-            import_mock.delay.assert_called_with(
-                mock.ANY, self.backend_record.id,
-                priority=10,
-            )
+            delay_record_instance = delay_record_mock.return_value
+            delay_record_instance.import_batch.assert_called_with(
+                self.backend_record)
 
     @assert_no_job_delayed
     def test_import_products_batch(self):
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette('test_import_carrier_batch') as cassette, \
-                mock.patch(record_job_path) as import_record_mock:
+                mock.patch(delay_record_path) as delay_record_mock:
 
-            import_carriers(
-                self.conn_session,
-                self.backend_record.id,
+            self.env['prestashop.delivery.carrier'].import_batch(
+                self.backend_record,
             )
             expected_query = {
                 'filter[deleted]': ['0'],
@@ -68,28 +57,26 @@ class TestImportCarrier(PrestashopTransactionCase):
             self.assertEqual('/api/carriers', self.parse_path(request.uri))
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
-            self.assertEqual(2, import_record_mock.delay.call_count)
+            delay_record_instance = delay_record_mock.return_value
+            self.assertEqual(2, delay_record_instance.import_record.call_count)
 
     @assert_no_job_delayed
     def test_import_carrier_record(self):
         """ Import a carrier """
         with recorder.use_cassette('test_import_carrier_record_2'):
-            import_record(self.conn_session, 'prestashop.delivery.carrier',
-                          self.backend_record.id, 2)
-
+            self.env['prestashop.delivery.carrier'].import_record(
+                self.backend_record, 2
+            )
         domain = [('prestashop_id', '=', 2),
                   ('backend_id', '=', self.backend_record.id)]
         binding = self.env['prestashop.delivery.carrier'].search(domain)
         binding.ensure_one()
 
-        ship_product_xmlid = 'connector_ecommerce.product_product_shipping'
-        ship_product = self.env.ref(ship_product_xmlid)
         expected = [
             ExpectedCarrier(
                 name='My carrier',
-                partner_id=self.backend_record.company_id.partner_id,
-                product_id=ship_product,
                 company_id=self.backend_record.company_id,
             )]
 
         self.assert_records(expected, binding)
+        self.assertEqual('My carrier', binding.product_id.name)

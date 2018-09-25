@@ -2,14 +2,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import base64
-
-from openerp import models, fields
-
-from ...unit.backend_adapter import (
-    PrestaShopCRUDAdapter,
-    PrestaShopWebServiceImage,
-)
-from ...backend import prestashop
+from odoo.tools import config
+from odoo import models, fields, api
+from odoo.addons.queue_job.job import job
+from odoo.addons.component.core import Component
+from ...components.backend_adapter import PrestaShopWebServiceImage
 
 
 class ProductImage(models.Model):
@@ -35,18 +32,36 @@ class PrestashopProductImage(models.Model):
         oldname='openerp_id',
     )
 
+    @job(default_channel='root.prestashop')
+    @api.multi
+    def import_product_image(self, backend, product_tmpl_id, image_id,
+                             **kwargs):
+        """Import a product image"""
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.run(product_tmpl_id, image_id)
 
-@prestashop
-class ProductImageAdapter(PrestaShopCRUDAdapter):
-    _model_name = 'prestashop.product.image'
+
+class ProductImageAdapter(Component):
+    _name = 'prestashop.product.image.adapter'
+    _inherit = 'prestashop.crud.adapter'
+    _apply_on = 'prestashop.product.image'
     _prestashop_image_model = 'products'
     _prestashop_model = '/images/products'
     _export_node_name = '/images/products'
     _export_node_name_res = 'image'
+    # pylint: disable=method-required-super
+
+    def connect(self):
+        debug = False
+        if config['log_level'] == 'debug':
+            debug = True
+        return PrestaShopWebServiceImage(self.prestashop.api_url,
+                                         self.prestashop.webservice_key,
+                                         debug=debug)
 
     def read(self, product_tmpl_id, image_id, options=None):
-        api = PrestaShopWebServiceImage(self.prestashop.api_url,
-                                        self.prestashop.webservice_key)
+        api = self.connect()
         return api.get_image(
             self._prestashop_image_model,
             product_tmpl_id,
@@ -55,8 +70,7 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
         )
 
     def create(self, attributes=None):
-        api = PrestaShopWebServiceImage(
-            self.prestashop.api_url, self.prestashop.webservice_key)
+        api = self.connect()
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
         return api.add(url, files=[(
@@ -66,8 +80,7 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
         )])
 
     def write(self, id, attributes=None):
-        api = PrestaShopWebServiceImage(
-            self.prestashop.api_url, self.prestashop.webservice_key)
+        api = self.connect()
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
         url_del = '{}/{}/{}/{}'.format(
@@ -84,6 +97,5 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
 
     def delete(self, resource, id):
         """ Delete a record on the external system """
-        api = PrestaShopWebServiceImage(
-            self.prestashop.api_url, self.prestashop.webservice_key)
+        api = self.connect()
         return api.delete(resource, resource_ids=id)

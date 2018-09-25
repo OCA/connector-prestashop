@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models
-from openerp.addons.decimal_precision import decimal_precision as dp
+from collections import defaultdict
 
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
+
+from odoo.addons.queue_job.job import job
+from odoo.addons.component.core import Component
 
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    prestashop_bind_ids = fields.One2many(
-        comodel_name='prestashop.product.combination',
-        inverse_name='odoo_id',
-        copy=False,
-        string='PrestaShop Bindings',
-    )
     prestashop_combinations_bind_ids = fields.One2many(
         comodel_name='prestashop.product.combination',
         inverse_name='odoo_id',
@@ -33,7 +29,8 @@ class ProductProduct(models.Model):
         for product in self:
             if product.product_variant_count > 1:
                 # Recompute qty in combination binding
-                for combination_binding in product.prestashop_bind_ids:
+                for combination_binding in \
+                        product.prestashop_combinations_bind_ids:
                     combination_binding.recompute_prestashop_qty()
             # Recompute qty in product template binding if any combination
             # if modified
@@ -68,8 +65,7 @@ class ProductProduct(models.Model):
                 # which could be not installed
                 uom = hasattr(product, 'uos_id') \
                     and product.uos_id or product.uom_id
-                price = uom._compute_price(
-                    product.uom_id.id, price, self.env.context['uom'])
+                price = uom._compute_price(price, product.uom_id)
             product.lst_price = price
 
     lst_price = fields.Float(
@@ -162,14 +158,50 @@ class PrestashopProductCombination(models.Model):
 
     @api.multi
     def recompute_prestashop_qty(self):
-        for product_binding in self:
-            if product_binding.quantity != product_binding.qty_available:
-                product_binding.quantity = product_binding.qty_available
+        # group products by backend
+        backends = defaultdict(set)
+        for product in self:
+            backends[product.backend_id].add(product.id)
+
+        for backend, product_ids in backends.iteritems():
+            products = self.browse(product_ids)
+            products._recompute_prestashop_qty_backend(backend)
         return True
 
+    @api.multi
+    def _recompute_prestashop_qty_backend(self, backend):
+        locations = backend._get_locations_for_stock_quantities()
+        self_loc = self.with_context(location=locations.ids,
+                                     compute_child=False)
+        for product_binding in self_loc:
+            new_qty = product_binding._prestashop_qty()
+            if product_binding.quantity != new_qty:
+                product_binding.quantity = new_qty
+        return True
+
+    def _prestashop_qty(self):
+        return self.qty_available
+
+    @job(default_channel='root.prestashop')
+    def export_inventory(self, fields=None):
+        """ Export the inventory configuration and quantity of a product. """
+        backend = self.backend_id
+        with backend.work_on('prestashop.product.combination') as work:
+            exporter = work.component(usage='inventory.exporter')
+            return exporter.run(self, fields)
+
     @api.model
-    def _prestashop_qty(self, product):
-        return product.qty_available
+    @job(default_channel='root.prestashop')
+    def export_product_quantities(self, backend):
+        self.search([
+            ('backend_id', '=', backend.id),
+        ]).recompute_prestashop_qty()
+
+    @job(default_channel='root.prestashop')
+    def set_product_image_variant(self, backend, combination_ids, **kwargs):
+        with backend.work_on(self._name) as work:
+            importer = work.component(usage='record.importer')
+            return importer.set_variant_images(combination_ids, **kwargs)
 
 
 class ProductAttribute(models.Model):
@@ -232,15 +264,27 @@ class PrestashopProductCombinationOptionValue(models.Model):
         comodel_name='prestashop.product.combination.option')
 
 
-@prestashop
-class ProductCombinationAdapter(GenericAdapter):
-    _model_name = 'prestashop.product.combination'
+class ProductCombinationAdapter(Component):
+    _name = 'prestashop.product.combination.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.product.combination'
     _prestashop_model = 'combinations'
     _export_node_name = 'combination'
 
 
-@prestashop
-class ProductCombinationOptionAdapter(GenericAdapter):
-    _model_name = 'prestashop.product.combination.option'
+class ProductCombinationOptionAdapter(Component):
+    _name = 'prestashop.product.combination.option.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.product.combination.option'
+
     _prestashop_model = 'product_options'
     _export_node_name = 'product_options'
+
+
+class ProductCombinationOptionValueAdapter(Component):
+    _name = 'prestashop.product.combination.option.value.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.product.combination.option.value'
+
+    _prestashop_model = 'product_option_values'
+    _export_node_name = 'product_option_value'

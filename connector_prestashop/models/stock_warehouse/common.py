@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp import api, fields, models
-
-from ...unit.backend_adapter import GenericAdapter
-from ...backend import prestashop
+from odoo import api, fields, models
+from odoo.addons.component.core import Component
 
 
 class StockWarehouse(models.Model):
@@ -56,7 +54,9 @@ class PrestashopShop(models.Model):
     default_url = fields.Char('Default url')
 
 
-@prestashop
-class ShopAdapter(GenericAdapter):
+class ShopAdapter(Component):
+    _name = 'prestashop.shop'
     _model_name = 'prestashop.shop'
+    _inherit = 'prestashop.adapter'
     _prestashop_model = 'shops'
+    _apply_on = 'prestashop.shop'

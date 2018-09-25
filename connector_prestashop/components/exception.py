@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.addons.connector.exception import RetryableJobError
+from odoo.addons.connector.exception import RetryableJobError
 
 
 class OrderImportRuleRetry(RetryableJobError):

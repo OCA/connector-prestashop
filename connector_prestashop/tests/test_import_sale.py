@@ -8,14 +8,6 @@ import mock
 
 from freezegun import freeze_time
 
-from openerp.addons.connector_prestashop.unit.importer import (
-    import_record,
-)
-from openerp.addons.connector_prestashop.models.\
-    sale_order.importer import (
-        import_orders_since
-    )
-
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -47,15 +39,14 @@ class TestImportSale(PrestashopTransactionCase):
     def test_import_sales(self):
         from_date = '2016-12-01 00:00:00'
         self.backend_record.import_orders_since = from_date
-        import_job = ('openerp.addons.connector_prestashop.models'
-                      '.prestashop_backend.common'
-                      '.import_orders_since')
-        with mock.patch(import_job) as import_mock:
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
+        with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_sale_orders()
-            import_mock.delay.assert_called_with(
-                mock.ANY, self.backend_record.id,
+            delay_record_instance = delay_record_mock.return_value
+            delay_record_instance.import_orders_since.assert_called_with(
+                self.backend_record,
                 from_date,
-                priority=5,
             )
 
     @freeze_time('2016-12-09 00:00:00')
@@ -63,16 +54,15 @@ class TestImportSale(PrestashopTransactionCase):
     def test_import_sale_batch(self):
         from_date = '2016-12-01 00:00:00'
         self.backend_record.import_res_partner_from_date = from_date
-        record_job_path = ('openerp.addons.connector_prestashop.unit'
-                           '.importer.import_record')
+        delay_record_path = ('odoo.addons.queue_job.models.base.'
+                             'DelayableRecordset')
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette('test_import_sale_batch') as cassette, \
-                mock.patch(record_job_path) as import_record_mock:
+                mock.patch(delay_record_path) as delay_record_mock:
 
-            import_orders_since(
-                self.conn_session,
-                self.backend_record.id,
+            self.env['prestashop.sale.order'].import_orders_since(
+                self.backend_record,
                 from_date,
             )
 
@@ -99,7 +89,8 @@ class TestImportSale(PrestashopTransactionCase):
                              self.parse_path(request.uri))
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
-            self.assertEqual(5, import_record_mock.delay.call_count)
+            delay_record_instance = delay_record_mock.return_value
+            self.assertEqual(5, delay_record_instance.import_record.call_count)
 
     @assert_no_job_delayed
     def test_import_sale_record(self):
@@ -124,7 +115,6 @@ class TestImportSale(PrestashopTransactionCase):
         carrier = self.env['delivery.carrier'].create({
             'name': 'My carrier',
             'product_id': ship_product.id,
-            'partner_id': self.env.ref('base.main_company').partner_id.id,
         })
         self.create_binding_no_export(
             'prestashop.delivery.carrier', carrier.id, prestashop_id=2,
@@ -167,9 +157,8 @@ class TestImportSale(PrestashopTransactionCase):
 
         # import of the sale order
         with recorder.use_cassette('test_import_sale_record_5'):
-            result = import_record(
-                self.conn_session, 'prestashop.sale.order',
-                self.backend_record.id, 5)
+            result = self.env['prestashop.sale.order'].import_record(
+                self.backend_record, 5)
 
         error_msg = ('Import of the order 5 canceled '
                      'because it has not been paid since 30 days')
@@ -177,9 +166,8 @@ class TestImportSale(PrestashopTransactionCase):
 
         with recorder.use_cassette('test_import_sale_record_5'):
             with freeze_time("2016-12-08"):
-                import_record(
-                    self.conn_session, 'prestashop.sale.order',
-                    self.backend_record.id, 5)
+                self.env['prestashop.sale.order'].import_record(
+                    self.backend_record, 5)
 
         domain = [('prestashop_id', '=', 5),
                   ('backend_id', '=', self.backend_record.id)]

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from ...unit.importer import BatchImporter
-from ...backend import prestashop
+from odoo.addons.component.core import Component
 
 
-@prestashop
-class PaymentModeBatchImporter(BatchImporter):
-    _model_name = 'account.payment.mode'
+class PaymentModeBatchImporter(Component):
+    _name = 'account.payment.mode.importer'
+    _inherit = 'prestashop.batch.importer'
+    _apply_on = 'account.payment.mode'
 
     def run(self, filters=None, **kwargs):
         if filters is None:
@@ -23,7 +23,7 @@ class PaymentModeBatchImporter(BatchImporter):
         If we have only 1 bank journal, we link the payment method to it,
         otherwise, the user will have to create manually the payment mode.
         """
-        if self.binder_for().to_odoo(record['payment']):
+        if self.binder_for().to_internal(record['payment']):
             return  # already exists
         method_xmlid = 'account.account_payment_method_manual_in'
         payment_method = self.env.ref(method_xmlid, raise_if_not_found=False)
@@ -43,7 +43,4 @@ class PaymentModeBatchImporter(BatchImporter):
             'fixed_journal_id': journals.id,
             'payment_method_id': payment_method.id
         })
-        self.backend_record.add_checkpoint(
-            model=self.model._name,
-            record_id=mode.id,
-        )
+        self.backend_record.add_checkpoint(mode, message=None)

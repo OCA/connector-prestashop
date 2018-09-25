@@ -3,10 +3,8 @@
 
 import logging
 
-from openerp import models, fields
-
-from ...backend import prestashop
-from ...unit.backend_adapter import GenericAdapter
+from odoo import models, fields
+from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
 
@@ -40,6 +38,12 @@ class PrestashopDeliveryCarrier(models.Model):
         string='Export tracking numbers to PrestaShop',
     )
 
+    _sql_constraints = [
+        ('prestashop_erp_uniq', 'unique(backend_id, odoo_id, id_reference)',
+         'An ERP record with same ID already exists on PrestaShop with the '
+         'same id_reference'),
+    ]
+
 
 class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"
@@ -56,8 +60,11 @@ class DeliveryCarrier(models.Model):
     )
 
 
-@prestashop
-class DeliveryCarrierAdapter(GenericAdapter):
+class DeliveryCarrierAdapter(Component):
+    _name = 'prestashop.delivery.carrier.adapter'
+    _inherit = 'prestashop.adapter'
+    _apply_on = 'prestashop.delivery.carrier'
+
     _model_name = 'prestashop.delivery.carrier'
     _prestashop_model = 'carriers'
 
@@ -65,5 +72,4 @@ class DeliveryCarrierAdapter(GenericAdapter):
         if filters is None:
             filters = {}
         filters['filter[deleted]'] = 0
-
         return super(DeliveryCarrierAdapter, self).search(filters)

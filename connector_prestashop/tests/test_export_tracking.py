@@ -4,8 +4,6 @@
 
 import mock
 
-from openerp.addons.connector_prestashop.models.stock_tracking.\
-    exporter import export_tracking_number
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -15,13 +13,13 @@ class TestExportPicking(PrestashopTransactionCase):
         super(TestExportPicking, self).setUp()
         self.sync_metadata()
 
-        self.mock_delay_export = mock.MagicMock()
-        self.patch_delay = mock.patch(
-            'openerp.addons.connector_prestashop'
-            '.consumer.export_tracking_number.delay',
-            new=self.mock_delay_export
+        mock_delay_record = mock.MagicMock()
+        self.instance_delay_record = mock_delay_record.return_value
+        self.patch_delay_record = mock.patch(
+            'odoo.addons.queue_job.models.base.DelayableRecordset',
+            new=mock_delay_record
         )
-        self.patch_delay.start()
+        self.patch_delay_record.start()
 
         stock_loc = self.ref('stock.stock_location_stock')
         customer_loc = self.ref('stock.stock_location_customers')
@@ -98,26 +96,24 @@ class TestExportPicking(PrestashopTransactionCase):
 
     def tearDown(self):
         super(TestExportPicking, self).tearDown()
-        self.patch_delay.stop()
+        self.patch_delay_record.stop()
 
     @assert_no_job_delayed
     def test_event_tracking_number__not_prestashop_sale(self):
         """ Test that nothing is exported """
         self.picking.carrier_tracking_ref = 'xyz'
-        self.assertEqual(0, self.mock_delay_export.call_count)
+        self.assertEqual(0, self.instance_delay_record.call_count)
 
     @assert_no_job_delayed
     def test_event_tracking_number__prestashop_sale(self):
         """ Test that tracking number is exported """
-        sale_binding = self.create_binding_no_export(
+        self.create_binding_no_export(
             'prestashop.sale.order', self.sale.id, prestashop_id=2
         )
 
         self.picking.carrier_tracking_ref = 'xyz'
-        self.mock_delay_export.assert_called_once_with(
-            mock.ANY, 'prestashop.sale.order', sale_binding.id,
-            priority=mock.ANY
-        )
+        self.assertEqual(
+            1, self.instance_delay_record.export_tracking_number.call_count)
 
     @assert_no_job_delayed
     def test_export_tracking_number(self):
@@ -127,9 +123,7 @@ class TestExportPicking(PrestashopTransactionCase):
         self.picking.carrier_tracking_ref = 'xyz'
         cassette_name = 'test_export_tracking_number'
         with recorder.use_cassette(cassette_name) as cassette:
-            export_tracking_number(
-                self.conn_session, 'prestashop.sale.order', sale_binding.id,
-            )
+            sale_binding.export_tracking_number()
             self.assertEqual(len(cassette.requests), 3)
 
             request = cassette.requests[0]

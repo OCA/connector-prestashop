@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models
+from odoo import api, fields, models
+from odoo.addons.component.core import Component
 
 
 class StockLocation(models.Model):
@@ -38,11 +39,11 @@ class StockQuant(models.Model):
         ps_locations = location_obj.get_prestashop_stock_locations()
         for quant in self:
             location = quant.location_id
-            res = super(StockQuant, self).write(vals)
+            super(StockQuant, self).write(vals)
             if location in ps_locations:
                 quant.invalidate_cache()
                 quant.product_id.update_prestashop_qty()
-        return res
+        return True
 
     @api.multi
     def unlink(self):
@@ -51,3 +52,13 @@ class StockQuant(models.Model):
         self.filtered(lambda x: x.location_id in ps_locations).mapped(
             'product_id').update_prestashop_qty()
         return super(StockQuant, self).unlink()
+
+
+class PrestashopStockPickingListener(Component):
+    _name = 'prestashop.stock.picking.listener'
+    _inherit = 'base.event.listener'
+    _apply_on = ['stock.picking']
+
+    def on_tracking_number_added(self, record):
+        for binding in record.sale_id.prestashop_bind_ids:
+            binding.with_delay().export_tracking_number()

@@ -4,8 +4,7 @@
 
 import functools
 
-import openerp.tests.common as common
-from openerp.addons.connector.session import ConnectorSession
+from odoo.addons.component.tests.common import SavepointComponentCase
 
 from contextlib import contextmanager
 from os.path import dirname, exists, join
@@ -77,12 +76,11 @@ def assert_no_job_delayed(func):
     return functools.wraps(func)(_decorated)
 
 
-class PrestashopTransactionCase(common.TransactionCase):
+class PrestashopTransactionCase(SavepointComponentCase):
     """ Base class for Tests with Prestashop """
 
     def setUp(self):
         super(PrestashopTransactionCase, self).setUp()
-        self.conn_session = ConnectorSession.from_env(self.env)
         self.backend_record = self.env.ref(
             'connector_prestashop.prestashop_backend_demo'
         )
@@ -97,7 +95,7 @@ class PrestashopTransactionCase(common.TransactionCase):
         self.env.ref('base.GBP').active = True
 
     def base_mapping(self):
-        self.create_binding_no_export('prestashop.res.lang', 1, 1)
+        self.create_binding_no_export('prestashop.res.lang', 1, 1, active=True)
         countries = [
             (self.env.ref('base.fr'), 8),
             (self.env.ref('base.uk'), 17),
@@ -167,7 +165,7 @@ class PrestashopTransactionCase(common.TransactionCase):
                 record = record[attr]
             return record
 
-        model_name = records._model._name
+        model_name = records._name
         records = list(records)
         assert len(expected_records) > 0, "must have > 0 expected record"
         fields = expected_records[0]._fields
@@ -311,7 +309,8 @@ class PrestashopTransactionCase(common.TransactionCase):
                                 template_ps_id=None,
                                 variant_ps_id=None):
         product = self.env['product.product'].create({
-            'name': name
+            'name': name,
+            'type': 'product',
         })
         template = product.product_tmpl_id
         template_binding = self.create_binding_no_export(

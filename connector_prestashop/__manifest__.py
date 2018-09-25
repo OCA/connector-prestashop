@@ -7,16 +7,18 @@
 
 {
     "name": "PrestaShop-Odoo connector",
-    "version": "9.0.1.0.3",
+    "version": "10.0.1.0.0",
     "license": "AGPL-3",
     "depends": [
         "account",
+        "base_vat",  # for vat validation on partner address
         "product",
         "product_multi_category",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
-        "product_multi_image",  # oca/product-attribute
+        "base_multi_image",  # oca/product-attribute
         "purchase",
         "product_variant_supplierinfo",  # oca/product-variant
+        "stock_available",  # stock-logistics-warehouse
         # TODO: perhaps not needed:
         # "product_variant_cost_price",  # oca/product-variant
     ],
@@ -34,7 +36,9 @@
               "Camptocamp,"
               "AvanzOSC,"
               "Tecnativa,"
+              "Mind And Go,"
               "Odoo Community Association (OCA)",
+
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
     'demo': [
@@ -43,7 +47,8 @@
     'data': [
         'data/cron.xml',
         'data/product_decimal_precision.xml',
-        'views/prestashop_model_view.xml',
+        'data/ecommerce_data.xml',
+        'views/prestashop_backend_view.xml',
         'views/product_view.xml',
         'views/product_category_view.xml',
         'views/image_view.xml',
@@ -55,8 +60,8 @@
         'views/stock_view.xml',
         'security/ir.model.access.csv',
         'security/prestashop_security.xml',
-        'data/ecommerce_data.xml',
+
     ],
-    'installable': False,
+    'installable': True,
     "application": True,
 }
