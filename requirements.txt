@@ -4,4 +4,4 @@ unidecode
 bs4
 # tests dependencies
 freezegun
-vcrpy
+vcrpy==1.10.5
