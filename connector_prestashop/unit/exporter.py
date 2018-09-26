@@ -315,12 +315,7 @@ class PrestashopExporter(PrestashopBaseExporter):
 
 class TranslationPrestashopExporter(PrestashopExporter):
 
-    @property
-    def mapper(self):
-        if self._mapper is None:
-            self._mapper = self.connector_env.get_connector_unit(
-                TranslationPrestashopExportMapper)
-        return self._mapper
+    _base_mapper = TranslationPrestashopExportMapper
 
 
 def related_action_record(session, job):

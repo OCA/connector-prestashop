@@ -20,8 +20,129 @@ from ...consumer import get_slug
 
 
 @prestashop
+class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
+    _model_name = 'prestashop.product.template'
+
+    direct = [
+        ('available_for_order', 'available_for_order'),
+        ('show_price', 'show_price'),
+        ('online_only', 'online_only'),
+        ('weight', 'weight'),
+        ('standard_price', 'wholesale_price'),
+        (m2o_to_backend('default_shop_id'), 'id_shop_default'),
+        ('always_available', 'active'),
+        ('barcode', 'barcode'),
+        ('additional_shipping_cost', 'additional_shipping_cost'),
+        ('minimal_quantity', 'minimal_quantity'),
+        ('on_sale', 'on_sale'),
+        (m2o_to_backend(
+            'prestashop_default_category_id',
+            binding='prestashop.product.category'), 'id_category_default'),
+    ]
+    # handled by base mapping `translatable_fields`
+    _translatable_fields = [
+        ('name', 'name'),
+        ('link_rewrite', 'link_rewrite'),
+        ('meta_title', 'meta_title'),
+        ('meta_description', 'meta_description'),
+        ('meta_keywords', 'meta_keywords'),
+        ('tags', 'tags'),
+        ('available_now', 'available_now'),
+        ('available_later', 'available_later'),
+        ('description_short_html', 'description_short'),
+        ('description_html', 'description'),
+    ]
+
+    def _get_factor_tax(self, tax):
+        return (1 + tax.amount / 100) if tax.price_include else 1.0
+
+    @mapping
+    def list_price(self, record):
+        tax = record.taxes_id
+        if tax.price_include and tax.amount_type == 'percent':
+            # 6 is the rounding precision used by PrestaShop for the
+            # tax excluded price.  we can get back a 2 digits tax included
+            # price from the 6 digits rounded value
+            return {
+                'price': str(
+                    round(record.list_price / self._get_factor_tax(tax), 6))
+            }
+        else:
+            return {'price': str(record.list_price)}
+
+    @mapping
+    def reference(self, record):
+        return {'reference': record.reference or record.default_code or ''}
+
+    def _get_product_category(self, record):
+        ext_categ_ids = []
+        binder = self.binder_for('prestashop.product.category')
+        for category in record.categ_ids:
+            ext_categ_ids.append(
+                {'id': binder.to_backend(category.id, wrap=True)})
+        return ext_categ_ids
+
+    @mapping
+    def associations(self, record):
+        return {
+            'associations': {
+                'categories': {
+                    'category_id': self._get_product_category(record)},
+            }
+        }
+
+    @mapping
+    def tax_ids(self, record):
+        if not record.taxes_id:
+            return
+        binder = self.binder_for('prestashop.account.tax.group')
+        ext_id = binder.to_backend(record.taxes_id[:1].tax_group_id, wrap=True)
+        return {'id_tax_rules_group': ext_id}
+
+    @mapping
+    def available_date(self, record):
+        if record.available_date:
+            return {'available_date': record.available_date}
+        return {}
+
+    @mapping
+    def date_add(self, record):
+        # When export a record the date_add in PS is null.
+        return {'date_add': record.create_date}
+
+    @mapping
+    def default_image(self, record):
+        default_image = record.image_ids.filtered('front_image')[:1]
+        if default_image:
+            binder = self.binder_for('prestashop.product.image')
+            ps_image_id = binder.to_backend(default_image, wrap=True)
+            if ps_image_id:
+                return {'id_default_image': ps_image_id}
+
+    @mapping
+    def extras_manufacturer(self, record):
+        mapper = self.unit_for(ManufacturerExportMapper)
+        return mapper.map_record(record).values(**self.options)
+
+
+@prestashop
+class ManufacturerExportMapper(TranslationPrestashopExportMapper):
+    # To extend in connector_prestashop_manufacturer module
+    _model_name = 'prestashop.product.template'
+
+    _translatable_fields = [
+        ('name', 'name'),
+    ]
+
+    @mapping
+    def manufacturer(self, record):
+        return {}
+
+
+@prestashop
 class ProductTemplateExporter(TranslationPrestashopExporter):
     _model_name = 'prestashop.product.template'
+    _base_mapper = ProductTemplateExportMapper
 
     def _create(self, record):
         res = super(ProductTemplateExporter, self)._create(record)
@@ -168,123 +289,3 @@ class ProductTemplateExporter(TranslationPrestashopExporter):
         self.check_images()
         self.export_variants()
         self.update_quantities()
-
-
-@prestashop
-class ProductTemplateExportMapper(TranslationPrestashopExportMapper):
-    _model_name = 'prestashop.product.template'
-
-    direct = [
-        ('available_for_order', 'available_for_order'),
-        ('show_price', 'show_price'),
-        ('online_only', 'online_only'),
-        ('weight', 'weight'),
-        ('standard_price', 'wholesale_price'),
-        (m2o_to_backend('default_shop_id'), 'id_shop_default'),
-        ('always_available', 'active'),
-        ('barcode', 'barcode'),
-        ('additional_shipping_cost', 'additional_shipping_cost'),
-        ('minimal_quantity', 'minimal_quantity'),
-        ('on_sale', 'on_sale'),
-        (m2o_to_backend(
-            'prestashop_default_category_id',
-            binding='prestashop.product.category'), 'id_category_default'),
-    ]
-    # handled by base mapping `translatable_fields`
-    _translatable_fields = [
-        ('name', 'name'),
-        ('link_rewrite', 'link_rewrite'),
-        ('meta_title', 'meta_title'),
-        ('meta_description', 'meta_description'),
-        ('meta_keywords', 'meta_keywords'),
-        ('tags', 'tags'),
-        ('available_now', 'available_now'),
-        ('available_later', 'available_later'),
-        ('description_short_html', 'description_short'),
-        ('description_html', 'description'),
-    ]
-
-    def _get_factor_tax(self, tax):
-        return (1 + tax.amount / 100) if tax.price_include else 1.0
-
-    @mapping
-    def list_price(self, record):
-        tax = record.taxes_id
-        if tax.price_include and tax.amount_type == 'percent':
-            # 6 is the rounding precision used by PrestaShop for the
-            # tax excluded price.  we can get back a 2 digits tax included
-            # price from the 6 digits rounded value
-            return {
-                'price': str(
-                    round(record.list_price / self._get_factor_tax(tax), 6))
-            }
-        else:
-            return {'price': str(record.list_price)}
-
-    @mapping
-    def reference(self, record):
-        return {'reference': record.reference or record.default_code or ''}
-
-    def _get_product_category(self, record):
-        ext_categ_ids = []
-        binder = self.binder_for('prestashop.product.category')
-        for category in record.categ_ids:
-            ext_categ_ids.append(
-                {'id': binder.to_backend(category.id, wrap=True)})
-        return ext_categ_ids
-
-    @mapping
-    def associations(self, record):
-        return {
-            'associations': {
-                'categories': {
-                    'category_id': self._get_product_category(record)},
-            }
-        }
-
-    @mapping
-    def tax_ids(self, record):
-        if not record.taxes_id:
-            return
-        binder = self.binder_for('prestashop.account.tax.group')
-        ext_id = binder.to_backend(record.taxes_id[:1].tax_group_id, wrap=True)
-        return {'id_tax_rules_group': ext_id}
-
-    @mapping
-    def available_date(self, record):
-        if record.available_date:
-            return {'available_date': record.available_date}
-        return {}
-
-    @mapping
-    def date_add(self, record):
-        # When export a record the date_add in PS is null.
-        return {'date_add': record.create_date}
-
-    @mapping
-    def default_image(self, record):
-        default_image = record.image_ids.filtered('front_image')[:1]
-        if default_image:
-            binder = self.binder_for('prestashop.product.image')
-            ps_image_id = binder.to_backend(default_image, wrap=True)
-            if ps_image_id:
-                return {'id_default_image': ps_image_id}
-
-    @mapping
-    def extras_manufacturer(self, record):
-        mapper = self.unit_for(ManufacturerExportMapper)
-        return mapper.map_record(record).values(**self.options)
-
-
-@prestashop
-class ManufacturerExportMapper(TranslationPrestashopExportMapper):
-    # To extend in connector_prestashop_manufacturer module
-    _model_name = 'prestashop.product.template'
-
-    _translatable_fields = [
-        ('name', 'name'),
-    ]
-
-    @mapping
-    def manufacturer(self, record):
-        return {}
