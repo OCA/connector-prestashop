@@ -49,6 +49,15 @@ CATEGORY_EXPORT_FIELDS = [
 
 EXCLUDE_FIELDS = ['list_price']
 
+EXCLUDE_TEMPLATE_IMAGE_FIELDS = [
+    'image',
+    'image_medium',
+    'image_small',
+    'image_main',
+    'image_main_medium',
+    'image_main_small',
+]
+
 
 @on_record_create(model_names='prestashop.product.category')
 def prestashop_product_category_create(session, model_name, record_id, fields):
@@ -154,11 +163,12 @@ def product_template_write(session, model_name, record_id, fields):
         return
     model = session.env[model_name]
     record = model.browse(record_id)
-    for binding in record.prestashop_bind_ids:
-        export_record.delay(
-            session, 'prestashop.product.template', binding.id, fields,
-            priority=20,
-        )
+    if set(fields.keys()) - set(EXCLUDE_TEMPLATE_IMAGE_FIELDS):
+        for binding in record.prestashop_bind_ids:
+            export_record.delay(
+                session, 'prestashop.product.template', binding.id, fields,
+                priority=20,
+            )
 
 
 @on_record_create(model_names='prestashop.product.combination')
