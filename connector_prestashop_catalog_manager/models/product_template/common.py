@@ -2,8 +2,22 @@
 # © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-from openerp import models, fields
+from openerp import api, models, fields
 import openerp.addons.decimal_precision as dp
+
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    @api.multi
+    def _set_multi_image_main_medium(self):
+        super(ProductTemplate, self.with_context(connector_no_export=True)
+              )._set_multi_image_main_medium()
+
+    @api.multi
+    def _set_multi_image_main_small(self):
+        super(ProductTemplate, self.with_context(connector_no_export=True)
+              )._set_multi_image_main_small()
 
 
 class PrestashopProductTemplate(models.Model):
