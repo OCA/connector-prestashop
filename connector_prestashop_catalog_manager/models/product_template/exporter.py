@@ -152,7 +152,6 @@ class ProductTemplateExporter(TranslationPrestashopExporter):
     def _update(self, data):
         """ Update an Prestashop record """
         assert self.prestashop_id
-        self.export_variants()
         self.check_images()
         self.backend_adapter.write(self.prestashop_id, data)
 
