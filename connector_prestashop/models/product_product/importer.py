@@ -107,6 +107,7 @@ class ProductCombinationMapper(Component):
 
     from_main = []
 
+    @only_create
     @mapping
     def combination_default(self, record):
         return {'default_on': bool(int(record['default_on'] or 0))}
@@ -116,6 +117,7 @@ class ProductCombinationMapper(Component):
         template = self.get_main_template_binding(record)
         return {'product_tmpl_id': template.odoo_id.id}
 
+    @only_create
     @mapping
     def from_main_template(self, record):
         main_template = self.get_main_template_binding(record)
@@ -155,12 +157,24 @@ class ProductCombinationMapper(Component):
             yield option_value_binding.odoo_id
 
     @mapping
+    def name(self, record):
+        template = self.get_main_template_binding(record)
+        options = []
+        for option_value_object in self._get_option_value(record):
+            key = option_value_object.attribute_id.name
+            value = option_value_object.name
+            options.append('%s:%s' % (key, value))
+        return {'name_template': template.name}
+
+    @only_create
+    @mapping
     def attribute_value_ids(self, record):
         results = []
         for option_value_object in self._get_option_value(record):
             results.append(option_value_object.id)
         return {'attribute_value_ids': [(6, 0, results)]}
 
+    @only_create
     @mapping
     def main_template_id(self, record):
         template_binding = self.get_main_template_binding(record)
@@ -176,6 +190,7 @@ class ProductCombinationMapper(Component):
         return template_ids and not combination_binder.to_external(
             template_ids, wrap=True)
 
+    @only_create
     @mapping
     def default_code(self, record):
         code = record.get('reference')
@@ -194,6 +209,7 @@ class ProductCombinationMapper(Component):
 #     def backend_id(self, record):
 #         return {'backend_id': self.backend_record.id}
 
+    @only_create
     @mapping
     def barcode(self, record):
         barcode = record.get('barcode') or record.get('ean13')
@@ -229,6 +245,7 @@ class ProductCombinationMapper(Component):
             if tax.price_include:
                 return price * factor_tax
 
+    @only_create
     @mapping
     def specific_price(self, record):
         product = self.binder_for(
@@ -249,13 +266,6 @@ class ProductCombinationMapper(Component):
     @only_create
     @mapping
     def odoo_id(self, record):
-        # product = self.env['product.product'].search([
-        #     ('default_code', '=', record['reference']),
-        #     ('prestashop_bind_ids', '=', False),
-        # ], limit=1)
-        # if product:
-        #     return {'odoo_id': product.id}
-
         """ Will bind the product to an existing one with the same code """
         if self.backend_record.matching_product_template:
             code = record.get(self.backend_record.matching_product_ch)
