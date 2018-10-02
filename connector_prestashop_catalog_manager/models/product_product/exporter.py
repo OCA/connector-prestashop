@@ -51,7 +51,7 @@ class ProductCombinationExporter(Component):
         Option = self.env['prestashop.product.combination.option']
         OptionValue = self.env['prestashop.product.combination.option.value']
         for value in self.binding.attribute_value_ids:
-            prestashop_option_id = attribute_binder.to_backend(
+            prestashop_option_id = attribute_binder.to_external(
                 value.attribute_id.id, wrap=True)
             if not prestashop_option_id:
                 option_binding = Option.search(
@@ -65,7 +65,7 @@ class ProductCombinationExporter(Component):
                 export_record(self.session,
                               'prestashop.product.combination.option',
                               option_binding.id)
-            prestashop_value_id = option_binder.to_backend(
+            prestashop_value_id = option_binder.to_external(
                 value.id, wrap=True)
             if not prestashop_value_id:
                 value_binding = OptionValue.search(
@@ -164,17 +164,16 @@ class ProductCombinationExportMapper(Component):
     @changed_by('attribute_value_ids', 'image_ids')
     @mapping
     def associations(self, record):
-        associations = OrderedDict([
-            ('product_option_values',
-                {'product_option_value':
-                 self._get_product_option_value(record)}),
-        ])
-        image = self._get_combination_image(record)
-        if image:
-            associations['images'] = {
-                'image': self._get_combination_image(record)
+        return {
+            'associations': {
+                'product_option_values': {
+                    'product_option_value': self._get_product_option_value(record)
+                },
+                'images': {
+                    'image': self._get_combination_image(record)
+                }
             }
-        return {'associations': associations}
+        }
 
 
 class ProductCombinationOptionExporter(Component):
