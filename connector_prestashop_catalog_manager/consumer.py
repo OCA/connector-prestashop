@@ -237,7 +237,7 @@ def prestashop_product_attribute_created(
 
 
 @on_record_create(model_names='prestashop.product.combination.option.value')
-def prestashop_product_atrribute_value_created(
+def prestashop_product_attribute_value_created(
         session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
@@ -260,7 +260,7 @@ def prestashop_attribute_option_written(session, model_name, record_id,
     export_record.delay(session, model_name, record_id, priority=20)
 
 
-@on_record_write(model_names='product.attribute.value')
+@on_record_write(model_names='product.attribute')
 def product_attribute_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return
@@ -272,7 +272,7 @@ def product_attribute_written(session, model_name, record_id, fields=None):
                             binding.id, fields, priority=20)
 
 
-@on_record_write(model_names='produc.attribute.value')
+@on_record_write(model_names='product.attribute.value')
 def attribute_option_written(session, model_name, record_id, fields=None):
     if session.context.get('connector_no_export'):
         return

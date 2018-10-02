@@ -97,7 +97,7 @@ class PrestashopTransactionCase(common.TransactionCase):
         self.env.ref('base.GBP').active = True
 
     def base_mapping(self):
-        self.create_binding_no_export('prestashop.res.lang', 1, 1)
+        self.create_binding_no_export('prestashop.res.lang', 1, 1, active=True)
         countries = [
             (self.env.ref('base.fr'), 8),
             (self.env.ref('base.uk'), 17),

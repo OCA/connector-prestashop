@@ -1,0 +1,59 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="UTF-8"?><prestashop><combination><associations><product_option_values><product_option_value><id>13</id></product_option_value><product_option_value><id>4</id></product_option_value></product_option_values></associations><ean13>8411788010150</ean13><reference>demo_3_OS</reference><weight>0.1</weight><default_on>0</default_on><active>1</active><wholesale_price>10.0</wholesale_price><price>20.0</price><minimal_quantity>2</minimal_quantity><id_product>3</id_product></combination></prestashop>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['523']
+      Content-Type: [text/xml]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: http://localhost:8080/api/combinations
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<combination>\n\t<id><![CDATA[46]]></id>\n\t<id_product
+        xlink:href=\"http://localhost:8080/api/products/3\"><![CDATA[3]]></id_product>\n\t<location></location>\n\t<ean13><![CDATA[8411788010150]]></ean13>\n\t<upc></upc>\n\t<quantity></quantity>\n\t<reference><![CDATA[demo_3_OS]]></reference>\n\t<supplier_reference></supplier_reference>\n\t<wholesale_price><![CDATA[10.0]]></wholesale_price>\n\t<price><![CDATA[20.0]]></price>\n\t<ecotax></ecotax>\n\t<weight><![CDATA[0.1]]></weight>\n\t<unit_price_impact></unit_price_impact>\n\t<minimal_quantity><![CDATA[2]]></minimal_quantity>\n\t<default_on></default_on>\n\t<available_date></available_date>\n<associations>\n<product_option_values
+        nodeType=\"product_option_value\" api=\"product_option_values\">\n\t<product_option_value
+        xlink:href=\"http://localhost:8080/api/product_option_values/4\">\n\t<id><![CDATA[4]]></id>\n\t</product_option_value>\n\t<product_option_value
+        xlink:href=\"http://localhost:8080/api/product_option_values/13\">\n\t<id><![CDATA[13]]></id>\n\t</product_option_value>\n</product_option_values>\n<images
+        nodeType=\"image\" api=\"images/products\"/>\n</associations>\n</combination>\n</prestashop>\n"}
+    headers:
+      access-time: ['1538472898']
+      connection: [keep-alive]
+      content-sha1: [8d35ae843f182d18adf31dde901d4b7e910effe5]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 02 Oct 2018 09:34:58 GMT']
+      execution-time: ['0.019']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=c6bbb7e7111199328f3502f20e9b644be06df2f1858521cd76d2aaef516caf61%3APmkiZjDBrkQam%2B7GGImXdYNBbsASivI%2FjpOfflczH8TXyhbld9bRmIewzH%2Ff7lWJyIkNlMESQopUVEsWd35L8agHSyV76WO11oPjL%2B7xaIQ%3D;
+          expires=Mon, 22-Oct-2018 09:34:58 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 201, message: Created}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['0']
+      User-Agent: [python-requests/2.18.4]
+    method: DELETE
+    uri: http://localhost:8080/api/combinations/46/46
+  response:
+    body: {string: !!python/unicode ''}
+    headers:
+      access-time: ['1538472898']
+      connection: [keep-alive]
+      date: ['Tue, 02 Oct 2018 09:34:58 GMT']
+      execution-time: ['0.021']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=c6bbb7e7111199328f3502f20e9b644be06df2f1858521cd76d2aaef516caf61%3APmkiZjDBrkQam%2B7GGImXdYNBbsASivI%2FjpOfflczH8TXyhbld9bRmIewzH%2Ff7lWJyIkNlMESQopUVEsWd35L8agHSyV76WO11oPjL%2B7xaIQ%3D;
+          expires=Mon, 22-Oct-2018 09:34:58 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1

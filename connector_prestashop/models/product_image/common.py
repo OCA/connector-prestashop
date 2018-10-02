@@ -40,8 +40,8 @@ class PrestashopProductImage(models.Model):
 class ProductImageAdapter(PrestaShopCRUDAdapter):
     _model_name = 'prestashop.product.image'
     _prestashop_image_model = 'products'
-    _prestashop_model = '/images/products'
-    _export_node_name = '/images/products'
+    _prestashop_model = 'images/products'
+    _export_node_name = 'images/products'
     _export_node_name_res = 'image'
 
     def read(self, product_tmpl_id, image_id, options=None):
@@ -70,7 +70,7 @@ class ProductImageAdapter(PrestaShopCRUDAdapter):
             self.prestashop.api_url, self.prestashop.webservice_key)
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
-        url_del = '{}/{}/{}/{}'.format(
+        url_del = '{}{}/{}/{}'.format(
             api._api_url, self._prestashop_model, attributes['id_product'], id)
         try:
             api._execute(url_del, 'DELETE')
