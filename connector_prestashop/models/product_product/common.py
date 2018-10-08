@@ -180,6 +180,11 @@ class PrestashopProductCombination(models.Model):
         return True
 
     def _prestashop_qty(self):
+        self.ensure_one()
+        backend_id = self.backend_id
+        quantity_field = backend_id.quantity_field
+        if self[quantity_field] != None:
+            return self[quantity_field]
         return self.qty_available
 
     @job(default_channel='root.prestashop')
