@@ -507,10 +507,13 @@ class TranslatableRecordImporter(AbstractComponent):
         super(TranslatableRecordImporter, self)._import(binding)
 
     def _after_import(self, binding):
+        # TODO: Improve the way translations are called
+        # https://github.com/OCA/connector/issues/282
         """ Hook called at the end of the import """
         for lang_code, lang_record in self.other_langs_data.iteritems():
             map_record = self.mapper.map_record(lang_record)
             binding.with_context(
                 lang=lang_code,
                 connector_no_export=True,
+                force_translate=True,
             ).write(map_record.values())
