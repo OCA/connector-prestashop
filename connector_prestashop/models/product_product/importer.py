@@ -196,10 +196,6 @@ class ProductCombinationMapper(Component):
             current_code = '%s_%s' % (code, i)
         return {'default_code': current_code}
 
-#     @mapping
-#     def backend_id(self, record):
-#         return {'backend_id': self.backend_record.id}
-
     @only_create
     @mapping
     def barcode(self, record):
