@@ -4,7 +4,9 @@
 
 from odoo import models
 from odoo.addons.component.core import Component
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class VersionKeyModel(models.TransientModel):
     # In actual connector version is mandatory use a model
@@ -21,7 +23,9 @@ class VersionKey(Component):
     }
 
     def get_key(self, key):
-        return self.keys.get(key) or key
+        output_key = self.keys.get(key) or key
+        _logger.info("Output key changed from %s to %s" % (key, output_key))
+        return output_key
 
 
 class VersionKey1609(Component):
