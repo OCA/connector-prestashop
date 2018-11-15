@@ -73,6 +73,14 @@ class ProductImageExporter(Component):
                 'storage': 'url',
             })
 
+    def _create(self, record):
+        res = super(ProductImageExporter, self)._create(record)
+        return res['prestashop']['image']['id']
+
+    def _update(self, data):
+        res = super(ProductImageExporter, self)._update(data)
+        return res['prestashop']['image']['id']
+
 
 class ProductImageExportMapper(Component):
     _name = 'prestashop.product.image.mapper'
