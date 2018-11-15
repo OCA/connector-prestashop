@@ -43,7 +43,6 @@ class ProductTemplateExporter(Component):
     def _update(self, data):
         """ Update an Prestashop record """
         assert self.prestashop_id
-        self.export_variants()
         self.check_images()
         self.backend_adapter.write(self.prestashop_id, data)
 
@@ -132,7 +131,8 @@ class ProductTemplateExporter(Component):
                     })
             # If a template has been modified then always update PrestaShop
             # combinations
-            combination_ext.with_delay(priority=50,eta=timedelta(seconds=20)).export_record()
+            combination_ext.with_delay(
+                priority=50, eta=timedelta(seconds=20)).export_record()
 
     def _not_in_variant_images(self, image):
         images = []
@@ -171,7 +171,8 @@ class ProductTemplateExporter(Component):
         self.export_variants()
         self.update_quantities()
         if not self.binding.date_add:
-            self.binding.with_context(connector_no_export=True).date_add = fields.Datetime.now()
+            self.binding.with_context(
+                connector_no_export=True).date_add = fields.Datetime.now()
 
 
 class ProductTemplateExportMapper(Component):
@@ -242,42 +243,16 @@ class ProductTemplateExportMapper(Component):
                 {'id': binder.to_external(category, wrap=True)})
         return ext_categ_ids
 
-    def _get_template_feature(self, record):
-        template_feature = []
-        attribute_binder = self.binder_for(
-            'prestashop.product.combination.option')
-        option_binder = self.binder_for(
-            'prestashop.product.combination.option.value')
-        for line in record.attribute_line_ids:
-            feature_dict = {}
-            attribute_ext_id = attribute_binder.to_external(
-                line.attribute_id.id, wrap=True)
-            if not attribute_ext_id:
-                continue
-            feature_dict = {'id': attribute_ext_id, 'custom': ''}
-            values_ids = []
-            for value in line.value_ids:
-                value_ext_id = option_binder.to_external(value.id,
-                                                        wrap=True)
-                if not value_ext_id:
-                    continue
-                values_ids.append(value_ext_id)
-            res = {'id_feature_value': values_ids}
-            feature_dict.update(res)
-            template_feature.append(feature_dict)
-        return template_feature
-
-    def _get_product_links(self, record):
-        links = []
-        binder = self.binder_for('prestashop.product.template')
-        for link in record.product_template_link_ids:
-            ext_id = binder.to_external(link.linked_product_template_id.id, wrap=True)
-            if ext_id:
-                links.append({'id': ext_id})
-        return links
+    def _get_product_image(self, record):
+        ext_image_ids = []
+        binder = self.binder_for('prestashop.product.image')
+        for image in record.image_ids:
+            ext_image_ids.append(
+                {'id': binder.to_external(image, wrap=True)})
+        return ext_image_ids
 
     @changed_by(
-        'attribute_line_ids', 'categ_ids', 'categ_id', 'product_link_ids'
+        'attribute_line_ids', 'categ_ids', 'categ_id', 'image_ids',
     )
     @mapping
     def associations(self, record):
@@ -285,10 +260,8 @@ class ProductTemplateExportMapper(Component):
             'associations': {
                 'categories': {
                     'category_id': self._get_product_category(record)},
-                'product_features': {
-                    'product_feature': self._get_template_feature(record)},
-                'accessories': {
-                    'accessory': self._get_product_links(record)},
+                'images': {
+                    'image': self._get_product_image(record)}
             }
         }
 
@@ -298,7 +271,8 @@ class ProductTemplateExportMapper(Component):
         if not record.taxes_id:
             return
         binder = self.binder_for('prestashop.account.tax.group')
-        ext_id = binder.to_external(record.taxes_id[:1].tax_group_id, wrap=True)
+        ext_id = binder.to_external(
+            record.taxes_id[:1].tax_group_id, wrap=True)
         return {'id_tax_rules_group': ext_id}
 
     @changed_by('available_date')
@@ -309,6 +283,11 @@ class ProductTemplateExportMapper(Component):
         return {}
 
     @mapping
+    def date_add(self, record):
+        # When export a record the date_add in PS is null.
+        return {'date_add': record.create_date}
+
+    @mapping
     def default_image(self, record):
         default_image = record.image_ids.filtered('front_image')[:1]
         if default_image:
@@ -316,23 +295,3 @@ class ProductTemplateExportMapper(Component):
             ps_image_id = binder.to_external(default_image, wrap=True)
             if ps_image_id:
                 return {'id_default_image': ps_image_id}
-
-#    @mapping
-#    def extras_manufacturer(self, record):
-#        mapper = self.unit_for(ManufacturerExportMapper)
-#        return mapper.map_record(record).values(**self.options)
-
-
-#class ManufacturerExportMapper(Component):
-#    # To extend in connector_prestashop_manufacturer module
-#    _name = 'prestashop.product.template.manufacturer.mapper'
-#    _inherit = 'prestashop.product.template.export.mapper'
-#    _apply_on = 'prestashop.product.template'
-#
-#    _translatable_fields = [
-#        ('name', 'name'),
-#    ]
-#
-#    @mapping
-#    def manufacturer(self, record):
-#        return {}

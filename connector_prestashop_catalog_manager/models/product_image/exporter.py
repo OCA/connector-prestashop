@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.connector.unit.mapper import mapping
-from odoo.addons.connector_prestashop.components.exporter import \
-    PrestashopExporter
-from odoo.addons.connector_prestashop.components.mapper import (
-    PrestashopExportMapper
-)
 from openerp.addons.connector_prestashop.components.backend_adapter import (
     PrestaShopWebServiceImage
 )
-from odoo.addons.connector_prestashop.backend import prestashop
 
-from odoo import models, fields
 from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.component.core import Component
 from odoo.tools.translate import _
@@ -105,6 +97,15 @@ class ProductImageExportMapper(Component):
             elif storage == 'file':
                 file_name = os.path.splitext(
                     os.path.basename(record.odoo_id.path))
+            elif storage == 'filestore':
+                mimetype = record.odoo_id.attachment_id.mimetype
+                if '/' in mimetype:
+                    ext = mimetype.split('/')[-1]
+                else:
+                    ext = mimetype
+                if ext == 'jpeg':
+                    ext = 'jpg'
+                file_name = [record.odoo_id.attachment_id.res_name, ext]
         return file_name
 
     @mapping
