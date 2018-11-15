@@ -87,7 +87,6 @@ class PrestashopProductCategoryListener(Component):
     _apply_on = 'prestashop.product.category'
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_create(self, record, fields=None):
         """ Called when a record is created """
         record.with_delay().export_record(fields=fields)
@@ -108,7 +107,8 @@ class ProductCategoryListener(Component):
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         for binding in record.prestashop_bind_ids:
-            binding.with_delay().export_record(fields=fields)
+            if not self.need_to_export(binding, fields):
+                binding.with_delay().export_record(fields=fields)
         if 'image' in fields:
             if record.prestashop_image_bind_ids:
                 for image in record.prestashop_image_bind_ids:
@@ -120,4 +120,3 @@ class ProductCategoryListener(Component):
                         'odoo_id': record.id
                     })
                     image.with_delay().export_record(fields=fields)
-

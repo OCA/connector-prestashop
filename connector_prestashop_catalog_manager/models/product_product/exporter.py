@@ -229,7 +229,10 @@ class ProductCombinationOptionValueExportMapper(Component):
     _inherit = 'translation.prestashop.export.mapper'
     _apply_on= 'prestashop.product.combination.option.value'
 
-    direct = [('name', 'value')]
+    direct = [
+        ('name', 'value'),
+        ('prestashop_position', 'position'),
+    ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [
         ('name', 'name'),
