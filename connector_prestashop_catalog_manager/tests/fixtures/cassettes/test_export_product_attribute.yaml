@@ -1,0 +1,39 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="UTF-8"?><prestashop><product_options><public_name><language
+      id="1">New attribute</language></public_name><position>4</position><name><language
+      id="1">New attribute</language></name><group_type>select</group_type></product_options></prestashop>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['273']
+      Content-Type: [text/xml]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: http://localhost:8080/api/product_options
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<product_option>\n\t<id><![CDATA[4]]></id>\n\t<is_color_group></is_color_group>\n\t<group_type><![CDATA[select]]></group_type>\n\t<position><![CDATA[4]]></position>\n\t<name><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        attribute]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></name>\n\t<public_name><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        attribute]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></public_name>\n<associations>\n<product_option_values
+        nodeType=\"product_option_value\" api=\"product_option_values\"/>\n</associations>\n</product_option>\n</prestashop>\n"}
+    headers:
+      access-time: ['1542123952']
+      connection: [keep-alive]
+      content-sha1: [1cba17b0441a19d604108fd414973bb59b4b33c1]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 13 Nov 2018 15:45:52 GMT']
+      execution-time: ['0.022']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=ed174276bd731c9737a60e8951bf7791ceecca1f7edcd54b3f0726bdf73247fd%3AuAPmvnCBWlHl976bPgtgeAHQvd0IHpWXWsdmu8OQGvkUMmy7PdPLAbXOmkvwqwx6JmQ35MIBNPHbbktPfmh4HpomQRWBeOFgnzVFfTOujws%3D;
+          expires=Mon, 03-Dec-2018 15:45:52 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 201, message: Created}
+version: 1

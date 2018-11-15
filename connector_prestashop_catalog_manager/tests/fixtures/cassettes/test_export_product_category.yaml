@@ -1,0 +1,58 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="UTF-8"?><prestashop><category><meta_description><language
+      id="1">New category meta description</language></meta_description><link_rewrite><language
+      id="1">new-category</language></link_rewrite><meta_title><language id="1">New
+      category meta title</language></meta_title><meta_keywords><language id="1">New
+      category keywords</language></meta_keywords><name><language id="1">New category</language></name><id_parent>2</id_parent><id_shop_default>1</id_shop_default><active>1</active><position>1</position><description><language
+      id="1">&lt;p&gt;New category description&lt;/p&gt;</language></description></category></prestashop>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['654']
+      Content-Type: [text/xml]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: http://localhost:8080/api/categories
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t<id><![CDATA[13]]></id>\n\t<id_parent
+        xlink:href=\"http://localhost:8080/api/categories/2\"><![CDATA[2]]></id_parent>\n\t<level_depth><![CDATA[2]]></level_depth>\n\t<nb_products_recursive
+        notFilterable=\"true\"><![CDATA[-1]]></nb_products_recursive>\n\t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\t<is_root_category></is_root_category>\n\t<position><![CDATA[1]]></position>\n\t<date_add><![CDATA[2018-11-13
+        10:36:36]]></date_add>\n\t<date_upd><![CDATA[2018-11-13 10:36:36]]></date_upd>\n\t<name><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        category]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></name>\n\t<link_rewrite><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[new-category]]></language><language
+        id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></link_rewrite>\n\t<description><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[<p>New
+        category description</p>]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></description>\n\t<meta_title><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        category meta title]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></meta_title>\n\t<meta_description><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        category meta description]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></meta_description>\n\t<meta_keywords><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        category keywords]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></meta_keywords>\n<associations>\n<categories
+        nodeType=\"category\" api=\"categories\"/>\n<products nodeType=\"product\"
+        api=\"products\"/>\n</associations>\n</category>\n</prestashop>\n"}
+    headers:
+      access-time: ['1542101796']
+      connection: [keep-alive]
+      content-sha1: [b9340312746d36b660c7d61420000deb7fbcb6ab]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 13 Nov 2018 09:36:36 GMT']
+      execution-time: ['0.065']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=559869069c7e7d6133c57d334ab2ea61b9a8ce0702886951f285bf98970a68a8%3AuAPmvnCBWlHl976bPgtgeK6UimOJmIqQFw%2BjVUZM19qGAoYoLv%2Byvsi1QEhjVSO2CrZ%2FblpZd%2BVOI9g3edVBmJu4sif0huxgLkH8sVh2CpE%3D;
+          expires=Mon, 03-Dec-2018 09:36:36 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 201, message: Created}
+version: 1

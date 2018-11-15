@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-<<<<<<< 9d8fe97a202219d3869b8cf23cc50ac31486d802
 from odoo.addons.connector.unit.mapper import mapping
 from odoo.addons.connector_prestashop.components.exporter import \
     PrestashopExporter
 from odoo.addons.connector_prestashop.components.mapper import (
     PrestashopExportMapper
 )
-from openerp.addons.connector_prestashop.unit.backend_adapter import (
+from openerp.addons.connector_prestashop.components.backend_adapter import (
     PrestaShopWebServiceImage
 )
 from odoo.addons.connector_prestashop.backend import prestashop

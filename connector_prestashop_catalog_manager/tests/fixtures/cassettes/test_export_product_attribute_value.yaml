@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: !!python/unicode <?xml version="1.0" encoding="UTF-8"?><prestashop><product_option_value><id_attribute_group>1</id_attribute_group><position>1</position><id_feature></id_feature><name><language
+      id="1">New value</language></name><value>New value</value></product_option_value></prestashop>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['271']
+      Content-Type: [text/xml]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: http://localhost:8080/api/product_option_values
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<product_option_value>\n\t<id><![CDATA[25]]></id>\n\t<id_attribute_group
+        xlink:href=\"http://localhost:8080/api/product_options/1\"><![CDATA[1]]></id_attribute_group>\n\t<color></color>\n\t<position><![CDATA[1]]></position>\n\t<name><language
+        id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+        value]]></language><language id=\"2\" xlink:href=\"http://localhost:8080/api/languages/2\"></language><language
+        id=\"3\" xlink:href=\"http://localhost:8080/api/languages/3\"></language></name>\n</product_option_value>\n</prestashop>\n"}
+    headers:
+      access-time: ['1542123957']
+      connection: [keep-alive]
+      content-sha1: [9e4d42f91c4bb4ff13be5a2a31424800a8867cfa]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Tue, 13 Nov 2018 15:45:57 GMT']
+      execution-time: ['0.023']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=320811b3e1ad0bcb7f0083eac8e7855fe6f70c8992ca17ccfa8580dad3e9f0e6%3AuAPmvnCBWlHl976bPgtgeCBAxUbKrx1WTnq1%2F5Oqyqpjqu6MxDO90LOj%2F16qP0tJpjYPON24vy%2BwyOKW7RFbmsPyv%2BATJFod2f%2Frxky0irQ%3D;
+          expires=Mon, 03-Dec-2018 15:45:57 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 201, message: Created}
+version: 1
