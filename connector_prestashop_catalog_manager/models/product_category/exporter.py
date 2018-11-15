@@ -37,7 +37,7 @@ class ProductCategoryExporter(Component):
 
 
 class ProductCategoryExportMapper(Component):
-    _name = 'prestashop.product.category.mapper'
+    _name = 'prestashop.product.category.export.mapper'
     _inherit = 'translation.prestashop.export.mapper'
     _apply_on = 'prestashop.product.category'
 

@@ -2,10 +2,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.tools import config
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
-from odoo.addons.connector_prestashop.components.backend_adapter import PrestaShopWebServiceImage
+from odoo.addons.connector_prestashop.components.backend_adapter\
+    import PrestaShopWebServiceImage
 
 
 class ProductCategory(models.Model):
@@ -68,7 +69,8 @@ class CategImageAdapter(Component):
         img_filename = attributes['name']
         image_url = 'images/%s/%s' % (
             self._prestashop_image_model, str(attributes['categ_id']))
-        return api.add(image_url, files=[('image', img_filename, image_binary)])
+        return api.add(image_url, files=[
+            ('image', img_filename, image_binary)])
 
     def write(self, id, attributes=None):
         api = self.connect()
@@ -78,7 +80,8 @@ class CategImageAdapter(Component):
         api.delete(delete_url,  str(attributes['categ_id']))
         image_url = 'images/%s/%s' % (
             self._prestashop_image_model, str(attributes['categ_id']))
-        return api.add(image_url, files=[('image', img_filename, image_binary)])
+        return api.add(image_url, files=[
+            ('image', img_filename, image_binary)])
 
 
 class PrestashopProductCategoryListener(Component):
@@ -92,7 +95,8 @@ class PrestashopProductCategoryListener(Component):
         record.with_delay().export_record(fields=fields)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(
+        record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         record.with_delay().export_record(fields=fields)
@@ -120,3 +124,19 @@ class ProductCategoryListener(Component):
                         'odoo_id': record.id
                     })
                     image.with_delay().export_record(fields=fields)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_unlink(self, record, fields=None):
+        """ Called when a record is deleted """
+        for binding in record.prestashop_bind_ids:
+            work = self.work.work_on(collection=binding.backend_id)
+            binder = work.component(
+                usage='binder',
+                model_name='prestashop.product.category')
+            prestashop_id = binder.to_external(binding)
+            if prestashop_id:
+                record = binding.get_map_record_vals()
+                self.env['prestashop.product.category'].\
+                    with_delay().export_delete_record(
+                        binding._name, binding.backend_id, prestashop_id,
+                        record)

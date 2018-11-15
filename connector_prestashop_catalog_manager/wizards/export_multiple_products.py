@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import unicodedata
 import re
+
+from odoo.exceptions import ValidationError
 
 try:
     import slugify as slugify_lib
@@ -137,7 +139,10 @@ class ExportMultipleProducts(models.TransientModel):
                 cat = self._check_category(product)
                 var = self._check_variants(product)
                 if not(var and cat):
-                    continue
+                    raise ValidationError(
+                        _("""Product "%s" cannot be exported to Prestashop \
+because is not assigned to any Prestashop category or \
+has not any Product Variant.""") % product.name)
                 self.create_prestashop_template(product)
             else:
                 for tmpl in presta_tmpl:
