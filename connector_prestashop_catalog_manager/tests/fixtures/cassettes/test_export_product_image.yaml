@@ -155,11 +155,11 @@ interactions:
 
         <image>
 
-        <id><![CDATA[44]]></id>
+        <id><![CDATA[55]]></id>
 
         <id_product><![CDATA[1]]></id_product>
 
-        <position><![CDATA[16]]></position>
+        <position><![CDATA[21]]></position>
 
         <cover></cover>
 
@@ -173,17 +173,17 @@ interactions:
 
 '}
     headers:
-      access-time: ['1542271146']
+      access-time: ['1542370679']
       connection: [keep-alive]
       content-length: ['6610']
-      content-sha1: [5a6840141fe58e2b0fe3abd582e85141dea2bc6a]
+      content-sha1: [60d0dfb1a6f6379a94c071050c28a73ec99538f3]
       content-type: [text/xml;charset=utf-8]
-      date: ['Thu, 15 Nov 2018 08:39:06 GMT']
-      execution-time: ['0.071']
+      date: ['Fri, 16 Nov 2018 12:17:59 GMT']
+      execution-time: ['0.085']
       psws-version: [1.6.1.22]
       server: [nginx/1.10.3 (Ubuntu)]
-      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=7640fbe74a21372eb3c6118172d1a04400543b170377776a18073cbe0517bc4e%3AWmo59jKoaMXym66wVV4hpn30pBCic8Yq4bxSUJr4v%2BT6A%2FSxJgveJ%2FaHAzBhpN3K4Mwm5J6bw1ZgDRskBfV2v6ZmgMTpaRNGdhy9YrYHGyI%3D;
-          expires=Wed, 05-Dec-2018 08:39:06 GMT; Max-Age=1728000; path=/; HttpOnly']
+      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=b4e82b8c95c4806aded1982594035486ede01dc7941ba688cc50f42505046720%3AWmo59jKoaMXym66wVV4hpl8t4lWeULPzUeBocmpz3QBxKe2UtzhSvndJsTdaCiM249VesjLBOI%2BxANhwKggxzqjgONBOnHNLVbMCbNubjEg%3D;
+          expires=Thu, 06-Dec-2018 12:17:58 GMT; Max-Age=1727999; path=/; HttpOnly']
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
       x-powered-by: [PrestaShop Webservice]
@@ -197,181 +197,19 @@ interactions:
       Content-Length: ['0']
       User-Agent: [python-requests/2.11.1]
     method: DELETE
-    uri: http://localhost:8080/api/images/products/1/44
+    uri: http://localhost:8080/api/images/products/1/55
   response:
     body: {string: !!python/unicode ''}
     headers:
-      access-time: ['1542271147']
+      access-time: ['1542370679']
       connection: [keep-alive]
       content-length: ['0']
-      date: ['Thu, 15 Nov 2018 08:39:07 GMT']
+      date: ['Fri, 16 Nov 2018 12:17:59 GMT']
       execution-time: ['0.011']
       psws-version: [1.6.1.22]
       server: [nginx/1.10.3 (Ubuntu)]
-      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=f845e5d963cb3e921837e3fcaec7c8d46870b9a8e4f698aaca04bbca973c3069%3AWmo59jKoaMXym66wVV4hpo3eo5tnu1Lost1jHqnynPbQLRd9M2FfjPCjDWhnOslOX5O3nfjQAotILXrsUcp2lre11ACus1SqluzKHEfQ6bA%3D;
-          expires=Wed, 05-Dec-2018 08:39:07 GMT; Max-Age=1728000; path=/; HttpOnly']
-      transfer-encoding: [chunked]
-      vary: [Accept-Encoding]
-      x-powered-by: [PrestaShop Webservice]
-    status: {code: 200, message: OK}
-- request:
-    body: !!binary |
-      LS0tLS0tLS0tLS0tVGhJc19Jc190SGVfYm91TmRhUllfJA0KQ29udGVudC1EaXNwb3NpdGlvbjog
-      Zm9ybS1kYXRhOyAgICAgICAgICAgICAgICAgICAgIG5hbWU9ImltYWdlIjsgZmlsZW5hbWU9IjQ0
-      Li5qcGciDQpDb250ZW50LVR5cGU6IGltYWdlL2pwZWcNCg0K/9j/4AAQSkZJRgABAQEAYABgAAD/
-      /gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2ODApLCBxdWFsaXR5ID0g
-      OTAK/9sAQwADAgIDAgIDAwMDBAMDBAUIBQUEBAUKBwcGCAwKDAwLCgsLDQ4SEA0OEQ4LCxAWEBET
-      FBUVFQwPFxgWFBgSFBUU/9sAQwEDBAQFBAUJBQUJFA0LDRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU
-      FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU/8IAEQgAgACAAwEiAAIRAQMRAf/EABwAAQACAwEB
-      AQAAAAAAAAAAAAAGBwQFCAIBA//EABoBAAIDAQEAAAAAAAAAAAAAAAAEAwUGAgH/2gAMAwEAAhAD
-      EAAAAeqQAAAACvY3TrdzLIx9krVvprDrzW+c9d5vK/TaOezRCkAGPGAl8aj9fSM19v4/0a/oZLti
-      sy3ikLy8dz8dWtXvmx03Wwq8jEqC2vSAc7fp0VpwoaP9CwGZ6oepuWbratrdFfmxqz3nmKfpvbXX
-      9SCqx/NXR0Cg/HN6ZGi8xcb/AAPeZPLyNi9Jc72equCfcpOIOk6Qjf3uf5fseuyCvBSlpPSbjT4X
-      OBDHZc8rSy9hesHOWDdVaC9EzlMz+TuYwjWAKe0cqjuNoPOv3np+5z7aqK3XoQtXAAAAACH6uxC/
-      nNmntmGPbe1Zhi5S+LDrkAAACEfMvT++bz3q8wPrXbLjzIy43sq1X7+f5Z3nklFq6AAH/8QAJhAA
-      AgICAQIHAQEBAAAAAAAAAwQCBQEGABASBxETFBUgMCMxFv/aAAgBAQABBQL8bncVq6Tu0WTuZlmT
-      K9i0pmr3s4spuBfB+O3bNLv4IMzzhq1rOLda0j0pbk1K0m2N9b77FZ/FVWc+eaSnJdOV1WtVB5OE
-      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
-      DQo=
-    headers:
-      Accept: ['*/*']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['4847']
-      Content-Type: [multipart/form-data; boundary=----------ThIs_Is_tHe_bouNdaRY_$]
-      Cookie: [PrestaShop-ac85e42aef73418ac8f31f6687398719=f845e5d963cb3e921837e3fcaec7c8d46870b9a8e4f698aaca04bbca973c3069%3AWmo59jKoaMXym66wVV4hpo3eo5tnu1Lost1jHqnynPbQLRd9M2FfjPCjDWhnOslOX5O3nfjQAotILXrsUcp2lre11ACus1SqluzKHEfQ6bA%3D]
-      User-Agent: [python-requests/2.11.1]
-    method: POST
-    uri: http://localhost:8080/api/images/products/1
-  response:
-    body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
-
-        <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
-
-        <image>
-
-        <id><![CDATA[45]]></id>
-
-        <id_product><![CDATA[1]]></id_product>
-
-        <position><![CDATA[16]]></position>
-
-        <cover></cover>
-
-        <legend><language id="1" xlink:href="http://localhost:8080/api/languages/1"><![CDATA[]]></language></legend>
-
-        </image>
-
-        <content encode="base64"><![CDATA[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]]></content>
-
-        </prestashop>
-
-'}
-    headers:
-      access-time: ['1542271147']
-      connection: [keep-alive]
-      content-length: ['6626']
-      content-sha1: [25113a21ebe4134e5e1b9c66a10950a83ecddacb]
-      content-type: [text/xml;charset=utf-8]
-      date: ['Thu, 15 Nov 2018 08:39:07 GMT']
-      execution-time: ['0.075']
-      psws-version: [1.6.1.22]
-      server: [nginx/1.10.3 (Ubuntu)]
-      transfer-encoding: [chunked]
-      vary: [Accept-Encoding]
-      x-powered-by: [PrestaShop Webservice]
-    status: {code: 200, message: OK}
-- request:
-    body: null
-    headers:
-      Accept: ['*/*']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['0']
-      User-Agent: [python-requests/2.11.1]
-    method: DELETE
-    uri: http://localhost:8080/api/images/products/45
-  response:
-    body: {string: !!python/unicode ''}
-    headers:
-      access-time: ['1542271147']
-      connection: [keep-alive]
-      content-length: ['0']
-      date: ['Thu, 15 Nov 2018 08:39:07 GMT']
-      execution-time: ['0.006']
-      psws-version: [1.6.1.22]
-      server: [nginx/1.10.3 (Ubuntu)]
-      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=f845e5d963cb3e921837e3fcaec7c8d46870b9a8e4f698aaca04bbca973c3069%3AWmo59jKoaMXym66wVV4hpo3eo5tnu1Lost1jHqnynPbQLRd9M2FfjPCjDWhnOslOX5O3nfjQAotILXrsUcp2lre11ACus1SqluzKHEfQ6bA%3D;
-          expires=Wed, 05-Dec-2018 08:39:07 GMT; Max-Age=1728000; path=/; HttpOnly']
+      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=b3e1ec7e3d1c7a616401af001f2331d45d7706712807ea086dc0a8e8f291f214%3AWmo59jKoaMXym66wVV4hptLBrbuL9Qxfqpkv69D4b9RrrffUoYb7hmPIAbBgv%2FGwK%2BGxAw64UQG9eWwT7tB6UQpj%2FbwEs16JlxHr9aj9T1Q%3D;
+          expires=Thu, 06-Dec-2018 12:17:59 GMT; Max-Age=1728000; path=/; HttpOnly']
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
       x-powered-by: [PrestaShop Webservice]

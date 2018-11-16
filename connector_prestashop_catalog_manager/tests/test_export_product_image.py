@@ -98,10 +98,10 @@ class TestExportProductImage(CatalogManagerTransactionCase):
 #             self.assertDictEqual({}, self.parse_qs(request.uri))
 
             # delete image in PS
-            self.binding.export_delete_record('/api/images/products/1')
+            self.binding.export_delete_record()
 
             # check DELETE requests
-            request = cassette.requests[3]
+            request = cassette.requests[1]
             self.assertEqual('DELETE', request.method)
             self.assertEqual(
                 '/api/images/products/1/%s' % self.binding.prestashop_id,
