@@ -89,7 +89,7 @@ class ProductCombinationExporter(Component):
 
     def update_quantities(self):
         self.binding.odoo_id.with_context(
-            self._context).update_prestashop_qty()
+            self.env.context).update_prestashop_qty()
 
     def _after_export(self):
         self.update_quantities()

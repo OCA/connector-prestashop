@@ -47,7 +47,7 @@ class ProductProductListener(Component):
     EXCLUDE_FIELDS = ['list_price']
 
     def prestashop_product_combination_unlink(self, record):
-    # binding is deactivate when deactive a product variant
+        # binding is deactivate when deactive a product variant
         for binding in record.prestashop_combinations_bind_ids:
             resource = 'combinations/%s' % (binding.prestashop_id)
             record.with_delay().export_delete_record(binding.backend_id,
@@ -58,14 +58,15 @@ class ProductProductListener(Component):
     @skip_if(lambda self, record, **kwargs: self.need_to_export(record.prestashop_combinations_bind_ids, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
-        for field in EXCLUDE_FIELDS:
-            fields.pop(field, None)
-        if 'active' in fields and not fields['active']:
+        for field in self.EXCLUDE_FIELDS:
+            if field in fields:
+                fields.remove(field)
+        if 'active' in fields:
             self.prestashop_product_combination_unlink(record)
             return
         if fields:
             priority = 20
-            if 'default_on' in fields and fields['default_on']:
+            if 'default_on' in fields:
                 # PS has to uncheck actual default combination first
                 priority = 99
             for binding in record.prestashop_combinations_bind_ids:
