@@ -267,17 +267,8 @@ class ProductTemplateExportMapper(Component):
             template_feature.append(feature_dict)
         return template_feature
 
-    def _get_product_links(self, record):
-        links = []
-        binder = self.binder_for('prestashop.product.template')
-        for link in record.product_template_link_ids:
-            ext_id = binder.to_external(link.linked_product_template_id.id, wrap=True)
-            if ext_id:
-                links.append({'id': ext_id})
-        return links
-
     @changed_by(
-        'attribute_line_ids', 'categ_ids', 'categ_id', 'product_link_ids'
+        'attribute_line_ids', 'categ_ids', 'categ_id',
     )
     @mapping
     def associations(self, record):
@@ -287,8 +278,6 @@ class ProductTemplateExportMapper(Component):
                     'category_id': self._get_product_category(record)},
                 'product_features': {
                     'product_feature': self._get_template_feature(record)},
-                'accessories': {
-                    'accessory': self._get_product_links(record)},
             }
         }
 

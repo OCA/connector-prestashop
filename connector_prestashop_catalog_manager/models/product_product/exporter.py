@@ -96,7 +96,7 @@ class ProductCombinationExporter(Component):
 
 
 class ProductCombinationExportMapper(Component):
-    _name = 'prestashop.product.combination.mapper'
+    _name = 'prestashop.product.combination.export.mapper'
     _inherit = 'translation.prestashop.export.mapper'
     _apply_on = 'prestashop.product.combination'
 
@@ -187,7 +187,7 @@ class ProductCombinationOptionExporter(Component):
 
 
 class ProductCombinationOptionExportMapper(Component):
-    _name = 'prestashop.product.combination.option.mapper'
+    _name = 'prestashop.product.combination.option.export.mapper'
     _inherit = 'translation.prestashop.export.mapper'
     _apply_on = 'prestashop.product.combination.option'
 
@@ -225,7 +225,7 @@ class ProductCombinationOptionValueExporter(Component):
 
 
 class ProductCombinationOptionValueExportMapper(Component):
-    _name = 'prestashop.product.combination.option.value.mapper'
+    _name = 'prestashop.product.combination.option.value.export.mapper'
     _inherit = 'translation.prestashop.export.mapper'
     _apply_on= 'prestashop.product.combination.option.value'
 
