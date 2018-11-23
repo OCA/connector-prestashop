@@ -113,6 +113,15 @@ class ProductImageExportMapper(Component):
             elif storage == 'file':
                 file_name = os.path.splitext(
                     os.path.basename(record.odoo_id.path))
+            elif storage == 'filestore':
+                mimetype = record.odoo_id.attachment_id.mimetype
+                if '/' in mimetype:
+                    ext = mimetype.split('/')[-1]
+                else:
+                    ext = mimetype
+                if ext == 'jpeg':
+                    ext = 'jpg'
+                file_name = [record.odoo_id.attachment_id.res_name, ext]
         return file_name
 
     @mapping
