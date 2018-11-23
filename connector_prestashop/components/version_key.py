@@ -8,6 +8,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class VersionKeyModel(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '_prestashop.version.key'
@@ -73,8 +74,9 @@ class VersionKey1612(Component):
         'messages': 'customer_messages',
         'manufacturers': 'manufacturers',
     }
-    
-class VersionKey_1_6_1_9(Component):
+
+
+class VersionKey1619(Component):
     _name = '_prestashop.version.key.1.6.1.9'
     _inherit = '_prestashop.version.key'
     _usage = 'prestashop.version.key.1.6.1.9'

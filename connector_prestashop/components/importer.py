@@ -379,7 +379,7 @@ class DelayedBatchImporter(AbstractComponent):
             description=description,
             channel=channel,
             identity_key=identity_key
-            ).import_record(
+        ).import_record(
             backend=self.backend_record,
             prestashop_id=external_id,
             **kwargs)

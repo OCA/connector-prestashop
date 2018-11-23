@@ -171,7 +171,7 @@ class TemplateMapper(Component):
                         'matching option'))
             else:
                 if self.backend_record.matching_product_ch == 'reference':
-                    code = record.get(self.backend_record.matching_product_ch)    
+                    code = record.get(self.backend_record.matching_product_ch)
                     if code:
                         if self._template_code_exists(code):
                             product = self.env['product.template'].search(
@@ -258,7 +258,7 @@ class TemplateMapper(Component):
     @mapping
     def purchase_ok(self, record):
         return {'purchase_ok': True}
-    
+
     @only_create
     @mapping
     def categ_ids(self, record):
@@ -297,7 +297,7 @@ class TemplateMapper(Component):
     @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
-    
+
     @only_create
     @mapping
     def barcode(self, record):
@@ -325,7 +325,7 @@ class TemplateMapper(Component):
     def taxes_id(self, record):
         taxes = self._get_tax_ids(record)
         return {'taxes_id': [(6, 0, taxes.ids)]}
-    
+
     @only_create
     @mapping
     def type(self, record):

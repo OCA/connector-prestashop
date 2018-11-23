@@ -261,7 +261,7 @@ class ProductCombinationMapper(Component):
                     product = self.env['product.product'].search(
                         [('default_code', '=', code)], limit=1)
                     if product:
-                            return {'odoo_id': product.id}
+                        return {'odoo_id': product.id}
             if self.backend_record.matching_product_ch == 'barcode':
                 if code:
                     product = self.env['product.product'].search(
