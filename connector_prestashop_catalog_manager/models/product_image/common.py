@@ -15,7 +15,7 @@ class ProductImage(models.Model):
 class PrestashopProductImageListener(Component):
     _name = 'prestashop.product.image.event.listener'
     _inherit = 'base.connector.listener'
-    _apply_on = 'base_multi_image.image',
+    _apply_on = 'base_multi_image.image'
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_write(self, record, fields=None):
@@ -41,8 +41,5 @@ class PrestashopProductImageListener(Component):
                 binder = work.component(
                     usage='binder', model_name='prestashop.product.image')
                 prestashop_id = binder.to_external(binding)
-                resource = 'images/products/%s' % (template_prestashop_id)
                 if prestashop_id:
-                    binding.with_delay().export_delete_record(
-                        binding.backend_id,
-                        prestashop_id)
+                    binding.with_delay().export_delete_record()
