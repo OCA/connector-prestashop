@@ -208,7 +208,7 @@ class SaleOrderAdapter(Component):
 
     def update_sale_state(self, prestashop_id, datas):
         return self.client.add(
-            self.backend_record.get_version_ps_key('order_histories'), 
+            self.backend_record.get_version_ps_key('order_histories'),
             datas
             )
 
