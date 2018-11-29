@@ -147,7 +147,7 @@ class PrestashopProductTemplate(models.Model):
         self.ensure_one()
         backend_id = self.backend_id
         quantity_field = backend_id.quantity_field
-        if self[quantity_field] != None:
+        if self[quantity_field] is not None:
             return self[quantity_field]
         return self.qty_available
 

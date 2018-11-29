@@ -207,7 +207,10 @@ class SaleOrderAdapter(Component):
     _export_node_name = 'order'
 
     def update_sale_state(self, prestashop_id, datas):
-        return self.client.add(self.backend_record.get_version_ps_key('order_histories'), datas)
+        return self.client.add(
+            self.backend_record.get_version_ps_key('order_histories'), 
+            datas
+            )
 
 
 class SaleOrderLineAdapter(Component):
