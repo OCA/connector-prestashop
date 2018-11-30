@@ -70,3 +70,28 @@ class VersionKey1612(Component):
         "messages": "customer_messages",
         "manufacturers": "manufacturers",
     }
+
+
+class VersionKey1616(Component):
+    _name = "_prestashop.version.key.1.6.1.6"
+    _inherit = "_prestashop.version.key"
+    _usage = "prestashop.version.key.1.6.1.6"
+
+    # keys checked in 1.6.1.12:
+    # * tax
+
+    keys = {
+        "product_option_value": "product_option_value",
+        "category": "category",
+        "image": "image",
+        "order_slip": "order_slip",
+        "order_slip_detail": "order_slip_detail",
+        "group": "group",
+        "order_row": "order_row",
+        "tax": "tax",
+        "combinations": "combination",
+        "product_features": "product_feature",
+        "tag": "tag",
+        "messages": "customer_messages",
+        "manufacturers": "manufacturers",
+    }
