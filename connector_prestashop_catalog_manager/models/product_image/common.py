@@ -5,6 +5,8 @@ from odoo import models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
 
+from odoo.addons.connector_prestashop.models.binding.common import export_delete_record
+
 
 class ProductImage(models.Model):
     _inherit = 'base_multi_image.image'
@@ -42,4 +44,12 @@ class PrestashopProductImageListener(Component):
                     usage='binder', model_name='prestashop.product.image')
                 prestashop_id = binder.to_external(binding)
                 if prestashop_id:
-                    binding.with_delay().export_delete_record()
+                    with binding.backend_id.work_on(
+                            'prestashop.product.image') as work:
+                        exporter = work.component(usage='record.exporter')
+                        map_record = exporter.mapper.map_record(binding)
+                        record = map_record.values()
+                        self.env['prestashop.product.image'].\
+                            with_delay().export_delete_record(
+                                binding._name, binding.backend_id,
+                                prestashop_id, record)
