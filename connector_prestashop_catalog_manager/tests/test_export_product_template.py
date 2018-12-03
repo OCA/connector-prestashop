@@ -2,7 +2,6 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mock
 from ..models.product_template.exporter import get_slug
 
 from .common import CatalogManagerTransactionCase

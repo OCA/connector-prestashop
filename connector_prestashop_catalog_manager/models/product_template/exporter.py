@@ -132,7 +132,8 @@ class ProductTemplateExporter(Component):
                     })
             # If a template has been modified then always update PrestaShop
             # combinations
-            combination_ext.with_delay(priority=50,eta=timedelta(seconds=20)).export_record()
+            combination_ext.with_delay(
+                priority=50, eta=timedelta(seconds=20)).export_record()
 
     def _not_in_variant_images(self, image):
         images = []
@@ -171,7 +172,8 @@ class ProductTemplateExporter(Component):
         self.export_variants()
         self.update_quantities()
         if not self.binding.date_add:
-            self.binding.with_context(connector_no_export=True).date_add = fields.Datetime.now()
+            self.binding.with_context(
+                connector_no_export=True).date_add = fields.Datetime.now()
 
 
 class ProductTemplateExportMapper(Component):
@@ -296,7 +298,8 @@ class ProductTemplateExportMapper(Component):
         if not record.taxes_id:
             return
         binder = self.binder_for('prestashop.account.tax.group')
-        ext_id = binder.to_external(record.taxes_id[:1].tax_group_id, wrap=True)
+        ext_id = binder.to_external(
+            record.taxes_id[:1].tax_group_id, wrap=True)
         return {'id_tax_rules_group': ext_id}
 
     @changed_by('available_date')
@@ -307,6 +310,11 @@ class ProductTemplateExportMapper(Component):
         return {}
 
     @mapping
+    def date_add(self, record):
+        # When export a record the date_add in PS is null.
+        return {'date_add': record.create_date}
+
+    @mapping
     def default_image(self, record):
         default_image = record.image_ids.filtered('front_image')[:1]
         if default_image:
@@ -314,23 +322,3 @@ class ProductTemplateExportMapper(Component):
             ps_image_id = binder.to_external(default_image, wrap=True)
             if ps_image_id:
                 return {'id_default_image': ps_image_id}
-
-#    @mapping
-#    def extras_manufacturer(self, record):
-#        mapper = self.unit_for(ManufacturerExportMapper)
-#        return mapper.map_record(record).values(**self.options)
-
-
-#class ManufacturerExportMapper(Component):
-#    # To extend in connector_prestashop_manufacturer module
-#    _name = 'prestashop.product.template.manufacturer.mapper'
-#    _inherit = 'prestashop.product.template.export.mapper'
-#    _apply_on = 'prestashop.product.template'
-#
-#    _translatable_fields = [
-#        ('name', 'name'),
-#    ]
-#
-#    @mapping
-#    def manufacturer(self, record):
-#        return {}

@@ -53,11 +53,15 @@ class TestExportProductImage(CatalogManagerTransactionCase):
     def test_export_product_image_ondelete(self):
         # bind image
         self.binding.prestashop_id = 24
+        map_record = self.binding.get_map_record_vals()
+
         # delete image
         self.image.unlink()
         # check export delete delayed
         self.instance_delay_record.export_delete_record.\
-            assert_called_once_with(self.backend_record, 24)
+            assert_called_once_with(
+                'prestashop.product.image', self.backend_record, 24,
+                map_record)
 
     @assert_no_job_delayed
     def test_export_product_image_jobs(self):
@@ -98,7 +102,10 @@ class TestExportProductImage(CatalogManagerTransactionCase):
 #             self.assertDictEqual({}, self.parse_qs(request.uri))
 
             # delete image in PS
-            self.binding.export_delete_record()
+            map_record = self.binding.get_map_record_vals()
+            self.env['prestashop.product.image'].export_delete_record(
+                'prestashop.product.image', self.backend_record,
+                self.binding.prestashop_id, map_record)
 
             # check DELETE requests
             request = cassette.requests[1]

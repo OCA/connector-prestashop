@@ -80,7 +80,7 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
 
     def test_export_product_product_oncreate(self):
         # create binding
-        binding = self.env['prestashop.product.combination'].create({
+        self.env['prestashop.product.combination'].create({
             'backend_id': self.backend_record.id,
             'odoo_id': self.product.id,
             'main_template_id': self.main_template_id.id,
@@ -91,7 +91,7 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
         )
 
     def test_export_product_product_onwrite(self):
-        #reset mock:
+        # reset mock:
         self.patch_delay_record.stop()
         mock_delay_record = mock.MagicMock()
         self.instance_delay_record = mock_delay_record.return_value
@@ -125,9 +125,8 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
         # delete product
         self.product.unlink()
         # check export delete delayed
-        self.instance_delay_record.export_delete_record.assert_called_once_with(
-            self.backend_record, 46
-        )
+        self.instance_delay_record.export_delete_record.\
+            assert_called_once_with()
 
     @assert_no_job_delayed
     def test_export_product_product_jobs(self):
@@ -169,7 +168,10 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
             self.assertIn({'id': '13'}, ps_product_option_values)
 
             # delete combination in PS
-            binding.export_delete_record()
+            map_record = binding.get_map_record_vals()
+            self.env['prestashop.product.combination'].export_delete_record(
+                'prestashop.product.combination', self.backend_record,
+                binding.prestashop_id, map_record)
 
             # check DELETE requests
             request = cassette.requests[1]

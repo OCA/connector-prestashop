@@ -3,7 +3,6 @@
 
 from odoo.addons.connector.components.mapper import mapping, changed_by
 from odoo.addons.component.core import Component
-from collections import OrderedDict
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -13,7 +12,6 @@ class ProductCombinationExporter(Component):
     _name = 'prestashop.product.combination.exporter'
     _inherit = 'translation.prestashop.exporter'
     _apply_on = 'prestashop.product.combination'
-
 
     def _create(self, record):
         """
@@ -62,9 +60,7 @@ class ProductCombinationExporter(Component):
                         connector_no_export=True).create({
                             'backend_id': self.backend_record.id,
                             'odoo_id': value.attribute_id.id})
-                export_record(self.session,
-                              'prestashop.product.combination.option',
-                              option_binding.id)
+                option_binding.export_record()
             prestashop_value_id = option_binder.to_external(
                 value.id, wrap=True)
             if not prestashop_value_id:
@@ -81,10 +77,7 @@ class ProductCombinationExporter(Component):
                             'backend_id': self.backend_record.id,
                             'odoo_id': value.id,
                             'id_attribute_group': option_binding.id})
-                export_record(
-                    self.session,
-                    'prestashop.product.combination.option.value',
-                    value_binding.id)
+                value_binding.export_record()
         # self._export_images()
 
     def update_quantities(self):
@@ -167,7 +160,8 @@ class ProductCombinationExportMapper(Component):
         return {
             'associations': {
                 'product_option_values': {
-                    'product_option_value': self._get_product_option_value(record)
+                    'product_option_value': self._get_product_option_value(
+                        record)
                 },
                 'images': {
                     'image': self._get_combination_image(record)
@@ -208,7 +202,8 @@ class ProductCombinationOptionValueExporter(Component):
     _apply_on = 'prestashop.product.combination.option.value'
 
     def _create(self, record):
-        res = super(ProductCombinationOptionValueExporter, self)._create(record)
+        res = super(ProductCombinationOptionValueExporter, self)._create(
+            record)
         return res['prestashop']['product_option_value']['id']
 
     def _export_dependencies(self):
@@ -227,7 +222,7 @@ class ProductCombinationOptionValueExporter(Component):
 class ProductCombinationOptionValueExportMapper(Component):
     _name = 'prestashop.product.combination.option.value.export.mapper'
     _inherit = 'translation.prestashop.export.mapper'
-    _apply_on= 'prestashop.product.combination.option.value'
+    _apply_on = 'prestashop.product.combination.option.value'
 
     direct = [
         ('name', 'value'),

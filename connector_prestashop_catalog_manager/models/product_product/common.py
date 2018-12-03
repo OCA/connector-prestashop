@@ -22,13 +22,15 @@ class PrestashopProductProductListener(Component):
     _apply_on = 'prestashop.product.combination'
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(
+        record, **kwargs))
     def on_record_create(self, record, fields=None):
         """ Called when a record is created """
         record.with_delay().export_record(fields=fields)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(
+        record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         work = self.work.work_on(collection=record)
@@ -53,7 +55,8 @@ class ProductProductListener(Component):
         record.prestashop_combinations_bind_ids.unlink()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(record.prestashop_combinations_bind_ids, **kwargs))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(
+        record.prestashop_combinations_bind_ids, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         for field in self.EXCLUDE_FIELDS:
@@ -68,7 +71,8 @@ class ProductProductListener(Component):
                 # PS has to uncheck actual default combination first
                 priority = 99
             for binding in record.prestashop_combinations_bind_ids:
-                binding.with_delay(priority=priority).export_record(fields=fields)
+                binding.with_delay(priority=priority).export_record(
+                    fields=fields)
 
 
 class PrestashopAttributeListener(Component):
@@ -85,7 +89,8 @@ class PrestashopAttributeListener(Component):
         record.with_delay().export_record(fields=fields)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
+    @skip_if(lambda self, record, **kwargs: self.need_to_export(
+        record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         record.with_delay().export_record(fields=fields)

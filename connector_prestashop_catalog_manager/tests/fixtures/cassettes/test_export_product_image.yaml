@@ -155,11 +155,11 @@ interactions:
 
         <image>
 
-        <id><![CDATA[55]]></id>
+        <id><![CDATA[68]]></id>
 
         <id_product><![CDATA[1]]></id_product>
 
-        <position><![CDATA[21]]></position>
+        <position><![CDATA[6]]></position>
 
         <cover></cover>
 
@@ -173,17 +173,17 @@ interactions:
 
 '}
     headers:
-      access-time: ['1542370679']
+      access-time: ['1544010333']
       connection: [keep-alive]
-      content-length: ['6610']
-      content-sha1: [60d0dfb1a6f6379a94c071050c28a73ec99538f3]
+      content-length: ['6609']
+      content-sha1: [3a308e3ae28e34ab2eef6c8bedeacd54ba5250f3]
       content-type: [text/xml;charset=utf-8]
-      date: ['Fri, 16 Nov 2018 12:17:59 GMT']
-      execution-time: ['0.085']
+      date: ['Wed, 05 Dec 2018 11:45:33 GMT']
+      execution-time: ['0.104']
       psws-version: [1.6.1.22]
       server: [nginx/1.10.3 (Ubuntu)]
-      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=b4e82b8c95c4806aded1982594035486ede01dc7941ba688cc50f42505046720%3AWmo59jKoaMXym66wVV4hpl8t4lWeULPzUeBocmpz3QBxKe2UtzhSvndJsTdaCiM249VesjLBOI%2BxANhwKggxzqjgONBOnHNLVbMCbNubjEg%3D;
-          expires=Thu, 06-Dec-2018 12:17:58 GMT; Max-Age=1727999; path=/; HttpOnly']
+      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=955af223f6180571e5e5e318e1a81079ca7d43406aa0e6cdc920b78d05165d99%3Ay9dT%2FUvu1KNqFoEFFplK6KgmFvX9MCUWzxfVdGR2sctbyzMZQ%2FuHKRHmpCgQ6rfMv8tpY%2FD%2BCaCDSw627GwpbrPaMx1unqas4i0VMPWUblE%3D;
+          expires=Tue, 25-Dec-2018 11:45:33 GMT; Max-Age=1728000; path=/; HttpOnly']
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
       x-powered-by: [PrestaShop Webservice]
@@ -197,19 +197,19 @@ interactions:
       Content-Length: ['0']
       User-Agent: [python-requests/2.11.1]
     method: DELETE
-    uri: http://localhost:8080/api/images/products/1/55
+    uri: http://localhost:8080/api/images/products/1/68
   response:
     body: {string: !!python/unicode ''}
     headers:
-      access-time: ['1542370679']
+      access-time: ['1544010333']
       connection: [keep-alive]
       content-length: ['0']
-      date: ['Fri, 16 Nov 2018 12:17:59 GMT']
-      execution-time: ['0.011']
+      date: ['Wed, 05 Dec 2018 11:45:33 GMT']
+      execution-time: ['0.01']
       psws-version: [1.6.1.22]
       server: [nginx/1.10.3 (Ubuntu)]
-      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=b3e1ec7e3d1c7a616401af001f2331d45d7706712807ea086dc0a8e8f291f214%3AWmo59jKoaMXym66wVV4hptLBrbuL9Qxfqpkv69D4b9RrrffUoYb7hmPIAbBgv%2FGwK%2BGxAw64UQG9eWwT7tB6UQpj%2FbwEs16JlxHr9aj9T1Q%3D;
-          expires=Thu, 06-Dec-2018 12:17:59 GMT; Max-Age=1728000; path=/; HttpOnly']
+      set-cookie: ['PrestaShop-ac85e42aef73418ac8f31f6687398719=955af223f6180571e5e5e318e1a81079ca7d43406aa0e6cdc920b78d05165d99%3Ay9dT%2FUvu1KNqFoEFFplK6KgmFvX9MCUWzxfVdGR2sctbyzMZQ%2FuHKRHmpCgQ6rfMv8tpY%2FD%2BCaCDSw627GwpbrPaMx1unqas4i0VMPWUblE%3D;
+          expires=Tue, 25-Dec-2018 11:45:33 GMT; Max-Age=1728000; path=/; HttpOnly']
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
       x-powered-by: [PrestaShop Webservice]
