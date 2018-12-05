@@ -3,7 +3,6 @@
 
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job, related_action
-from ...components.importer import import_record
 from odoo.addons.connector.exception import RetryableJobError
 
 
@@ -80,12 +79,11 @@ class PrestashopBinding(models.AbstractModel):
     # TODO: Research
     @api.multi
     def resync(self):
-        func = import_record
+        func = self.import_record
         if self.env.context.get('connector_delay'):
-            func = import_record.delay
+            func = self.import_record.delay
         for record in self:
-            func(self.env, self._name, record.backend_id.id,
-                 record.prestashop_id)
+            func(record.backend_id, record.prestashop_id)
         return True
 
 
