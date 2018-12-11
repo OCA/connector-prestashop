@@ -1,0 +1,4965 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* connector_prestashop
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+#. module: connector_prestashop
+#: help:prestashop.refund,state:0
+msgid " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+" * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
+" * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Cancelled' status is used when user cancel invoice."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,purchase_count:0
+#: field:prestashop.product.template,purchase_count:0
+msgid "# Purchases"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,sales_count:0
+#: field:prestashop.product.template,sales_count:0
+msgid "# Sales"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,supplier_invoice_count:0
+#: field:prestashop.res.partner,supplier_invoice_count:0
+#: field:prestashop.supplier,supplier_invoice_count:0
+msgid "# Supplier Invoices"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,product_variant_count:0
+#: field:prestashop.product.template,product_variant_count:0
+msgid "# of Product Variants"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,purchase_order_count:0
+#: field:prestashop.res.partner,purchase_order_count:0
+#: field:prestashop.supplier,purchase_order_count:0
+msgid "# of Purchase Order"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,sale_order_count:0
+#: field:prestashop.res.partner,sale_order_count:0
+#: field:prestashop.supplier,sale_order_count:0
+msgid "# of Sales Order"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order.line,state:0
+#: help:prestashop.sale.order.line.discount,state:0
+msgid "* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
+"* The 'Cancelled' status is set when a user cancel the sales order related."
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.actions.act_window,help:connector_prestashop.action_prestashop_sale_order_state_form
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Here are the sale order states mapped with e-commerce.\n"
+"              </p><p>\n"
+"                Each state can be linked between PrestaShop and Odoo.\n"
+"                When a sale order state change, the connector will update the sale order in PrestaShop.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,type:0
+msgid "A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,description_sale:0
+#: help:prestashop.product.template,description_sale:0
+msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,description_purchase:0
+#: help:prestashop.product.template,description_purchase:0
+msgid "A description of the Product that you want to communicate to your suppliers. This description will be copied to every Purchase Order, Receipt and Supplier Invoice/Refund."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,parent_need_cancel:0
+msgid "A parent sales order has been canceled on the backend and needs to be canceled."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,parent_id:0
+msgid "A parent sales order is a sales order replaced by this one."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,parent_need_cancel:0
+msgid "A parent sales order needs cancel"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order.line,address_allotment_id:0
+#: help:prestashop.sale.order.line.discount,address_allotment_id:0
+msgid "A partner to whom the particular product needs to be allotted."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,description:0
+#: help:prestashop.product.template,description:0
+msgid "A precise description of the Product, used only for internal information purposes."
+msgstr ""
+
+#. module: connector_prestashop
+#: sql_constraint:prestashop.account.tax:0
+#: sql_constraint:prestashop.account.tax.group:0
+#: sql_constraint:prestashop.address:0
+#: sql_constraint:prestashop.binding:0
+#: sql_constraint:prestashop.binding.odoo:0
+#: sql_constraint:prestashop.delivery.carrier:0
+#: sql_constraint:prestashop.groups.pricelist:0
+#: sql_constraint:prestashop.mail.message:0
+#: sql_constraint:prestashop.product.category:0
+#: sql_constraint:prestashop.product.combination:0
+#: sql_constraint:prestashop.product.combination.option:0
+#: sql_constraint:prestashop.product.combination.option.value:0
+#: sql_constraint:prestashop.product.image:0
+#: sql_constraint:prestashop.product.supplierinfo:0
+#: sql_constraint:prestashop.product.template:0
+#: sql_constraint:prestashop.refund:0
+#: sql_constraint:prestashop.res.country:0
+#: sql_constraint:prestashop.res.currency:0
+#: sql_constraint:prestashop.res.lang:0
+#: sql_constraint:prestashop.res.partner:0
+#: sql_constraint:prestashop.res.partner.category:0
+#: sql_constraint:prestashop.sale.order:0
+#: sql_constraint:prestashop.sale.order.line:0
+#: sql_constraint:prestashop.sale.order.line.discount:0
+#: sql_constraint:prestashop.sale.order.state:0
+#: sql_constraint:prestashop.shop:0
+#: sql_constraint:prestashop.shop.group:0
+#: sql_constraint:prestashop.supplier:0
+msgid "A record with same ID already exists on PrestaShop."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,account_id:0
+msgid "Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,base_code_id:0
+msgid "Account Base Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_account_payable:0
+#: field:prestashop.res.partner,property_account_payable:0
+#: field:prestashop.supplier,property_account_payable:0
+msgid "Account Payable"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_account_receivable:0
+#: field:prestashop.res.partner,property_account_receivable:0
+#: field:prestashop.supplier,property_account_receivable:0
+msgid "Account Receivable"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,tax_code_id:0
+msgid "Account Tax Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,active:0
+#: field:prestashop.address,active:0
+#: field:prestashop.delivery.carrier,active:0
+#: field:prestashop.groups.pricelist,active:0
+#: field:prestashop.product.category,active:0
+#: field:prestashop.product.combination,active:0
+#: field:prestashop.product.template,active:0
+#: field:prestashop.product.template,always_available:0
+#: field:prestashop.res.currency,active:0
+#: field:prestashop.res.partner,active:0
+#: field:prestashop.res.partner.category,active:0
+#: field:prestashop.supplier,active:0
+msgid "Active"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,active_ext:0
+#: field:prestashop.res.lang,active:0
+msgid "Active in PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,comment:0
+msgid "Additional Information"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.country,address_format:0
+msgid "Address Format"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,type:0
+#: field:prestashop.res.partner,type:0
+#: field:prestashop.supplier,type:0
+msgid "Address Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,pricelist_ids:0
+msgid "Advanced Pricing"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,use_detailed_pricelist:0
+msgid "Advanced Pricing per Destination"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,address_allotment_id:0
+#: field:prestashop.sale.order.line.discount,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,amount:0
+#: field:prestashop.delivery.carrier,amount:0
+msgid "Amount"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,amount_paid:0
+msgid "Amount Paid"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,amount:0
+msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
+msgstr ""
+
+#. module: connector_prestashop
+#: sql_constraint:prestashop.account.tax:0
+#: sql_constraint:prestashop.account.tax.group:0
+#: sql_constraint:prestashop.address:0
+#: sql_constraint:prestashop.binding.odoo:0
+#: sql_constraint:prestashop.delivery.carrier:0
+#: sql_constraint:prestashop.groups.pricelist:0
+#: sql_constraint:prestashop.mail.message:0
+#: sql_constraint:prestashop.product.category:0
+#: sql_constraint:prestashop.product.combination:0
+#: sql_constraint:prestashop.product.combination.option:0
+#: sql_constraint:prestashop.product.image:0
+#: sql_constraint:prestashop.product.supplierinfo:0
+#: sql_constraint:prestashop.product.template:0
+#: sql_constraint:prestashop.refund:0
+#: sql_constraint:prestashop.res.country:0
+#: sql_constraint:prestashop.res.currency:0
+#: sql_constraint:prestashop.res.lang:0
+#: sql_constraint:prestashop.res.partner:0
+#: sql_constraint:prestashop.res.partner.category:0
+#: sql_constraint:prestashop.sale.order:0
+#: sql_constraint:prestashop.sale.order.line:0
+#: sql_constraint:prestashop.sale.order.line.discount:0
+#: sql_constraint:prestashop.sale.order.state:0
+#: sql_constraint:prestashop.supplier:0
+msgid "An ERP record with same ID already exists on PrestaShop."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,no_auto_thread:0
+msgid "Answers do not go in the original document' discussion thread. This has an impact on the generated message-id."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,applicable_type:0
+msgid "Applicability"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,python_applicable:0
+msgid "Applicable Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,sequence:0
+msgid "Assigns the priority to the list of product supplier."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,attachment_ids:0
+msgid "Attachments"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option,odoo_id:0
+#: field:prestashop.product.combination.option.value,attribute_id:0
+#: field:prestashop.product.combination.option.value,odoo_id:0
+msgid "Attribute"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option.value,price_extra:0
+msgid "Attribute Price Extra"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option.value,price_ids:0
+msgid "Attribute Prices"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,attribute_value_ids:0
+msgid "Attributes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,author_id:0
+msgid "Author"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,author_id:0
+msgid "Author of the message. If not set, email_from may hold an email address that did not match any partner."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,author_avatar:0
+msgid "Author's Avatar"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,workflow_process_id:0
+msgid "Automatic Workflow"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,available:0
+msgid "Available"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,available_for_order:0
+msgid "Available for Order Taking"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.account.tax.group:connector_prestashop.account_tax_group_connector_prestashop_tree_view
+#: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_form_view
+#: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_tree_view
+#: view:prestashop.product.combination:connector_prestashop.combination_connector_presta_tree_view
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_tree_view
+msgid "Backend"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_backend
+msgid "Backends"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,residual:0
+#: field:prestashop.sale.order,residual:0
+msgid "Balance"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,partner_bank_id:0
+msgid "Bank Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,partner_bank_id:0
+msgid "Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,bank_ids:0
+#: field:prestashop.res.partner,bank_ids:0
+#: field:prestashop.supplier,bank_ids:0
+msgid "Banks"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,base:0
+msgid "Base"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,base_sign:0
+msgid "Base Code Sign"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,list_price:0
+#: help:prestashop.product.template,list_price:0
+msgid "Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,birthdate:0
+#: field:prestashop.res.partner,birthdate:0
+#: field:prestashop.supplier,birthdate:0
+msgid "Birthdate"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner,birthday:0
+msgid "Birthday"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "By clicking on the buttons,\n"
+"                                    you will initiate the synchronizations\n"
+"                                    with PrestaShop.\n"
+"                                    Note that the import or exports\n"
+"                                    won't be done directly,\n"
+"                                    they will create 'Jobs'\n"
+"                                    executed as soon as possible."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,purchase_ok:0
+#: field:prestashop.product.template,purchase_ok:0
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,rental:0
+#: field:prestashop.product.template,rental:0
+msgid "Can be Rent"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,sale_ok:0
+#: field:prestashop.product.template,sale_ok:0
+msgid "Can be Sold"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,canceled_in_backend:0
+msgid "Canceled in backend"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,cancellation_resolved:0
+msgid "Cancellation from the backend resolved"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_delivery_carrier
+msgid "Carrier"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_carrier
+msgid "Carriers"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,loc_case:0
+#: field:prestashop.product.template,loc_case:0
+msgid "Case"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner.category,name:0
+msgid "Category Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,type:0
+msgid "Category Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,is_company:0
+#: help:prestashop.res.partner,is_company:0
+#: help:prestashop.supplier,is_company:0
+msgid "Check if the contact is a company, otherwise it is a person"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,vat_subjected:0
+#: help:prestashop.res.partner,vat_subjected:0
+#: help:prestashop.supplier,vat_subjected:0
+msgid "Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,customer:0
+#: help:prestashop.res.partner,customer:0
+#: help:prestashop.supplier,customer:0
+msgid "Check this box if this contact is a customer."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,supplier:0
+#: help:prestashop.res.partner,supplier:0
+#: help:prestashop.supplier,supplier:0
+msgid "Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,employee:0
+#: help:prestashop.res.partner,employee:0
+#: help:prestashop.supplier,employee:0
+msgid "Check this box if this contact is an Employee."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,use_detailed_pricelist:0
+msgid "Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,price_include:0
+msgid "Check this if the price you use on the product and invoices includes this tax."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:stock.location,prestashop_synchronized:0
+msgid "Check this option to synchronize this location with PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,child_id:0
+#: field:prestashop.res.partner.category,child_ids:0
+msgid "Child Categories"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,child_ids:0
+msgid "Child Messages"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,child_ids:0
+msgid "Child Tax Accounts"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,group_id:0
+msgid "Choose the tax group. This is needed for example with Prestashop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,city:0
+#: field:prestashop.res.partner,city:0
+#: field:prestashop.supplier,city:0
+msgid "City"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,uos_coeff:0
+#: help:prestashop.product.template,uos_coeff:0
+msgid "Coefficient to convert default Unit of Measure to Unit of Sale\n"
+" uos = uom * coeff"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:prestashop.product.combination.option,group_type:0
+msgid "Color"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,color:0
+#: field:prestashop.product.combination,color:0
+#: field:prestashop.product.template,color:0
+#: field:prestashop.res.partner,color:0
+#: field:prestashop.supplier,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,combinations_ids:0
+msgid "Combinations"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,comments:0
+msgid "Comments"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,commercial_partner_id:0
+#: field:prestashop.refund,commercial_partner_id:0
+#: field:prestashop.res.partner,commercial_partner_id:0
+#: field:prestashop.supplier,commercial_partner_id:0
+msgid "Commercial Entity"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,ref_companies:0
+#: field:prestashop.res.partner,ref_companies:0
+#: field:prestashop.supplier,ref_companies:0
+msgid "Companies that refers to partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:account.tax.group,company_id:0
+#: field:delivery.carrier,company_id:0
+#: field:prestashop.account.tax,company_id:0
+#: field:prestashop.account.tax.group,company_id:0
+#: field:prestashop.address,company_id:0
+#: field:prestashop.backend,company_id:0
+#: field:prestashop.delivery.carrier,company_id:0
+#: field:prestashop.groups.pricelist,company_id:0
+#: field:prestashop.product.combination,company_id:0
+#: field:prestashop.product.supplierinfo,company_id:0
+#: field:prestashop.product.template,company_id:0
+#: field:prestashop.refund,company_id:0
+#: field:prestashop.res.currency,company_id:0
+#: field:prestashop.res.partner,company:0
+#: field:prestashop.res.partner,company_id:0
+#: field:prestashop.sale.order,company_id:0
+#: field:prestashop.sale.order.line,company_id:0
+#: field:prestashop.sale.order.line.discount,company_id:0
+#: field:prestashop.sale.order.state,company_id:0
+#: field:prestashop.shop.group,company_id:0
+#: field:prestashop.supplier,company_id:0
+#: field:sale.order.state,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,contact_address:0
+#: field:prestashop.res.partner,contact_address:0
+#: field:prestashop.supplier,contact_address:0
+msgid "Complete Address"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,carrier_id:0
+msgid "Complete this field if you plan to invoice the shipping based on picking."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,accuracy:0
+msgid "Computational Accuracy"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,quantity:0
+#: field:prestashop.product.template,quantity:0
+msgid "Computed Quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:sale.order.state:connector_prestashop.view_sale_order_state_form
+msgid "Connector"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,type:0
+#: help:prestashop.product.template,type:0
+msgid "Consumable: Will not imply stock management for this product. \n"
+"Stockable product: Will imply stock management for this product."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,ref:0
+#: field:prestashop.res.partner,ref:0
+#: field:prestashop.supplier,ref:0
+msgid "Contact Reference"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,child_ids:0
+#: field:prestashop.res.partner,child_ids:0
+#: field:prestashop.supplier,child_ids:0
+msgid "Contacts"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,body:0
+msgid "Contents"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,project_id:0
+msgid "Contract / Analytic"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,contract_ids:0
+#: field:prestashop.address,contracts_count:0
+#: field:prestashop.res.partner,contract_ids:0
+#: field:prestashop.res.partner,contracts_count:0
+#: field:prestashop.supplier,contract_ids:0
+#: field:prestashop.supplier,contracts_count:0
+msgid "Contracts"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,standard_price:0
+#: field:prestashop.product.template,standard_price:0
+msgid "Cost Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.template,standard_price:0
+msgid "Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,standard_price:0
+msgid "Cost price of the product variant used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,cost_method:0
+#: field:prestashop.product.template,cost_method:0
+msgid "Costing Method"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_res_country
+#: field:prestashop.address,country_id:0
+#: field:prestashop.res.country,odoo_id:0
+#: field:prestashop.res.partner,country_id:0
+#: field:prestashop.supplier,country_id:0
+msgid "Country"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.country,code:0
+msgid "Country Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.country,country_group_ids:0
+msgid "Country Groups"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.country,name:0
+msgid "Country Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,order_policy:0
+msgid "Create Invoice"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,date_add:0
+#: field:prestashop.product.category,date_add:0
+#: field:prestashop.res.partner,date_add:0
+#: field:prestashop.res.partner.category,date_add:0
+msgid "Created At (on PrestaShop)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,date_add:0
+msgid "Created at (in PrestaShop)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,create_uid:0
+#: field:prestashop.account.tax,create_uid:0
+#: field:prestashop.account.tax.group,create_uid:0
+#: field:prestashop.address,create_uid:0
+#: field:prestashop.backend,create_uid:0
+#: field:prestashop.delivery.carrier,create_uid:0
+#: field:prestashop.groups.pricelist,create_uid:0
+#: field:prestashop.mail.message,create_uid:0
+#: field:prestashop.product.category,create_uid:0
+#: field:prestashop.product.combination,create_uid:0
+#: field:prestashop.product.combination.option,create_uid:0
+#: field:prestashop.product.combination.option.value,create_uid:0
+#: field:prestashop.product.image,create_uid:0
+#: field:prestashop.product.supplierinfo,create_uid:0
+#: field:prestashop.product.template,create_uid:0
+#: field:prestashop.refund,create_uid:0
+#: field:prestashop.res.country,create_uid:0
+#: field:prestashop.res.currency,create_uid:0
+#: field:prestashop.res.lang,create_uid:0
+#: field:prestashop.res.partner,create_uid:0
+#: field:prestashop.res.partner.category,create_uid:0
+#: field:prestashop.sale.order,create_uid:0
+#: field:prestashop.sale.order.line,create_uid:0
+#: field:prestashop.sale.order.line.discount,create_uid:0
+#: field:prestashop.sale.order.state,create_uid:0
+#: field:prestashop.shop,create_uid:0
+#: field:prestashop.shop.group,create_uid:0
+#: field:prestashop.supplier,create_uid:0
+#: field:sale.order.state,create_uid:0
+#: field:sale.order.state.list,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,create_date:0
+#: field:prestashop.account.tax,create_date:0
+#: field:prestashop.account.tax.group,create_date:0
+#: field:prestashop.address,create_date:0
+#: field:prestashop.backend,create_date:0
+#: field:prestashop.delivery.carrier,create_date:0
+#: field:prestashop.groups.pricelist,create_date:0
+#: field:prestashop.mail.message,create_date:0
+#: field:prestashop.product.category,create_date:0
+#: field:prestashop.product.combination,create_date:0
+#: field:prestashop.product.combination.option,create_date:0
+#: field:prestashop.product.combination.option.value,create_date:0
+#: field:prestashop.product.image,create_date:0
+#: field:prestashop.product.supplierinfo,create_date:0
+#: field:prestashop.product.template,create_date:0
+#: field:prestashop.refund,create_date:0
+#: field:prestashop.res.country,create_date:0
+#: field:prestashop.res.currency,create_date:0
+#: field:prestashop.res.lang,create_date:0
+#: field:prestashop.res.partner,create_date:0
+#: field:prestashop.res.partner.category,create_date:0
+#: field:prestashop.sale.order,create_date:0
+#: field:prestashop.sale.order.line,create_date:0
+#: field:prestashop.sale.order.line.discount,create_date:0
+#: field:prestashop.sale.order.state,create_date:0
+#: field:prestashop.shop,create_date:0
+#: field:prestashop.shop.group,create_date:0
+#: field:prestashop.supplier,create_date:0
+#: field:sale.order.state,create_date:0
+#: field:sale.order.state.list,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,credit_limit:0
+#: field:prestashop.res.partner,credit_limit:0
+#: field:prestashop.supplier,credit_limit:0
+msgid "Credit Limit"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_res_currency
+#: field:prestashop.groups.pricelist,currency_id:0
+#: field:prestashop.refund,currency_id:0
+#: field:prestashop.res.country,currency_id:0
+#: field:prestashop.res.currency,name:0
+#: field:prestashop.res.currency,odoo_id:0
+#: field:prestashop.sale.order,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.currency,name:0
+msgid "Currency Code (ISO 4217)"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.currency,symbol:0
+msgid "Currency sign, to be used when printing amounts."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,rate:0
+#: field:prestashop.res.currency,rate_silent:0
+msgid "Current Rate"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,qty_available:0
+msgid "Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,customer:0
+#: field:prestashop.res.partner,customer:0
+#: field:prestashop.sale.order,partner_id:0
+#: field:prestashop.sale.order.line,order_partner_id:0
+#: field:prestashop.sale.order.line.discount,order_partner_id:0
+#: field:prestashop.supplier,customer:0
+msgid "Customer"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,sale_delay:0
+#: field:prestashop.product.template,sale_delay:0
+msgid "Customer Lead Time"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_stock_customer:0
+#: field:prestashop.res.partner,property_stock_customer:0
+#: field:prestashop.supplier,property_stock_customer:0
+msgid "Customer Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_payment_term:0
+#: field:prestashop.res.partner,property_payment_term:0
+#: field:prestashop.supplier,property_payment_term:0
+msgid "Customer Payment Term"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,taxes_id:0
+#: field:prestashop.product.template,taxes_id:0
+msgid "Customer Taxes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,partner_ref:0
+msgid "Customer ref"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,date:0
+#: field:prestashop.mail.message,date:0
+#: field:prestashop.res.currency,date:0
+#: field:prestashop.res.partner,date:0
+#: field:prestashop.sale.order,date_order:0
+#: field:prestashop.supplier,date:0
+msgid "Date"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,date_format:0
+msgid "Date Format"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,message_last_post:0
+#: help:prestashop.product.combination,message_last_post:0
+#: help:prestashop.product.template,message_last_post:0
+#: help:prestashop.refund,message_last_post:0
+#: help:prestashop.res.partner,message_last_post:0
+#: help:prestashop.sale.order,message_last_post:0
+#: help:prestashop.supplier,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,date_confirm:0
+msgid "Date on which sales order is confirmed."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,last_reconciliation_date:0
+#: help:prestashop.res.partner,last_reconciliation_date:0
+#: help:prestashop.supplier,last_reconciliation_date:0
+msgid "Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button \"Nothing more to reconcile\" during the manual reconciliation process."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,decimal_point:0
+msgid "Decimal Separator"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,default_on:0
+#: field:product.product,default_on:0
+msgid "Default On"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,uom_id:0
+#: help:prestashop.product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,uom_po_id:0
+#: help:prestashop.product.template,uom_po_id:0
+msgid "Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,default_shop_id:0
+msgid "Default shop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,default_shop_id:0
+msgid "Default shop id"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.shop,default_url:0
+msgid "Default url"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,shipped:0
+msgid "Delivered"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,delivery_count:0
+msgid "Delivery"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,partner_shipping_id:0
+msgid "Delivery Address"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,grids_id:0
+msgid "Delivery Grids"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,delay:0
+#: field:prestashop.sale.order.line,delay:0
+#: field:prestashop.sale.order.line.discount,delay:0
+msgid "Delivery Lead Time"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_delivery_carrier:0
+#: field:prestashop.delivery.carrier,name:0
+#: field:prestashop.res.partner,property_delivery_carrier:0
+#: field:prestashop.sale.order,carrier_id:0
+#: field:prestashop.supplier,property_delivery_carrier:0
+msgid "Delivery Method"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,product_id:0
+msgid "Delivery Product"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,partner_shipping_id:0
+msgid "Delivery address for current sales order."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,odoo_id:0
+msgid "Delivery carrier"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_form
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
+msgid "Delivery method"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,route_ids:0
+#: help:prestashop.product.template,route_ids:0
+msgid "Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,description:0
+#: field:prestashop.product.combination,description:0
+#: field:prestashop.product.template,description:0
+#: field:prestashop.product.template,description_html:0
+#: field:prestashop.sale.order.line,name:0
+#: field:prestashop.sale.order.line.discount,name:0
+msgid "Description"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_form_view
+msgid "Descriptions"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination.option.value,sequence:0
+msgid "Determine the display order"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.currency,position:0
+msgid "Determines where the currency symbol should be placed after or before the amount."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,direction:0
+msgid "Direction"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,discount:0
+#: field:prestashop.sale.order.line.discount,discount:0
+msgid "Discount (%)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,discount_product_id:0
+msgid "Discount Product"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,display_name:0
+#: field:connector_prestashop.installed,display_name:0
+#: field:prestashop.account.tax,display_name:0
+#: field:prestashop.account.tax.group,display_name:0
+#: field:prestashop.address,display_name:0
+#: field:prestashop.backend,display_name:0
+#: field:prestashop.binding,display_name:0
+#: field:prestashop.binding.odoo,display_name:0
+#: field:prestashop.delivery.carrier,display_name:0
+#: field:prestashop.groups.pricelist,display_name:0
+#: field:prestashop.mail.message,display_name:0
+#: field:prestashop.product.category,display_name:0
+#: field:prestashop.product.combination,display_name:0
+#: field:prestashop.product.combination.option,display_name:0
+#: field:prestashop.product.combination.option.value,display_name:0
+#: field:prestashop.product.image,display_name:0
+#: field:prestashop.product.supplierinfo,display_name:0
+#: field:prestashop.product.template,display_name:0
+#: field:prestashop.refund,display_name:0
+#: field:prestashop.res.country,display_name:0
+#: field:prestashop.res.currency,display_name:0
+#: field:prestashop.res.lang,display_name:0
+#: field:prestashop.res.partner,display_name:0
+#: field:prestashop.res.partner.category,display_name:0
+#: field:prestashop.sale.order,display_name:0
+#: field:prestashop.sale.order.line,display_name:0
+#: field:prestashop.sale.order.line.discount,display_name:0
+#: field:prestashop.sale.order.state,display_name:0
+#: field:prestashop.shop,display_name:0
+#: field:prestashop.shop.group,display_name:0
+#: field:prestashop.supplier,display_name:0
+#: field:sale.order.state,display_name:0
+#: field:sale.order.state.list,display_name:0
+msgid "Display Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,show_price:0
+msgid "Display Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,domain:0
+msgid "Domain"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Done"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Draft Quotation"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,date_due:0
+msgid "Due Date"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,ean13:0
+#: field:prestashop.res.partner,ean13:0
+#: field:prestashop.supplier,ean13:0
+msgid "EAN13"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,ean13:0
+#: field:prestashop.product.template,ean13:0
+msgid "EAN13 Barcode"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,email:0
+#: field:prestashop.res.partner,email:0
+#: field:prestashop.supplier,email:0
+msgid "Email"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,email_from:0
+msgid "Email address of the sender. This field is set when no matching partner is found for incoming emails."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,employee:0
+#: field:prestashop.res.partner,employee:0
+#: field:prestashop.supplier,employee:0
+msgid "Employee"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,move_lines:0
+msgid "Entry Lines"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/direct_binder.py:43
+#, python-format
+msgid "Error :"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,exception_ids:0
+msgid "Exceptions"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,property_account_expense_categ:0
+#: field:prestashop.product.combination,property_account_expense:0
+#: field:prestashop.product.template,property_account_expense:0
+msgid "Expense Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_tree_view
+msgid "Export All Stock"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Export in background"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.combination:connector_prestashop.combination_connector_presta_tree_view
+msgid "Export quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Export stock quantities"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
+msgid "Export tracking"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,export_tracking:0
+msgid "Export tracking numbers to PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/direct_binder.py:44
+#, python-format
+msgid "Failed to query %s via PS webservice"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,fax:0
+#: field:prestashop.res.partner,fax:0
+#: field:prestashop.supplier,fax:0
+msgid "Fax"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,extension:0
+msgid "File extension"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,filename:0
+msgid "Filename"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_account_position:0
+#: field:prestashop.refund,fiscal_position:0
+#: field:prestashop.res.partner,property_account_position:0
+#: field:prestashop.sale.order,fiscal_position:0
+#: field:prestashop.supplier,property_account_position:0
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,message_follower_ids:0
+#: field:prestashop.product.combination,message_follower_ids:0
+#: field:prestashop.product.template,message_follower_ids:0
+#: field:prestashop.refund,message_follower_ids:0
+#: field:prestashop.res.partner,message_follower_ids:0
+#: field:prestashop.sale.order,message_follower_ids:0
+#: field:prestashop.supplier,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,amount:0
+msgid "For taxes of type percentage, enter % ratio between 0-1."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,period_id:0
+msgid "Force Period"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,removal_strategy_id:0
+msgid "Force Removal Strategy"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,track_incoming:0
+#: help:prestashop.product.template,track_incoming:0
+msgid "Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,track_outgoing:0
+#: help:prestashop.product.template,track_outgoing:0
+msgid "Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,track_all:0
+#: help:prestashop.product.template,track_all:0
+msgid "Forces to specify a Serial Number on each and every operation related to this product"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,virtual_available:0
+#: field:prestashop.product.template,virtual_available:0
+msgid "Forecast Quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,virtual_available:0
+msgid "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,free_if_more_than:0
+msgid "Free If Order Total Amount Is More Than"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,link_rewrite:0
+#: field:prestashop.product.template,link_rewrite:0
+msgid "Friendly URL"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,email_from:0
+msgid "From"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,track_all:0
+#: field:prestashop.product.template,track_all:0
+msgid "Full Lots Traceability"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner.category,complete_name:0
+msgid "Full Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,image_main:0
+msgid "Full-sized image"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,packaging_ids:0
+#: help:prestashop.product.template,packaging_ids:0
+msgid "Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,sequence:0
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order.line,sequence:0
+#: help:prestashop.sale.order.line.discount,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,state:0
+msgid "Gives the status of the quotation or sales order.              \n"
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,weight:0
+#: field:prestashop.product.template,weight:0
+msgid "Gross Weight"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,description:0
+#: help:prestashop.product.template,description_html:0
+msgid "HTML description from PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,has_checkpoint:0
+msgid "Has Checkpoint"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,need_cancel:0
+msgid "Has been canceled on the backend, need to be canceled."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,message_summary:0
+#: help:prestashop.product.combination,message_summary:0
+#: help:prestashop.product.template,message_summary:0
+#: help:prestashop.refund,message_summary:0
+#: help:prestashop.res.partner,message_summary:0
+#: help:prestashop.sale.order,message_summary:0
+#: help:prestashop.supplier,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,id:0
+#: field:connector_prestashop.installed,id:0
+#: field:prestashop.account.tax,id:0
+#: field:prestashop.account.tax.group,id:0
+#: field:prestashop.address,id:0
+#: field:prestashop.backend,id:0
+#: field:prestashop.binding,id:0
+#: field:prestashop.binding.odoo,id:0
+#: field:prestashop.delivery.carrier,id:0
+#: field:prestashop.groups.pricelist,id:0
+#: field:prestashop.mail.message,id:0
+#: field:prestashop.product.category,id:0
+#: field:prestashop.product.combination,id:0
+#: field:prestashop.product.combination.option,id:0
+#: field:prestashop.product.combination.option.value,id:0
+#: field:prestashop.product.image,id:0
+#: field:prestashop.product.supplierinfo,id:0
+#: field:prestashop.product.template,id:0
+#: field:prestashop.refund,id:0
+#: field:prestashop.res.country,id:0
+#: field:prestashop.res.currency,id:0
+#: field:prestashop.res.lang,id:0
+#: field:prestashop.res.partner,id:0
+#: field:prestashop.res.partner.category,id:0
+#: field:prestashop.sale.order,id:0
+#: field:prestashop.sale.order.line,id:0
+#: field:prestashop.sale.order.line.discount,id:0
+#: field:prestashop.sale.order.state,id:0
+#: field:prestashop.shop,id:0
+#: field:prestashop.shop.group,id:0
+#: field:prestashop.supplier,id:0
+#: field:sale.order.state,id:0
+#: field:sale.order.state.list,id:0
+msgid "ID"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,prestashop_id:0
+#: field:prestashop.account.tax.group,prestashop_id:0
+#: field:prestashop.address,prestashop_id:0
+#: field:prestashop.binding,prestashop_id:0
+#: field:prestashop.binding.odoo,prestashop_id:0
+#: field:prestashop.delivery.carrier,prestashop_id:0
+#: field:prestashop.groups.pricelist,prestashop_id:0
+#: field:prestashop.mail.message,prestashop_id:0
+#: field:prestashop.product.category,prestashop_id:0
+#: field:prestashop.product.combination,prestashop_id:0
+#: field:prestashop.product.combination.option,prestashop_id:0
+#: field:prestashop.product.combination.option.value,prestashop_id:0
+#: field:prestashop.product.image,prestashop_id:0
+#: field:prestashop.product.supplierinfo,prestashop_id:0
+#: field:prestashop.product.template,prestashop_id:0
+#: field:prestashop.refund,prestashop_id:0
+#: field:prestashop.res.country,prestashop_id:0
+#: field:prestashop.res.currency,prestashop_id:0
+#: field:prestashop.res.lang,prestashop_id:0
+#: field:prestashop.res.partner,prestashop_id:0
+#: field:prestashop.res.partner.category,prestashop_id:0
+#: field:prestashop.sale.order,prestashop_id:0
+#: field:prestashop.sale.order.line,prestashop_id:0
+#: field:prestashop.sale.order.line.discount,prestashop_id:0
+#: field:prestashop.sale.order.state,prestashop_id:0
+#: field:prestashop.shop,prestashop_id:0
+#: field:prestashop.shop.group,prestashop_id:0
+#: field:prestashop.supplier,prestashop_id:0
+msgid "ID on PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,iso_code:0
+msgid "ISO code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option.value,id_attribute_group:0
+msgid "Id attribute group"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
+msgid "Id ref."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,message_unread:0
+#: help:prestashop.product.combination,message_unread:0
+#: help:prestashop.product.template,message_unread:0
+#: help:prestashop.refund,message_unread:0
+#: help:prestashop.res.partner,message_unread:0
+#: help:prestashop.sale.order,message_unread:0
+#: help:prestashop.supplier,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.template,always_available:0
+msgid "If checked, this product is considered always available"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,applicable_type:0
+msgid "If not applicable (computed through a Python code), the tax won't appear on the invoice."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,opt_out:0
+#: help:prestashop.res.partner,opt_out:0
+#: help:prestashop.supplier,opt_out:0
+msgid "If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,valuation:0
+#: help:prestashop.product.template,valuation:0
+msgid "If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,active:0
+msgid "If the active field is set to False, it will allow you to hide the delivery carrier without removing it."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,active:0
+msgid "If the active field is set to False, it will allow you to hide the tax without removing it."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,free_if_more_than:0
+msgid "If the order is more expensive than a certain amount, the customer can benefit from a free shipping"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,lang:0
+#: help:prestashop.res.partner,lang:0
+#: help:prestashop.supplier,lang:0
+msgid "If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.groups.pricelist,active:0
+msgid "If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,active:0
+#: help:prestashop.product.template,active:0
+msgid "If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.image,product_variant_ids:0
+msgid "If you leave it empty, all variants will show this image. Selecting one or several of the available variants, you restrict the availability of the image to those variants."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,payment_term:0
+msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,date_due:0
+msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,ignore_exceptions:0
+msgid "Ignore Exceptions"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,image:0
+#: field:prestashop.res.country,image:0
+#: field:prestashop.res.partner,image:0
+#: field:prestashop.supplier,image:0
+msgid "Image"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,path:0
+#: help:prestashop.product.image,path:0
+msgid "Image path"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,url:0
+msgid "Image remote URL"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,file_db_store:0
+msgid "Image stored in database"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,name:0
+msgid "Image title"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,image_ids:0
+#: field:prestashop.product.template,image_ids:0
+msgid "Images"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,import_orders_since:0
+msgid "Import Orders since"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,import_products_since:0
+msgid "Import Products since"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,import_refunds_since:0
+msgid "Import Refunds since"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,import_suppliers_since:0
+msgid "Import Suppliers since"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import carriers"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import customer groups and customers since"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import in background"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,import_partners_since:0
+msgid "Import partners since"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import payment methods"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import product categories and products"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import refunds"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import sale orders since"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import stock quantities"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Import suppliers"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Imports"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,id_reference:0
+msgid "In PrestaShop, carriers can be copied with the same 'Reference ID' (only the last copied carrier will be synchronized with the ERP)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,include_base_amount:0
+msgid "Included in base amount"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,property_account_income_categ:0
+#: field:prestashop.product.combination,property_account_income:0
+#: field:prestashop.product.template,property_account_income:0
+msgid "Income Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,incoming_qty:0
+#: field:prestashop.product.template,incoming_qty:0
+msgid "Incoming"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,incoterm:0
+msgid "Incoterm"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,include_base_amount:0
+msgid "Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_product_supplierinfo
+msgid "Information about a product supplier"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,parent_id:0
+msgid "Initial thread message."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,code:0
+#: field:prestashop.product.combination,default_code:0
+#: field:prestashop.product.template,default_code:0
+msgid "Internal Reference"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,ean13:0
+msgid "International Article Number used for product identification."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,incoterm:0
+msgid "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,property_stock_inventory:0
+#: field:prestashop.product.template,property_stock_inventory:0
+msgid "Inventory Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_stock_location
+msgid "Inventory Locations"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,valuation:0
+#: field:prestashop.product.template,valuation:0
+msgid "Inventory Valuation"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_account_invoice
+#: field:prestashop.refund,odoo_id:0
+msgid "Invoice"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,date_invoice:0
+msgid "Invoice Date"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Invoice Exception"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,invoice_line:0
+#: field:prestashop.sale.order.line,invoice_lines:0
+#: field:prestashop.sale.order.line.discount,invoice_lines:0
+msgid "Invoice Lines"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,internal_number:0
+msgid "Invoice Number"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,reference:0
+msgid "Invoice Reference"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,account_collected_id:0
+msgid "Invoice Tax Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,account_analytic_collected_id:0
+msgid "Invoice Tax Analytic Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,partner_invoice_id:0
+msgid "Invoice address for current sales order."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,invoice_exists:0
+#: field:prestashop.sale.order.line,invoiced:0
+#: field:prestashop.sale.order.line.discount,invoiced:0
+msgid "Invoiced"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,invoiced_rate:0
+msgid "Invoiced Ratio"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,invoice_ids:0
+#: field:prestashop.res.partner,invoice_ids:0
+#: field:prestashop.sale.order,invoice_ids:0
+#: field:prestashop.supplier,invoice_ids:0
+msgid "Invoices"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,is_company:0
+#: field:prestashop.res.partner,is_company:0
+#: field:prestashop.supplier,is_company:0
+msgid "Is a Company"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,is_delivery:0
+#: field:prestashop.sale.order.line.discount,is_delivery:0
+msgid "Is a Delivery"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,message_is_follower:0
+#: field:prestashop.product.combination,message_is_follower:0
+#: field:prestashop.product.template,message_is_follower:0
+#: field:prestashop.refund,message_is_follower:0
+#: field:prestashop.res.partner,message_is_follower:0
+#: field:prestashop.sale.order,message_is_follower:0
+#: field:prestashop.supplier,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,is_product_variant:0
+#: field:prestashop.product.template,is_product_variant:0
+msgid "Is product variant"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,available:0
+msgid "Is the carrier method possible with the current order."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,invoiced:0
+msgid "It indicates that an invoice has been paid."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,invoice_exists:0
+msgid "It indicates that sales order has at least one invoice."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,reconciled:0
+msgid "It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,sent:0
+msgid "It indicates that the invoice has been sent."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,function:0
+#: field:prestashop.res.partner,function:0
+#: field:prestashop.supplier,function:0
+msgid "Job Position"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,move_id:0
+#: field:prestashop.refund,move_name:0
+msgid "Journal Entry"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,journal_item_count:0
+#: field:prestashop.res.partner,journal_item_count:0
+#: field:prestashop.supplier,journal_item_count:0
+msgid "Journal Items"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,normal_price:0
+msgid "Keep empty if the pricing depends on the advanced pricing per destination"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,date_invoice:0
+msgid "Keep empty to use the current date"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,period_id:0
+msgid "Keep empty to use the period of the validation(invoice) date."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,lang:0
+#: field:prestashop.res.lang,odoo_id:0
+#: field:prestashop.res.partner,lang:0
+#: field:prestashop.supplier,lang:0
+msgid "Language"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_res_lang
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+#: field:prestashop.backend,language_ids:0
+msgid "Languages"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,message_last_post:0
+#: field:prestashop.product.combination,message_last_post:0
+#: field:prestashop.product.template,message_last_post:0
+#: field:prestashop.refund,message_last_post:0
+#: field:prestashop.res.partner,message_last_post:0
+#: field:prestashop.sale.order,message_last_post:0
+#: field:prestashop.supplier,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,__last_update:0
+#: field:connector_prestashop.installed,__last_update:0
+#: field:prestashop.account.tax,__last_update:0
+#: field:prestashop.account.tax.group,__last_update:0
+#: field:prestashop.address,__last_update:0
+#: field:prestashop.backend,__last_update:0
+#: field:prestashop.binding,__last_update:0
+#: field:prestashop.binding.odoo,__last_update:0
+#: field:prestashop.delivery.carrier,__last_update:0
+#: field:prestashop.groups.pricelist,__last_update:0
+#: field:prestashop.mail.message,__last_update:0
+#: field:prestashop.product.category,__last_update:0
+#: field:prestashop.product.combination,__last_update:0
+#: field:prestashop.product.combination.option,__last_update:0
+#: field:prestashop.product.combination.option.value,__last_update:0
+#: field:prestashop.product.image,__last_update:0
+#: field:prestashop.product.supplierinfo,__last_update:0
+#: field:prestashop.product.template,__last_update:0
+#: field:prestashop.refund,__last_update:0
+#: field:prestashop.res.country,__last_update:0
+#: field:prestashop.res.currency,__last_update:0
+#: field:prestashop.res.lang,__last_update:0
+#: field:prestashop.res.partner,__last_update:0
+#: field:prestashop.res.partner.category,__last_update:0
+#: field:prestashop.sale.order,__last_update:0
+#: field:prestashop.sale.order.line,__last_update:0
+#: field:prestashop.sale.order.line.discount,__last_update:0
+#: field:prestashop.sale.order.state,__last_update:0
+#: field:prestashop.shop,__last_update:0
+#: field:prestashop.shop.group,__last_update:0
+#: field:prestashop.supplier,__last_update:0
+#: field:sale.order.state,__last_update:0
+#: field:sale.order.state.list,__last_update:0
+msgid "Last Modified on"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,write_uid:0
+#: field:prestashop.account.tax,write_uid:0
+#: field:prestashop.account.tax.group,write_uid:0
+#: field:prestashop.address,write_uid:0
+#: field:prestashop.backend,write_uid:0
+#: field:prestashop.delivery.carrier,write_uid:0
+#: field:prestashop.groups.pricelist,write_uid:0
+#: field:prestashop.mail.message,write_uid:0
+#: field:prestashop.product.category,write_uid:0
+#: field:prestashop.product.combination,write_uid:0
+#: field:prestashop.product.combination.option,write_uid:0
+#: field:prestashop.product.combination.option.value,write_uid:0
+#: field:prestashop.product.image,write_uid:0
+#: field:prestashop.product.supplierinfo,write_uid:0
+#: field:prestashop.product.template,write_uid:0
+#: field:prestashop.refund,write_uid:0
+#: field:prestashop.res.country,write_uid:0
+#: field:prestashop.res.currency,write_uid:0
+#: field:prestashop.res.lang,write_uid:0
+#: field:prestashop.res.partner,write_uid:0
+#: field:prestashop.res.partner.category,write_uid:0
+#: field:prestashop.sale.order,write_uid:0
+#: field:prestashop.sale.order.line,write_uid:0
+#: field:prestashop.sale.order.line.discount,write_uid:0
+#: field:prestashop.sale.order.state,write_uid:0
+#: field:prestashop.shop,write_uid:0
+#: field:prestashop.shop.group,write_uid:0
+#: field:prestashop.supplier,write_uid:0
+#: field:sale.order.state,write_uid:0
+#: field:sale.order.state.list,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:_import_stock_available,write_date:0
+#: field:prestashop.account.tax,write_date:0
+#: field:prestashop.account.tax.group,write_date:0
+#: field:prestashop.address,write_date:0
+#: field:prestashop.backend,write_date:0
+#: field:prestashop.delivery.carrier,write_date:0
+#: field:prestashop.groups.pricelist,write_date:0
+#: field:prestashop.mail.message,write_date:0
+#: field:prestashop.product.category,write_date:0
+#: field:prestashop.product.combination,write_date:0
+#: field:prestashop.product.combination.option,write_date:0
+#: field:prestashop.product.combination.option.value,write_date:0
+#: field:prestashop.product.image,write_date:0
+#: field:prestashop.product.supplierinfo,write_date:0
+#: field:prestashop.product.template,write_date:0
+#: field:prestashop.refund,write_date:0
+#: field:prestashop.res.country,write_date:0
+#: field:prestashop.res.currency,write_date:0
+#: field:prestashop.res.lang,write_date:0
+#: field:prestashop.res.partner,write_date:0
+#: field:prestashop.res.partner.category,write_date:0
+#: field:prestashop.sale.order,write_date:0
+#: field:prestashop.sale.order.line,write_date:0
+#: field:prestashop.sale.order.line.discount,write_date:0
+#: field:prestashop.sale.order.state,write_date:0
+#: field:prestashop.shop,write_date:0
+#: field:prestashop.shop.group,write_date:0
+#: field:prestashop.supplier,write_date:0
+#: field:sale.order.state,write_date:0
+#: field:sale.order.state.list,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,quantity:0
+msgid "Last computed quantity to send on PrestaShop."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.template,quantity:0
+msgid "Last computed quantity to send to PrestaShop."
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
+msgid "Last synchro"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,sync_date:0
+#: field:prestashop.account.tax.group,sync_date:0
+#: field:prestashop.address,sync_date:0
+#: field:prestashop.binding,sync_date:0
+#: field:prestashop.binding.odoo,sync_date:0
+#: field:prestashop.delivery.carrier,sync_date:0
+#: field:prestashop.groups.pricelist,sync_date:0
+#: field:prestashop.mail.message,sync_date:0
+#: field:prestashop.product.category,sync_date:0
+#: field:prestashop.product.combination,sync_date:0
+#: field:prestashop.product.combination.option,sync_date:0
+#: field:prestashop.product.combination.option.value,sync_date:0
+#: field:prestashop.product.image,sync_date:0
+#: field:prestashop.product.supplierinfo,sync_date:0
+#: field:prestashop.product.template,sync_date:0
+#: field:prestashop.refund,sync_date:0
+#: field:prestashop.res.country,sync_date:0
+#: field:prestashop.res.currency,sync_date:0
+#: field:prestashop.res.lang,sync_date:0
+#: field:prestashop.res.partner,sync_date:0
+#: field:prestashop.res.partner.category,sync_date:0
+#: field:prestashop.sale.order,sync_date:0
+#: field:prestashop.sale.order.line,sync_date:0
+#: field:prestashop.sale.order.line.discount,sync_date:0
+#: field:prestashop.sale.order.state,sync_date:0
+#: field:prestashop.shop,sync_date:0
+#: field:prestashop.shop.group,sync_date:0
+#: field:prestashop.supplier,sync_date:0
+msgid "Last synchronization date"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,last_reconciliation_date:0
+#: field:prestashop.res.partner,last_reconciliation_date:0
+#: field:prestashop.supplier,last_reconciliation_date:0
+msgid "Latest Full Reconciliation Date"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,delay:0
+msgid "Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,parent_left:0
+msgid "Left Parent"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner.category,parent_left:0
+msgid "Left parent"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,move_id:0
+msgid "Link to the automatically generated Journal Items."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,code:0
+msgid "Locale Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,location:0
+#: field:prestashop.product.combination,location_id:0
+msgid "Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.backend,stock_location_id:0
+msgid "Location used to import stock quantities."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,packaging_ids:0
+#: field:prestashop.product.template,packaging_ids:0
+msgid "Logistical Units"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Main Configuration"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,main_exception_id:0
+msgid "Main Exception"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,seller_id:0
+#: field:prestashop.product.template,seller_id:0
+msgid "Main Supplier"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,seller_id:0
+#: help:prestashop.product.template,seller_id:0
+msgid "Main Supplier who has highest priority in Supplier List."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,main_template_id:0
+msgid "Main Template"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,image_main:0
+#: field:prestashop.product.template,image_main:0
+msgid "Main image"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,mes_type:0
+#: field:prestashop.product.template,mes_type:0
+msgid "Measure Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,image_main_medium:0
+#: field:prestashop.product.template,image_main_medium:0
+msgid "Medium image"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,image_medium:0
+#: field:prestashop.product.image,image_medium:0
+#: field:prestashop.res.partner,image_medium:0
+#: field:prestashop.supplier,image_medium:0
+msgid "Medium-sized image"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,image_medium:0
+#: help:prestashop.res.partner,image_medium:0
+#: help:prestashop.supplier,image_medium:0
+msgid "Medium-sized image of this contact. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.image,image_medium:0
+msgid "Medium-sized image. It is automatically resized as a 128 x 128 px image, with aspect ratio preserved, only when the image exceeds one of those sizes. Use this field in form views or kanban views."
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_mail_message
+#: field:prestashop.mail.message,odoo_id:0
+msgid "Message"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,record_name:0
+msgid "Message Record Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,type:0
+msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,message_id:0
+msgid "Message unique identifier"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,message_id:0
+msgid "Message-Id"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,message_ids:0
+#: field:prestashop.product.combination,message_ids:0
+#: field:prestashop.product.template,message_ids:0
+#: field:prestashop.refund,message_ids:0
+#: field:prestashop.res.partner,message_ids:0
+#: field:prestashop.sale.order,message_ids:0
+#: field:prestashop.supplier,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,message_ids:0
+#: help:prestashop.product.combination,message_ids:0
+#: help:prestashop.product.template,message_ids:0
+#: help:prestashop.refund,message_ids:0
+#: help:prestashop.res.partner,message_ids:0
+#: help:prestashop.sale.order,message_ids:0
+#: help:prestashop.supplier,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,meta_description:0
+msgid "Meta description"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,meta_keywords:0
+msgid "Meta keywords"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,meta_title:0
+msgid "Meta title"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,min_qty:0
+msgid "Minimal Quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,orderpoint_ids:0
+msgid "Minimum Stock Rules"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,mobile:0
+#: field:prestashop.res.partner,mobile:0
+#: field:prestashop.supplier,mobile:0
+msgid "Mobile"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax.group,name:0
+#: field:prestashop.address,name:0
+#: field:prestashop.backend,name:0
+#: field:prestashop.product.category,complete_name:0
+#: field:prestashop.product.category,name:0
+#: field:prestashop.product.combination,name:0
+#: field:prestashop.product.combination.option,name:0
+#: field:prestashop.product.template,name:0
+#: field:prestashop.res.lang,name:0
+#: field:prestashop.res.partner,name:0
+#: field:prestashop.sale.order.state,name:0
+#: field:prestashop.shop,name:0
+#: field:prestashop.shop.group,name:0
+#: field:prestashop.supplier,name:0
+#: field:sale.order.state,name:0
+msgid "Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,record_name:0
+msgid "Name get of the related document."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,name_ext:0
+msgid "Name in PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,need_cancel:0
+msgid "Need to be canceled"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,weight_net:0
+#: field:prestashop.product.template,weight_net:0
+msgid "Net Weight"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner,newsletter:0
+msgid "Newsletter"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/models/stock_tracking/exporter.py:48
+#, python-format
+msgid "No carrier found on sale order"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/importer.py:444
+#, python-format
+msgid "No language could be found for the Prestashop lang with id \"%s\". Run \"Synchronize base data\" again."
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/importer.py:423
+#, python-format
+msgid "No language mapping defined. Run \"Synchronize base data\"."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,no_auto_thread:0
+msgid "No threading for answers"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,normal_price:0
+msgid "Normal Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,comment:0
+#: field:prestashop.res.partner,comment:0
+#: field:prestashop.supplier,comment:0
+msgid "Notes"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/exporter.py:123
+#: code:addons/connector_prestashop/unit/exporter.py:133
+#, python-format
+msgid "Nothing to export."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,notification_ids:0
+msgid "Notifications"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,notified_partner_ids:0
+msgid "Notified partners"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,number:0
+msgid "Number"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,number_packages:0
+#: field:prestashop.sale.order.line.discount,number_packages:0
+msgid "Number Packages"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order.line,delay:0
+#: help:prestashop.sale.order.line.discount,delay:0
+msgid "Number of days between the order confirmation and the shipping of the products to the customer"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.groups.pricelist,odoo_id:0
+msgid "Odoo Pricelist"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:sale.order.state.list,name:0
+msgid "Odoo State"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.state,openerp_state_ids:0
+msgid "Odoo States"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.binding.odoo,odoo_id:0
+msgid "Odoo binding"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,order_policy:0
+msgid "On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Once imported,\n"
+"                                    some types of records,\n"
+"                                    like the products or categories,\n"
+"                                    need a manual review.\n"
+"                                    You will find the list\n"
+"                                    of the new records to review\n"
+"                                    in the menu 'Connectors > Checkpoint'."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,opt_out:0
+#: field:prestashop.res.partner,opt_out:0
+#: field:prestashop.supplier,opt_out:0
+msgid "Opt-Out"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,order_line:0
+msgid "Order Lines"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,name:0
+#: field:prestashop.sale.order.line,order_id:0
+#: field:prestashop.sale.order.line.discount,order_id:0
+msgid "Order Reference"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,reference:0
+#: field:prestashop.product.template,reference:0
+msgid "Original reference"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:sale.order:connector_prestashop.view_order_form
+msgid "Other Information"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,outgoing_qty:0
+#: field:prestashop.product.template,outgoing_qty:0
+msgid "Outgoing"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,mail_server_id:0
+msgid "Outgoing mail server"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,owner_id:0
+msgid "Owner"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,owner_model:0
+msgid "Owner model"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,product_packaging:0
+#: field:prestashop.sale.order.line.discount,product_packaging:0
+msgid "Packaging"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,invoiced:0
+msgid "Paid"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,reconciled:0
+msgid "Paid/Reconciled"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,parent_id:0
+#: field:prestashop.res.partner.category,parent_id:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,parent_id:0
+msgid "Parent Message"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,parent_id:0
+msgid "Parent Order"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,parent_id:0
+msgid "Parent Tax Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,parent_name:0
+#: field:prestashop.res.partner,parent_name:0
+#: field:prestashop.supplier,parent_name:0
+msgid "Parent name"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_res_partner
+#: field:prestashop.address,odoo_id:0
+#: field:prestashop.refund,partner_id:0
+#: field:prestashop.res.partner,odoo_id:0
+#: field:prestashop.supplier,odoo_id:0
+msgid "Partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner.category,odoo_id:0
+msgid "Partner Category"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_res_partner_category
+msgid "Partner Tags"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner.category,partner_ids:0
+msgid "Partners"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,notified_partner_ids:0
+msgid "Partners that have a notification pushing this message in their mailboxes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,debit_limit:0
+#: field:prestashop.res.partner,debit_limit:0
+#: field:prestashop.supplier,debit_limit:0
+msgid "Payable Limit"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,payment_method_id:0
+msgid "Payment Method"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,reference_type:0
+msgid "Payment Reference"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,payment_term:0
+msgid "Payment Term"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,payment_term:0
+msgid "Payment Terms"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,payment_ids:0
+msgid "Payments"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,payment_ids:0
+msgid "Payments Entries"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,paypal_url:0
+#: field:prestashop.sale.order,paypal_url:0
+msgid "Paypal Url"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,phone:0
+#: field:prestashop.res.partner,phone:0
+#: field:prestashop.supplier,phone:0
+msgid "Phone"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,picking_policy:0
+msgid "Pick 'Deliver each product when available' if you allow partial delivery."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,picking_ids:0
+msgid "Picking associated to this sale"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,notify_email:0
+#: help:prestashop.res.partner,notify_email:0
+#: help:prestashop.supplier,notify_email:0
+msgid "Policy to receive emails for new messages pushed to your personal Inbox:\n"
+"- Never: no emails are sent\n"
+"- All Messages: for every notification you receive in your Inbox"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,portal_payment_options:0
+#: field:prestashop.sale.order,portal_payment_options:0
+msgid "Portal Payment Options"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,position:0
+msgid "Position"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_root
+#: view:res.partner.category:connector_prestashop.view_partner_category_form
+#: view:stock.warehouse:connector_prestashop.view_stock_form
+msgid "PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.account.tax.group:connector_prestashop.account_tax_group_connector_prestashop_tree_view
+msgid "PrestaShop Account Tax Group"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.address:connector_prestashop.view_prestashop_address_form
+#: view:prestashop.address:connector_prestashop.view_prestashop_address_tree
+msgid "PrestaShop Address"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,prestashop_address_bind_ids:0
+#: field:prestashop.res.partner,prestashop_address_bind_ids:0
+#: field:prestashop.supplier,prestashop_address_bind_ids:0
+#: field:res.partner,prestashop_address_bind_ids:0
+msgid "PrestaShop Address Bindings"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,backend_id:0
+#: field:prestashop.account.tax.group,backend_id:0
+#: field:prestashop.address,backend_id:0
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_tree
+#: field:prestashop.binding,backend_id:0
+#: field:prestashop.binding.odoo,backend_id:0
+#: field:prestashop.delivery.carrier,backend_id:0
+#: field:prestashop.groups.pricelist,backend_id:0
+#: field:prestashop.mail.message,backend_id:0
+#: field:prestashop.product.category,backend_id:0
+#: field:prestashop.product.combination,backend_id:0
+#: field:prestashop.product.combination.option,backend_id:0
+#: field:prestashop.product.combination.option.value,backend_id:0
+#: field:prestashop.product.image,backend_id:0
+#: field:prestashop.product.supplierinfo,backend_id:0
+#: field:prestashop.product.template,backend_id:0
+#: field:prestashop.refund,backend_id:0
+#: field:prestashop.res.country,backend_id:0
+#: field:prestashop.res.currency,backend_id:0
+#: field:prestashop.res.lang,backend_id:0
+#: field:prestashop.res.partner,backend_id:0
+#: field:prestashop.res.partner.category,backend_id:0
+#: field:prestashop.sale.order,backend_id:0
+#: field:prestashop.sale.order.line,backend_id:0
+#: field:prestashop.sale.order.line.discount,backend_id:0
+#: field:prestashop.sale.order.state,backend_id:0
+#: field:prestashop.shop,backend_id:0
+#: field:prestashop.shop.group,backend_id:0
+#: field:prestashop.supplier,backend_id:0
+msgid "PrestaShop Backend"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_prestashop_backend
+msgid "PrestaShop Backend Configuration"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.actions.act_window,name:connector_prestashop.action_prestashop_backend
+msgid "PrestaShop Backends"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:account.tax.group:connector_prestashop.prestashop_binding_tax_group_form_view
+#: view:prestashop.product.image:connector_prestashop.image_prestashop_binding_form_view
+#: view:product.category:connector_prestashop.product_category_prestashop_binding_form_view
+#: view:res.partner.category:connector_prestashop.view_partner_category_form
+#: view:sale.order:connector_prestashop.view_order_form
+msgid "PrestaShop Binding"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_prestashop_binding
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_combination_option_value
+msgid "PrestaShop Binding (abstract)"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_prestashop_account_tax
+#: model:ir.model,name:connector_prestashop.model_prestashop_account_tax_group
+#: model:ir.model,name:connector_prestashop.model_prestashop_address
+#: model:ir.model,name:connector_prestashop.model_prestashop_binding_odoo
+#: model:ir.model,name:connector_prestashop.model_prestashop_groups_pricelist
+#: model:ir.model,name:connector_prestashop.model_prestashop_mail_message
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_category
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_combination
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_combination_option
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_image
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_supplierinfo
+#: model:ir.model,name:connector_prestashop.model_prestashop_product_template
+#: model:ir.model,name:connector_prestashop.model_prestashop_refund
+#: model:ir.model,name:connector_prestashop.model_prestashop_res_country
+#: model:ir.model,name:connector_prestashop.model_prestashop_res_currency
+#: model:ir.model,name:connector_prestashop.model_prestashop_res_lang
+#: model:ir.model,name:connector_prestashop.model_prestashop_res_partner
+#: model:ir.model,name:connector_prestashop.model_prestashop_res_partner_category
+#: model:ir.model,name:connector_prestashop.model_prestashop_sale_order
+#: model:ir.model,name:connector_prestashop.model_prestashop_sale_order_line
+#: model:ir.model,name:connector_prestashop.model_prestashop_sale_order_line_discount
+#: model:ir.model,name:connector_prestashop.model_prestashop_sale_order_state
+#: model:ir.model,name:connector_prestashop.model_prestashop_supplier
+msgid "PrestaShop Binding with Odoo binding (abstract)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:account.invoice,prestashop_bind_ids:0
+#: field:account.tax.group,prestashop_bind_ids:0
+#: field:base_multi_image.image,prestashop_bind_ids:0
+#: field:delivery.carrier,prestashop_bind_ids:0
+#: field:mail.message,prestashop_bind_ids:0
+#: field:prestashop.account.tax.group,prestashop_bind_ids:0
+#: field:prestashop.address,prestashop_bind_ids:0
+#: field:prestashop.delivery.carrier,prestashop_bind_ids:0
+#: field:prestashop.mail.message,prestashop_bind_ids:0
+#: field:prestashop.product.category,prestashop_bind_ids:0
+#: field:prestashop.product.combination,prestashop_bind_ids:0
+#: field:prestashop.product.combination.option.value,prestashop_bind_ids:0
+#: field:prestashop.product.image,prestashop_bind_ids:0
+#: field:prestashop.product.template,prestashop_bind_ids:0
+#: field:prestashop.refund,prestashop_bind_ids:0
+#: field:prestashop.res.currency,prestashop_bind_ids:0
+#: field:prestashop.res.lang,prestashop_bind_ids:0
+#: field:prestashop.res.partner,prestashop_bind_ids:0
+#: field:prestashop.res.partner.category,prestashop_bind_ids:0
+#: field:prestashop.sale.order,prestashop_bind_ids:0
+#: field:prestashop.sale.order.line,prestashop_bind_ids:0
+#: field:prestashop.sale.order.line.discount,prestashop_bind_ids:0
+#: field:prestashop.sale.order.state,prestashop_bind_ids:0
+#: field:prestashop.supplier,prestashop_bind_ids:0
+#: field:product.attribute.value,prestashop_bind_ids:0
+#: field:product.category,prestashop_bind_ids:0
+#: view:product.product:connector_prestashop.product_normal_form_view
+#: field:product.product,prestashop_bind_ids:0
+#: view:product.template:connector_prestashop.product_template_common_form
+#: field:product.template,prestashop_bind_ids:0
+#: field:res.currency,prestashop_bind_ids:0
+#: field:res.lang,prestashop_bind_ids:0
+#: view:res.partner:connector_prestashop.view_partner_form
+#: field:res.partner,prestashop_bind_ids:0
+#: field:res.partner.category,prestashop_bind_ids:0
+#: field:sale.order,prestashop_bind_ids:0
+#: field:sale.order.line,prestashop_bind_ids:0
+#: view:sale.order.state:connector_prestashop.view_sale_order_state_form
+#: field:sale.order.state,prestashop_bind_ids:0
+#: field:stock.warehouse,prestashop_bind_ids:0
+msgid "PrestaShop Bindings"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,prestashop_combinations_bind_ids:0
+#: field:prestashop.product.combination.option,prestashop_bind_ids:0
+#: field:product.attribute,prestashop_bind_ids:0
+#: field:product.product,prestashop_combinations_bind_ids:0
+msgid "PrestaShop Bindings (combinations)"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_prestashop_delivery_carrier
+msgid "PrestaShop Carrier"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.actions.act_window,name:connector_prestashop.action_prestashop_carrier
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_tree
+msgid "PrestaShop Carriers"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,prestashop_delivery_number:0
+msgid "PrestaShop Delivery Number"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,prestashop_discount_bind_ids:0
+#: field:prestashop.sale.order.line.discount,prestashop_discount_bind_ids:0
+#: field:sale.order.line,prestashop_discount_bind_ids:0
+msgid "PrestaShop Discount Bindings"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,prestashop_discount_line_ids:0
+msgid "PrestaShop Discount Lines"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner,group_ids:0
+msgid "PrestaShop Groups"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:sale.order.state.list,prestashop_id:0
+msgid "PrestaShop ID"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:sale.order:connector_prestashop.view_order_form
+#: view:stock.location:connector_prestashop.view_location_prestashop_inherited_form
+msgid "PrestaShop Information"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,prestashop_invoice_number:0
+msgid "PrestaShop Invoice Number"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,prestashop_order_line_ids:0
+msgid "PrestaShop Order Lines"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,prestashop_partner_id:0
+#: view:prestashop.res.partner:connector_prestashop.view_prestashop_res_partner_form
+#: view:prestashop.res.partner:connector_prestashop.view_prestashop_res_partner_tree
+msgid "PrestaShop Partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option,prestashop_position:0
+#: field:prestashop.product.combination.option.value,prestashop_position:0
+msgid "PrestaShop Position"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_form_view
+#: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_tree_view
+msgid "PrestaShop Product Category"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,prestashop_order_id:0
+#: field:prestashop.sale.order.line.discount,prestashop_order_id:0
+msgid "PrestaShop Sale Order"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_prestashop_shop
+#: view:prestashop.delivery.carrier:connector_prestashop.view_prestashop_delivery_carrier_form
+#: field:prestashop.res.partner,shop_id:0
+#: view:prestashop.shop:connector_prestashop.view_prestashop_shop_form
+#: view:prestashop.shop:connector_prestashop.view_prestashop_shop_tree
+msgid "PrestaShop Shop"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_prestashop_shop_group
+#: field:prestashop.address,shop_group_id:0
+#: field:prestashop.res.partner,shop_group_id:0
+#: field:prestashop.shop,shop_group_id:0
+#: view:prestashop.shop.group:connector_prestashop.view_prestashop_shop_group_form
+#: view:prestashop.shop.group:connector_prestashop.view_prestashop_shop_group_tree
+msgid "PrestaShop Shop Group"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.actions.act_window,name:connector_prestashop.action_prestashop_shop_group
+msgid "PrestaShop Shop Groups"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.actions.act_window,name:connector_prestashop.action_prestashop_shop
+msgid "PrestaShop Shops"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:sale.order.state.list,prestashop_state_id:0
+msgid "PrestaShop State"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,vat_number:0
+msgid "PrestaShop VAT"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,prestashop_bind_ids:0
+#: field:product.supplierinfo,prestashop_bind_ids:0
+msgid "PrestaShop bindings"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner,default_category_id:0
+msgid "PrestaShop default category"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,prestashop_supplier_bind_ids:0
+#: field:prestashop.res.partner,prestashop_supplier_bind_ids:0
+#: field:prestashop.supplier,prestashop_supplier_bind_ids:0
+#: field:res.partner,prestashop_supplier_bind_ids:0
+msgid "PrestaShop supplier bindings"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.groups.pricelist,prestashop_groups_bind_ids:0
+#: field:product.pricelist,prestashop_groups_bind_ids:0
+msgid "PrestaShop user groups"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,price:0
+#: field:prestashop.product.combination,price:0
+#: field:prestashop.product.template,price:0
+msgid "Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination.option.value,price_extra:0
+msgid "Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,impact_price:0
+#: field:product.product,impact_price:0
+msgid "Price Impact"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,price_reduce:0
+#: field:prestashop.sale.order.line.discount,price_reduce:0
+msgid "Price Reduce"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_product_pricelist
+#: field:prestashop.product.combination,pricelist_id:0
+#: field:prestashop.product.template,pricelist_id:0
+#: field:prestashop.sale.order,pricelist_id:0
+msgid "Pricelist"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.groups.pricelist,name:0
+msgid "Pricelist Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.groups.pricelist,type:0
+msgid "Pricelist Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.groups.pricelist,version_id:0
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,pricelist_id:0
+msgid "Pricelist for current sales order."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,categ_id:0
+#: field:prestashop.product.template,categ_id:0
+msgid "Pricing/Primary Category"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.category:connector_prestashop.product_category_connector_prestashop_form_view
+msgid "Primary Data"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,property_stock_procurement:0
+#: field:prestashop.product.template,property_stock_procurement:0
+msgid "Procurement Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,procurement_group_id:0
+msgid "Procurement group"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,procurement_ids:0
+#: field:prestashop.sale.order.line.discount,procurement_ids:0
+msgid "Procurements"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_product_product
+#: field:prestashop.product.combination,odoo_id:0
+#: field:prestashop.sale.order,product_id:0
+#: field:prestashop.sale.order.line,product_id:0
+#: field:prestashop.sale.order.line.discount,product_id:0
+msgid "Product"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_product_attribute
+msgid "Product Attribute"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,attribute_line_ids:0
+#: field:prestashop.product.template,attribute_line_ids:0
+msgid "Product Attributes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,categ_ids:0
+#: field:prestashop.product.template,categ_ids:0
+msgid "Product Categories"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_product_category
+#: field:prestashop.product.category,odoo_id:0
+msgid "Product Category"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,product_manager:0
+#: field:prestashop.product.template,product_manager:0
+msgid "Product Manager"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_product_template
+#: field:prestashop.product.combination,product_tmpl_id:0
+#: field:prestashop.product.supplierinfo,product_tmpl_id:0
+#: field:prestashop.sale.order.line,product_tmpl_id:0
+#: field:prestashop.sale.order.line.discount,product_tmpl_id:0
+msgid "Product Template"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,type:0
+#: field:prestashop.product.template,type:0
+msgid "Product Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,product_uos:0
+#: field:prestashop.sale.order.line.discount,product_uos:0
+msgid "Product UoS"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,odoo_id:0
+msgid "Product image"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,product_id:0
+msgid "Product variant"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,product_variant_count:0
+msgid "Product variant count"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,property_stock_production:0
+#: field:prestashop.product.template,property_stock_production:0
+msgid "Production Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,product_variant_ids:0
+#: field:prestashop.product.template,product_variant_ids:0
+msgid "Products"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option,public_name:0
+msgid "Public Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,lst_price:0
+#: field:prestashop.product.template,lst_price:0
+msgid "Public Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,description_purchase:0
+#: field:prestashop.product.template,description_purchase:0
+msgid "Purchase Description"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_product_pricelist_purchase:0
+#: field:prestashop.res.partner,property_product_pricelist_purchase:0
+#: field:prestashop.supplier,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,uom_po_id:0
+#: field:prestashop.product.template,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,python_compute:0
+msgid "Python Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,python_compute_inv:0
+msgid "Python Code (reverse)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,qty:0
+#: field:prestashop.sale.order.line,product_uom_qty:0
+#: field:prestashop.sale.order.line.discount,product_uom_qty:0
+msgid "Quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,product_uos_qty:0
+#: field:prestashop.sale.order.line.discount,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,qty_available:0
+#: field:prestashop.product.template,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,incoming_qty:0
+msgid "Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,outgoing_qty:0
+msgid "Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Quotation Sent"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,loc_rack:0
+#: field:prestashop.product.template,loc_rack:0
+msgid "Rack"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:prestashop.product.combination.option,group_type:0
+msgid "Radio"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,rate_ids:0
+msgid "Rates"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,reception_count:0
+msgid "Receipt"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,notify_email:0
+#: field:prestashop.res.partner,notify_email:0
+#: field:prestashop.supplier,notify_email:0
+msgid "Receive Inbox Notifications by Email"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_tree_view
+msgid "Recompute quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/deleter.py:19
+#, python-format
+msgid "Record %s deleted on PrestaShop on resource %s"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/exporter.py:141
+#, python-format
+msgid "Record exported with ID %s on PrestaShop."
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/exporter.py:139
+#, python-format
+msgid "Record on PrestaShop have not been created"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,id_reference:0
+msgid "Reference ID"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,origin:0
+msgid "Reference of the document that generated this sales order request."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,origin:0
+msgid "Reference of the document that produced this invoice."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,name:0
+#: field:prestashop.sale.order,client_order_ref:0
+msgid "Reference/Description"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,ref_base_code_id:0
+msgid "Refund Base Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,ref_base_sign:0
+msgid "Refund Base Code Sign"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,account_paid_id:0
+msgid "Refund Tax Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,account_analytic_paid_id:0
+msgid "Refund Tax Analytic Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,ref_tax_code_id:0
+msgid "Refund Tax Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,ref_tax_sign:0
+msgid "Refund Tax Code Sign"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,parent_id:0
+#: field:prestashop.res.partner,parent_id:0
+#: field:prestashop.supplier,parent_id:0
+msgid "Related Company"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,res_id:0
+msgid "Related Document ID"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,model:0
+msgid "Related Document Model"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,residual:0
+msgid "Remaining amount due."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,reply_to:0
+msgid "Reply email address. Setting the reply_to bypasses the automatic thread creation."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,reply_to:0
+msgid "Reply-To"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.combination:connector_prestashop.combination_connector_presta_tree_view
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_tree_view
+#: view:prestashop.res.partner:connector_prestashop.view_prestashop_res_partner_tree
+msgid "Resync"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,parent_right:0
+msgid "Right Parent"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.partner.category,parent_right:0
+msgid "Right parent"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,rounding:0
+msgid "Rounding Factor"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,route_id:0
+#: field:prestashop.sale.order.line.discount,route_id:0
+msgid "Route"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,route_ids:0
+#: field:prestashop.product.combination,route_ids:0
+#: field:prestashop.product.template,route_ids:0
+msgid "Routes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,loc_row:0
+#: field:prestashop.product.template,loc_row:0
+msgid "Row"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,description_sale:0
+#: field:prestashop.product.template,description_sale:0
+msgid "Sale Description"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,odoo_id:0
+msgid "Sale Order"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.state,odoo_id:0
+msgid "Sale Order State"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.actions.act_window,name:connector_prestashop.action_prestashop_sale_order_state_form
+#: model:ir.ui.menu,name:connector_prestashop.sale_order_state_tree_menu
+msgid "Sale Order States"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,odoo_id:0
+#: field:prestashop.sale.order.line.discount,odoo_id:0
+msgid "Sale Order line"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,sale_ids:0
+msgid "Sale Orders"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,list_price:0
+#: field:prestashop.product.template,list_price:0
+msgid "Sale Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_product_pricelist:0
+#: field:prestashop.res.partner,property_product_pricelist:0
+#: field:prestashop.supplier,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,workflow_process_id:0
+msgid "Sale Workflow Process"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.sale.order.state:connector_prestashop.view_prestashop_sale_order_state_form
+#: view:prestashop.sale.order.state:connector_prestashop.view_prestashop_sale_order_state_tree
+#: view:sale.order.state:connector_prestashop.view_sale_order_state_form
+#: view:sale.order.state:connector_prestashop.view_sale_order_state_tree
+msgid "Sale order State"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Sale to Invoice"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_sale_order
+#: field:prestashop.address,sale_order_ids:0
+#: field:prestashop.res.partner,sale_order_ids:0
+#: field:prestashop.supplier,sale_order_ids:0
+#: selection:sale.order.state.list,name:0
+msgid "Sales Order"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,section_id:0
+#: field:prestashop.refund,section_id:0
+#: field:prestashop.res.partner,section_id:0
+#: field:prestashop.sale.order,section_id:0
+#: field:prestashop.supplier,section_id:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,user_id:0
+#: field:prestashop.refund,user_id:0
+#: field:prestashop.res.partner,user_id:0
+#: field:prestashop.sale.order,user_id:0
+#: field:prestashop.sale.order.line,salesman_id:0
+#: field:prestashop.sale.order.line.discount,salesman_id:0
+#: field:prestashop.supplier,user_id:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:prestashop.product.combination.option,group_type:0
+msgid "Select"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,categ_id:0
+#: help:prestashop.product.template,categ_id:0
+msgid "Select category for the current product"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,use_parent_address:0
+#: help:prestashop.res.partner,use_parent_address:0
+#: help:prestashop.supplier,use_parent_address:0
+msgid "Select this if you want to set company's address information  for this contact"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,seller_ids:0
+msgid "Seller ids"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,sent:0
+msgid "Sent"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,grouping:0
+msgid "Separator Format"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,sequence:0
+#: field:prestashop.product.category,sequence:0
+#: field:prestashop.product.combination.option.value,sequence:0
+#: field:prestashop.product.image,sequence:0
+#: field:prestashop.product.supplierinfo,sequence:0
+#: field:prestashop.sale.order.line,sequence:0
+#: field:prestashop.sale.order.line.discount,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,removal_strategy_id:0
+msgid "Set a specific removal strategy that will be used regardless of the source location for this product category"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,child_depend:0
+msgid "Set if the tax computation is based on the computation of child taxes rather than on the total amount."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,account_collected_id:0
+msgid "Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,account_paid_id:0
+msgid "Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,account_analytic_collected_id:0
+msgid "Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,account_analytic_paid_id:0
+msgid "Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,shipping_product_id:0
+msgid "Shipping Product"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.shop.group,shop_ids:0
+msgid "Shops"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,description_short_html:0
+msgid "Short Description"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,on_sale:0
+msgid "Show on sale icon"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,show_technical:0
+msgid "Show technical"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,signup_expiration:0
+#: field:prestashop.res.partner,signup_expiration:0
+#: field:prestashop.supplier,signup_expiration:0
+msgid "Signup Expiration"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,signup_token:0
+#: field:prestashop.res.partner,signup_token:0
+#: field:prestashop.supplier,signup_token:0
+msgid "Signup Token"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,signup_type:0
+#: field:prestashop.res.partner,signup_type:0
+#: field:prestashop.supplier,signup_type:0
+msgid "Signup Token Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,signup_valid:0
+#: field:prestashop.res.partner,signup_valid:0
+#: field:prestashop.supplier,signup_valid:0
+msgid "Signup Token is Valid"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,signup_url:0
+#: field:prestashop.res.partner,signup_url:0
+#: field:prestashop.supplier,signup_url:0
+msgid "Signup URL"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,image_main_small:0
+#: field:prestashop.product.template,image_main_small:0
+msgid "Small image"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,image_small:0
+#: field:prestashop.product.image,image_small:0
+#: field:prestashop.res.partner,image_small:0
+#: field:prestashop.supplier,image_small:0
+msgid "Small-sized image"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,image_small:0
+#: help:prestashop.res.partner,image_small:0
+#: help:prestashop.supplier,image_small:0
+msgid "Small-sized image of this contact. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.image,image_small:0
+msgid "Small-sized image. It is automatically resized as a 64 x 64 px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,origin:0
+#: field:prestashop.sale.order,origin:0
+msgid "Source Document"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,uos_id:0
+#: help:prestashop.product.template,uos_id:0
+msgid "Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,purchase_ok:0
+#: help:prestashop.product.template,purchase_ok:0
+msgid "Specify if the product can be selected in a purchase order line."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,sale_ok:0
+#: help:prestashop.product.template,sale_ok:0
+msgid "Specify if the product can be selected in a sales order line."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.template,cost_method:0
+msgid "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,cost_method:0
+msgid "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,starred:0
+msgid "Starred"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,state_id:0
+#: field:prestashop.res.partner,state_id:0
+#: field:prestashop.supplier,state_id:0
+msgid "State"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.sale.order.state:connector_prestashop.view_prestashop_sale_order_state_form
+msgid "States"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,state:0
+#: field:prestashop.product.template,state:0
+#: field:prestashop.refund,state:0
+#: field:prestashop.sale.order,state:0
+#: field:prestashop.sale.order.line,state:0
+#: field:prestashop.sale.order.line.discount,state:0
+msgid "Status"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,property_stock_account_input_categ:0
+#: field:prestashop.product.combination,property_stock_account_input:0
+#: field:prestashop.product.template,property_stock_account_input:0
+msgid "Stock Input Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,property_stock_journal:0
+msgid "Stock Journal"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,stock_location_id:0
+msgid "Stock Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,property_stock_account_output_categ:0
+#: field:prestashop.product.combination,property_stock_account_output:0
+#: field:prestashop.product.template,property_stock_account_output:0
+msgid "Stock Output Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,storage:0
+msgid "Storage"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_shop
+msgid "Stores"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,street:0
+#: field:prestashop.res.partner,street:0
+#: field:prestashop.supplier,street:0
+msgid "Street"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,street2:0
+#: field:prestashop.res.partner,street2:0
+#: field:prestashop.supplier,street2:0
+msgid "Street2"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,subject:0
+msgid "Subject"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,amount_untaxed:0
+#: field:prestashop.sale.order.line,price_subtotal:0
+#: field:prestashop.sale.order.line.discount,price_subtotal:0
+msgid "Subtotal"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,subtype_id:0
+msgid "Subtype"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,message_summary:0
+#: field:prestashop.product.combination,message_summary:0
+#: field:prestashop.product.template,message_summary:0
+#: field:prestashop.refund,message_summary:0
+#: field:prestashop.res.partner,message_summary:0
+#: field:prestashop.sale.order,message_summary:0
+#: field:prestashop.supplier,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,supplier:0
+#: field:prestashop.product.supplierinfo,name:0
+#: field:prestashop.product.template,seller_ids:0
+#: field:prestashop.res.partner,supplier:0
+#: field:prestashop.supplier,supplier:0
+msgid "Supplier"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,supplier_invoice_number:0
+msgid "Supplier Invoice Number"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,seller_delay:0
+#: field:prestashop.product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_stock_supplier:0
+#: field:prestashop.res.partner,property_stock_supplier:0
+#: field:prestashop.supplier,property_stock_supplier:0
+msgid "Supplier Location"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,property_supplier_payment_term:0
+#: field:prestashop.res.partner,property_supplier_payment_term:0
+#: field:prestashop.supplier,property_supplier_payment_term:0
+msgid "Supplier Payment Term"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,pricelist_ids:0
+msgid "Supplier Pricelist"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,product_code:0
+msgid "Supplier Product Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,product_name:0
+msgid "Supplier Product Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,seller_qty:0
+#: field:prestashop.product.template,seller_qty:0
+msgid "Supplier Quantity"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,supplier_taxes_id:0
+#: field:prestashop.product.template,supplier_taxes_id:0
+msgid "Supplier Taxes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,product_uom:0
+msgid "Supplier Unit of Measure"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.supplierinfo,odoo_id:0
+msgid "Supplier info"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,name:0
+msgid "Supplier of this product"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,symbol:0
+msgid "Symbol"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.currency,position:0
+msgid "Symbol Position"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:stock.location,prestashop_synchronized:0
+msgid "Sync with PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Synchonize datas like language, country, currency, tax"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Synchonize shop and shop groups"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Synchronize Base Data"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.backend:connector_prestashop.view_prestashop_backend_form
+msgid "Synchronize Metadata"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,vat:0
+#: field:prestashop.res.partner,vat:0
+#: field:prestashop.supplier,vat:0
+msgid "TIN"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,category_id:0
+#: field:prestashop.res.partner,category_id:0
+#: field:prestashop.supplier,category_id:0
+msgid "Tags"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_account_tax
+#: field:prestashop.account.tax,odoo_id:0
+#: field:prestashop.refund,amount_tax:0
+msgid "Tax"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,type_tax_use:0
+msgid "Tax Application"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,description:0
+msgid "Tax Code"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,tax_sign:0
+msgid "Tax Code Sign"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,group_id:0
+#: field:prestashop.account.tax.group,odoo_id:0
+#: field:prestashop.product.combination,tax_group_id:0
+#: field:prestashop.product.template,tax_group_id:0
+msgid "Tax Group"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,vat:0
+#: help:prestashop.res.partner,vat:0
+#: help:prestashop.supplier,vat:0
+msgid "Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,price_include:0
+msgid "Tax Included in Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,tax_line:0
+msgid "Tax Lines"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,name:0
+msgid "Tax Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,type:0
+msgid "Tax Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,tax_group_id:0
+#: help:prestashop.product.template,tax_group_id:0
+msgid "Tax groups are used with some external system like Prestashop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax,child_depend:0
+msgid "Tax on Children"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.account.tax.group,tax_ids:0
+#: field:prestashop.sale.order,amount_tax:0
+#: field:prestashop.sale.order.line,tax_id:0
+#: field:prestashop.sale.order.line.discount,tax_id:0
+msgid "Taxes"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,notification_ids:0
+msgid "Technical field holding the message notifications. Use notified_partner_ids to access notified partners."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,odoo_id:0
+msgid "Template"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,note:0
+msgid "Terms and conditions"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.country,code:0
+msgid "The ISO country code in two chars.\n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.lang,grouping:0
+msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.partner.category,active:0
+msgid "The active field allows you to hide the category without removing it."
+msgstr ""
+
+#. module: connector_prestashop
+#: model:sale.exception,description:connector_prestashop.excep_order_wrong_total_amount
+msgid "The amount computed in Odoo doesn't match with the amount in PrestaShop.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between Odoo and PrestaShop. A fiscal position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if necessary."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,amount_untaxed:0
+msgid "The amount without tax."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,project_id:0
+msgid "The analytic account related to a sales order."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,sale_delay:0
+#: help:prestashop.product.template,sale_delay:0
+msgid "The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,commercial_partner_id:0
+msgid "The commercial entity that will be used on Journal Entries for this invoice"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,type:0
+msgid "The computation method for the tax amount."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_account_position:0
+#: help:prestashop.res.partner,property_account_position:0
+#: help:prestashop.supplier,property_account_position:0
+msgid "The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.country,name:0
+msgid "The full name of the country."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,weight:0
+#: help:prestashop.product.template,weight:0
+msgid "The gross weight in Kg."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,user_id:0
+#: help:prestashop.res.partner,user_id:0
+#: help:prestashop.supplier,user_id:0
+msgid "The internal user that is in charge of communicating with this contact if any."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,min_qty:0
+msgid "The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.shop,name:0
+msgid "The name of the method on the backend"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,weight_net:0
+#: help:prestashop.product.template,weight_net:0
+msgid "The net weight in Kg."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,account_id:0
+msgid "The partner account used for this invoice."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,reference:0
+msgid "The partner reference of this invoice."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.delivery.carrier,partner_id:0
+msgid "The partner that is doing the delivery service."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,tz:0
+#: help:prestashop.res.partner,tz:0
+#: help:prestashop.supplier,tz:0
+msgid "The partner's timezone, used to output proper date and time values inside printed reports. It is important to set a value for this field. You should use the same timezone that is otherwise used to pick and render date and time values: your computer's timezone."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.currency,rate_silent:0
+msgid "The rate of the currency to the currency of rate 1 (0 if no rate defined)."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.currency,rate:0
+msgid "The rate of the currency to the currency of rate 1."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,supplier_invoice_number:0
+msgid "The reference of this invoice as provided by the supplier."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,sequence:0
+msgid "The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."
+msgstr ""
+
+#. module: connector_prestashop
+#: model:sale.exception,description:connector_prestashop.excep_order_wrong_total_amount_tax
+msgid "The tax amount computed in Odoo doesn't match with the tax amount in PrestaShop.\n"
+"\n"
+"Cause:\n"
+"The taxes are probably different between Odoo and PrestaShop. A fiscal position could have changed the final price.\n"
+"\n"
+"Resolution:\n"
+"Check your taxes and fiscal positions configuration and correct them if necessary."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,amount_tax:0
+msgid "The tax amount."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,amount_total:0
+msgid "The total amount."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,volume:0
+#: help:prestashop.product.template,volume:0
+msgid "The volume in m3."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.lang,iso_code:0
+msgid "This ISO code is the name of po files to use for translations"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_account_expense:0
+#: help:prestashop.product.template,property_account_expense:0
+msgid "This account will be used for invoices instead of the default one to value expenses for the current product."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_account_income:0
+#: help:prestashop.product.template,property_account_income:0
+msgid "This account will be used for invoices instead of the default one to value sales for the current product."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_account_payable:0
+#: help:prestashop.res.partner,property_account_payable:0
+#: help:prestashop.supplier,property_account_payable:0
+msgid "This account will be used instead of the default one as the payable account for the current partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_account_receivable:0
+#: help:prestashop.res.partner,property_account_receivable:0
+#: help:prestashop.supplier,property_account_receivable:0
+msgid "This account will be used instead of the default one as the receivable account for the current partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_delivery_carrier:0
+#: help:prestashop.res.partner,property_delivery_carrier:0
+#: help:prestashop.supplier,property_delivery_carrier:0
+msgid "This delivery method will be used when invoicing from picking."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,image:0
+#: help:prestashop.res.partner,image:0
+#: help:prestashop.supplier,image:0
+msgid "This field holds the image used as avatar for this contact, limited to 1024x1024px"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,image_variant:0
+msgid "This field holds the image used as image for the product variant, limited to 1024x1024px."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,domain:0
+msgid "This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.partner,default_category_id:0
+msgid "This field is synchronized with the field 'Default customer group' in PrestaShop."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.lang,code:0
+msgid "This field is used to set/get locales for user"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,qty:0
+msgid "This is a quantity which is converted into Default Unit of Measure."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,seller_qty:0
+#: help:prestashop.product.template,seller_qty:0
+msgid "This is minimum quantity to purchase from Main Supplier."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,seller_delay:0
+#: help:prestashop.product.template,seller_delay:0
+msgid "This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.sale.order,invoice_ids:0
+msgid "This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,price_extra:0
+msgid "This is the sum of the extra price of all attributes"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,name:0
+msgid "This name will be displayed on reports"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_supplier_payment_term:0
+#: help:prestashop.res.partner,property_supplier_payment_term:0
+#: help:prestashop.supplier,property_supplier_payment_term:0
+msgid "This payment term will be used instead of the default one for purchase orders and supplier invoices"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_payment_term:0
+#: help:prestashop.res.partner,property_payment_term:0
+#: help:prestashop.supplier,property_payment_term:0
+msgid "This payment term will be used instead of the default one for sale orders and customer invoices"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_product_pricelist_purchase:0
+#: help:prestashop.res.partner,property_product_pricelist_purchase:0
+#: help:prestashop.supplier,property_product_pricelist_purchase:0
+msgid "This pricelist will be used, instead of the default one, for purchases from the current partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_product_pricelist:0
+#: help:prestashop.res.partner,property_product_pricelist:0
+#: help:prestashop.supplier,property_product_pricelist:0
+msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_stock_customer:0
+#: help:prestashop.res.partner,property_stock_customer:0
+#: help:prestashop.supplier,property_stock_customer:0
+msgid "This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,property_stock_supplier:0
+#: help:prestashop.res.partner,property_stock_supplier:0
+#: help:prestashop.supplier,property_stock_supplier:0
+msgid "This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_stock_production:0
+#: help:prestashop.product.template,property_stock_production:0
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by manufacturing orders."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_stock_procurement:0
+#: help:prestashop.product.template,property_stock_procurement:0
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by procurements."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_stock_inventory:0
+#: help:prestashop.product.template,property_stock_inventory:0
+msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,product_code:0
+msgid "This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,product_name:0
+msgid "This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,thousands_sep:0
+msgid "Thousands Separator"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,time_format:0
+msgid "Time Format"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,tz:0
+#: field:prestashop.res.partner,tz:0
+#: field:prestashop.supplier,tz:0
+msgid "Timezone"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,tz_offset:0
+#: field:prestashop.res.partner,tz_offset:0
+#: field:prestashop.supplier,tz_offset:0
+msgid "Timezone offset"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,title:0
+#: field:prestashop.res.partner,title:0
+#: field:prestashop.supplier,title:0
+msgid "Title"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,tmpl_seller_ids:0
+msgid "Tmpl seller ids"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,to_read:0
+msgid "To read"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:product.product:connector_prestashop.product_normal_form_view
+msgid "To show PrestaShop binding go to:"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,amount_total:0
+#: field:prestashop.sale.order,amount_total:0
+msgid "Total"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:sale.exception,name:connector_prestashop.excep_order_wrong_total_amount
+msgid "Total Amount differs from PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,total_invoiced:0
+#: field:prestashop.res.partner,total_invoiced:0
+#: field:prestashop.supplier,total_invoiced:0
+msgid "Total Invoiced"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,debit:0
+#: field:prestashop.res.partner,debit:0
+#: field:prestashop.supplier,debit:0
+msgid "Total Payable"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,credit:0
+#: field:prestashop.res.partner,credit:0
+#: field:prestashop.supplier,credit:0
+msgid "Total Receivable"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:sale.exception,name:connector_prestashop.excep_order_wrong_total_amount_tax
+msgid "Total Tax Amount differs from PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,total_amount:0
+msgid "Total amount in PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,credit:0
+#: help:prestashop.res.partner,credit:0
+#: help:prestashop.supplier,credit:0
+msgid "Total amount this customer owes you."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,debit:0
+#: help:prestashop.res.partner,debit:0
+#: help:prestashop.supplier,debit:0
+msgid "Total amount you have to pay to this supplier."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.category,total_route_ids:0
+msgid "Total routes"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,total_shipping_tax_excluded:0
+#: field:prestashop.sale.order,total_shipping_tax_included:0
+msgid "Total shipping in PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,total_amount_tax:0
+msgid "Total tax in PrestaShop"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,track_incoming:0
+#: field:prestashop.product.template,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,track_outgoing:0
+#: field:prestashop.product.template,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.res.lang,translatable:0
+msgid "Translatable"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.delivery.carrier,partner_id:0
+msgid "Transport Company"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,type:0
+#: field:prestashop.product.combination.option,group_type:0
+#: field:prestashop.refund,type:0
+msgid "Type"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/models/prestashop_backend/importer.py:20
+#, python-format
+msgid "Undefined"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.refund,internal_number:0
+msgid "Unique number of the invoice, computed automatically when the invoice is created."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,price_unit:0
+#: field:prestashop.sale.order.line.discount,price_unit:0
+msgid "Unit Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,uom_id:0
+#: field:prestashop.product.template,uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,product_uom:0
+#: field:prestashop.sale.order.line.discount,product_uom:0
+msgid "Unit of Measure "
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,uos_coeff:0
+#: field:prestashop.product.template,uos_coeff:0
+msgid "Unit of Measure -> UOS Coeff"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,uos_id:0
+#: field:prestashop.product.template,uos_id:0
+msgid "Unit of Sale"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,message_unread:0
+#: field:prestashop.product.combination,message_unread:0
+#: field:prestashop.product.template,message_unread:0
+#: field:prestashop.refund,message_unread:0
+#: field:prestashop.res.partner,message_unread:0
+#: field:prestashop.sale.order,message_unread:0
+#: field:prestashop.supplier,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,date_upd:0
+#: field:prestashop.product.category,date_upd:0
+#: field:prestashop.res.partner,date_upd:0
+#: field:prestashop.res.partner.category,date_upd:0
+msgid "Updated At (on PrestaShop)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.template,date_upd:0
+msgid "Updated at (in PrestaShop)"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,use_parent_address:0
+#: field:prestashop.res.partner,use_parent_address:0
+#: field:prestashop.supplier,use_parent_address:0
+msgid "Use Company Address"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,taxes_included:0
+msgid "Use tax included prices"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,base_code_id:0
+#: help:prestashop.account.tax,ref_base_code_id:0
+#: help:prestashop.account.tax,ref_tax_code_id:0
+#: help:prestashop.account.tax,tax_code_id:0
+msgid "Use this code for the tax declaration."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,type:0
+#: help:prestashop.res.partner,type:0
+#: help:prestashop.supplier,type:0
+msgid "Used to select automatically the right address according to the context in sales and purchases documents."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,user_ids:0
+#: field:prestashop.res.partner,user_ids:0
+#: field:prestashop.supplier,user_ids:0
+msgid "Users"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.mail.message,vote_user_ids:0
+msgid "Users that voted for this message"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.account.tax,base_sign:0
+#: help:prestashop.account.tax,ref_base_sign:0
+#: help:prestashop.account.tax,ref_tax_sign:0
+#: help:prestashop.account.tax,tax_sign:0
+msgid "Usually 1 or -1."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,vat_subjected:0
+#: field:prestashop.res.partner,vat_subjected:0
+#: field:prestashop.supplier,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option.value,name:0
+msgid "Value"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option,value_ids:0
+msgid "Values"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,price_extra:0
+msgid "Variant Extra Price"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,image_variant:0
+msgid "Variant Image"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,variant_seller_ids:0
+msgid "Variant seller ids"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination.option.value,product_ids:0
+msgid "Variants"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.refund,check_total:0
+msgid "Verification Total"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,version:0
+msgid "Version"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.image,product_variant_ids:0
+msgid "Visible in these variants"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,volume:0
+#: field:prestashop.product.template,volume:0
+msgid "Volume"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.mail.message,vote_user_ids:0
+msgid "Votes"
+msgstr ""
+
+#. module: connector_prestashop
+#: selection:sale.order.state.list,name:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.shop,odoo_id:0
+msgid "WareHouse"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_stock_warehouse
+#: field:prestashop.backend,warehouse_id:0
+#: field:prestashop.product.combination,warehouse_id:0
+#: field:prestashop.sale.order,warehouse_id:0
+msgid "Warehouse"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.backend,warehouse_id:0
+msgid "Warehouse used to compute the stock quantities."
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.product.combination,warranty:0
+#: field:prestashop.product.template,warranty:0
+msgid "Warranty"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.backend,webservice_key:0
+msgid "Webservice key"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,website:0
+#: field:prestashop.res.partner,website:0
+#: field:prestashop.supplier,website:0
+msgid "Website"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.address,website:0
+#: help:prestashop.res.partner,website:0
+#: help:prestashop.supplier,website:0
+msgid "Website of Partner or Company"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_shop_group
+msgid "Websites"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.sale.order.line,th_weight:0
+#: field:prestashop.sale.order.line.discount,th_weight:0
+msgid "Weight"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,property_stock_account_input_categ:0
+msgid "When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account set on the source location. This is the default value for all products in this category. It can also directly be set on each product"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_stock_account_input:0
+#: help:prestashop.product.template,property_stock_account_input:0
+msgid "When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,property_stock_account_output_categ:0
+msgid "When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless there is a specific valuation account set on the destination location. This is the default value for all products in this category. It can also directly be set on each product"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.combination,property_stock_account_output:0
+#: help:prestashop.product.template,property_stock_account_output:0
+msgid "When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,property_stock_journal:0
+msgid "When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.category,property_stock_valuation_account_id:0
+msgid "When real-time inventory valuation is enabled on a product, this account will hold the current value of the products."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.product.supplierinfo,product_id:0
+msgid "When this field is filled in, the vendor data will onlyapply to the variant."
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.res.country,address_format:0
+msgid "You can state here the usual format to use for the addresses belonging to this country.\n"
+"\n"
+"You can use the python-style string patern with all the field of the address (for example, use '%(street)s' to display the field 'street') plus\n"
+"            \n"
+"%(state_name)s: the name of the state\n"
+"            \n"
+"%(state_code)s: the code of the state\n"
+"            \n"
+"%(country_name)s: the name of the country\n"
+"            \n"
+"%(country_code)s: the code of the country"
+msgstr ""
+
+#. module: connector_prestashop
+#: help:prestashop.backend,webservice_key:0
+msgid "You have to put it in 'username' of the PrestaShop Webservice api path invite"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,zip:0
+#: field:prestashop.res.partner,zip:0
+#: field:prestashop.supplier,zip:0
+msgid "Zip"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model,name:connector_prestashop.model_account_tax_group
+msgid "account tax group"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:account.tax,prestashop_bind_ids:0
+#: field:prestashop.account.tax,prestashop_bind_ids:0
+#: field:prestashop.res.country,prestashop_bind_ids:0
+#: field:res.country,prestashop_bind_ids:0
+msgid "prestashop Bindings"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.combination:connector_prestashop.combination_connector_presta_form_view
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_form_view
+msgid "prestashop fields"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.combination:connector_prestashop.combination_connector_presta_tree_view
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_tree_view
+msgid "prestashop product"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:product.product:connector_prestashop.product_normal_form_view
+msgid "product template"
+msgstr ""
+
+#. module: connector_prestashop
+#: view:prestashop.product.template:connector_prestashop.product_connector_presta_form_view
+msgid "qty"
+msgstr ""
+
+#. module: connector_prestashop
+#: field:prestashop.address,has_image:0
+#: field:prestashop.product.combination,image:0
+#: field:prestashop.product.combination,image_medium:0
+#: field:prestashop.product.combination,image_small:0
+#: field:prestashop.product.combination,qty_available_text:0
+#: field:prestashop.product.template,image:0
+#: field:prestashop.product.template,image_medium:0
+#: field:prestashop.product.template,image_small:0
+#: field:prestashop.product.template,qty_available_text:0
+#: field:prestashop.res.partner,has_image:0
+#: field:prestashop.supplier,has_image:0
+msgid "unknown"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/backend_adapter.py:38
+#, python-format
+msgid "{}API / Network Error:\n"
+"\n"
+"{}"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/backend_adapter.py:42
+#, python-format
+msgid "{}Authentication Error:\n"
+"\n"
+"{}"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/backend_adapter.py:46
+#, python-format
+msgid "{}Error during synchronization with PrestaShop:\n"
+"\n"
+"{}"
+msgstr ""
+
+#. module: connector_prestashop
+#: code:addons/connector_prestashop/unit/backend_adapter.py:34
+#, python-format
+msgid "{}Network Error:\n"
+"\n"
+"{}"
+msgstr ""
