@@ -5,7 +5,8 @@
 from odoo import models, fields
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
-
+from odoo.addons.connector_prestashop.models.product_template.common import\
+    PrestashopProductQuantityListener
 
 class PrestashopProductCombination(models.Model):
     _inherit = 'prestashop.product.combination'
@@ -33,9 +34,8 @@ class PrestashopProductProductListener(Component):
         record, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
-        work = self.work.work_on(collection=record)
-        inv_listener = work.component(usage='product.inventory.listener')
-        inventory_fields = inv_listener._get_inventory_fields()
+        inventory_fields =\
+            PrestashopProductQuantityListener._get_inventory_fields()
         fields = list(set(fields).difference(set(inventory_fields)))
         if fields:
             record.with_delay().export_record(fields=fields)
