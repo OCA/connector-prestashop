@@ -36,8 +36,6 @@ class PrestashopProductImageListener(Component):
 
                 work = self.work.work_on(collection=binding.backend_id)
                 binder = work.component(
-                    usage='binder', model_name='prestashop.product.template')
-                binder = work.component(
                     usage='binder', model_name='prestashop.product.image')
                 prestashop_id = binder.to_external(binding)
                 if prestashop_id:

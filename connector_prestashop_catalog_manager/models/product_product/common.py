@@ -51,7 +51,12 @@ class ProductProductListener(Component):
     def prestashop_product_combination_unlink(self, record):
         # binding is deactivate when deactive a product variant
         for binding in record.prestashop_combinations_bind_ids:
-            binding.with_delay().export_delete_record()
+            work = self.work.work_on(collection=binding.backend_id)
+            binder = work.component(
+                usage='binder', model_name='prestashop.product.combination')
+            prestashop_id = binder.to_external(binding)
+            binding.with_delay().export_delete_record(
+                binding._name, binding.backend_id, prestashop_id, record)
         record.prestashop_combinations_bind_ids.unlink()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
