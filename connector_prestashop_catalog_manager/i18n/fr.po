@@ -4,16 +4,15 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0-20170815\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-16 17:27+0000\n"
-"PO-Revision-Date: 2018-05-16 17:27+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.active_product_form
@@ -33,7 +32,7 @@ msgstr "Rendre actifs/inactifs les produits sélectionnés"
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,additional_shipping_cost:0
 msgid "Additional Shipping Price"
-msgstr "Coût de livraison complémentaire"
+msgstr "Coût de livraison supplémentaire"
 
 #. module: connector_prestashop_catalog_manager
 #: help:prestashop.product.template,additional_shipping_cost:0
@@ -48,7 +47,7 @@ msgstr "Date de disponibilité"
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,available_later:0
 msgid "Available Later"
-msgstr "Disponible prochaiement"
+msgstr "Disponible prochainement"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,available_now:0
@@ -195,17 +194,17 @@ msgstr "Dernière mise à jour le"
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,meta_description:0
 msgid "Meta Description"
-msgstr "Meta Description"
+msgstr ""
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,meta_keywords:0
 msgid "Meta Keywords"
-msgstr "Meta Keywords"
+msgstr ""
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,meta_title:0
 msgid "Meta Title"
-msgstr "Meta Title"
+msgstr ""
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.combination,minimal_quantity:0
@@ -299,4 +298,3 @@ msgstr "Attributs produits Prestashop"
 #: view:sync.products:connector_prestashop_catalog_manager.sync_products_form
 msgid "sync selected products"
 msgstr "synchro produits sélectionnés"
-

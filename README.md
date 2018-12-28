@@ -59,7 +59,7 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[connector_prestashop](connector_prestashop/) | 8.0.1.0.4 | PrestaShop-Odoo connector
+[connector_prestashop](connector_prestashop/) | 8.0.1.0.5 | PrestaShop-Odoo connector
 [connector_prestashop_catalog_manager](connector_prestashop_catalog_manager/) | 8.0.1.0.2 | Prestashop-Odoo Catalog Manager
 
 
