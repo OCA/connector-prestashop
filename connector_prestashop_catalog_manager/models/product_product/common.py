@@ -106,6 +106,36 @@ class AttributeListener(Component):
     _inherit = 'prestashop.connector.listener'
     _apply_on = [
         'product.attribute',
+    ]
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_write(self, record, fields=None):
+        """ Called when a record is written """
+        for binding in record.prestashop_bind_ids:
+            if not self.need_to_export(binding, fields):
+                binding.with_delay().export_record(fields=fields)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_unlink(self, record, fields=None):
+        """ Called when a record is deleted """
+        for binding in record.prestashop_bind_ids:
+            work = self.work.work_on(collection=binding.backend_id)
+            binder = work.component(
+                usage='binder',
+                model_name='prestashop.product.combination.option')
+            prestashop_id = binder.to_external(binding)
+            if prestashop_id:
+                record = binding.get_map_record_vals()
+                self.env['prestashop.product.combination.option'].\
+                    with_delay().export_delete_record(
+                        binding._name, binding.backend_id, prestashop_id,
+                        record)
+
+
+class AttributeValueListener(Component):
+    _name = 'attribute.value.event.listener'
+    _inherit = 'prestashop.connector.listener'
+    _apply_on = [
         'product.attribute.value',
     ]
 
@@ -115,3 +145,19 @@ class AttributeListener(Component):
         for binding in record.prestashop_bind_ids:
             if not self.need_to_export(binding, fields):
                 binding.with_delay().export_record(fields=fields)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_unlink(self, record, fields=None):
+        """ Called when a record is deleted """
+        for binding in record.prestashop_bind_ids:
+            work = self.work.work_on(collection=binding.backend_id)
+            binder = work.component(
+                usage='binder',
+                model_name='prestashop.product.combination.option.value')
+            prestashop_id = binder.to_external(binding)
+            if prestashop_id:
+                record = binding.get_map_record_vals()
+                self.env['prestashop.product.combination.option.value'].\
+                    with_delay().export_delete_record(
+                        binding._name, binding.backend_id, prestashop_id,
+                        record)

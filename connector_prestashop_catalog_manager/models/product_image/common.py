@@ -25,7 +25,7 @@ class PrestashopProductImageListener(Component):
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
     def on_record_unlink(self, record, fields=None):
-        """ Called when a record is created """
+        """ Called when a record is deleted """
         for binding in record.prestashop_bind_ids:
             product = self.env[record.owner_model].browse(record.owner_id)
             if product.exists():
