@@ -124,3 +124,19 @@ class ProductCategoryListener(Component):
                         'odoo_id': record.id
                     })
                     image.with_delay().export_record(fields=fields)
+
+    @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
+    def on_record_unlink(self, record, fields=None):
+        """ Called when a record is deleted """
+        for binding in record.prestashop_bind_ids:
+            work = self.work.work_on(collection=binding.backend_id)
+            binder = work.component(
+                usage='binder',
+                model_name='prestashop.product.category')
+            prestashop_id = binder.to_external(binding)
+            if prestashop_id:
+                record = binding.get_map_record_vals()
+                self.env['prestashop.product.category'].\
+                    with_delay().export_delete_record(
+                        binding._name, binding.backend_id, prestashop_id,
+                        record)
