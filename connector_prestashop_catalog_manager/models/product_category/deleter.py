@@ -4,10 +4,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
-from odoo.tools import config
-from odoo import fields, models
 from odoo.addons.component.core import Component
-from odoo.addons.component_event import skip_if
+from odoo import _
 
 
 class ProductCombinationOptionDeleter(Component):

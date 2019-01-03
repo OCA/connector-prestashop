@@ -8,6 +8,7 @@ from odoo.addons.component_event import skip_if
 from odoo.addons.connector_prestashop.models.product_template.common import\
     PrestashopProductQuantityListener
 
+
 class PrestashopProductCombination(models.Model):
     _inherit = 'prestashop.product.combination'
     minimal_quantity = fields.Integer(
