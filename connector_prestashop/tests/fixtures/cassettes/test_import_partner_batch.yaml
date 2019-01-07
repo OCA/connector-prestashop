@@ -60,8 +60,6 @@ interactions:
 
         <customer id="1" xlink:href="http://172.24.0.3/api/customers/1"/>
 
-        <customer id="2" xlink:href="http://172.24.0.3/api/customers/2"/>
-
         </customers>
 
         </prestashop>

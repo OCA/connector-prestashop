@@ -15,7 +15,7 @@ interactions:
         \t<show_prices><![CDATA[1]]></show_prices>\n\t<date_add><![CDATA[2016-09-02\
         \ 14:37:17]]></date_add>\n\t<date_upd><![CDATA[2016-09-06 15:03:01]]></date_upd>\n\
         \t<name><language id=\"1\" xlink:href=\"http://172.24.0.3/api/languages/1\"\
-        ><![CDATA[Customer A]]></language></name>\n</group>\n</prestashop>\n"}
+        ><![CDATA[Customer]]></language></name>\n</group>\n</prestashop>\n"}
     headers:
       access-time: ['1473766107']
       connection: [Keep-Alive]
@@ -49,7 +49,7 @@ interactions:
         \t<show_prices><![CDATA[1]]></show_prices>\n\t<date_add><![CDATA[2016-09-02\
         \ 14:37:17]]></date_add>\n\t<date_upd><![CDATA[2016-09-06 15:03:01]]></date_upd>\n\
         \t<name><language id=\"1\" xlink:href=\"http://172.24.0.3/api/languages/1\"\
-        ><![CDATA[Customer A]]></language></name>\n</group>\n</prestashop>\n"}
+        ><![CDATA[Customer]]></language></name>\n</group>\n</prestashop>\n"}
     headers:
       access-time: ['1473766107']
       connection: [Keep-Alive]

@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from collections import namedtuple
+from datetime import datetime, timedelta
 
 import mock
 
@@ -157,15 +158,25 @@ class TestImportSale(PrestashopTransactionCase):
 
         # import of the sale order
         with recorder.use_cassette('test_import_sale_record_5'):
-            result = self.env['prestashop.sale.order'].import_record(
-                self.backend_record, 5)
 
-        error_msg = ('Import of the order 5 canceled '
-                     'because it has not been paid since 30 days')
-        self.assertEqual(result, error_msg)
+            with self.backend_record.work_on(
+                    model_name='prestashop.sale.order') as work:
+                order = work.component(usage='backend.adapter').read(5)
 
-        with recorder.use_cassette('test_import_sale_record_5'):
-            with freeze_time("2016-12-08"):
+            fmt = '%Y-%m-%d %H:%M:%S'
+            order_date = datetime.strptime(order['date_add'], fmt)
+            order_date_29 = (order_date + timedelta(days=29)).strftime(fmt)
+            order_date_31 = (order_date + timedelta(days=31)).strftime(fmt)
+
+            with freeze_time(order_date_31):
+                result = self.env['prestashop.sale.order'].import_record(
+                    self.backend_record, 5)
+
+            error_msg = ('Import of the order 5 canceled '
+                         'because it has not been paid since 30 days')
+            self.assertEqual(result, error_msg)
+
+            with freeze_time(order_date_29):
                 self.env['prestashop.sale.order'].import_record(
                     self.backend_record, 5)
 

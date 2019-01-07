@@ -88,7 +88,7 @@ class TestImportPartner(PrestashopTransactionCase):
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
             delay_record_instance = delay_record_mock.return_value
-            self.assertEqual(5, delay_record_instance.import_record.call_count)
+            self.assertEqual(4, delay_record_instance.import_record.call_count)
 
     @assert_no_job_delayed
     def test_import_partner_category_record(self):
@@ -104,7 +104,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
         expected = [
             ExpectedCategory(
-                name='Customer A',
+                name='Customer',
             )]
 
         self.assert_records(expected, category_bindings)
@@ -201,7 +201,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
         expected = [
             ExpectedAddress(
-                name='John DOE (My address)',
+                name='John DOE (Mon adresse)',
                 parent_id=partner,
                 street='16, Main street',
                 street2='2nd floor',

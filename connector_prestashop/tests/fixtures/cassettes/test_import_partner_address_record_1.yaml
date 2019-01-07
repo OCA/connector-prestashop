@@ -15,7 +15,7 @@ interactions:
         \t<id_manufacturer><![CDATA[0]]></id_manufacturer>\n\t<id_supplier><![CDATA[0]]></id_supplier>\n\
         \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_country xlink:href=\"\
         http://172.24.0.3/api/countries/8\"><![CDATA[8]]></id_country>\n\t<id_state><![CDATA[0]]></id_state>\n\
-        \t<alias><![CDATA[My address]]></alias>\n\t<company></company>\n\t<lastname><![CDATA[DOE]]></lastname>\n\
+        \t<alias><![CDATA[Mon adresse]]></alias>\n\t<company></company>\n\t<lastname><![CDATA[DOE]]></lastname>\n\
         \t<firstname><![CDATA[John]]></firstname>\n\t<vat_number></vat_number>\n\t\
         <address1><![CDATA[16, Main street]]></address1>\n\t<address2><![CDATA[2nd\
         \ floor]]></address2>\n\t<postcode><![CDATA[75002]]></postcode>\n\t<city><![CDATA[Paris]]></city>\n\

@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
     method: GET
-    uri: http://172.22.0.4/api/stock_availables?filter%5Bid_product_attribute%5D=0&filter%5Bid_product%5D=1
+    uri: http://172.22.0.4/api/stock_availables?filter%5Bid_product_attribute%5D=0&filter%5Bid_product%5D=2
   response:
     body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
 
@@ -15,7 +15,7 @@ interactions:
 
         <stock_availables>
 
-        <stock_available id="1" xlink:href="http://172.22.0.4/api/stock_availables/1"/>
+        <stock_available id="2" xlink:href="http://172.22.0.4/api/stock_availables/2"/>
 
         </stock_availables>
 
@@ -47,12 +47,12 @@ interactions:
       Cookie: [PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TefxaDQeKRvH4iskMptWR8Ao0kKwTQ%2BHn74qCsABs2oIgh1NPrPv59GgeUjPVxKZOHRsmUHT3M%2BW%2FfrbuB4NBJU%3D000078]
       User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
     method: GET
-    uri: http://172.22.0.4/api/stock_availables/1
+    uri: http://172.22.0.4/api/stock_availables/2
   response:
     body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
         <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_available>\n\
-        \t<id><![CDATA[1]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
+        \t<id><![CDATA[2]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
+        ><![CDATA[2]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
         \t<id_shop xlink:href=\"http://172.22.0.4/api/shops/1\"><![CDATA[1]]></id_shop>\n\
         \t<id_shop_group><![CDATA[0]]></id_shop_group>\n\t<quantity><![CDATA[1799]]></quantity>\n\
         \t<depends_on_stock><![CDATA[0]]></depends_on_stock>\n\t<out_of_stock><![CDATA[2]]></out_of_stock>\n\
@@ -72,7 +72,7 @@ interactions:
       x-powered-by: [PrestaShop Webservice]
     status: {code: 200, message: OK}
 - request:
-    body: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?><prestashop><stock_available><id_product_attribute>0</id_product_attribute><id_product>1</id_product><out_of_stock>2</out_of_stock><id_shop>1</id_shop><quantity>0</quantity><depends_on_stock>0</depends_on_stock><id>1</id><id_shop_group>0</id_shop_group></stock_available></prestashop>'
+    body: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?><prestashop><stock_available><id_product_attribute>0</id_product_attribute><id_product>2</id_product><out_of_stock>0</out_of_stock><id_shop>1</id_shop><quantity>0</quantity><depends_on_stock>0</depends_on_stock><id>2</id><id_shop_group>0</id_shop_group></stock_available></prestashop>'
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
@@ -86,11 +86,11 @@ interactions:
   response:
     body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
         <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_available>\n\
-        \t<id><![CDATA[1]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/1\"\
-        ><![CDATA[1]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
+        \t<id><![CDATA[2]]></id>\n\t<id_product xlink:href=\"http://172.22.0.4/api/products/2\"\
+        ><![CDATA[2]]></id_product>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\
         \t<id_shop xlink:href=\"http://172.22.0.4/api/shops/1\"><![CDATA[1]]></id_shop>\n\
         \t<id_shop_group><![CDATA[0]]></id_shop_group>\n\t<quantity><![CDATA[0]]></quantity>\n\
-        \t<depends_on_stock><![CDATA[0]]></depends_on_stock>\n\t<out_of_stock><![CDATA[2]]></out_of_stock>\n\
+        \t<depends_on_stock><![CDATA[0]]></depends_on_stock>\n\t<out_of_stock><![CDATA[0]]></out_of_stock>\n\
         </stock_available>\n</prestashop>\n"}
     headers:
       access-time: ['1481297840']

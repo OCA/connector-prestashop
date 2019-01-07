@@ -17,9 +17,9 @@ class TestExportStockQuantity(ExportStockQuantityCase):
     def test_job_export_qty(self):
         """ Export a qty on PrestaShop """
         variant_binding = self._create_product_binding(
-            name='Faded Short Sleeves T-shirt',
-            template_ps_id=1,
-            variant_ps_id=1,
+            name='Blouse',
+            template_ps_id=2,
+            variant_ps_id=7,
         )
         base_qty = variant_binding.qty_available
         base_prestashop_qty = variant_binding.quantity
@@ -41,13 +41,13 @@ class TestExportStockQuantity(ExportStockQuantityCase):
             self.assertEqual('GET', request.method)
             self.assertEqual('/api/stock_availables',
                              self.parse_path(request.uri))
-            expected_query = {'filter[id_product]': ['1'],
+            expected_query = {'filter[id_product]': ['2'],
                               'filter[id_product_attribute]': ['0']}
             self.assertDictEqual(expected_query, self.parse_qs(request.uri))
 
             request = cassette.requests[1]
             self.assertEqual('GET', request.method)
-            self.assertEqual('/api/stock_availables/1',
+            self.assertEqual('/api/stock_availables/2',
                              self.parse_path(request.uri))
             self.assertDictEqual({}, self.parse_qs(request.uri))
 
@@ -59,12 +59,12 @@ class TestExportStockQuantity(ExportStockQuantityCase):
 
             self.assertTrue(
                 set({'depends_on_stock': '0',
-                     'id': '1',
-                     'id_product': '1',
+                     'id': '2',
+                     'id_product': '2',
                      'id_product_attribute': '0',
                      'id_shop': '1',
                      'id_shop_group': '0',
-                     'out_of_stock': '2',
+                     'out_of_stock': '0',
                      'quantity': '0'}.items())
                 .issubset(set(body['prestashop']['stock_available'].items())))
             self.assertDictEqual({}, self.parse_qs(request.uri))
