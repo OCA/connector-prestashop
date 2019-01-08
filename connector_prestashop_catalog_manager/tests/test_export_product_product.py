@@ -122,11 +122,14 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
         # bind product
         binding = self._bind_product()
         binding.prestashop_id = 46
+        backend_id = binding.backend_id
         # delete product
         self.product.unlink()
         # check export delete delayed
         self.instance_delay_record.export_delete_record.\
-            assert_called_once_with()
+            assert_called_once_with(
+                'prestashop.product.combination', backend_id, 46,
+                self.product)
 
     @assert_no_job_delayed
     def test_export_product_product_jobs(self):

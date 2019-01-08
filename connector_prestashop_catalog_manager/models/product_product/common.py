@@ -24,8 +24,6 @@ class PrestashopProductProductListener(Component):
     _apply_on = 'prestashop.product.combination'
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(
-        record, **kwargs))
     def on_record_create(self, record, fields=None):
         """ Called when a record is created """
         record.with_delay().export_record(fields=fields)
