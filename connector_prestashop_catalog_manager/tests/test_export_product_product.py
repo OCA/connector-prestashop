@@ -87,7 +87,7 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
         })
         # check export delayed
         self.instance_delay_record.export_record.assert_called_once_with(
-            fields=[]
+            fields=['main_template_id', 'backend_id', 'odoo_id']
         )
 
     def test_export_product_product_onwrite(self):
