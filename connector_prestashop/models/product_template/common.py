@@ -39,7 +39,6 @@ class ProductTemplate(models.Model):
     @api.depends(
         'product_variant_ids',
         'product_variant_ids.stock_quant_ids',
-        'product_variant_ids.stock_move_ids',
     )
     def _compute_quantities(self):
         return super(ProductTemplate, self)._compute_quantities()
