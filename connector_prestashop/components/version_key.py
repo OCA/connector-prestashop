@@ -71,10 +71,10 @@ class VersionKey1612(Component):
     }
 
 
-class VersionKey_1_6_1_12(Component):
-    _name = '_prestashop.version.key.1.6.1.12'
+class VersionKey1616(Component):
+    _name = '_prestashop.version.key.1.6.1.6'
     _inherit = '_prestashop.version.key'
-    _usage = 'prestashop.version.key.1.6.1.12'
+    _usage = 'prestashop.version.key.1.6.1.6'
 
     # keys checked in 1.6.1.12:
     # * tax
