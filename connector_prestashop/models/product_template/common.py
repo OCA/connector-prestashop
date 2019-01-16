@@ -35,6 +35,14 @@ class ProductTemplate(models.Model):
         ondelete='restrict'
     )
 
+    # TODO remove when https://github.com/odoo/odoo/pull/30024 is merged
+    @api.depends(
+        'product_variant_ids',
+        'product_variant_ids.stock_quant_ids',
+    )
+    def _compute_quantities(self):
+        return super(ProductTemplate, self)._compute_quantities()
+
     @api.multi
     def update_prestashop_quantities(self):
         for template in self:
