@@ -54,7 +54,22 @@ class ProductProduct(models.Model):
                             prestashop_combination.prestashop_bind_ids:
                         combination_binding.recompute_prestashop_qty()
         return True
+    
+    
+    @api.multi
+    @api.depends('impact_price', 'product_tmpl_id.price','product_tmpl_id.list_price')
+    def _compute_product_price(self):
+        super(ProductProduct, self)._compute_product_price()
+        for product in self:
+            product.price += product.impact_price
+            
+            
+    price = fields.Float(
+        'Price', compute='_compute_product_price',
+        digits=dp.get_precision('Product Price'),)
+    
 
+            
     @api.multi
     @api.depends('impact_price', 'product_tmpl_id.list_price')
     def _compute_lst_price(self):
@@ -67,7 +82,7 @@ class ProductProduct(models.Model):
                     and product.uos_id or product.uom_id
                 price = uom._compute_price(price, product.uom_id)
             product.lst_price = price
-
+ 
     lst_price = fields.Float(
         compute='_compute_lst_price')
 
