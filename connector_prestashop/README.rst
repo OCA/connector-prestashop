@@ -8,6 +8,9 @@ Odoo PrestaShop Connector
 
 This module connects Odoo and PrestaShop.
 
+Caution : it's not compatible with product_variant_configurator
+(see models/produc_product/common.py)
+
 PrestaShop (http://www.prestashop.com/) is a popular e-commerce platform
 written in PHP/MySQL and published under the Open Software licence v3.0.
 
