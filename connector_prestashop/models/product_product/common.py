@@ -55,7 +55,7 @@ class ProductProduct(models.Model):
                         combination_binding.recompute_prestashop_qty()
         return True
     
-    
+    # it's not compatible with product_variant_configurator for the variable depth 
     @api.depends('attribute_value_ids.price_ids.price_extra', 'attribute_value_ids.price_ids.product_tmpl_id', 'impact_price')
     def _compute_product_price_extra(self):
         # TDE FIXME: do a real multi and optimize a bit ?
