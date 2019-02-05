@@ -56,35 +56,13 @@ class ProductProduct(models.Model):
         return True
     
     
-    @api.multi
-    @api.depends('impact_price', 'product_tmpl_id.price','product_tmpl_id.list_price')
-    def _compute_product_price(self):
-        super(ProductProduct, self)._compute_product_price()
+    @api.depends('attribute_value_ids.price_ids.price_extra', 'attribute_value_ids.price_ids.product_tmpl_id', 'impact_price')
+    def _compute_product_price_extra(self):
+        # TDE FIXME: do a real multi and optimize a bit ?
+        super(ProductProduct, self)._compute_product_price_extra()
         for product in self:
-            product.price += product.impact_price
+            product.price_extra += product.impact_price
             
-            
-    price = fields.Float(
-        'Price', compute='_compute_product_price',
-        digits=dp.get_precision('Product Price'),)
-    
-
-            
-    @api.multi
-    @api.depends('impact_price', 'product_tmpl_id.list_price')
-    def _compute_lst_price(self):
-        for product in self:
-            price = product.list_price + product.impact_price
-            if 'uom' in self.env.context:
-                # `uos_id` comes from `product_uos`
-                # which could be not installed
-                uom = hasattr(product, 'uos_id') \
-                    and product.uos_id or product.uom_id
-                price = uom._compute_price(price, product.uom_id)
-            product.lst_price = price
- 
-    lst_price = fields.Float(
-        compute='_compute_lst_price')
 
     @api.multi
     def _set_variants_default_on(self, default_on_list=None):
