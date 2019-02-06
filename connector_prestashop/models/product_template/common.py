@@ -9,6 +9,9 @@ from odoo.addons import decimal_precision as dp
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
+from odoo.addons.connector_prestashop.components.backend_adapter import (
+    retryable_error
+)
 
 import logging
 
@@ -235,6 +238,7 @@ class ProductInventoryAdapter(Component):
             client = PrestaShopWebServiceDict(url, key)
             self.export_quantity_url(filters, quantity, client=client)
 
+    @retryable_error
     def export_quantity_url(self, filters, quantity, client=None):
         if client is None:
             client = self.client
