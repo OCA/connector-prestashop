@@ -13,6 +13,10 @@ class CountryImporter(Component):
     _ps_field = 'iso_code'
 
     def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
+        # All code in Odoo have 2 char, it seems dangerous to cut the code
+        # before comparing and it can leads to error...
+        if len(ps_val) != 2:
+            return False
         if (
             erp_val and
             ps_val and

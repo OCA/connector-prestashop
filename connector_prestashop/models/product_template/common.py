@@ -55,9 +55,48 @@ class ProductTemplate(models.Model):
         return True
 
 
+class ProductQtyMixin(models.AbstractModel):
+    _name = 'prestashop.product.qty.mixin'
+
+    @api.multi
+    def recompute_prestashop_qty(self):
+        # group products by backend
+        backends = defaultdict(set)
+        for product in self:
+            backends[product.backend_id].add(product.id)
+
+        for backend, product_ids in backends.items():
+            products = self.browse(product_ids)
+            products._recompute_prestashop_qty_backend(backend)
+        return True
+
+    @api.multi
+    def _recompute_prestashop_qty_backend(self, backend):
+        locations = backend._get_locations_for_stock_quantities()
+        self_loc = self.with_context(location=locations.ids,
+                                     compute_child=False)
+        for product_binding in self_loc:
+            new_qty = product_binding._prestashop_qty(backend)
+            if product_binding.quantity != new_qty:
+                product_binding.quantity = new_qty
+        return True
+
+    def _prestashop_qty(self, backend):
+        qty = self[backend.product_qty_field]
+        if qty < 0:
+            # make sure we never send negative qty to PS
+            # because the overall qty computed at template level
+            # is going to be wrong.
+            qty = 0.0
+        return qty
+
+
 class PrestashopProductTemplate(models.Model):
     _name = 'prestashop.product.template'
-    _inherit = 'prestashop.binding.odoo'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.product.qty.mixin',
+    ]
     _inherits = {'product.template': 'odoo_id'}
 
     odoo_id = fields.Many2one(
@@ -125,34 +164,6 @@ class PrestashopProductTemplate(models.Model):
         ('2', 'Default prestashop')],
         string='If stock shortage'
     )
-
-    @api.multi
-    def recompute_prestashop_qty(self):
-        # group products by backend
-        backends = defaultdict(set)
-        for product in self:
-            backends[product.backend_id].add(product.id)
-
-        for backend, product_ids in backends.iteritems():
-            products = self.browse(product_ids)
-            products._recompute_prestashop_qty_backend(backend)
-        return True
-
-    @api.multi
-    def _recompute_prestashop_qty_backend(self, backend):
-        locations = backend._get_locations_for_stock_quantities()
-        self_loc = self.with_context(location=locations.ids,
-                                     compute_child=False)
-        for product in self_loc:
-            if product.type == 'product':
-                new_qty = product._prestashop_qty()
-                if product.quantity != new_qty:
-                    product.quantity = new_qty
-        return True
-
-    @api.multi
-    def _prestashop_qty(self):
-        return self.qty_available
 
     @job(default_channel='root.prestashop')
     def import_products(self, backend, since_date=None, **kwargs):
@@ -230,7 +241,7 @@ class ProductInventoryAdapter(Component):
         response = client.search(self._prestashop_model, filters)
         for stock_id in response:
             res = client.get(self._prestashop_model, stock_id)
-            first_key = res.keys()[0]
+            first_key = list(res)[0]
             stock = res[first_key]
             stock['quantity'] = int(quantity['quantity'])
             stock['out_of_stock'] = int(quantity['out_of_stock'])
