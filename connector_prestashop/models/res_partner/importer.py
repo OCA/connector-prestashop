@@ -82,13 +82,6 @@ class PartnerImportMapper(Component):
         return {'customer': True}
 
     @mapping
-    def is_company(self, record):
-        # This is sad because we _have_ to have a company partner if we want to
-        # store multiple adresses... but... well... we have customers who want
-        # to be billed at home and be delivered at work... (...)...
-        return {'is_company': True}
-
-    @mapping
     def company_id(self, record):
         return {'company_id': self.backend_record.company_id.id}
 
