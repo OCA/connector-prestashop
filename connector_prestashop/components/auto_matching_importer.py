@@ -18,6 +18,7 @@ class AutoMatchingImporter(Component):
     _erp_field = None
     _ps_field = None
     _copy_fields = []
+    _filters = None
 
     def _compare_function(ps_val, erp_val, ps_dict, erp_dict):
         raise NotImplementedError
@@ -37,7 +38,7 @@ class AutoMatchingImporter(Component):
         erp_list_dict = erp_ids.read()
         adapter = self.component(usage='backend.adapter')
         # Get the IDS from PS
-        ps_ids = adapter.search()
+        ps_ids = adapter.search(self._filters)
         if not ps_ids:
             raise exceptions.Warning(
                 _('Failed to query %s via PS webservice')
