@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2011-2013 Camptocamp
 # Copyright 2011-2013 Akretion
 # Copyright 2015 AvanzOSC

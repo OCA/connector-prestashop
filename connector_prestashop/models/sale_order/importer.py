@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 import pytz
 from odoo import _, fields
@@ -340,14 +339,13 @@ class SaleOrderImporter(Component):
             if row.get('product_attribute_id', '0') != '0':
                 try:
                     self._import_dependency(row['product_attribute_id'],
-                                           'prestashop.product.combination')
-                except PrestaShopWebServiceError:
+                                            'prestashop.product.combination')
+                except PrestaShopWebServiceError as err:
                     # we ignore it, the order line will be imported without
                     # product
                     _logger.error('PrestaShop combination %s could not be '
                                   'imported, error: %s' %
                                   row['product_attribute_id'], err)
-
 
     def _add_shipping_line(self, binding):
         shipping_total = (binding.total_shipping_tax_included

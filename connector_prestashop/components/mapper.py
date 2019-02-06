@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.component.core import AbstractComponent
@@ -24,7 +23,7 @@ class PrestashopExportMapper(AbstractComponent):
         res = super(PrestashopExportMapper, self)._map_direct(record,
                                                               from_attr,
                                                               to_attr) or ''
-        if isinstance(from_attr, basestring):
+        if isinstance(from_attr, str):
             column = self.model.fields_get()[from_attr]
             if column['type'] == 'boolean':
                 return res and 1 or 0
