@@ -32,6 +32,7 @@
                     <field name="shop_group_id"/>
                     <field name="backend_id"/>
                     <field name="prestashop_id"/>
+                    <field name="company"/>
                     <field name="date_add"/>
                     <field name="date_upd"/>
                     <field name="group_ids" widget="many2many_tags"/>
@@ -48,6 +49,7 @@
             <tree string="PrestaShop Partner">
                 <field name="backend_id"/>
                 <field name="shop_group_id"/>
+                <field name="company"/>
                 <button name="resync"
                     type="object"
                     string="Resync" />

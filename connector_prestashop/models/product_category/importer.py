@@ -89,7 +89,7 @@ class ProductCategoryImporter(Component):
             try:
                 self._import_dependency(record['id_parent'],
                                         'prestashop.product.category')
-            except PrestaShopWebServiceError, e:
+            except PrestaShopWebServiceError as e:
                 msg = _(
                     'Parent category for `%s` '
                     'cannot be imported. '

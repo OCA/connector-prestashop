@@ -7,8 +7,8 @@ from odoo.addons.component.core import Component
 from odoo import models, fields, api, exceptions, _
 
 from ...components.backend_adapter import api_handle_errors
-from odoo.addons.connector.checkpoint import checkpoint
-from odoo.addons.base.res.res_partner import _tz_get
+from odoo.addons.connector.models import checkpoint
+from odoo.addons.base.models.res_partner import _tz_get
 
 _logger = logging.getLogger(__name__)
 
@@ -45,6 +45,7 @@ class PrestashopBackend(models.Model):
                 ('checked', 'Checked'),
                 ('production', 'In Production')]
 
+    name = fields.Char(string='Name', required=True)
     version = fields.Selection(
         selection='select_versions',
         string='Version',
@@ -88,6 +89,7 @@ class PrestashopBackend(models.Model):
     taxes_included = fields.Boolean("Use tax included prices")
     import_partners_since = fields.Datetime('Import partners since')
     import_orders_since = fields.Datetime('Import Orders since')
+    import_payment_mode_since = fields.Datetime('Import Payment Modes since')
     import_products_since = fields.Datetime('Import Products since')
     import_refunds_since = fields.Datetime('Import Refunds since')
     import_suppliers_since = fields.Datetime('Import Suppliers since')
@@ -162,6 +164,32 @@ class PrestashopBackend(models.Model):
         _tz_get, 'Timezone', size=64,
         help="The timezone of the backend. Used to synchronize the sale order "
         "date.")
+    product_qty_field = fields.Selection(
+        selection=[
+            ('immediately_usable_qty', 'Immediately usable qty'),
+            ('qty_available', 'Qty available'),
+        ],
+        string='Product qty',
+        help='Select how you want to calculate the qty to push to PS. ',
+        default='qty_available',
+        required=True,
+    )
+
+    @api.constrains('product_qty_field')
+    def check_product_qty_field_dependencies_installed(self):
+        for backend in self:
+            # we only support stock_available_unreserved module for now.
+            # In order to support stock_available_immediately or
+            # virtual_available for example, we would need to recompute
+            # the prestashop qty at stock move level, it can't work to
+            # recompute it only at quant level, like it is done today
+            if backend.product_qty_field == 'immediately_usable_qty':
+                module = self.env['ir.module.module'].sudo().search(
+                    [('name', '=', 'stock_available_unreserved')], limit=1)
+                if not module or module.state != 'installed':
+                    raise exceptions.UserError(
+                        _('In order to choose this option, you have to '
+                          'install the module stock_available_unreserved.'))
 
     @api.onchange("matching_customer")
     def change_matching_customer(self):
@@ -314,10 +342,18 @@ class PrestashopBackend(models.Model):
 
     @api.multi
     def import_payment_modes(self):
+        now_fmt = fields.Datetime.now()
         for backend_record in self:
+            since_date = backend_record.import_payment_mode_since
+            filters = {}
+            if since_date:
+                filters = {
+                    'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)
+                }
             with backend_record.work_on('account.payment.mode') as work:
                 importer = work.component(usage='batch.importer')
-                importer.run(filters={})
+                importer.run(filters=filters)
+            backend_record.import_payment_mode_since = now_fmt
         return True
 
     @api.multi

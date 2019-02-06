@@ -125,6 +125,15 @@ class SupplierInfoMapper(Component):
     def currency_id(self, record):
         binder = self.binder_for('prestashop.res.currency')
         currency = binder.to_internal(record['id_currency'], unwrap=True)
+        # Fallback on supplier currency
+        if not currency:
+            supplier_binder = self.binder_for('prestashop.supplier')
+            supplier = supplier_binder.to_internal(
+                record['id_supplier'], unwrap=True)
+            currency = supplier.property_purchase_currency_id
+        # fallback on company currency
+        if not currency:
+            currency = self.backend_record.company_id.currency_id
         return {'currency_id': currency.id}
 
     @mapping

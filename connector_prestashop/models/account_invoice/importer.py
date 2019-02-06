@@ -45,7 +45,6 @@ class RefundMapper(Component):
     _name = 'prestashop.refund.mapper'
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.refund'
-    _model_name = 'prestashop.refund'
 
     direct = [
         ('id', 'name'),
@@ -72,9 +71,15 @@ class RefundMapper(Component):
         fiscal_position = None
         if sale_order.fiscal_position_id:
             fiscal_position = sale_order.fiscal_position_id.id
+        if sale_order:
+            partner = sale_order.partner_invoice_id
+        else:
+            binder = self.binder_for('prestashop.res.partner')
+            partner = binder.to_internal(record['id_customer'], unwrap=True)
         return {
             'origin': sale_order['name'],
             'fiscal_position_id': fiscal_position,
+            'partner_id': partner.id,
         }
 
     @mapping
@@ -217,12 +222,6 @@ class RefundMapper(Component):
         return {'type': 'out_refund'}
 
     @mapping
-    def partner_id(self, record):
-        binder = self.binder_for('prestashop.res.partner')
-        partner = binder.to_internal(record['id_customer'], unwrap=True)
-        return {'partner_id': partner.id}
-
-    @mapping
     def account_id(self, record):
         binder = self.binder_for('prestashop.res.partner')
         partner = binder.to_internal(record['id_customer'])
@@ -242,7 +241,5 @@ class RefundMapper(Component):
 
 class RefundBatchImporter(Component):
     _name = 'prestashop.refund.batch.importer'
-    _inherit = 'prestashop.batch.importer'
+    _inherit = 'prestashop.delayed.batch.importer'
     _apply_on = 'prestashop.refund'
-
-    _model_name = 'prestashop.refund'

@@ -16,7 +16,7 @@ class PrestashopTrackingExporter(Component):
         for picking in self.binding.picking_ids:
             if picking.carrier_tracking_ref:
                 trackings.append(picking.carrier_tracking_ref)
-        return ';'.join(trackings) if trackings else None
+        return ' '.join(trackings) if trackings else None
 
     def run(self, binding, **kwargs):
         """ Export the tracking number of a picking to PrestaShop """

@@ -53,11 +53,6 @@ class DeliveryCarrier(models.Model):
         inverse_name='odoo_id',
         string='PrestaShop Bindings',
     )
-    company_id = fields.Many2one(
-        comodel_name='res.company',
-        string='Company',
-        index=True,
-    )
 
 
 class DeliveryCarrierAdapter(Component):

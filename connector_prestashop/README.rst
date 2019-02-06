@@ -156,6 +156,7 @@ Contributors
 * Simone Orsi <simone.orsi@camptocamp.com>
 * Florent THOMAS <florent.thomas@mind-and-go.com>
 * Francisco Fernández <ffernandez@planetatic.com>
+* Florian da Costa <florian.dacosta@akretion.com>
 
 Maintainer
 ----------

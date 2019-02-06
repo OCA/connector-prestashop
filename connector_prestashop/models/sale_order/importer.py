@@ -311,7 +311,12 @@ class SaleOrderImporter(Component):
             record['id_address_invoice'], 'prestashop.address'
         )
         self._import_dependency(
-            record['id_address_delivery'], 'prestashop.address'
+            record['id_address_delivery'], 'prestashop.address',
+            # it is important to be sure that delivery address is updated
+            # else there is a chance to send it to an old address
+            # it is not rare that the customer changes an existing address
+            # at the same time he orders.
+            always=True
         )
 
         if record['id_carrier'] != '0':
@@ -332,6 +337,17 @@ class SaleOrderImporter(Component):
                 _logger.error('PrestaShop product %s could not be imported, '
                               'error: %s', row['product_id'], err)
                 self.line_template_errors.append(row)
+            if row.get('product_attribute_id', '0') != '0':
+                try:
+                    self._import_dependency(row['product_attribute_id'],
+                                           'prestashop.product.combination')
+                except PrestaShopWebServiceError:
+                    # we ignore it, the order line will be imported without
+                    # product
+                    _logger.error('PrestaShop combination %s could not be '
+                                  'imported, error: %s' %
+                                  row['product_attribute_id'], err)
+
 
     def _add_shipping_line(self, binding):
         shipping_total = (binding.total_shipping_tax_included
@@ -379,7 +395,7 @@ class SaleOrderImporter(Component):
             # we don't let the NothingToDoJob exception let go out, because if
             # we are in a cascaded import, it would stop the whole
             # synchronization and set the whole job to done
-            return err.message
+            return str(err)
 
 
 class SaleOrderBatchImporter(Component):

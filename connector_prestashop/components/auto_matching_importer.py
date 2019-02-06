@@ -30,7 +30,7 @@ class AutoMatchingImporter(Component):
         nr_ps_already_mapped = 0
         nr_ps_mapped = 0
         nr_ps_not_mapped = 0
-        erp_model_name = self.model._inherits.iterkeys().next()
+        erp_model_name = next(iter(self.model._inherits))
         erp_rec_name = self.env[erp_model_name]._rec_name
         model = self.env[erp_model_name].with_context(active_test=False)
         erp_ids = model.search([])
@@ -41,7 +41,7 @@ class AutoMatchingImporter(Component):
         if not ps_ids:
             raise exceptions.Warning(
                 _('Failed to query %s via PS webservice')
-                % adapter.prestashop_model
+                % adapter._prestashop_model
             )
 
         binder = self.binder_for()
@@ -62,10 +62,10 @@ class AutoMatchingImporter(Component):
                 ps_dict = adapter.read(ps_id)
                 mapping_found = False
                 # Loop on OE IDs
+                ps_val = ps_dict[self._ps_field]
                 for erp_dict in erp_list_dict:
                     # Search for a match
                     erp_val = erp_dict[self._erp_field]
-                    ps_val = ps_dict[self._ps_field]
                     if self._compare_function(
                             ps_val, erp_val, ps_dict, erp_dict):
                         # it matches, so I write the external ID
