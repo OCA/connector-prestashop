@@ -134,7 +134,10 @@ class ProductProduct(models.Model):
 
 class PrestashopProductCombination(models.Model):
     _name = 'prestashop.product.combination'
-    _inherit = 'prestashop.binding.odoo'
+    _inherit = [
+        'prestashop.binding.odoo',
+        'prestashop.product.qty.mixin',
+    ]
     _inherits = {'product.product': 'odoo_id'}
 
     odoo_id = fields.Many2one(
@@ -155,32 +158,6 @@ class PrestashopProductCombination(models.Model):
         help='Last computed quantity to send on PrestaShop.'
     )
     reference = fields.Char(string='Original reference')
-
-    @api.multi
-    def recompute_prestashop_qty(self):
-        # group products by backend
-        backends = defaultdict(set)
-        for product in self:
-            backends[product.backend_id].add(product.id)
-
-        for backend, product_ids in backends.iteritems():
-            products = self.browse(product_ids)
-            products._recompute_prestashop_qty_backend(backend)
-        return True
-
-    @api.multi
-    def _recompute_prestashop_qty_backend(self, backend):
-        locations = backend._get_locations_for_stock_quantities()
-        self_loc = self.with_context(location=locations.ids,
-                                     compute_child=False)
-        for product_binding in self_loc:
-            new_qty = product_binding._prestashop_qty()
-            if product_binding.quantity != new_qty:
-                product_binding.quantity = new_qty
-        return True
-
-    def _prestashop_qty(self):
-        return self.qty_available
 
     @job(default_channel='root.prestashop')
     def export_inventory(self, fields=None):
@@ -227,10 +204,6 @@ class PrestashopProductCombinationOption(models.Model):
         oldname='openerp_id',
     )
     prestashop_position = fields.Integer('PrestaShop Position')
-    group_type = fields.Selection([
-        ('color', 'Color'),
-        ('radio', 'Radio'),
-        ('select', 'Select')], string='Type', default='select')
     public_name = fields.Char(string='Public Name', translate=True)
 
 

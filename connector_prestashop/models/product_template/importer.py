@@ -3,14 +3,6 @@
 
 from odoo import _, models, api
 from odoo.addons.queue_job.job import job
-# from odoo.addons.connector.components.mapper import (
-#     mapping,
-#     only_create,
-# )
-# from ...components.importer import (
-#     import_record,
-#     import_batch,
-# )
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, external_to_m2o, only_create)
@@ -43,15 +35,27 @@ class TemplateMapper(Component):
     _apply_on = 'prestashop.product.template'
 
     direct = [
-        ('weight', 'weight'),
         ('wholesale_price', 'wholesale_price'),
-        ('wholesale_price', 'standard_price'),
         (external_to_m2o('id_shop_default'), 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
         ('reference', 'reference'),
         ('available_for_order', 'available_for_order'),
         ('on_sale', 'on_sale'),
     ]
+
+    @mapping
+    def standard_price(self, record):
+        if self.has_combinations(record):
+            return {}
+        else:
+            return {'standard_price': record.get('wholesale_price', 0.0)}
+
+    @mapping
+    def weight(self, record):
+        if self.has_combinations(record):
+            return {}
+        else:
+            return {'weight': record.get('weight', 0.0)}
 
     def _apply_taxes(self, tax, price):
         if self.backend_record.taxes_included == tax.price_include:
@@ -187,11 +191,13 @@ class TemplateMapper(Component):
 
     def _template_code_exists(self, code):
         model = self.env['product.template']
-        template_ids = model.search([
+        template_binder = self.binder_for('prestashop.product.template')
+        template = model.with_context(active_test=False).search([
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
         ], limit=1)
-        return len(template_ids) > 0
+        return template and not template_binder.to_external(
+            template, wrap=True)
 
     @mapping
     def default_code(self, record):
@@ -244,8 +250,6 @@ class TemplateMapper(Component):
 
     @mapping
     def sale_ok(self, record):
-        # if this product has combinations, we do not want to sell this
-        # product, but its combinations (so sale_ok = False in that case).
         return {'sale_ok': True}
 
     @mapping
@@ -315,9 +319,6 @@ class TemplateMapper(Component):
 
     @mapping
     def type(self, record):
-        # If the product has combinations, this main product is not a real
-        # product. So it is set to a 'service' kind of product. Should better
-        # be a 'virtual' product... but it does not exist...
         # The same if the product is a virtual one in prestashop.
         if record['type']['value'] and record['type']['value'] == 'virtual':
             return {"type": 'service'}
@@ -519,6 +520,7 @@ class ProductTemplateImporter(Component):
     def _after_import(self, binding):
         super(ProductTemplateImporter, self)._after_import(binding)
         self.import_images(binding)
+        self.import_supplierinfo(binding)
         self.import_combinations()
         self.attribute_line(binding)
         self.deactivate_default_product(binding)
@@ -558,7 +560,7 @@ class ProductTemplateImporter(Component):
                     lambda x: (x.attribute_id.id == attribute_id and
                                x.id not in attr_line_value_ids))
                 if values:
-                    self.env['product.attribute.line'].create({
+                    self.env['product.template.attribute.line'].create({
                         'attribute_id': attribute_id,
                         'product_tmpl_id': template_id,
                         'value_ids': [(6, 0, values.ids)],
@@ -569,6 +571,11 @@ class ProductTemplateImporter(Component):
 
         Can be overriden for instance to forward arguments to the importer
         """
+        # We need to pass the template presta record because we need it
+        # for combination mapper
+        self.work.parent_presta_record = self.prestashop_record
+        if not 'parent_presta_record' in self.work._propagate_kwargs:
+            self.work._propagate_kwargs.append('parent_presta_record')
         self._import_dependency(combination['id'],
                                 'prestashop.product.combination',
                                 always=True,
@@ -632,8 +639,9 @@ class ProductTemplateImporter(Component):
             filters=filters
         )
         ps_product_template = binding
+        template_id = ps_product_template.odoo_id.id
         ps_supplierinfos = self.env['prestashop.product.supplierinfo'].\
-            search([('product_tmpl_id', '=', ps_product_template.id)])
+            search([('product_tmpl_id', '=', template_id)])
         for ps_supplierinfo in ps_supplierinfos:
             try:
                 ps_supplierinfo.resync()

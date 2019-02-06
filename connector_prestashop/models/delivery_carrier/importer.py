@@ -49,6 +49,11 @@ class CarrierImportMapper(Component):
         else:
             return {}
 
+    @only_create
+    @mapping
+    def product_id(self, record):
+        return {'product_id': self.backend_record.shipping_product_id.id}
+
     @mapping
     def id_reference(self, record):
         id_reference = int(str(record['id_reference']))
