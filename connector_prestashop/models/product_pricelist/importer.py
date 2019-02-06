@@ -43,8 +43,6 @@ class ProductPricelistImporter(Component):
     _inherit = 'prestashop.translatable.record.importer'
     _apply_on = 'prestashop.groups.pricelist'
 
-    _usage = "Translate"
-
     _translatable_fields = {
         'prestashop.groups.pricelist': ['name'],
     }
