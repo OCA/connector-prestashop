@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
@@ -57,6 +56,7 @@ class TestExportStockQuantity(ExportStockQuantityCase):
                 fields=['quantity'])
 
         self._change_product_qty(variant_binding.odoo_id, 42)
+        # problem is there is not api.depends ok template qty field
         with mock.patch(delay_record_path) as delay_record_mock:
             # the function call the update qty for template and combination
             # depending on the state of the tests we may have one or two call
