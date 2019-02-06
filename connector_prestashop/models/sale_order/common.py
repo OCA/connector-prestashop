@@ -5,6 +5,7 @@ import openerp.addons.decimal_precision as dp
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
+from datetime import timedelta
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -78,7 +79,10 @@ class PrestashopSaleOrder(models.Model):
             filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
         self.env['prestashop.mail.message'].import_batch(backend, filters)
 
-        backend.import_orders_since = now_fmt
+        # substract a 10 second margin to avoid to miss an order if it is
+        # created in prestashop at the exact same time odoo is checking.
+        next_check_datetime = now_fmt - timedelta(seconds=10)
+        backend.import_orders_since = next_check_datetime
         return True
 
     @job(default_channel='root.prestashop')
