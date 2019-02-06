@@ -210,7 +210,6 @@ class GenericAdapter(AbstractComponent):
     @retryable_error
     def read(self, id_, attributes=None):
         """Returns the information of a record
-
         :rtype: dict
         """
         _logger.debug(
