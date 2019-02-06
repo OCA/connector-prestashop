@@ -153,6 +153,7 @@ class PrestashopAddress(models.Model):
         readonly=True,
     )
     vat_number = fields.Char('PrestaShop VAT')
+    alias = fields.Char('Prestashop Alias')
 
 
 class PartnerAdapter(Component):
