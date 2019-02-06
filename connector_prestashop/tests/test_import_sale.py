@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
@@ -8,6 +7,7 @@ import mock
 
 from freezegun import freeze_time
 
+from odoo import fields
 from .common import recorder, PrestashopTransactionCase, assert_no_job_delayed
 
 
@@ -34,10 +34,10 @@ class TestImportSale(PrestashopTransactionCase):
         self.shop_group = self.env['prestashop.shop.group'].search([])
         self.shop = self.env['prestashop.shop'].search([])
 
-    @freeze_time('2016-12-09 00:00:00')
+    @freeze_time('2019-01-30 00:00:00')
     @assert_no_job_delayed
     def test_import_sales(self):
-        from_date = '2016-12-01 00:00:00'
+        from_date = fields.Datetime.to_datetime('2016-12-01 00:00:00')
         self.backend_record.import_orders_since = from_date
         delay_record_path = ('odoo.addons.queue_job.models.base.'
                              'DelayableRecordset')
@@ -49,10 +49,10 @@ class TestImportSale(PrestashopTransactionCase):
                 from_date,
             )
 
-    @freeze_time('2016-12-09 00:00:00')
+    @freeze_time('2019-01-30 00:00:00')
     @assert_no_job_delayed
     def test_import_sale_batch(self):
-        from_date = '2016-12-01 00:00:00'
+        from_date = '2019-01-23 00:00:00'
         self.backend_record.import_res_partner_from_date = from_date
         delay_record_path = ('odoo.addons.queue_job.models.base.'
                              'DelayableRecordset')
@@ -69,7 +69,7 @@ class TestImportSale(PrestashopTransactionCase):
             expected_query = {
                 'date': ['1'],
                 'limit': ['0,1000'],
-                'filter[date_upd]': ['>[2016-12-01 00:00:00]'],
+                'filter[date_upd]': ['>[2019-01-23 00:00:00]'],
             }
             self.assertEqual(2, len(cassette.requests))
 
@@ -81,7 +81,7 @@ class TestImportSale(PrestashopTransactionCase):
             expected_query = {
                 'date': ['1'],
                 'limit': ['0,1000'],
-                'filter[date_add]': ['>[2016-12-01 00:00:00]'],
+                'filter[date_add]': ['>[2019-01-23 00:00:00]'],
             }
             request = cassette.requests[1]
             self.assertEqual('GET', request.method)
@@ -92,6 +92,7 @@ class TestImportSale(PrestashopTransactionCase):
             delay_record_instance = delay_record_mock.return_value
             self.assertEqual(5, delay_record_instance.import_record.call_count)
 
+    @freeze_time('2019-03-30 00:00:00')
     @assert_no_job_delayed
     def test_import_sale_record(self):
         """ Import a sale order """
@@ -144,7 +145,7 @@ class TestImportSale(PrestashopTransactionCase):
         })
         partner_binding = self.create_binding_no_export(
             'prestashop.res.partner', partner.id, prestashop_id=1,
-            shop_group_id=self.shop.id,
+            shop_group_id=self.shop_group.id,
         )
         address = self.env['res.partner'].create({
             'name': 'John DOE',
@@ -163,9 +164,9 @@ class TestImportSale(PrestashopTransactionCase):
         error_msg = ('Import of the order 5 canceled '
                      'because it has not been paid since 30 days')
         self.assertEqual(result, error_msg)
-
         with recorder.use_cassette('test_import_sale_record_5'):
-            with freeze_time("2016-12-08"):
+
+            with freeze_time("2019-01-29"):
                 self.env['prestashop.sale.order'].import_record(
                     self.backend_record, 5)
 
