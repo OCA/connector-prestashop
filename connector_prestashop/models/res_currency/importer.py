@@ -11,6 +11,7 @@ class ResCurrencyImporter(Component):
 
     _erp_field = 'name'
     _ps_field = 'iso_code'
+    _filters = {'filter[deleted]': '0'}
 
     def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
         if len(erp_val) == 3 and len(ps_val) == 3 and \

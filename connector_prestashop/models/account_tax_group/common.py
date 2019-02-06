@@ -47,3 +47,9 @@ class TaxGroupAdapter(Component):
 
     _model_name = 'prestashop.account.tax.group'
     _prestashop_model = 'tax_rule_groups'
+
+    def search(self, filters=None):
+        if filters is None:
+            filters = {}
+        filters['filter[deleted]'] = 0
+        return super(TaxGroupAdapter, self).search(filters)
