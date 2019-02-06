@@ -7,7 +7,9 @@ from odoo import exceptions, _
 from odoo.addons.connector.exception import NetworkRetryableError
 
 from contextlib import contextmanager
-from requests.exceptions import HTTPError, RequestException, ConnectionError
+from requests.exceptions import (
+    HTTPError, RequestException, ConnectionError, Timeout
+)
 import base64
 import logging
 
@@ -17,6 +19,23 @@ try:
     from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
 except:
     _logger.debug('Cannot import from `prestapyt`')
+
+def retryable_error(func):
+    """
+        Sometimes Jobs may fail because of a network error when calling
+        prestashop api. The job have very good chance to go through later
+        So we want to retry it automatically.
+    """
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except (ConnectionError, Timeout, HTTPError)  as err:
+            raise NetworkRetryableError(
+                'A network error caused the failure of the job: '
+                '%s' % str(err))
+        except Exception as e:
+            raise e
+    return wrapper
 
 
 @contextmanager
@@ -175,6 +194,7 @@ class GenericAdapter(AbstractComponent):
     # _export_node_name_res = "manufacturer"
     _export_node_name_res = ''
 
+    @retryable_error
     def search(self, filters=None):
         """ Search records according to some criterias
         and returns a list of ids
@@ -186,6 +206,7 @@ class GenericAdapter(AbstractComponent):
             self._prestashop_model, str(filters))
         return self.client.search(self._prestashop_model, filters)
 
+    @retryable_error
     def read(self, id, attributes=None):
         """ Returns the information of a record
 
@@ -230,6 +251,7 @@ class GenericAdapter(AbstractComponent):
         # Delete a record(s) on the external system
         return self.client.delete(resource, ids)
 
+    @retryable_error
     def head(self, id=None):
         """ HEAD """
         return self.client.head(self._prestashop_model, resource_id=id)
