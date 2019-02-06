@@ -131,6 +131,7 @@ class AddressImportMapper(Component):
         ('postcode', 'zip'),
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
+        ('alias', 'alias'),
         (external_to_m2o('id_customer'), 'prestashop_partner_id'),
     ]
 
@@ -147,8 +148,6 @@ class AddressImportMapper(Component):
     @mapping
     def name(self, record):
         parts = [record['firstname'], record['lastname']]
-        if record['alias']:
-            parts.append('(%s)' % record['alias'])
         name = ' '.join(p.strip() for p in parts if p.strip())
         return {'name': name}
 
