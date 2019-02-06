@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -297,8 +296,8 @@ class PrestashopBackend(models.Model):
         for backend_record in self:
             since_date = backend_record.import_partners_since
             self.env['prestashop.res.partner'].with_delay(
-                ).import_customers_since(
-                    backend_record=backend_record, since_date=since_date)
+            ).import_customers_since(
+                backend_record=backend_record, since_date=since_date)
         return True
 
     @api.multi
@@ -306,7 +305,7 @@ class PrestashopBackend(models.Model):
         for backend_record in self:
             since_date = backend_record.import_products_since
             self.env['prestashop.product.template'].with_delay(
-                ).import_products(backend_record, since_date)
+            ).import_products(backend_record, since_date)
         return True
 
     @api.multi
@@ -337,7 +336,7 @@ class PrestashopBackend(models.Model):
         for backend_record in self:
             since_date = backend_record.import_orders_since
             backend_record.env['prestashop.sale.order'].with_delay(
-                ).import_orders_since(backend_record, since_date)
+            ).import_orders_since(backend_record, since_date)
         return True
 
     @api.multi

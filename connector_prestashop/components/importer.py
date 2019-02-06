@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -385,7 +384,7 @@ class DelayedBatchImporter(AbstractComponent):
             description=description,
             channel=channel,
             identity_key=identity_key
-            ).import_record(
+        ).import_record(
             backend=self.backend_record,
             prestashop_id=external_id,
             **kwargs)

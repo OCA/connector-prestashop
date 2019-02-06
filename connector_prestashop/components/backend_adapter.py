@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.component.core import AbstractComponent
@@ -20,6 +19,7 @@ try:
 except:
     _logger.debug('Cannot import from `prestapyt`')
 
+
 def retryable_error(func):
     """
         Sometimes Jobs may fail because of a network error when calling
@@ -29,7 +29,7 @@ def retryable_error(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except (ConnectionError, Timeout, HTTPError)  as err:
+        except (ConnectionError, Timeout, HTTPError) as err:
             raise NetworkRetryableError(
                 'A network error caused the failure of the job: '
                 '%s' % str(err))

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
@@ -12,7 +11,7 @@ import os
 
 from vcr import VCR
 import logging
-import urlparse
+from urllib import parse
 _logger = logging.getLogger(__name__)
 try:
     from prestapyt.xml2dict import xml2dict
@@ -173,7 +172,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
         equals = []
         for expected in expected_records:
             for record in records:
-                for field, expected_value in expected._asdict().iteritems():
+                for field, expected_value in expected._asdict().items():
                     record_value = get_record_field(record, field)
                     if not record_value == expected_value:
                         break
@@ -202,7 +201,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
                 u' - {}({})'.format(
                     model_name,
                     u', '.join(u'%s: %s' % (field.replace('__', '.'), v) for
-                               field, v in expected._asdict().iteritems())
+                               field, v in expected._asdict().items())
                 )
             )
         for record in records:
@@ -244,11 +243,11 @@ class PrestashopTransactionCase(SavepointComponentCase):
 
     @staticmethod
     def parse_path(url):
-        return urlparse.urlparse(url).path
+        return parse.urlparse(url).path
 
     @staticmethod
     def parse_qs(url):
-        return urlparse.parse_qs(urlparse.urlparse(url).query)
+        return parse.parse_qs(parse.urlparse(url).query)
 
     def configure_taxes(self):
         company = self.env.ref('base.main_company')

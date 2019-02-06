@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
@@ -63,17 +62,9 @@ class TestExportPicking(PrestashopTransactionCase):
         procurement_group = self.env['procurement.group'].create(
             {'name': 'Test',
              'move_type': 'direct',
+             'sale_id': self.sale.id,
              }
         )
-
-        procurement = self.env['procurement.order'].create({
-            'name': "Unittest P1 procurement",
-            'product_id': self.product_1.id,
-            'product_uom': self.product_1.uom_id.id,
-            'product_qty': 1,
-            'sale_line_id': self.sale.order_line[0].id,
-            'group_id': procurement_group.id,
-        })
 
         self.picking = self.env['stock.picking'].create({
             'picking_type_id': self.ref('stock.picking_type_out'),
@@ -82,9 +73,9 @@ class TestExportPicking(PrestashopTransactionCase):
             'move_lines': [
                 (0, 0, {
                     'name': 'Test move',
-                    'procurement_id': procurement.id,
+                    'sale_line_id': self.sale.order_line[0].id,
                     'product_id': self.product_1.id,
-                    'product_uom': self.ref('product.product_uom_unit'),
+                    'product_uom': self.ref('uom.product_uom_unit'),
                     'product_uom_qty': 1,
                     'location_id': stock_loc,
                     'location_dest_id': customer_loc,
@@ -110,8 +101,8 @@ class TestExportPicking(PrestashopTransactionCase):
         self.create_binding_no_export(
             'prestashop.sale.order', self.sale.id, prestashop_id=2
         )
-
         self.picking.carrier_tracking_ref = 'xyz'
+
         self.assertEqual(
             1, self.instance_delay_record.export_tracking_number.call_count)
 

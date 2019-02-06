@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo import models
@@ -108,10 +107,8 @@ class ProductCombinationMapper(Component):
 
     from_main = []
 
-
     @mapping
     def weight(self, record):
-        main_template = self.get_main_template_binding(record)
         combination_weight = float(record.get('weight', '0.0'))
         main_weight = float(
             self.work.parent_presta_record.get('weight', 0.0))
@@ -266,7 +263,6 @@ class ProductCombinationMapper(Component):
         # ], limit=1)
         # if product:
         #     return {'odoo_id': product.id}
-
         """ Will bind the product to an existing one with the same code """
         if self.backend_record.matching_product_template:
             code = record.get(self.backend_record.matching_product_ch)
@@ -275,7 +271,7 @@ class ProductCombinationMapper(Component):
                     product = self.env['product.product'].search(
                         [('default_code', '=', code)], limit=1)
                     if product:
-                            return {'odoo_id': product.id}
+                        return {'odoo_id': product.id}
             if self.backend_record.matching_product_ch == 'barcode':
                 if code:
                     product = self.env['product.product'].search(
