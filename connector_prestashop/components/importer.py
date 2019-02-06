@@ -166,7 +166,7 @@ class PrestashopImporter(AbstractComponent):
         for instance to see if another transaction already made the work.
         """
         with odoo.api.Environment.manage():
-            registry = odoo.modules.registry.RegistryManager.get(
+            registry = odoo.modules.registry.Registry(
                 self.env.cr.dbname
             )
             with closing(registry.cursor()) as cr:
@@ -317,6 +317,12 @@ class BatchImporter(AbstractComponent):
         if 'limit' in filters:
             self._run_page(filters, **kwargs)
             return
+        # Without this copy, the parameter we add, like the limit may also
+        # be applied for other batch imports. For example in
+        # import_customers_since, we do to batch import in a row and the
+        # 1000 limit would applied to customers because it has been set
+        # here for the customer type.
+        filters = filters.copy()
         page_number = 0
         filters['limit'] = '%d,%d' % (
             page_number * self.page_size, self.page_size)
@@ -395,6 +401,7 @@ class TranslatableRecordImporter(AbstractComponent):
     _translatable_fields = {}
     # TODO set default language on the backend
     _default_language = 'en_US'
+    _mandatory_translation = True
 
     def __init__(self, environment):
         """
@@ -449,7 +456,7 @@ class TranslatableRecordImporter(AbstractComponent):
                   'Run "Synchronize base data".')
             )
         model_name = self.model._name
-        for language_id, language_code in languages.iteritems():
+        for language_id, language_code in languages.items():
             split_record[language_code] = record.copy()
         _fields = self._translatable_fields[model_name]
         if fields:
@@ -458,7 +465,7 @@ class TranslatableRecordImporter(AbstractComponent):
             for language in record[field]['language']:
                 current_id = language['attrs']['id']
                 code = languages.get(current_id)
-                if not code:
+                if not code and self._mandatory_translation:
                     # TODO: be nicer here.
                     # Currently if you have a language in PS
                     # that is not present in odoo
@@ -470,6 +477,8 @@ class TranslatableRecordImporter(AbstractComponent):
                           'with id "%s". Run "Synchronize base data" again.') %
                         (current_id,)
                     )
+                elif not code:
+                    continue
                 split_record[code][field] = language['value']
         return split_record
 
@@ -508,7 +517,7 @@ class TranslatableRecordImporter(AbstractComponent):
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """
-        for lang_code, lang_record in self.other_langs_data.iteritems():
+        for lang_code, lang_record in self.other_langs_data.items():
             map_record = self.mapper.map_record(lang_record)
             binding.with_context(
                 lang=lang_code,

@@ -29,25 +29,25 @@ def api_handle_errors(message=''):
     instead, they are presented as :class:`openerp.exceptions.UserError`.
     """
     if message:
-        message = message + u'\n\n'
+        message = message + '\n\n'
     try:
         yield
     except NetworkRetryableError as err:
         raise exceptions.UserError(
-            _(u'{}Network Error:\n\n{}').format(message, err)
+            _('{}Network Error:\n\n{}').format(message, err)
         )
     except (HTTPError, RequestException, ConnectionError) as err:
         raise exceptions.UserError(
-            _(u'{}API / Network Error:\n\n{}').format(message, err)
+            _('{}API / Network Error:\n\n{}').format(message, err)
         )
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
-            _(u'{}Authentication Error:\n\n{}').format(message, err)
+            _('{}Authentication Error:\n\n{}').format(message, err)
         )
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
-            _(u'{}Error during synchronization with '
-                'PrestaShop:\n\n{}').format(message, unicode(err))
+            _('{}Error during synchronization with '
+                'PrestaShop:\n\n{}').format(message, str(err))
         )
 
 
@@ -116,7 +116,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         """
         super(PrestaShopCRUDAdapter, self).__init__(environment)
         self.prestashop = PrestaShopLocation(
-            self.backend_record.location.encode(),
+            self.backend_record.location,
             self.backend_record.webservice_key
         )
         self.client = PrestaShopWebServiceDict(
@@ -183,7 +183,7 @@ class GenericAdapter(AbstractComponent):
         """
         _logger.debug(
             'method search, model %s, filters %s',
-            self._prestashop_model, unicode(filters))
+            self._prestashop_model, str(filters))
         return self.client.search(self._prestashop_model, filters)
 
     def read(self, id, attributes=None):
@@ -193,16 +193,16 @@ class GenericAdapter(AbstractComponent):
         """
         _logger.debug(
             'method read, model %s id %s, attributes %s',
-            self._prestashop_model, str(id), unicode(attributes))
+            self._prestashop_model, str(id), str(attributes))
         res = self.client.get(self._prestashop_model, id, options=attributes)
-        first_key = res.keys()[0]
+        first_key = list(res)[0]
         return res[first_key]
 
     def create(self, attributes=None):
         """ Create a record on the external system """
         _logger.debug(
             'method create, model %s, attributes %s',
-            self._prestashop_model, unicode(attributes))
+            self._prestashop_model, str(attributes))
         res = self.client.add(self._prestashop_model, {
             self._export_node_name: attributes
         })
@@ -216,7 +216,7 @@ class GenericAdapter(AbstractComponent):
         _logger.debug(
             'method write, model %s, attributes %s',
             self._prestashop_model,
-            unicode(attributes)
+            str(attributes)
         )
         res = self.client.edit(
             self._prestashop_model, {self._export_node_name: attributes})
@@ -226,7 +226,7 @@ class GenericAdapter(AbstractComponent):
 
     def delete(self, resource, ids):
         _logger.debug('method delete, model %s, ids %s',
-                      resource, unicode(ids))
+                      resource, str(ids))
         # Delete a record(s) on the external system
         return self.client.delete(resource, ids)
 

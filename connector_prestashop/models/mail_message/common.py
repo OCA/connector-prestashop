@@ -46,12 +46,12 @@ class MailMessageAdapter(Component):
         """
         api = self.client
         res = api.get(self._prestashop_model, id, options=attributes)
-        first_key = res.keys()[0]
+        first_key = list(res)[0]
         message_data = res[first_key]
         thread_data = api.get('customer_threads',
                               message_data['id_customer_thread'],
                               options=attributes)
-        first_key = thread_data.keys()[0]
+        first_key = list(thread_data)[0]
         del thread_data[first_key]['id']
         del thread_data[first_key]['date_add']
         message_data.update(thread_data[first_key])
