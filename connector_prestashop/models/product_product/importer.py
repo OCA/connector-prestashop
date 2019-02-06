@@ -88,8 +88,9 @@ class ProductCombinationImporter(Component):
             filters=filters
         )
         ps_product_template = binding
+        template_id = ps_product_template.product_tmpl_id.id
         ps_supplierinfos = self.env['prestashop.product.supplierinfo']. \
-            search([('product_tmpl_id', '=', ps_product_template.id)])
+            search([('product_tmpl_id', '=', template_id)])
         for ps_supplierinfo in ps_supplierinfos:
             try:
                 ps_supplierinfo.resync()
@@ -106,6 +107,16 @@ class ProductCombinationMapper(Component):
     ]
 
     from_main = []
+
+
+    @mapping
+    def weight(self, record):
+        main_template = self.get_main_template_binding(record)
+        combination_weight = float(record.get('weight', '0.0'))
+        main_weight = float(
+            self.work.parent_presta_record.get('weight', 0.0))
+        weight = main_weight + combination_weight
+        return {'weight': weight}
 
     @mapping
     def combination_default(self, record):
@@ -166,26 +177,26 @@ class ProductCombinationMapper(Component):
         template_binding = self.get_main_template_binding(record)
         return {'main_template_id': template_binding.id}
 
-    def _template_code_exists(self, code):
+    def _product_code_exists(self, code):
         model = self.env['product.product']
         combination_binder = self.binder_for('prestashop.product.combination')
-        template_ids = model.search([
+        product = model.with_context(active_test=False).search([
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
         ], limit=1)
-        return template_ids and not combination_binder.to_external(
-            template_ids, wrap=True)
+        return product and not combination_binder.to_external(
+            product, wrap=True)
 
     @mapping
     def default_code(self, record):
         code = record.get('reference')
         if not code:
             code = "%s_%s" % (record['id_product'], record['id'])
-        if not self._template_code_exists(code):
+        if not self._product_code_exists(code):
             return {'default_code': code}
         i = 1
         current_code = '%s_%s' % (code, i)
-        while self._template_code_exists(current_code):
+        while self._product_code_exists(current_code):
             i += 1
             current_code = '%s_%s' % (code, i)
         return {'default_code': current_code}
@@ -303,7 +314,9 @@ class ProductCombinationOptionMapper(Component):
     _inherit = 'prestashop.import.mapper'
     _apply_on = 'prestashop.product.combination.option'
 
-    direct = []
+    direct = [
+        ('group_type', 'type'),
+    ]
 
     @mapping
     def backend_id(self, record):
@@ -312,7 +325,7 @@ class ProductCombinationOptionMapper(Component):
     @only_create
     @mapping
     def odoo_id(self, record):
-        name = self.name(record)
+        name = self.name(record).get('name')
         binding = self.env['product.attribute'].search(
             [('name', '=', name)],
             limit=1,
