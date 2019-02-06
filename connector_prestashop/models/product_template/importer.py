@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo import _, models, api
@@ -574,7 +573,7 @@ class ProductTemplateImporter(Component):
         # We need to pass the template presta record because we need it
         # for combination mapper
         self.work.parent_presta_record = self.prestashop_record
-        if not 'parent_presta_record' in self.work._propagate_kwargs:
+        if 'parent_presta_record' not in self.work._propagate_kwargs:
             self.work._propagate_kwargs.append('parent_presta_record')
         self._import_dependency(combination['id'],
                                 'prestashop.product.combination',
