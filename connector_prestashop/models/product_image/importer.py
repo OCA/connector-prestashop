@@ -41,7 +41,7 @@ class ProductImageMapper(Component):
 
     @mapping
     def extension(self, record):
-        return {'extension': mimetypes.guess_extension(record['type'])}
+        return {'extension': '.jpg'}
 
     @mapping
     def image_url(self, record):

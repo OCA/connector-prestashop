@@ -81,10 +81,7 @@ class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
     def get_image_public_url(self, record):
         url = self._api_url.replace('/api', '')
         url += '/img/p/' + '/'.join(list(record['id_image']))
-        extension = ''
-        if record['type'] == 'image/jpeg':
-            extension = '.jpg'
-        url += '/' + record['id_image'] + extension
+        url += '/%s.jpg' % record['id_image']
         return url
 
 
