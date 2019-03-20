@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+    method: GET
+    uri: http://172.22.0.4/api/carriers/2
+  response:
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<carrier>\n\t<id><![CDATA[2]]></id>\n\
+        \t<deleted><![CDATA[0]]></deleted>\n\t<is_module><![CDATA[0]]></is_module>\n\
+        \t<id_tax_rules_group xlink:href=\"http://172.22.0.4/api/tax_rule_groups/1\"\
+        \ notFilterable=\"true\"><![CDATA[1]]></id_tax_rules_group>\n\t<id_reference><![CDATA[2]]></id_reference>\n\
+        \t<name><![CDATA[My carrier]]></name>\n\t<active><![CDATA[1]]></active>\n\t\
+        <is_free><![CDATA[0]]></is_free>\n\t<url></url>\n\t<shipping_handling><![CDATA[1]]></shipping_handling>\n\
+        \t<shipping_external><![CDATA[0]]></shipping_external>\n\t<range_behavior><![CDATA[0]]></range_behavior>\n\
+        \t<shipping_method><![CDATA[1]]></shipping_method>\n\t<max_width><![CDATA[0]]></max_width>\n\
+        \t<max_height><![CDATA[0]]></max_height>\n\t<max_depth><![CDATA[0]]></max_depth>\n\
+        \t<max_weight><![CDATA[0.000000]]></max_weight>\n\t<grade><![CDATA[0]]></grade>\n\
+        \t<external_module_name></external_module_name>\n\t<need_range><![CDATA[0]]></need_range>\n\
+        \t<position><![CDATA[1]]></position>\n\t<delay><language id=\"1\" xlink:href=\"\
+        http://172.22.0.4/api/languages/1\"><![CDATA[Delivery next day!]]></language></delay>\n\
+        </carrier>\n</prestashop>\n"}
+    headers:
+      access-time: ['1481190114']
+      connection: [Keep-Alive]
+      content-length: ['1160']
+      content-sha1: [3eb63c012374844e65081f0322dcf3881704c4df]
+      content-type: [text/xml;charset=utf-8]
+      date: ['Thu, 08 Dec 2016 09:41:54 GMT']
+      execution-time: ['0.009']
+      keep-alive: ['timeout=5, max=100']
+      psws-version: [1.6.1.9]
+      server: [Apache/2.4.10 (Debian)]
+      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5TR%2FOLUU5VRDWtKVoZze2PAI%2FCTcBu%2FZQLB0b4MgNW9lDz6xcXxqLYypnZSfJafIP342RPhIrLhkZsGC7BbfXL%2Fs%3D000078;
+          expires=Wed, 28-Dec-2016 09:41:54 GMT; Max-Age=1728000; path=/; httponly']
+      vary: [Accept-Encoding]
+      x-powered-by: [PrestaShop Webservice]
+    status: {code: 200, message: OK}
+version: 1
