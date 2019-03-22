@@ -33,7 +33,6 @@ class AccountInvoice(models.Model):
                 if refund:
                     invoice_line.unlink()
                     line_replacement[invoice] = refund
-                    invoice.button_reset_taxes()
         result = super(AccountInvoice, self).action_move_create()
         # reconcile invoice with refund
         for invoice, refund in line_replacement.items():
