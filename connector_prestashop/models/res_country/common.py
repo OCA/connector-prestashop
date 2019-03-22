@@ -9,27 +9,24 @@ from odoo.addons.component.core import Component
 
 class PrestashopResCountry(models.Model):
     _name = 'prestashop.res.country'
-    _inherit = 'prestashop.binding'
-    _inherits = {'res.country': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'res.country': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='res.country',
         required=True,
         ondelete='cascade',
         string='Country',
+        oldname='openerp_id',
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 class ResCountry(models.Model):
     _inherit = 'res.country'
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.res.country',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         readonly=True,
         string='prestashop Bindings',
     )

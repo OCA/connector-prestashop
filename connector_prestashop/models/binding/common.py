@@ -11,7 +11,7 @@ class PrestashopBinding(models.AbstractModel):
     _inherit = 'external.binding'
     _description = 'PrestaShop Binding (abstract)'
 
-    # 'openerp_id': openerp-side id must be declared in concrete model
+    # 'odoo_id': openerp-side id must be declared in concrete model
     backend_id = fields.Many2one(
         comodel_name='prestashop.backend',
         string='PrestaShop Backend',
@@ -85,3 +85,27 @@ class PrestashopBinding(models.AbstractModel):
         for record in self:
             func(record.backend_id, record.prestashop_id)
         return True
+
+
+class PrestashopBindingOdoo(models.AbstractModel):
+    _name = 'prestashop.binding.odoo'
+    _inherit = 'prestashop.binding'
+    _description = 'PrestaShop Binding with Odoo binding (abstract)'
+
+    def _get_selection(self):
+        records = self.env['ir.model'].search([])
+        return [(r.model, r.name) for r in records] + [('', '')]
+
+    # 'odoo_id': odoo-side id must be re-declared in concrete model
+    # for having a many2one instead of a reference field
+    odoo_id = fields.Reference(
+        required=True,
+        ondelete='cascade',
+        string='Odoo binding',
+        selection=_get_selection,
+    )
+
+    _sql_constraints = [
+        ('prestashop_erp_uniq', 'unique(backend_id, odoo_id)',
+         'An ERP record with same ID already exists on PrestaShop.'),
+    ]
