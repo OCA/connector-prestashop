@@ -265,7 +265,6 @@ class TemplateMapper(Component):
                 ps_category['id'],
                 unwrap=True,
             )
-
         return {'categ_ids': [(6, 0, product_categories.ids)]}
 
     @mapping
@@ -544,7 +543,7 @@ class ProductTemplateImporter(Component):
         attr_line_value_ids = []
         for attr_line in binding.attribute_line_ids:
             attr_line_value_ids.extend(attr_line.value_ids.ids)
-        template_id = binding.openerp_id.id
+        template_id = binding.odoo_id.id
         products = self.env['product.product'].search([
             ('product_tmpl_id', '=', template_id)]
         )
@@ -639,7 +638,7 @@ class ProductTemplateImporter(Component):
             try:
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
+                ps_supplierinfo.odoo_id.unlink()
 
     def _import_dependencies(self):
         self._import_default_category()
