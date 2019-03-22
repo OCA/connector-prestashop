@@ -229,11 +229,11 @@ class PrestashopTransactionCase(SavepointComponentCase):
         with recorder.use_cassette('sync_basedata'):
             self.backend_record.synchronize_basedata()
 
-    def create_binding_no_export(self, model_name, openerp_id,
+    def create_binding_no_export(self, model_name, odoo_id,
                                  prestashop_id=None, **cols):
         values = {
             'backend_id': self.backend_record.id,
-            'openerp_id': openerp_id,
+            'odoo_id': odoo_id,
             'prestashop_id': prestashop_id,
         }
         if cols:
