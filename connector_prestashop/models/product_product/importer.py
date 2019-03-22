@@ -114,7 +114,7 @@ class ProductCombinationMapper(Component):
     @mapping
     def product_tmpl_id(self, record):
         template = self.get_main_template_binding(record)
-        return {'product_tmpl_id': template.openerp_id.id}
+        return {'product_tmpl_id': template.odoo_id.id}
 
     @mapping
     def from_main_template(self, record):

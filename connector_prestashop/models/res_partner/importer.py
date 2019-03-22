@@ -63,7 +63,7 @@ class PartnerImportMapper(Component):
             partner_category_bindings |= binder.to_internal(group['id'])
 
         result = {'group_ids': [(6, 0, partner_category_bindings.ids)],
-                  'category_id': [(4, b.openerp_id.id)
+                  'category_id': [(4, b.odoo_id.id)
                                   for b in partner_category_bindings]}
         return result
 
@@ -80,6 +80,13 @@ class PartnerImportMapper(Component):
     @mapping
     def customer(self, record):
         return {'customer': True}
+
+    @mapping
+    def is_company(self, record):
+        # This is sad because we _have_ to have a company partner if we want to
+        # store multiple adresses... but... well... we have customers who want
+        # to be billed at home and be delivered at work... (...)...
+        return {'is_company': True}
 
     @mapping
     def company_id(self, record):
