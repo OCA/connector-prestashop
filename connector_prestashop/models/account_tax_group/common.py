@@ -10,7 +10,7 @@ class AccountTaxGroup(models.Model):
 
     prestashop_bind_ids = fields.One2many(
         comodel_name='prestashop.account.tax.group',
-        inverse_name='openerp_id',
+        inverse_name='odoo_id',
         string='PrestaShop Bindings',
         readonly=True
     )
@@ -28,20 +28,16 @@ class AccountTaxGroup(models.Model):
 
 class PrestashopAccountTaxGroup(models.Model):
     _name = 'prestashop.account.tax.group'
-    _inherit = 'prestashop.binding'
-    _inherits = {'account.tax.group': 'openerp_id'}
+    _inherit = 'prestashop.binding.odoo'
+    _inherits = {'account.tax.group': 'odoo_id'}
 
-    openerp_id = fields.Many2one(
+    odoo_id = fields.Many2one(
         comodel_name='account.tax.group',
         string='Tax Group',
         required=True,
         ondelete='cascade',
+        oldname='openerp_id',
     )
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class TaxGroupAdapter(Component):

@@ -12,7 +12,7 @@ ExpectedShopGroup = namedtuple('ExpectedShopGroup',
                                'name prestashop_id backend_id')
 
 ExpectedShop = namedtuple('ExpectedShop',
-                          'name prestashop_id openerp_id shop_group_id '
+                          'name prestashop_id odoo_id shop_group_id '
                           'backend_id')
 
 
@@ -44,7 +44,7 @@ class TestImportBackendData(PrestashopTransactionCase):
             ExpectedShop(
                 name='PrestaShop',
                 prestashop_id=1,
-                openerp_id=self.backend_record.warehouse_id,
+                odoo_id=self.backend_record.warehouse_id,
                 shop_group_id=shop_groups,
                 backend_id=self.backend_record,
             ),

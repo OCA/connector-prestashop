@@ -74,11 +74,6 @@ class PrestashopProductSupplierinfo(models.Model):
         oldname='openerp_id',
     )
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
-
 
 class SupplierImageModel(models.TransientModel):
     # In actual connector version is mandatory use a model

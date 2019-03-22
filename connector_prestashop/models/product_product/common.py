@@ -20,7 +20,9 @@ class ProductProduct(models.Model):
     )
     default_on = fields.Boolean(string='Default On')
     impact_price = fields.Float(
-        string="Price Impact", digits=dp.get_precision('Product Price'))
+        string="Price Impact",
+        digits=dp.get_precision('Product Price')
+    )
 
     @api.multi
     def update_prestashop_qty(self):
@@ -108,7 +110,10 @@ class ProductProduct(models.Model):
 
     @api.multi
     def unlink(self):
-        self.write({'default_on': False})
+        self.write({
+            'default_on': False,
+            'active': False
+        })
         res = super(ProductProduct, self).unlink()
         return res
 
@@ -257,11 +262,6 @@ class PrestashopProductCombinationOptionValue(models.Model):
     )
     id_attribute_group = fields.Many2one(
         comodel_name='prestashop.product.combination.option')
-
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
 
 
 class ProductCombinationAdapter(Component):

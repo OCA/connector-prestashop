@@ -46,11 +46,6 @@ class PrestashopProductCategory(models.Model):
     active = fields.Boolean(string='Active', default=True)
     position = fields.Integer(string='Position')
 
-    _sql_constraints = [
-        ('prestashop_erp_uniq', 'unique(backend_id, openerp_id)',
-         'A erp record with same ID on PrestaShop already exists.'),
-    ]
-
 
 class ProductCategoryAdapter(Component):
     _name = 'prestashop.product.category.adapter'

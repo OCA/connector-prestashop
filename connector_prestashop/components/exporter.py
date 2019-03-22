@@ -100,7 +100,7 @@ class PrestashopExporter(AbstractComponent):
 
             IntegrityError: duplicate key value violates unique
             constraint "prestashop_product_template_openerp_uniq"
-            DETAIL:  Key (backend_id, openerp_id)=(1, 4851) already exists.
+            DETAIL:  Key (backend_id, odoo_id)=(1, 4851) already exists.
 
         In that case, we'll retry the import just later.
 
@@ -262,7 +262,7 @@ class PrestashopExporter(AbstractComponent):
         with :meth:`_export_dependencies`. Each level will set its own lock
         on the binding record it has to export.
 
-        Uses "NO KEY UPDATE", to avoid FK accesses
+        Uses ``NO KEY UPDATE``, to avoid FK accesses
         being blocked in PSQL > 9.3.
         """
         sql = ("SELECT id FROM %s WHERE ID = %%s FOR NO KEY UPDATE NOWAIT" %
