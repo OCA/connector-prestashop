@@ -251,30 +251,6 @@ class ProductTemplateExportMapper(Component):
                 {'id': binder.to_external(image, wrap=True)})
         return ext_image_ids
 
-    def _get_template_feature(self, record):
-        template_feature = []
-        attribute_binder = self.binder_for(
-            'prestashop.product.combination.option')
-        option_binder = self.binder_for(
-            'prestashop.product.combination.option.value')
-        for line in record.attribute_line_ids:
-            feature_dict = {}
-            attribute_ext_id = attribute_binder.to_external(
-                line.attribute_id.id, wrap=True)
-            if not attribute_ext_id:
-                continue
-            feature_dict = {'id': attribute_ext_id, 'custom': ''}
-            values_ids = []
-            for value in line.value_ids:
-                value_ext_id = option_binder.to_external(value.id, wrap=True)
-                if not value_ext_id:
-                    continue
-                values_ids.append(value_ext_id)
-            res = {'id_feature_value': values_ids}
-            feature_dict.update(res)
-            template_feature.append(feature_dict)
-        return template_feature
-
     @changed_by(
         'attribute_line_ids', 'categ_ids', 'categ_id', 'image_ids',
     )
@@ -284,8 +260,6 @@ class ProductTemplateExportMapper(Component):
             'associations': {
                 'categories': {
                     'category_id': self._get_product_category(record)},
-                'product_features': {
-                    'product_feature': self._get_template_feature(record)},
                 'images': {
                     'image': self._get_product_image(record)}
             }

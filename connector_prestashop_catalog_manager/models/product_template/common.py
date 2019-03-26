@@ -104,3 +104,29 @@ class ProductTemplateListener(Component):
                     with_delay().export_delete_record(
                         binding._name, binding.backend_id, prestashop_id,
                         record)
+
+
+class TemplateAdapter(Component):
+    _inherit = 'prestashop.product.template.adapter'
+
+    def write(self, id, attributes=None):
+        # Prestashop wants all product data:
+        prestashop_data = self.client.get(
+            self._prestashop_model, id)
+
+        # Remove read-only fields:
+        prestashop_data['product'].pop('manufacturer_name', False)
+        prestashop_data['product'].pop('quantity', False)
+
+        full_attributes = prestashop_data['product'].copy()
+        for field in attributes:
+            if field != 'associations':
+                full_attributes[field] = attributes[field]
+            else:
+                for association in attributes['associations']:
+                    full_attributes['associations'][association] =\
+                        attributes['associations'][association]
+
+        res = super(TemplateAdapter, self).write(id, full_attributes)
+
+        return res
