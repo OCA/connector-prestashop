@@ -10,20 +10,16 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'prestashop_default_category_id' in vals:
-            vals.update(
-                {'categ_id': vals.get('prestashop_default_category_id')}
-            ) if vals.get('prestashop_default_category_id') else vals.update(
-                {'categ_id': self._get_default_category_id()})
         res = super(ProductTemplate, self).create(vals)
+        if 'prestashop_default_category_id' in vals:
+            res.categ_id = vals.get('prestashop_default_category_id') or \
+                self._get_default_category_id()
         return res
 
     @api.multi
     def write(self, vals):
-        if 'prestashop_default_category_id' in vals:
-            vals.update(
-                {'categ_id': vals.get('prestashop_default_category_id')}
-            ) if vals.get('prestashop_default_category_id') else vals.update(
-                {'categ_id': self._get_default_category_id()})
         res = super(ProductTemplate, self).write(vals)
+        if 'prestashop_default_category_id' in vals:
+            self.categ_id = vals.get('prestashop_default_category_id') or \
+                self._get_default_category_id()
         return res
