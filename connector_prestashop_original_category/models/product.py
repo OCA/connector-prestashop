@@ -8,7 +8,22 @@ from odoo import models, fields, api
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    categ_id = fields.Many2one(
-        store=True,
-        readonly=False,
-        related='prestashop_default_category_id')
+    @api.model
+    def create(self, vals):
+        if 'prestashop_default_category_id' in vals:
+            vals.update(
+                {'categ_id': vals.get('prestashop_default_category_id')}
+            ) if vals.get('prestashop_default_category_id') else vals.update(
+                {'categ_id': self._get_default_category_id()})
+        res = super(ProductTemplate, self).create(vals)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        if 'prestashop_default_category_id' in vals:
+            vals.update(
+                {'categ_id': vals.get('prestashop_default_category_id')}
+            ) if vals.get('prestashop_default_category_id') else vals.update(
+                {'categ_id': self._get_default_category_id()})
+        res = super(ProductTemplate, self).write(vals)
+        return res
