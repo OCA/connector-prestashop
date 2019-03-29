@@ -59,7 +59,7 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[connector_prestashop](connector_prestashop/) | 10.0.1.0.0 | PrestaShop-Odoo connector
+[connector_prestashop](connector_prestashop/) | 10.0.1.0.1 | PrestaShop-Odoo connector
 
 
 Unported addons
