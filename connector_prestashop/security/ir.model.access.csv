@@ -51,3 +51,10 @@ access_prestashop_account_tax_user,User access on prestashop.account.tax,model_p
 access_prestashop_account_tax_group_user,User access on prestashop.account.tax.group,model_prestashop_account_tax_group,base.group_user,1,0,0,0
 access_prestashop_res_lang_user,User access on prestashop.res.lang,model_prestashop_res_lang,base.group_user,1,0,0,0
 access_prestashop_shop_user,User access on prestashop.shop,model_prestashop_shop,base.group_user,1,0,0,0
+access_prestashop_delivery_carrier_user,User access on prestashop.delivery.carrier,model_prestashop_delivery_carrier,base.group_user,1,0,0,0
+access_prestashop_groups_pricelist_user,User access on prestashop.groups.pricelist,model_prestashop_groups_pricelist,base.group_user,1,0,0,0
+access_mail_message_user,User access on prestashop.mail.message,model_prestashop_mail_message,base.group_user,1,0,0,0
+access_prestashop_refund_user,User access on prestashop.refund,model_prestashop_refund,base.group_user,1,0,0,0
+access_prestashop_res_country_user,User access on prestashop.res.country,model_prestashop_res_country,base.group_user,1,0,0,0
+access_prestashop_res_currency_user,User access on prestashop.res.currency,model_prestashop_res_currency,base.group_user,1,0,0,0
+access_prestashop_shop_group_user,User access on prestashop.shop.group,model_prestashop_shop_group,base.group_user,1,0,0,0
