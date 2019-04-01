@@ -52,21 +52,14 @@ class ProductProduct(models.Model):
                         combination_binding.recompute_prestashop_qty()
         return True
 
-    @api.multi
-    @api.depends('impact_price', 'product_tmpl_id.list_price')
-    def _compute_lst_price(self):
+    @api.depends('impact_price')
+    def _compute_product_price_extra(self):
         for product in self:
-            price = product.list_price + product.impact_price
-            if 'uom' in self.env.context:
-                # `uos_id` comes from `product_uos`
-                # which could be not installed
-                uom = hasattr(product, 'uos_id') \
-                    and product.uos_id or product.uom_id
-                price = uom._compute_price(price, product.uom_id)
-            product.lst_price = price
-
-    lst_price = fields.Float(
-        compute='_compute_lst_price')
+            if product.impact_price:
+                product.price_extra = product.impact_price
+            else:
+                product.price_extra = sum(product.mapped(
+                    'product_template_attribute_value_ids.price_extra'))
 
     @api.multi
     def _set_variants_default_on(self, default_on_list=None):
