@@ -9,6 +9,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
+from odoo.addons.queue_job.exception import FailedJobError
 
 import logging
 
@@ -228,6 +229,8 @@ class ProductInventoryAdapter(Component):
         if client is None:
             client = self.client
         response = client.search(self._prestashop_model, filters)
+        if not response:
+            raise FailedJobError('No stock found for product')
         for stock_id in response:
             res = client.get(self._prestashop_model, stock_id)
             first_key = res.keys()[0]
