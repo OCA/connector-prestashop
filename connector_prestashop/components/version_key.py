@@ -95,3 +95,48 @@ class VersionKey1616(Component):
         "messages": "customer_messages",
         "manufacturers": "manufacturers",
     }
+
+
+class VersionKey1750(Component):
+    _name = "_prestashop.version.key.1.7.5.0"
+    _inherit = "_prestashop.version.key"
+    _usage = "prestashop.version.key.1.7.5.0"
+
+    keys = {
+        "product_option_value": "product_option_values",
+        "category": "categories",
+        "image": "images",
+        "order_slip": "order_slip",
+        "order_slip_detail": "order_slip_details",
+        "group": "groups",
+        "order_row": "order_rows",
+        "tax": "taxes",
+        "combinations": "combinations",
+        "product_features": "product_features",
+        "tag": "tags",
+        "messages": "customer_messages",
+        "manufacturers": "manufacturers",
+    }
+
+
+class VersionKey17x0(Component):
+    _name = "_prestashop.version.key.1.7.x.0"
+    _inherit = "_prestashop.version.key"
+    _usage = "prestashop.version.key.1.7.x.0"
+
+    keys = {
+        "product_option_value": "product_option_value",
+        "category": "categories",
+        "image": "image",
+        "order_slip": "order_slip",
+        "order_slip_detail": "order_slip_details",
+        "order_discounts": "order_cart_rules",
+        "order_row": "order_row",
+        "group": "group",
+        "tax": "tax",
+        "product_features": "product_features",
+        "combinations": "combination",
+        "tag": "tags",
+        "messages": "customer_messages",
+        "manufacturers": "manufacturers",
+    }

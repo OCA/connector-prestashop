@@ -279,4 +279,7 @@ class PrestashopProductQuantityListener(Component):
     def on_record_write(self, record, fields=None):
         inventory_fields = list(set(fields).intersection(self._get_inventory_fields()))
         if inventory_fields:
-            record.with_delay(priority=20).export_inventory(fields=inventory_fields)
+            record.with_delay(
+                priority=20,
+                identity_key=identity_exact,
+            ).export_inventory(fields=inventory_fields)
