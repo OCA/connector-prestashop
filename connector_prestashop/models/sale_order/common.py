@@ -240,7 +240,10 @@ class OrderDiscountAdapter(Component):
     _name = "prestashop.sale.order.line.discount.adapter"
     _inherit = "prestashop.adapter"
     _apply_on = "prestashop.sale.order.line.discount"
-    _prestashop_model = "order_discounts"
+
+    @property
+    def _prestashop_model(self):
+        return self.backend_record.get_version_ps_key("order_discounts")
 
 
 class PrestashopSaleOrderListener(Component):
