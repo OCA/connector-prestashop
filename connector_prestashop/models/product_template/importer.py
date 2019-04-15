@@ -416,20 +416,25 @@ class ProductInventoryImporter(Component):
     _inherit = 'prestashop.importer'
     _apply_on = '_import_stock_available'
 
-    def _get_quantity(self, record):
+    def _get_quantity_vals(self, record):
         filters = {
             'filter[id_product]': record['id_product'],
             'filter[id_product_attribute]': record['id_product_attribute'],
-            'display': '[quantity]',
+            'display': '[quantity,out_of_stock]',
         }
         quantities = self.backend_adapter.get(filters)
         all_qty = 0
+        out_of_stock = False
         quantities = quantities['stock_availables']['stock_available']
         if isinstance(quantities, dict):
             quantities = [quantities]
         for quantity in quantities:
             all_qty += int(quantity['quantity'])
-        return all_qty
+            out_of_stock = quantity['out_of_stock']
+        return {
+            'quantity': all_qty,
+            'out_of_stock': out_of_stock,
+        }
 
     def _get_binding(self):
         record = self.prestashop_record
@@ -464,11 +469,12 @@ class ProductInventoryImporter(Component):
 
     def _import(self, binding, **kwargs):
         record = self.prestashop_record
-        qty = self._get_quantity(record)
-        if qty < 0:
-            qty = 0
+        quantity_vals = self._get_quantity_vals(record)
+        if quantity_vals['quantity'] < 0:
+            quantity_vals['quantity'] = 0
         if binding._name == 'prestashop.product.template':
             products = binding.odoo_id.product_variant_ids
+            binding.out_of_stock = quantity_vals['out_of_stock']
         else:
             products = binding.odoo_id
 
@@ -478,7 +484,7 @@ class ProductInventoryImporter(Component):
             vals = {
                 'location_id': location.id,
                 'product_id': product.id,
-                'new_quantity': qty,
+                'new_quantity': quantity_vals['quantity'],
             }
             template_qty = self.env['stock.change.product.qty'].create(vals)
             template_qty.with_context(
