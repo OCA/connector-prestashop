@@ -368,10 +368,10 @@ class SaleOrderImporter(Component):
                 if discount_ids[i].odoo_id.price_unit < amount :
                     discount_ids[i].odoo_id.price_unit
                     amount -= discount_ids[i].odoo_id.price_unit
-                    discount_ids[i].odoo_id.price_unit = "0,00"
+                    discount_ids[i].odoo_id.price_unit = 0.00
                 else :
                     discount_ids[i].odoo_id.price_unit -= amount
-                    amount = "0,00"
+                    amount = 0.00
                 i -=1
     
 
