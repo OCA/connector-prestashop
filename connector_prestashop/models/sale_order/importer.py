@@ -353,11 +353,33 @@ class SaleOrderImporter(Component):
         if binding.fiscal_position_id:
             binding.odoo_id._compute_tax_id()
         return binding
+    
+    
+    def _recompute_net_discount(self, binding):
+        discount_ids = binding.prestashop_discount_line_ids
+        
+        amount = (binding.odoo_id.amount_total
+                          if self.backend_record.taxes_included
+                          else binding.odoo_id.amount_untaxed)
+        
+        if amount <0:
+            i = len(discount_ids)-1
+            while i>=0 and amount<0 :
+                if discount_ids[i].odoo_id.price_unit > amount :
+                    discount_ids[i].odoo_id.price_unit
+                    amount -= discount_ids[i].odoo_id.price_unit
+                    discount_ids[i].odoo_id.price_unit = 0.00
+                else :
+                    discount_ids[i].odoo_id.price_unit -= amount
+                    amount = 0.00
+                i -=1
+    
 
     def _after_import(self, binding):
         super(SaleOrderImporter, self)._after_import(binding)
         self._add_shipping_line(binding)
         self.checkpoint_line_without_template(binding)
+        self._recompute_net_discount(binding)
 
     def checkpoint_line_without_template(self, binding):
         if not self.line_template_errors:
