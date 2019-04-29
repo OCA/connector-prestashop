@@ -123,7 +123,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
             self.prestashop.api_url,
             self.prestashop.webservice_key,
             debug=self.backend_record.debug,
-            # verbose=self.backend_record.verbose
+            verbose=self.backend_record.verbose
         )
 
     def search(self, filters=None):
