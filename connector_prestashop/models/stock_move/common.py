@@ -50,9 +50,52 @@ class StockQuant(models.Model):
     def unlink(self):
         ps_locations = self.env['stock.location'].\
             get_prestashop_stock_locations()
-        self.filtered(lambda x: x.location_id in ps_locations).mapped(
-            'product_id').update_prestashop_qty()
-        return super(StockQuant, self).unlink()
+        products = self.filtered(lambda x: x.location_id in ps_locations
+                                 ).mapped('product_id')
+        res = super(StockQuant, self).unlink()
+        products.invalidate_cache()
+        products.update_prestashop_qty()
+        return res
+
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    @api.model
+    def create(self, vals):
+        location_obj = self.env['stock.location']
+        ps_locations = location_obj.get_prestashop_stock_locations()
+        move = super(StockMove, self).create(vals)
+        if set([move.location_id, move.location_dest_id]) & set(ps_locations):
+            move.invalidate_cache()
+            move.product_id.update_prestashop_qty()
+        return move
+
+    @api.multi
+    def write(self, vals):
+        location_obj = self.env['stock.location']
+        ps_locations = location_obj.get_prestashop_stock_locations()
+        for move in self:
+            prev_location = move.location_id
+            prev_location_dest = move.location_dest_id
+            super(StockMove, self).write(vals)
+            if set([prev_location, prev_location_dest, move.location_id,
+                    move.location_dest_id]) & set(ps_locations):
+                move.invalidate_cache()
+                move.product_id.update_prestashop_qty()
+        return True
+
+    @api.multi
+    def unlink(self):
+        ps_locations = self.env['stock.location'].\
+            get_prestashop_stock_locations()
+        products = self.filtered(lambda x: set([
+            x.location_id, x.location_dest_id]) & set(ps_locations)).mapped(
+                'product_id')
+        res = super(StockMove, self).unlink()
+        products.invalidate_cache()
+        products.update_prestashop_qty()
+        return res
 
 
 class PrestashopStockPickingListener(Component):

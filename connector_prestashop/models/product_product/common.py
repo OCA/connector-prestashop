@@ -180,7 +180,7 @@ class PrestashopProductCombination(models.Model):
         return True
 
     def _prestashop_qty(self):
-        return self.qty_available
+        return self[self.backend_id.quantity_field]
 
     @job(default_channel='root.prestashop')
     def export_inventory(self, fields=None):

@@ -40,6 +40,7 @@ class ProductTemplate(models.Model):
     @api.depends(
         'product_variant_ids',
         'product_variant_ids.stock_quant_ids',
+        'product_variant_ids.stock_move_ids',
     )
     def _compute_quantities(self):
         return super(ProductTemplate, self)._compute_quantities()
@@ -153,7 +154,7 @@ class PrestashopProductTemplate(models.Model):
 
     @api.multi
     def _prestashop_qty(self):
-        return self.qty_available
+        return self[self.backend_id.quantity_field]
 
     @job(default_channel='root.prestashop')
     def import_products(self, backend, since_date=None, **kwargs):

@@ -155,7 +155,11 @@ class PrestashopBackend(models.Model):
          ('potential_qty', 'Potential')],
         help="Some of this options may need some additionnal modules you'll "
         "have to install by yourself from "
-        "https://github.com/OCA/stock-logistics-warehouse",
+        "https://github.com/OCA/stock-logistics-warehouse\n\n"
+        "Automatic export might not work for 'Available to promise' and "
+        "'Potential' if stock does not depend exclusively on quants and "
+        "movements, as is the case with stock_available_sale and "
+        "stock_available_mrp modules",
         required=True,
         default='virtual_available')
     tz = fields.Selection(
