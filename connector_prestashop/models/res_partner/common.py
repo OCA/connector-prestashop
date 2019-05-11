@@ -23,6 +23,7 @@ class ResPartner(models.Model):
 
 class PrestashopPartnerMixin(models.AbstractModel):
     _name = 'prestashop.partner.mixin'
+    _description = 'Mixin for Partner Bindings'
 
     group_ids = fields.Many2many(
         comodel_name='prestashop.res.partner.category',
@@ -104,6 +105,7 @@ class PrestashopResPartner(models.Model):
 
 class PrestashopAddressMixin(models.AbstractModel):
     _name = 'prestashop.address.mixin'
+    _description = 'Mixin for prestashop adress bindings'
 
     date_add = fields.Datetime(
         string='Created At (on PrestaShop)',

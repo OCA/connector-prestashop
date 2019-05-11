@@ -195,11 +195,13 @@ class PrestashopSaleOrderLineDiscount(models.Model):
 class OrderPaymentModel(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '__not_exist_prestashop.payment'
+    _description = 'Dummy Transient model for Order Payment'
 
 
 class OrderCarrierModel(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '__not_exit_prestashop.order_carrier'
+    _description = 'Dummy Transient model for Order Carrier'
 
 
 class SaleOrderAdapter(Component):
