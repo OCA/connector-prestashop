@@ -8,7 +8,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
-from odoo.addons.connector_prestashop.components.backend_adapter import (
+from ...components.backend_adapter import (
     retryable_error
 )
 
@@ -59,6 +59,7 @@ class ProductTemplate(models.Model):
 
 class ProductQtyMixin(models.AbstractModel):
     _name = 'prestashop.product.qty.mixin'
+    _description = 'Prestashop mixin shared between product and template'
 
     @api.multi
     def recompute_prestashop_qty(self):
@@ -256,6 +257,7 @@ class ProductInventoryAdapter(Component):
 class PrestashopProductTagsModel(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '_prestashop_product_tag'
+    _description = 'Dummy Prestashop Product Tags Transient model'
 
 
 class PrestashopProductTags(Component):

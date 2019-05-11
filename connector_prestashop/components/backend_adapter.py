@@ -7,7 +7,7 @@ from odoo.addons.connector.exception import NetworkRetryableError
 
 from contextlib import contextmanager
 from requests.exceptions import (
-    HTTPError, RequestException, ConnectionError, Timeout
+    HTTPError, RequestException, ConnectionError as ConnError, Timeout
 )
 import base64
 import logging
@@ -29,7 +29,7 @@ def retryable_error(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except (ConnectionError, Timeout, HTTPError) as err:
+        except (ConnError, Timeout, HTTPError) as err:
             raise NetworkRetryableError(
                 'A network error caused the failure of the job: '
                 '%s' % str(err))
@@ -55,7 +55,7 @@ def api_handle_errors(message=''):
         raise exceptions.UserError(
             _('{}Network Error:\n\n{}').format(message, err)
         )
-    except (HTTPError, RequestException, ConnectionError) as err:
+    except (HTTPError, RequestException, ConnError) as err:
         raise exceptions.UserError(
             _('{}API / Network Error:\n\n{}').format(message, err)
         )
@@ -150,7 +150,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         and returns a list of ids """
         raise NotImplementedError
 
-    def read(self, id, attributes=None):
+    def read(self, id_, attributes=None):
         """ Returns the information of a record """
         raise NotImplementedError
 
@@ -163,11 +163,11 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         """ Create a record on the external system """
         raise NotImplementedError
 
-    def write(self, id, data):
+    def write(self, id_, data):
         """ Update records on the external system """
         raise NotImplementedError
 
-    def delete(self, id):
+    def delete(self, id_):
         """ Delete a record on the external system """
         raise NotImplementedError
 
@@ -207,15 +207,15 @@ class GenericAdapter(AbstractComponent):
         return self.client.search(self._prestashop_model, filters)
 
     @retryable_error
-    def read(self, id, attributes=None):
+    def read(self, id_, attributes=None):
         """ Returns the information of a record
 
         :rtype: dict
         """
         _logger.debug(
             'method read, model %s id %s, attributes %s',
-            self._prestashop_model, str(id), str(attributes))
-        res = self.client.get(self._prestashop_model, id, options=attributes)
+            self._prestashop_model, str(id_), str(attributes))
+        res = self.client.get(self._prestashop_model, id_, options=attributes)
         first_key = list(res)[0]
         return res[first_key]
 
@@ -231,9 +231,9 @@ class GenericAdapter(AbstractComponent):
             return res['prestashop'][self._export_node_name_res]['id']
         return res
 
-    def write(self, id, attributes=None):
+    def write(self, id_, attributes=None):
         """ Update records on the external system """
-        attributes['id'] = id
+        attributes['id'] = id_
         _logger.debug(
             'method write, model %s, attributes %s',
             self._prestashop_model,
@@ -252,6 +252,6 @@ class GenericAdapter(AbstractComponent):
         return self.client.delete(resource, ids)
 
     @retryable_error
-    def head(self, id=None):
+    def head(self, id_=None):
         """ HEAD """
-        return self.client.head(self._prestashop_model, resource_id=id)
+        return self.client.head(self._prestashop_model, resource_id=id_)
