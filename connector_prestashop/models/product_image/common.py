@@ -78,12 +78,12 @@ class ProductImageAdapter(Component):
             base64.b64decode(attributes['content'])
         )])
 
-    def write(self, id, attributes=None):
+    def write(self, id_, attributes=None):
         api = self.connect()
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
         url_del = '{}/{}/{}/{}'.format(
-            api._api_url, self._prestashop_model, attributes['id_product'], id)
+            api._api_url, self._prestashop_model, attributes['id_product'], id_)
         try:
             api._execute(url_del, 'DELETE')
         except:
@@ -94,7 +94,7 @@ class ProductImageAdapter(Component):
             base64.b64decode(attributes['content'])
         )])
 
-    def delete(self, resource, id):
+    def delete(self, resource, id_):
         """ Delete a record on the external system """
         api = self.connect()
-        return api.delete(resource, resource_ids=id)
+        return api.delete(resource, resource_ids=id_)

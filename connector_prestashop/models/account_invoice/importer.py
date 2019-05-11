@@ -118,17 +118,11 @@ class RefundMapper(Component):
         product = self.env['product.product'].browse(
             order_line['product_id'][0]
         )
-        account_id = product.property_account_income_id.id
-        if not account_id:
-            account_id = product.categ_id.property_account_income_categ_id.id
+        account = product.property_account_income_id
+        if not account:
+            account = product.categ_id.property_account_income_categ_id
         if fpos:
-            fpos_obj = self.env['account.fiscal.position']
-            account_id = fpos_obj.map_account(
-                self.session.cr,
-                self.session.uid,
-                fpos,
-                account_id
-            )
+            account = fpos.map_account(account)
         return {
             'quantity': 1,
             'product_id': product.id,
@@ -136,7 +130,7 @@ class RefundMapper(Component):
             'invoice_line_tax_ids': [(6, 0, order_line['tax_id'])],
             'price_unit': price_unit,
             'discount': order_line['discount'],
-            'account_id': account_id,
+            'account_id': account.id,
         }
 
     def _get_shipping_order_line(self, record):
@@ -158,25 +152,19 @@ class RefundMapper(Component):
         if order_line is None:
             product_id = None
             name = "Order line not found"
-            account_id = None
+            account = self.env['account.account']
         else:
             product = order_line.product_id
             product_id = product.id
             name = order_line.name
             for tax in order_line.tax_id:
                 tax_ids.append(tax.id)
-            account_id = product.property_account_income_id.id
-            if not account_id:
+            account = product.property_account_income_id
+            if not account:
                 categ = product.categ_id
-                account_id = categ.property_account_income_categ_id.id
-        if fpos and account_id:
-            fpos_obj = self.session.pool['account.fiscal.position']
-            account_id = fpos_obj.map_account(
-                self.session.cr,
-                self.session.uid,
-                fpos,
-                account_id
-            )
+                account = categ.property_account_income_categ_id
+        if fpos and account:
+            account = fpos.map_account(account)
         if record['product_quantity'] == '0':
             quantity = 1
         else:
@@ -203,7 +191,7 @@ class RefundMapper(Component):
             'invoice_line_tax_ids': [(6, 0, tax_ids)],
             'price_unit': price_unit,
             'discount': discount,
-            'account_id': account_id,
+            'account_id': account.id,
         }
 
     def _get_order_line(self, order_details_id):
