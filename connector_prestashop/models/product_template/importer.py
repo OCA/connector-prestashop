@@ -363,6 +363,7 @@ class ManufacturerProductImportMapper(Component):
 class ImportInventory(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '_import_stock_available'
+    _description = 'Dummy Import Inventory Transient model'
 
     @job(default_channel='root.prestashop')
     @api.model

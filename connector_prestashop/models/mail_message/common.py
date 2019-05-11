@@ -38,13 +38,13 @@ class MailMessageAdapter(Component):
     def _prestashop_model(self):
         return self.backend_record.get_version_ps_key('messages')
 
-    def read(self, id, attributes=None):
+    def read(self, id_, attributes=None):
         """ Merge message and thread datas
 
         :rtype: dict
         """
         api = self.client
-        res = api.get(self._prestashop_model, id, options=attributes)
+        res = api.get(self._prestashop_model, id_, options=attributes)
         first_key = list(res)[0]
         message_data = res[first_key]
         thread_data = api.get('customer_threads',

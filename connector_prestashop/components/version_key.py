@@ -8,6 +8,7 @@ from odoo.addons.component.core import Component
 class VersionKeyModel(models.TransientModel):
     # In actual connector version is mandatory use a model
     _name = '_prestashop.version.key'
+    _description = 'Dummy transient model Prestashop Version Key'
 
 
 class VersionKey(Component):

@@ -28,6 +28,6 @@ class ProductInventoryExporter(Component):
         adapter = self.component(
             usage='backend.adapter', model_name='_import_stock_available'
         )
-        filter = self.get_filter(template)
+        filters = self.get_filter(template)
         quantity_vals = self.get_quantity_vals(template)
-        adapter.export_quantity(filter, quantity_vals)
+        adapter.export_quantity(filters, quantity_vals)
