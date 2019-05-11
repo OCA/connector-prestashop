@@ -6,6 +6,7 @@ from odoo.addons.component.core import Component
 
 class SaleOrderState(models.Model):
     _name = 'sale.order.state'
+    _description = 'Sale Order States'
 
     name = fields.Char('Name', translate=True)
     company_id = fields.Many2one(
@@ -41,6 +42,7 @@ class PrestashopSaleOrderState(models.Model):
 
 class SaleOrderStateList(models.Model):
     _name = 'sale.order.state.list'
+    _description = 'Sale Order State List'
 
     name = fields.Selection(
         selection=[
