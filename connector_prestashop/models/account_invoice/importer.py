@@ -27,7 +27,7 @@ class RefundImporter(Component):
     def _open_refund(self, binding):
         invoice = binding.odoo_id
         if invoice.amount_total == float(self.prestashop_record['amount']):
-            invoice.signal_workflow('invoice_open')
+            invoice.action_invoice_open()
         else:
             self.backend_record.add_checkpoint(
                 invoice,
@@ -133,7 +133,7 @@ class RefundMapper(Component):
             'quantity': 1,
             'product_id': product.id,
             'name': order_line['name'],
-            'invoice_line_tax_id': [(6, 0, order_line['tax_id'])],
+            'invoice_line_tax_ids': [(6, 0, order_line['tax_id'])],
             'price_unit': price_unit,
             'discount': order_line['discount'],
             'account_id': account_id,
@@ -200,7 +200,7 @@ class RefundMapper(Component):
             'quantity': quantity,
             'product_id': product_id,
             'name': name,
-            'invoice_line_tax_id': [(6, 0, tax_ids)],
+            'invoice_line_tax_ids': [(6, 0, tax_ids)],
             'price_unit': price_unit,
             'discount': discount,
             'account_id': account_id,
