@@ -185,12 +185,15 @@ class TemplateMapper(Component):
                             return {'odoo_id': product.id}
         return {}
 
-    def _template_code_exists(self, code):
+    def _template_code_exists(self, code, current_template=None):
         model = self.env['product.template']
-        template_ids = model.search([
+        domain = [
             ('default_code', '=', code),
             ('company_id', '=', self.backend_record.company_id.id),
-        ], limit=1)
+        ]
+        if current_template:
+            domain.append(('id', '!=', current_template.id))
+        template_ids = model.search(domain, limit=1)
         return len(template_ids) > 0
 
     @mapping
@@ -202,11 +205,15 @@ class TemplateMapper(Component):
             code = "backend_%d_product_%s" % (
                 self.backend_record.id, record['id']
             )
-        if not self._template_code_exists(code):
+        binder = self.binder_for('prestashop.product.template')
+        current_template = binder.to_internal(record['id'], unwrap=True)
+        if not self._template_code_exists(code,
+                                          current_template=current_template):
             return {'default_code': code}
         i = 1
         current_code = '%s_%d' % (code, i)
-        while self._template_code_exists(current_code):
+        while self._template_code_exists(current_code,
+                                         current_template=current_template):
             i += 1
             current_code = '%s_%d' % (code, i)
         return {'default_code': current_code}
