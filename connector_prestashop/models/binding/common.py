@@ -49,14 +49,14 @@ class PrestashopBinding(models.AbstractModel):
 
     @job(default_channel='root.prestashop')
     @api.model
-    def import_batch(self, backend, filters=None, **kwargs):
+    def import_batch(self, backend, filters=None):
         """ Prepare a batch import of records from PrestaShop """
         self.check_active(backend)
         if filters is None:
             filters = {}
         with backend.work_on(self._name) as work:
             importer = work.component(usage='batch.importer')
-            return importer.run(filters=filters, **kwargs)
+            return importer.run(filters=filters)
 
     @job(default_channel='root.prestashop')
     @related_action(action='related_action_record')
