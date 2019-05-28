@@ -72,8 +72,9 @@ class PrestashopSaleOrder(models.Model):
         if since_date:
             filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (since_date)}
         now_fmt = fields.Datetime.now()
-        self.env['prestashop.sale.order'].import_batch(
-            backend, filters=filters, priority=5, max_retries=0)
+        self.env['prestashop.sale.order'].with_delay(
+            priority=10).import_batch(
+            backend, filters=filters)
         if since_date:
             filters = {'date': '1', 'filter[date_add]': '>[%s]' % since_date}
         self.env['prestashop.mail.message'].import_batch(backend, filters)
