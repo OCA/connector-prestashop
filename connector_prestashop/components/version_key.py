@@ -108,13 +108,14 @@ class VersionKey1750(Component):
     _inherit = '_prestashop.version.key'
     _usage = 'prestashop.version.key.1.7.5.0'
 
+    # TODO: Don't forget to adpt your PS server due to this regression :
+    # https://www.prestashop.com/forums/topic/890277-r%C3%A9cup%C3%A9rer-le-d%C3%A9tail-des-r%C3%A9ductions-sur-commande-via-lapi/?tab=comments#comment-2955986
     keys = {
         'product_option_value': 'product_option_value',
         'category': 'categories',
         'image': 'image',
         'order_slip': 'order_slip',
-        'order_slip_detail': 'order_slip_details',
-        'order_discounts': 'cart_rules',
+        'order_slip_detail': 'order_slip_details',      
         'order_row': 'order_row',
         'group': 'groups',
         'tax': 'tax',
