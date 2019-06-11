@@ -42,10 +42,6 @@ class PrestashopSupplier(models.Model):
             filters,
             **kwargs
         )
-        self.env['prestashop.product.supplierinfo'].with_delay().import_batch(
-            backend,
-            **kwargs
-        )
         backend.import_suppliers_since = now_fmt
         return True
 
