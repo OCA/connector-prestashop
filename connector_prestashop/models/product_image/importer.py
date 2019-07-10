@@ -5,7 +5,6 @@
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 
-import mimetypes
 import logging
 
 from odoo import _
