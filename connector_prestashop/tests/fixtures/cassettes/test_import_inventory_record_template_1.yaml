@@ -5,28 +5,24 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+      User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: http://172.22.0.4/api/stock_availables?filter%5Bid_product_attribute%5D=0&filter%5Bid_product%5D=1&display=%5Bquantity%5D
+    uri: http://localhost:8080/api/stock_availables?filter%5Bid_product_attribute%5D=0&filter%5Bid_product%5D=1&display=%5Bquantity%2Cout_of_stock%5D
   response:
-    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-        <prestashop xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_availables>\n\
-        <stock_available>\n\t<quantity><![CDATA[1799]]></quantity>\n</stock_available>\n\
-        </stock_availables>\n</prestashop>\n"}
+    body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_availables>\n<stock_available>\n\t<quantity><![CDATA[1799]]></quantity>\n\t<out_of_stock><![CDATA[0]]></out_of_stock>\n</stock_available>\n</stock_availables>\n</prestashop>\n"}
     headers:
-      access-time: ['1481293390']
-      connection: [Keep-Alive]
-      content-length: ['224']
-      content-sha1: [fc056b14c97c4c0e6eec0c3b197cd87c2e40fc65]
+      access-time: ['1562750344']
+      connection: [keep-alive]
+      content-sha1: [207105336987692e9b27de943a9610e58893d0f6]
       content-type: [text/xml;charset=utf-8]
-      date: ['Fri, 09 Dec 2016 14:23:10 GMT']
-      execution-time: ['0.002']
-      keep-alive: ['timeout=5, max=100']
-      psws-version: [1.6.1.9]
-      server: [Apache/2.4.10 (Debian)]
-      set-cookie: ['PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tc5%2F25YbtlPp6Qp5D8d5rsOdA7SSrCgwsQjUULayWhLEb0NyFh1lymvNC7fb5yrMkZH9wBL6PJNw%2Bf5dIgFRXmE%3D000078;
-          expires=Thu, 29-Dec-2016 14:23:10 GMT; Max-Age=1728000; path=/; httponly']
-      vary: [Accept-Encoding]
+      date: ['Wed, 10 Jul 2019 09:19:04 GMT']
+      execution-time: ['0.003']
+      psws-version: [1.6.1.20]
+      server: [nginx/1.10.3 (Ubuntu)]
+      set-cookie: ['PrestaShop-afa88870cc72c3359653551ba256dfd3=f376ab18018543f099e55394d598228ddf94e7e2454b33f6f0e99d3c4626e7d4%3AirPfBirIaChXGdwPG6x5EU33h6M34ySIk9edU4mLMEU6J%2Bew6iIk070bhlDbw5pl4QSFQdcRtghSD6VnEdo%2BOs0l7NFLvWsV%2F6s8%2FxnYp0Q%3D;
+          expires=Tue, 30-Jul-2019 09:19:04 GMT; Max-Age=1728000; path=/; HttpOnly']
+      transfer-encoding: [chunked]
       x-powered-by: [PrestaShop Webservice]
     status: {code: 200, message: OK}
 version: 1

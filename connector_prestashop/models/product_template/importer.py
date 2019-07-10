@@ -474,7 +474,9 @@ class ProductInventoryImporter(Component):
             quantity_vals['quantity'] = 0
         if binding._name == 'prestashop.product.template':
             products = binding.odoo_id.product_variant_ids
-            binding.out_of_stock = quantity_vals['out_of_stock']
+            binding.with_context(connector_no_export=True).write({
+                'out_of_stock': quantity_vals['out_of_stock']
+            })
         else:
             products = binding.odoo_id
 
