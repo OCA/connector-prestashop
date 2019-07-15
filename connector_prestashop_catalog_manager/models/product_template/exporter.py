@@ -197,6 +197,7 @@ class ProductTemplateExportMapper(Component):
         (m2o_to_external(
             'prestashop_default_category_id',
             binding='prestashop.product.category'), 'id_category_default'),
+        ('state', 'state'),
     ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [

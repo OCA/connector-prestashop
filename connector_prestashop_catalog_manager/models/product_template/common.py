@@ -46,6 +46,7 @@ class PrestashopProductTemplate(models.Model):
         help='Minimal Sale quantity',
         default=1,
     )
+    state = fields.Boolean(string='State', default=True)
 
 
 class PrestashopProductTemplateListener(Component):
