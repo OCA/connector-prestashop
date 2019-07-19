@@ -3,11 +3,12 @@
 # Copyright 2011-2013 Akretion
 # Copyright 2015 AvanzOSC
 # Copyright 2015-2016 Tecnativa
+# Copyright 2018 Meta IT
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     "name": "Prestashop-Odoo Catalog Manager",
-    "version": "8.0.1.0.2",
+    "version": "8.0.1.0.3",
     "license": "AGPL-3",
     "depends": [
         "connector_prestashop"

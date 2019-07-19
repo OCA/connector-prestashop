@@ -54,6 +54,7 @@ Contributors
 * Mikel Arregi <mikelarregi@avanzosc.es>
 * Sergio Teruel <sergio.teruel@tecnativa.com>
 * Pedro M. Baeza <pedro.baeza@tecnativa.com>
+* Guillaume Masson <guillaume.masson@meta-it.fr>
 
 Maintainer
 ----------
