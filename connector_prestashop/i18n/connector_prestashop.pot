@@ -3759,6 +3759,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,state_id:0
+#: field:prestashop.product.template,state:0
 #: field:prestashop.res.partner,state_id:0
 #: field:prestashop.supplier,state_id:0
 msgid "State"
@@ -3771,7 +3772,6 @@ msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.product.combination,state:0
-#: field:prestashop.product.template,state:0
 #: field:prestashop.refund,state:0
 #: field:prestashop.sale.order,state:0
 #: field:prestashop.sale.order.line,state:0
