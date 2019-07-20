@@ -211,8 +211,7 @@ msgstr ""
 #: sql_constraint:prestashop.product.template:0
 #: sql_constraint:prestashop.refund:0 sql_constraint:prestashop.res.country:0
 #: sql_constraint:prestashop.res.currency:0
-#: sql_constraint:prestashop.res.lang:0
-#: sql_constraint:prestashop.res.partner:0
+#: sql_constraint:prestashop.res.lang:0 sql_constraint:prestashop.res.partner:0
 #: sql_constraint:prestashop.res.partner.category:0
 #: sql_constraint:prestashop.sale.order:0
 #: sql_constraint:prestashop.sale.order.line:0
@@ -260,8 +259,7 @@ msgstr "Código de Impuesto de la cuenta"
 #: field:prestashop.product.combination,active:0
 #: field:prestashop.product.template,active:0
 #: field:prestashop.product.template,always_available:0
-#: field:prestashop.res.currency,active:0
-#: field:prestashop.res.partner,active:0
+#: field:prestashop.res.currency,active:0 field:prestashop.res.partner,active:0
 #: field:prestashop.res.partner.category,active:0
 #: field:prestashop.supplier,active:0
 msgid "Active"
@@ -328,8 +326,7 @@ msgstr ""
 #. module: connector_prestashop
 #: sql_constraint:prestashop.account.tax:0
 #: sql_constraint:prestashop.account.tax.group:0
-#: sql_constraint:prestashop.address:0
-#: sql_constraint:prestashop.binding.odoo:0
+#: sql_constraint:prestashop.address:0 sql_constraint:prestashop.binding.odoo:0
 #: sql_constraint:prestashop.delivery.carrier:0
 #: sql_constraint:prestashop.groups.pricelist:0
 #: sql_constraint:prestashop.mail.message:0
@@ -341,8 +338,7 @@ msgstr ""
 #: sql_constraint:prestashop.product.template:0
 #: sql_constraint:prestashop.refund:0 sql_constraint:prestashop.res.country:0
 #: sql_constraint:prestashop.res.currency:0
-#: sql_constraint:prestashop.res.lang:0
-#: sql_constraint:prestashop.res.partner:0
+#: sql_constraint:prestashop.res.lang:0 sql_constraint:prestashop.res.partner:0
 #: sql_constraint:prestashop.res.partner.category:0
 #: sql_constraint:prestashop.sale.order:0
 #: sql_constraint:prestashop.sale.order.line:0
@@ -870,8 +866,7 @@ msgstr "Método de coste"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_res_country
-#: field:prestashop.address,country_id:0
-#: field:prestashop.res.country,odoo_id:0
+#: field:prestashop.address,country_id:0 field:prestashop.res.country,odoo_id:0
 #: field:prestashop.res.partner,country_id:0
 #: field:prestashop.supplier,country_id:0
 msgid "Country"
@@ -969,8 +964,7 @@ msgstr "Creado por"
 #: field:prestashop.sale.order.state,create_date:0
 #: field:prestashop.shop,create_date:0
 #: field:prestashop.shop.group,create_date:0
-#: field:prestashop.supplier,create_date:0
-#: field:sale.order.state,create_date:0
+#: field:prestashop.supplier,create_date:0 field:sale.order.state,create_date:0
 #: field:sale.order.state.list,create_date:0
 msgid "Created on"
 msgstr "Creado en "
@@ -987,8 +981,7 @@ msgstr "Límite de Crédito"
 #: field:prestashop.groups.pricelist,currency_id:0
 #: field:prestashop.refund,currency_id:0
 #: field:prestashop.res.country,currency_id:0
-#: field:prestashop.res.currency,name:0
-#: field:prestashop.res.currency,odoo_id:0
+#: field:prestashop.res.currency,name:0 field:prestashop.res.currency,odoo_id:0
 #: field:prestashop.sale.order,currency_id:0
 msgid "Currency"
 msgstr "Moneda"
@@ -1638,11 +1631,11 @@ msgid ""
 msgstr ""
 
 #. module: connector_prestashop
-#: field:_import_stock_available,id:0
-#: field:connector_prestashop.installed,id:0 field:prestashop.account.tax,id:0
-#: field:prestashop.account.tax.group,id:0 field:prestashop.address,id:0
-#: field:prestashop.backend,id:0 field:prestashop.binding,id:0
-#: field:prestashop.binding.odoo,id:0 field:prestashop.delivery.carrier,id:0
+#: field:_import_stock_available,id:0 field:connector_prestashop.installed,id:0
+#: field:prestashop.account.tax,id:0 field:prestashop.account.tax.group,id:0
+#: field:prestashop.address,id:0 field:prestashop.backend,id:0
+#: field:prestashop.binding,id:0 field:prestashop.binding.odoo,id:0
+#: field:prestashop.delivery.carrier,id:0
 #: field:prestashop.groups.pricelist,id:0 field:prestashop.mail.message,id:0
 #: field:prestashop.product.category,id:0
 #: field:prestashop.product.combination,id:0
@@ -2262,8 +2255,7 @@ msgstr ""
 #: field:prestashop.product.image,write_uid:0
 #: field:prestashop.product.supplierinfo,write_uid:0
 #: field:prestashop.product.template,write_uid:0
-#: field:prestashop.refund,write_uid:0
-#: field:prestashop.res.country,write_uid:0
+#: field:prestashop.refund,write_uid:0 field:prestashop.res.country,write_uid:0
 #: field:prestashop.res.currency,write_uid:0
 #: field:prestashop.res.lang,write_uid:0
 #: field:prestashop.res.partner,write_uid:0
@@ -2339,8 +2331,7 @@ msgstr ""
 #: field:prestashop.product.image,sync_date:0
 #: field:prestashop.product.supplierinfo,sync_date:0
 #: field:prestashop.product.template,sync_date:0
-#: field:prestashop.refund,sync_date:0
-#: field:prestashop.res.country,sync_date:0
+#: field:prestashop.refund,sync_date:0 field:prestashop.res.country,sync_date:0
 #: field:prestashop.res.currency,sync_date:0
 #: field:prestashop.res.lang,sync_date:0
 #: field:prestashop.res.partner,sync_date:0
@@ -2566,10 +2557,9 @@ msgstr ""
 #: field:prestashop.product.combination,name:0
 #: field:prestashop.product.combination.option,name:0
 #: field:prestashop.product.template,name:0 field:prestashop.res.lang,name:0
-#: field:prestashop.res.partner,name:0
-#: field:prestashop.sale.order.state,name:0 field:prestashop.shop,name:0
-#: field:prestashop.shop.group,name:0 field:prestashop.supplier,name:0
-#: field:sale.order.state,name:0
+#: field:prestashop.res.partner,name:0 field:prestashop.sale.order.state,name:0
+#: field:prestashop.shop,name:0 field:prestashop.shop.group,name:0
+#: field:prestashop.supplier,name:0 field:sale.order.state,name:0
 msgid "Name"
 msgstr ""
 
@@ -3754,8 +3744,7 @@ msgstr ""
 
 #. module: connector_prestashop
 #: field:prestashop.address,user_id:0 field:prestashop.refund,user_id:0
-#: field:prestashop.res.partner,user_id:0
-#: field:prestashop.sale.order,user_id:0
+#: field:prestashop.res.partner,user_id:0 field:prestashop.sale.order,user_id:0
 #: field:prestashop.sale.order.line,salesman_id:0
 #: field:prestashop.sale.order.line.discount,salesman_id:0
 #: field:prestashop.supplier,user_id:0
@@ -4001,8 +3990,9 @@ msgid "Starred"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.address,state_id:0 field:prestashop.res.partner,state_id:0
-#: field:prestashop.supplier,state_id:0
+#: field:prestashop.address,state_id:0
+#: field:prestashop.product.template,state:0
+#: field:prestashop.res.partner,state_id:0 field:prestashop.supplier,state_id:0
 msgid "State"
 msgstr ""
 
@@ -4012,10 +4002,8 @@ msgid "States"
 msgstr ""
 
 #. module: connector_prestashop
-#: field:prestashop.product.combination,state:0
-#: field:prestashop.product.template,state:0 field:prestashop.refund,state:0
-#: field:prestashop.sale.order,state:0
-#: field:prestashop.sale.order.line,state:0
+#: field:prestashop.product.combination,state:0 field:prestashop.refund,state:0
+#: field:prestashop.sale.order,state:0 field:prestashop.sale.order.line,state:0
 #: field:prestashop.sale.order.line.discount,state:0
 msgid "Status"
 msgstr ""
@@ -4108,8 +4096,7 @@ msgstr ""
 #: field:prestashop.address,supplier:0
 #: field:prestashop.product.supplierinfo,name:0
 #: field:prestashop.product.template,seller_ids:0
-#: field:prestashop.res.partner,supplier:0
-#: field:prestashop.supplier,supplier:0
+#: field:prestashop.res.partner,supplier:0 field:prestashop.supplier,supplier:0
 msgid "Supplier"
 msgstr ""
 
