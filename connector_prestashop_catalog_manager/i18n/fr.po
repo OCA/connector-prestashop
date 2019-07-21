@@ -6,53 +6,55 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2019-07-21 02:43+0000\n"
+"Last-Translator: Guillaume Masson <guillaume.masson@meta-it.fr>\n"
 "Language-Team: none\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.7.1\n"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.active_product_form
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: connector_prestashop_catalog_manager
 #: model:ir.actions.act_window,name:connector_prestashop_catalog_manager.act_active_products
 msgid "Active Products"
-msgstr ""
+msgstr "Produits actifs"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.active_product_form
 msgid "Active selected products"
-msgstr ""
+msgstr "Rendre actifs / inactifs les produits sélectionnés"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,additional_shipping_cost:0
 msgid "Additional Shipping Price"
-msgstr ""
+msgstr "Coût de livraison supplémentaire"
 
 #. module: connector_prestashop_catalog_manager
 #: help:prestashop.product.template,additional_shipping_cost:0
 msgid "Additionnal Shipping Price for the product on Prestashop"
-msgstr ""
+msgstr "Frais de port supplémentaire pour le produit dans Prestashop"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,available_date:0
 msgid "Available Date"
-msgstr ""
+msgstr "Date de disponibilité"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,available_later:0
 msgid "Available Later"
-msgstr ""
+msgstr "Disponible prochainement"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,available_now:0
 msgid "Available Now"
-msgstr ""
+msgstr "Disponible dès à présent"
 
 #. module: connector_prestashop_catalog_manager
 #: field:export.multiple.products,name:0
@@ -69,12 +71,12 @@ msgstr ""
 #: view:sync.products:connector_prestashop_catalog_manager.sync_products_form
 #: view:wiz.prestashop.export.category:connector_prestashop_catalog_manager.export_category_form
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #. module: connector_prestashop_catalog_manager
 #: help:active.deactive.products,force_status:0
 msgid "Check this option to force active product in prestashop"
-msgstr ""
+msgstr "Cocher cette case pour rendre le produit actif dans Prestashop"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,create_uid:0
@@ -82,7 +84,7 @@ msgstr ""
 #: field:sync.products,create_uid:0
 #: field:wiz.prestashop.export.category,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,create_date:0
@@ -90,17 +92,17 @@ msgstr ""
 #: field:sync.products,create_date:0
 #: field:wiz.prestashop.export.category,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.deactive_product_form
 msgid "Deactive"
-msgstr ""
+msgstr "Rendre inactif"
 
 #. module: connector_prestashop_catalog_manager
 #: model:ir.actions.act_window,name:connector_prestashop_catalog_manager.act_deactive_products
 msgid "Deactive Products"
-msgstr ""
+msgstr "Rendre inactifs les produits"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,display_name:0
@@ -109,19 +111,19 @@ msgstr ""
 #: field:sync.products,display_name:0
 #: field:wiz.prestashop.export.category,display_name:0
 msgid "Display Name"
-msgstr ""
+msgstr "Nom affiché"
 
 #. module: connector_prestashop_catalog_manager
 #: view:export.multiple.products:connector_prestashop_catalog_manager.export_multiple_products_form
 #: view:export.multiple.products:connector_prestashop_catalog_manager.export_variant_stock_form
 #: view:wiz.prestashop.export.category:connector_prestashop_catalog_manager.export_category_form
 msgid "Export"
-msgstr ""
+msgstr "Exporter"
 
 #. module: connector_prestashop_catalog_manager
 #: view:wiz.prestashop.export.category:connector_prestashop_catalog_manager.export_category_form
 msgid "Export Categories"
-msgstr ""
+msgstr "Exporter les catégories"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.active_product_form
@@ -130,32 +132,32 @@ msgstr ""
 #: model:ir.actions.act_window,name:connector_prestashop_catalog_manager.act_export_multiple_products
 #: view:sync.products:connector_prestashop_catalog_manager.sync_products_form
 msgid "Export Products"
-msgstr ""
+msgstr "Exporter les produits"
 
 #. module: connector_prestashop_catalog_manager
 #: model:ir.actions.act_window,name:connector_prestashop_catalog_manager.act_export_products_stock
 msgid "Export Products Stock"
-msgstr ""
+msgstr "Exporter le stock des produits"
 
 #. module: connector_prestashop_catalog_manager
 #: model:ir.actions.act_window,name:connector_prestashop_catalog_manager.act_export_prestashop_category
 msgid "Export To PrestaShop"
-msgstr ""
+msgstr "Exporter vers PrestaShop"
 
 #. module: connector_prestashop_catalog_manager
 #: view:export.multiple.products:connector_prestashop_catalog_manager.export_variant_stock_form
 msgid "Export variant stock"
-msgstr ""
+msgstr "Exporter le stock des variantes d'articles"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,force_status:0
 msgid "Force Status"
-msgstr ""
+msgstr "Forcer l'état"
 
 #. module: connector_prestashop_catalog_manager
 #: field:base_multi_image.image,front_image:0
 msgid "Front image"
-msgstr ""
+msgstr "Image principale"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,id:0
@@ -173,7 +175,7 @@ msgstr ""
 #: field:sync.products,__last_update:0
 #: field:wiz.prestashop.export.category,__last_update:0
 msgid "Last Modified on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,write_uid:0
@@ -181,7 +183,7 @@ msgstr ""
 #: field:sync.products,write_uid:0
 #: field:wiz.prestashop.export.category,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière modification par"
 
 #. module: connector_prestashop_catalog_manager
 #: field:active.deactive.products,write_date:0
@@ -189,7 +191,7 @@ msgstr ""
 #: field:sync.products,write_date:0
 #: field:wiz.prestashop.export.category,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,meta_description:0
@@ -210,68 +212,68 @@ msgstr ""
 #: field:prestashop.product.combination,minimal_quantity:0
 #: field:prestashop.product.template,minimal_quantity:0
 msgid "Minimal Quantity"
-msgstr ""
+msgstr "Quantité minimale"
 
 #. module: connector_prestashop_catalog_manager
 #: help:prestashop.product.combination,minimal_quantity:0
 #: help:prestashop.product.template,minimal_quantity:0
 msgid "Minimal Sale quantity"
-msgstr ""
+msgstr "Quantité minimale pour la vente"
 
 #. module: connector_prestashop_catalog_manager
 #: code:addons/connector_prestashop_catalog_manager/product_image.py:106
 #: code:addons/connector_prestashop_catalog_manager/product_image.py:113
 #, python-format
 msgid "Nothing to export."
-msgstr ""
+msgstr "Rien à exporter."
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,online_only:0
 msgid "Online Only"
-msgstr ""
+msgstr "Seulement en ligne"
 
 #. module: connector_prestashop_catalog_manager
 #: model:ir.model,name:connector_prestashop_catalog_manager.model_prestashop_product_combination
 #: model:ir.model,name:connector_prestashop_catalog_manager.model_prestashop_product_template
 msgid "PrestaShop Binding with Odoo binding (abstract)"
-msgstr ""
+msgstr "Connexion PrestaShop avec Odoo (abstraite)"
 
 #. module: connector_prestashop_catalog_manager
 #: view:product.attribute:connector_prestashop_catalog_manager.product_attribute_form_view
 msgid "Prestashop Bindings"
-msgstr ""
+msgstr "Connexions Prestasho"
 
 #. module: connector_prestashop_catalog_manager
 #: code:addons/connector_prestashop_catalog_manager/product_image.py:119
 #, python-format
 msgid "Record exported with ID %s on Prestashop."
-msgstr ""
+msgstr "Enregistrement exporté avec l'ID %s dans Prestashop."
 
 #. module: connector_prestashop_catalog_manager
 #: field:export.multiple.products,shop:0
 #: field:wiz.prestashop.export.category,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Boutique"
 
 #. module: connector_prestashop_catalog_manager
 #: view:sync.products:connector_prestashop_catalog_manager.sync_products_form
 msgid "Sync"
-msgstr ""
+msgstr "Synchro"
 
 #. module: connector_prestashop_catalog_manager
 #: model:ir.actions.act_window,name:connector_prestashop_catalog_manager.act_presta_sync_products
 msgid "Sync Products"
-msgstr ""
+msgstr "Synchro produits"
 
 #. module: connector_prestashop_catalog_manager
 #: field:prestashop.product.template,tags:0
 msgid "Tags"
-msgstr ""
+msgstr "Étiquettes"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.deactive_product_form
 msgid "deactive selected products"
-msgstr ""
+msgstr "Rendre inactifs les produits sélectionnés"
 
 #. module: connector_prestashop_catalog_manager
 #: view:active.deactive.products:connector_prestashop_catalog_manager.active_product_form
@@ -281,20 +283,20 @@ msgstr ""
 #: view:sync.products:connector_prestashop_catalog_manager.sync_products_form
 #: view:wiz.prestashop.export.category:connector_prestashop_catalog_manager.export_category_form
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: connector_prestashop_catalog_manager
 #: view:prestashop.product.combination.option:connector_prestashop_catalog_manager.product_attribute_connector_presta_form_view
 #: view:product.attribute:connector_prestashop_catalog_manager.product_attribute_form_view
 msgid "prestashop fields"
-msgstr ""
+msgstr "Champs Prestashop"
 
 #. module: connector_prestashop_catalog_manager
 #: view:prestashop.product.combination.option:connector_prestashop_catalog_manager.product_attribute_connector_presta_tree_view
 msgid "prestashop product attribute"
-msgstr ""
+msgstr "Attributs produits Prestashop"
 
 #. module: connector_prestashop_catalog_manager
 #: view:sync.products:connector_prestashop_catalog_manager.sync_products_form
 msgid "sync selected products"
-msgstr ""
+msgstr "synchro produits sélectionnés"
