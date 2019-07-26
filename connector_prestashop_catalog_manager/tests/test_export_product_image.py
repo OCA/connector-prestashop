@@ -81,7 +81,9 @@ class TestExportProductImage(CatalogManagerTransactionCase):
 
             # VCR.py does not support urllib v1 request in
             # OCA/server-tools/base_multi_image/models/image.py:
-            # to get image from URL so update test is avoided
+            # to get image from URL so...
+
+            # ...update test is avoided
             # update image in PS
 #             prestashop_id = self.binding.prestashop_id
 #             self.binding.export_record()
@@ -100,6 +102,13 @@ class TestExportProductImage(CatalogManagerTransactionCase):
 #             self.assertEqual('/api/images/products/1',
 #                              self.parse_path(request.uri))
 #             self.assertDictEqual({}, self.parse_qs(request.uri))
+
+            # ...and delete test is hacked
+            self.image.write({
+                'storage': 'file',
+                'path': get_resource_path('connector_prestashop',
+                                          'static', 'description', 'icon.png'),
+            })
 
             # delete image in PS
             map_record = self.binding.get_map_record_vals()

@@ -197,6 +197,13 @@ class ProductTemplateExportMapper(Component):
         (m2o_to_external(
             'prestashop_default_category_id',
             binding='prestashop.product.category'), 'id_category_default'),
+        ('state', 'state'),
+        ('low_stock_threshold', 'low_stock_threshold'),
+        ('low_stock_alert', 'low_stock_alert'),
+        ('default_code', 'reference'),
+        (m2o_to_external(
+            'product_brand_id',
+            binding='prestashop.product.brand'), 'id_manufacturer'),
     ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [
@@ -229,11 +236,6 @@ class ProductTemplateExportMapper(Component):
             }
         else:
             return {'price': str(record.list_price)}
-
-    @changed_by('default_code', 'reference')
-    @mapping
-    def reference(self, record):
-        return {'reference': record.reference or record.default_code or ''}
 
     def _get_product_category(self, record):
         ext_categ_ids = []
