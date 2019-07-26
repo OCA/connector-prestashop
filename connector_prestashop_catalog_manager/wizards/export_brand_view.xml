@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 PlanetaTIC - Marc Poch <mpoch@planetatic.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+<data>
+
+    <record id="export_product_brand_form" model="ir.ui.view">
+        <field name="name">wiz.prestashop.export.product.brand.form</field>
+        <field name="model">wiz.prestashop.export.product.brand</field>
+        <field name="arch" type="xml">
+            <form string="Export Product Brand">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]"/>
+                </group>
+                <footer>
+                    <button name="export_product_brands" type="object"
+                            string="Export" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="act_export_prestashop_product_brand"
+                name="Export To PrestaShop"
+                res_model="wiz.prestashop.export.product.brand"
+                src_model="product.brand"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"
+                view_id="export_product_brand_form"/>
+
+</data>
+</odoo>

@@ -55,6 +55,8 @@ Contributors
 * Sergio Teruel <sergio.teruel@tecnativa.com>
 * Pedro M. Baeza <pedro.baeza@tecnativa.com>
 * Simone Orsi <simone.orsi@camptocamp.com>
+* Guillaume Masson <guillaume.masson@meta-it.fr>
+* Marc Poch <mpoch@planetatic.com>
 
 Maintainer
 ----------
