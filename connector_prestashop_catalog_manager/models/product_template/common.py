@@ -46,6 +46,7 @@ class PrestashopProductTemplate(models.Model):
         help='Minimal Sale quantity',
         default=1,
     )
+    state = fields.Boolean(string='State', default=True)
 
 
 class PrestashopProductTemplateListener(Component):
@@ -65,11 +66,10 @@ class PrestashopProductTemplateListener(Component):
         """ Called when a record is written """
         record.with_delay().export_record(fields=fields)
         if 'minimal_quantity' in fields:
-            for binding in record.prestashop_bind_ids:
-                binding.odoo_id.mapped(
-                    'product_variant_ids.prestashop_bind_ids').write({
-                        'minimal_quantity': binding.minimal_quantity
-                    })
+            record.product_variant_ids.mapped(
+                'prestashop_combinations_bind_ids').filtered(
+                    lambda cb: cb.backend_id == record.backend_id).write({
+                        'minimal_quantity': record.minimal_quantity})
 
 
 class ProductTemplateListener(Component):
@@ -117,6 +117,11 @@ class TemplateAdapter(Component):
         # Remove read-only fields:
         prestashop_data['product'].pop('manufacturer_name', False)
         prestashop_data['product'].pop('quantity', False)
+
+        # Remove position_in_category to avoid these PrestaShop issues:
+        # https://github.com/PrestaShop/PrestaShop/issues/14903
+        # https://github.com/PrestaShop/PrestaShop/issues/15380
+        prestashop_data['product'].pop('position_in_category', False)
 
         full_attributes = prestashop_data['product'].copy()
         for field in attributes:

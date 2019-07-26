@@ -42,6 +42,12 @@ class TestExportProduct(CatalogManagerTransactionCase):
         self.create_binding_no_export(
             'prestashop.product.category', category_tshirts.id, 5)
 
+        acme_brand = self.env['product.brand'].create({
+            'name': 'ACME',
+        })
+        self.create_binding_no_export(
+            'prestashop.product.brand', acme_brand.id, 1)
+
         # create template
         self.template = self.env['product.template'].create({
             'barcode': '8411788010150',
@@ -57,6 +63,7 @@ class TestExportProduct(CatalogManagerTransactionCase):
             'prestashop_default_category_id': category_tshirts.id,
             'standard_price': 10.,
             'weight': 0.1,
+            'product_brand_id': acme_brand.id,
         })
 
     def _bind_template(self):
@@ -210,6 +217,7 @@ class TestExportProduct(CatalogManagerTransactionCase):
                     'show_price': '1',
                     'weight': '0.1',
                     'wholesale_price': '10.0',
+                    'id_manufacturer': '1',
                     }.items():
                 self.assertEqual(value, ps_product[field])
             # check translatable fields
