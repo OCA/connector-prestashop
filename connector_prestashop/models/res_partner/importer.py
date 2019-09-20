@@ -37,6 +37,12 @@ class PartnerImportMapper(Component):
         return {'property_product_pricelist': pricelist.id}
 
     @mapping
+    def is_company(self, record):
+        if record.get('company'):
+            return {'is_company': True}
+        return {}
+
+    @mapping
     def birthday(self, record):
         if record['birthday'] in ['0000-00-00', '']:
             return {}
@@ -131,6 +137,7 @@ class AddressImportMapper(Component):
         ('date_add', 'date_add'),
         ('date_upd', 'date_upd'),
         ('alias', 'alias'),
+        ('company', 'company'),
         (external_to_m2o('id_customer'), 'prestashop_partner_id'),
     ]
 
