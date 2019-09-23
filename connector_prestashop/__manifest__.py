@@ -15,7 +15,7 @@
         "product",
         "product_multi_category",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
-        "base_multi_image",  # oca/product-attribute
+        "product_multi_image",  # oca/product-attribute
         "purchase",
         "product_variant_supplierinfo",  # oca/product-variant
         "stock_available",  # stock-logistics-warehouse
