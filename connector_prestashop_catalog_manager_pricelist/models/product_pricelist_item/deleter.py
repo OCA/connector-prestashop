@@ -2,7 +2,9 @@
 # Copyright 2019 PlanetaTIC <info@planetatic.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from odoo import _
 from odoo.addons.component.core import Component
+
 
 class SpecificPriceDeleter(Component):
     _name = 'prestashop.specific.price.deleter'

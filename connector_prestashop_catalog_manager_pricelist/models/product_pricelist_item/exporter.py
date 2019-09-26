@@ -4,7 +4,7 @@
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
-    changed_by, convert, m2o_to_external, mapping, none) 
+    changed_by, m2o_to_external, mapping)
 
 
 def to_empty_date(field):
