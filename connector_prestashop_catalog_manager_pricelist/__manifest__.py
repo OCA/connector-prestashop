@@ -17,5 +17,7 @@
     "depends": [
         "connector_prestashop_catalog_manager",
     ],
-    "data": [],
+    "data": [
+        'security/ir.model.access.csv',
+    ],
 }
