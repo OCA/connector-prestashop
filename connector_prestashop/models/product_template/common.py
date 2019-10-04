@@ -47,7 +47,7 @@ class ProductTemplate(models.Model):
             template.mapped("prestashop_bind_ids").recompute_prestashop_qty()
             # Recompute variant PrestaShop qty
             template.mapped(
-                "product_variant_ids.prestashop_combination_bind_ids"
+                "product_variant_ids.prestashop_combinations_bind_ids"
             ).recompute_prestashop_qty()
         return True
 
@@ -149,6 +149,8 @@ class PrestashopProductTemplate(models.Model):
         [("0", "Refuse order"), ("1", "Accept order"), ("2", "Default prestashop")],
         string="If stock shortage",
     )
+    low_stock_threshold = fields.Integer(string="Low Stock Threshold")
+    low_stock_alert = fields.Boolean(string="Low Stock Alert")
 
     def import_products(self, backend, since_date=None, **kwargs):
         filters = None
