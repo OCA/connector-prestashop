@@ -61,6 +61,7 @@
                             <field name="importable_order_state_ids" widget="many2many_tags" />
                             <field name="discount_product_id" />
                             <field name="wrapping_product_id" />
+                            <field name="order_name_ps_field" />
                         </group>
                         <group string="Stock">
                             <field name="warehouse_id" />

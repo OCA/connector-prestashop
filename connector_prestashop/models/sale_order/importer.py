@@ -211,7 +211,8 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def name(self, record):
-        basename = record['reference']
+        ps_field = self.backend_record.order_name_ps_field
+        basename = record[ps_field]
         if not self._sale_order_exists(basename):
             return {"name": basename}
         i = 1

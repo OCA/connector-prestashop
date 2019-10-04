@@ -165,6 +165,14 @@ class PrestashopBackend(models.Model):
         help="The timezone of the backend. Used to synchronize the sale order "
         "date.")
 
+    order_name_ps_field = fields.Selection(
+        [('reference', 'Reference'),
+         ('id', 'Identifier')],
+        required=True,
+        default='reference',
+        string="Reference Field",
+        help="PrestaShop field for order reference")
+
     @api.onchange("matching_customer")
     def change_matching_customer(self):
         # Update the field list so that if you API change you could find the
