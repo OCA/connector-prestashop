@@ -198,6 +198,8 @@ class ProductTemplateExportMapper(Component):
             'prestashop_default_category_id',
             binding='prestashop.product.category'), 'id_category_default'),
         ('state', 'state'),
+        ('low_stock_threshold', 'low_stock_threshold'),
+        ('low_stock_alert', 'low_stock_alert'),
     ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [
