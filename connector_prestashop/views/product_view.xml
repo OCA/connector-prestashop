@@ -124,6 +124,8 @@
                     <field name="available_for_order" />
                     <field name="show_price" />
                     <field name="on_sale" />
+                    <field name="low_stock_threshold" />
+                    <field name="low_stock_alert" />
                 </group>
             </form>
        </field>
