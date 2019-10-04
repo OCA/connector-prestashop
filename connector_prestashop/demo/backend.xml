@@ -7,7 +7,7 @@
         <field name="location">http://localhost:8080</field>
         <field name="warehouse_id" ref="stock.warehouse0"/>
         <field name="discount_product_id" ref="connector_ecommerce.product_product_discount"/>
-        <field name="shipping_product_id" ref="connector_ecommerce.product_product_shipping"/>
+        <field name="wrapping_product_id" ref="product_product_wrapping"/>
     </record>
 
 </odoo>

@@ -64,6 +64,16 @@ class PrestashopSaleOrder(models.Model):
         digits=dp.get_precision('Account'),
         readonly=True,
     )
+    total_wrapping_tax_included = fields.Float(
+        string='Total wrapping (tax included) in PrestaShop',
+        digits=dp.get_precision('Account'),
+        readonly=True,
+    )
+    total_wrapping_tax_excluded = fields.Float(
+        string='Total wrapping (tax excluded) in PrestaShop',
+        digits=dp.get_precision('Account'),
+        readonly=True,
+    )
 
     @job(default_channel='root.prestashop')
     def import_orders_since(self, backend, since_date=None, **kwargs):

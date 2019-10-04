@@ -108,13 +108,15 @@ class PrestashopBackend(models.Model):
         comodel_name='product.product',
         index=True,
         required=True,
+        default=lambda self: self._default_discount_product_id(),
         string='Discount Product',
     )
-    shipping_product_id = fields.Many2one(
+    wrapping_product_id = fields.Many2one(
         comodel_name='product.product',
         index=True,
         required=True,
-        string='Shipping Product',
+        default=lambda self: self._default_wrapping_product_id(),
+        string='Wrapping Product',
     )
     importable_order_state_ids = fields.Many2many(
         comodel_name='sale.order.state',
@@ -201,6 +203,16 @@ class PrestashopBackend(models.Model):
     @api.model
     def _default_pricelist_id(self):
         return self.env['product.pricelist'].search([], limit=1)
+
+    @api.model
+    def _default_discount_product_id(self):
+        return self.env.ref(
+            'connector_ecommerce.product_product_discount', False)
+
+    @api.model
+    def _default_wrapping_product_id(self):
+        return self.env.ref(
+            'connector_prestashop.product_product_wrapping', False)
 
     @api.multi
     def add_checkpoint(self, record, message=''):

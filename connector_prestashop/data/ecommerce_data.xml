@@ -39,5 +39,13 @@ if sale.prestashop_bind_ids:
         <field name="active" eval="True"/>
     </record>
 
+    <record id="product_product_wrapping" model="product.product">
+        <field name="default_code">GIFT WRAPPING</field>
+        <field name="list_price">0.0</field>
+        <field name="standard_price">0.0</field>
+        <field name="type">service</field>
+        <field name="name">Gift Wrapping</field>
+        <field name="categ_id" ref="connector_ecommerce.product_categ_services" />
+    </record>
 
 </odoo>

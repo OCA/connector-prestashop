@@ -147,7 +147,9 @@ class SaleOrderImportMapper(Component):
         ('delivery_number', 'prestashop_delivery_number'),
         ('total_paid', 'total_amount'),
         ('total_shipping_tax_incl', 'total_shipping_tax_included'),
-        ('total_shipping_tax_excl', 'total_shipping_tax_excluded')
+        ('total_shipping_tax_excl', 'total_shipping_tax_excluded'),
+        ('total_wrapping_tax_incl', 'total_wrapping_tax_included'),
+        ('total_wrapping_tax_excl', 'total_wrapping_tax_excluded'),
     ]
 
     def _get_sale_order_lines(self, record):
@@ -333,6 +335,67 @@ class SaleOrderImporter(Component):
                               'error: %s', row['product_id'], err)
                 self.line_template_errors.append(row)
 
+    def _split_discount_lines_by_taxes(self, binding):
+        """ Weight discount taxes according to tax bases as PrestaShop does"""
+
+        order = binding.odoo_id
+        discount_product = self.backend_record.discount_product_id
+        wrapping_product = self.backend_record.wrapping_product_id
+
+        discount_lines = filter(
+            lambda l: l.product_id.id == discount_product.id,
+            order.order_line)
+        product_lines = filter(
+                lambda l: (l.product_id.id not in (
+                    discount_product.id, wrapping_product.id) and
+                    not l.is_delivery),
+                order.order_line)
+        if not discount_lines:
+            return
+
+        amount_by_tax_ids = {}
+        total_amount = 0
+        for line in product_lines:
+            tax_ids = tuple(sorted(line.tax_id.ids))
+            if tax_ids not in amount_by_tax_ids:
+                amount_by_tax_ids[tax_ids] = 0
+            amount_by_tax_ids[tax_ids] += line.price_subtotal
+            total_amount += line.price_subtotal
+        if not total_amount:
+            return
+
+        for line in discount_lines:
+            for tax_ids, amount in sorted(amount_by_tax_ids.items()):
+                weight = amount / total_amount
+                line.copy({
+                    'order_id': order.id,
+                    'sequence': order.order_line[-1].sequence + 1,
+                    'price_unit': weight * line.price_unit,
+                    'tax_id': [(6, 0, tax_ids)],
+                })
+            line.unlink()
+
+    def _add_wrapping_line(self, binding):
+        SaleOrderLine = self.env['sale.order.line']
+        order = binding.odoo_id
+        product = self.backend_record.wrapping_product_id
+        if self.backend_record.taxes_included:
+            price_unit = binding.total_wrapping_tax_included
+        else:
+            price_unit = binding.total_wrapping_tax_excluded
+        vals = {
+            'order_id': order.id,
+            'name': product.with_context(lang=order.partner_id.lang).name,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'product_id': product.id,
+            'price_unit': price_unit,
+            'tax_id': [(6, 0, product.taxes_id.ids)],
+        }
+        if order.order_line:
+            vals['sequence'] = order.order_line[-1].sequence + 1
+        SaleOrderLine.create(vals)
+
     def _add_shipping_line(self, binding):
         shipping_total = (binding.total_shipping_tax_included
                           if self.backend_record.taxes_included
@@ -356,6 +419,8 @@ class SaleOrderImporter(Component):
 
     def _after_import(self, binding):
         super(SaleOrderImporter, self)._after_import(binding)
+        self._split_discount_lines_by_taxes(binding)
+        self._add_wrapping_line(binding)
         self._add_shipping_line(binding)
         self.checkpoint_line_without_template(binding)
 
@@ -490,11 +555,7 @@ class SaleOrderLineDiscountMapper(Component):
 
     @mapping
     def product_id(self, record):
-        if self.backend_record.discount_product_id:
-            return {'product_id': self.backend_record.discount_product_id.id}
-        product_discount = self.env.ref(
-            'connector_ecommerce.product_product_discount')
-        return {'product_id': product_discount.id}
+        return {'product_id': self.backend_record.discount_product_id.id}
 
     @mapping
     def tax_id(self, record):

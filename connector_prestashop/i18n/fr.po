@@ -4584,11 +4584,6 @@ msgid "Shipping Policy"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_backend_shipping_product_id
-msgid "Shipping Product"
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_shop_group_shop_ids
 msgid "Shops"
 msgstr ""
@@ -6071,6 +6066,11 @@ msgstr ""
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_supplierinfo_product_id
 msgid ""
 "When this field is filled in, the vendor data will onlyapply to the variant."
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_backend_wrapping_product_id
+msgid "Wrapping Product"
 msgstr ""
 
 #. module: connector_prestashop

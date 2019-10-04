@@ -60,11 +60,11 @@
                             <field name="sale_team_id" />
                             <field name="importable_order_state_ids" widget="many2many_tags" />
                             <field name="discount_product_id" />
+                            <field name="wrapping_product_id" />
                         </group>
                         <group string="Stock">
                             <field name="warehouse_id" />
                             <field name="stock_location_id" />
-                            <field name="shipping_product_id" />
                         </group>
                         <group string="Accounting">
                             <field name="refund_journal_id" />
