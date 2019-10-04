@@ -378,12 +378,14 @@ class SaleOrderImporter(Component):
 
     def _add_wrapping_line(self, binding):
         SaleOrderLine = self.env['sale.order.line']
-        order = binding.odoo_id
-        product = self.backend_record.wrapping_product_id
         if self.backend_record.taxes_included:
             price_unit = binding.total_wrapping_tax_included
         else:
             price_unit = binding.total_wrapping_tax_excluded
+        if not price_unit:
+            return
+        order = binding.odoo_id
+        product = self.backend_record.wrapping_product_id
         vals = {
             'order_id': order.id,
             'name': product.with_context(lang=order.partner_id.lang).name,
