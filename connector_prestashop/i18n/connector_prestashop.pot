@@ -1824,7 +1824,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_country_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_currency_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_lang_id
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_category_id_6789
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_category_id_6792
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount_id
@@ -1992,6 +1992,8 @@ msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_ignore_exception
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount_ignore_exception
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_ignore_exception
 msgid "Ignore Exceptions"
 msgstr ""
 
@@ -4158,11 +4160,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_route_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template_route_ids
 msgid "Routes"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_rule_group
-msgid "Rule group"
 msgstr ""
 
 #. module: connector_prestashop
