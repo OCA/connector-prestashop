@@ -11,7 +11,6 @@ The taxes are probably different between Odoo and PrestaShop. A fiscal position 
 Resolution:
 Check your taxes and fiscal positions configuration and correct them if necessary.</field>
         <field name="sequence">30</field>
-        <field name="rule_group">sale</field>
         <field name="model">sale.order</field>
         <field name="code">if sale.prestashop_bind_ids and abs(sale.amount_total - sale.prestashop_bind_ids[0].total_amount) >= 0.001:
     failed = True</field>
@@ -28,7 +27,6 @@ The taxes are probably different between Odoo and PrestaShop. A fiscal position 
 Resolution:
 Check your taxes and fiscal positions configuration and correct them if necessary.</field>
         <field name="sequence">30</field>
-        <field name="rule_group">sale</field>
         <field name="model">sale.order</field>
         <field name="code"># By default, a cent of difference for the tax amount is allowed, feel free to customise it in your own module
 if sale.prestashop_bind_ids:
