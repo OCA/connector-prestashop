@@ -21,7 +21,7 @@ This module is based on modules in other repositories :
 - https://github.com/OCA/product-attribute.git
 - https://github.com/OCA/e-commerce.git
 - https://github.com/OCA/sale-workflow.git
- 
+
 
 Getting started
 ---------------
@@ -29,7 +29,7 @@ Getting started
 - install the module prestashoperpconnect
   - settings -> modules
   - choose your country accounting
-- install the module  account_accountant 
+- install the module  account_accountant
 - configure the chart of account (it seems that it is not required anymore with ocb branches)
   - in settings -> configuration -> Accounting -> Chart of account
   - set the template for your country
@@ -51,6 +51,3 @@ Getting started
   - click on 'import in background' in front of 'Import product categories and products'
 - once these tasks are done (see it in Connectors -> Queue -> Jobs)
   - click on 'import in background' in front of 'import sale orders'
-
-
-
