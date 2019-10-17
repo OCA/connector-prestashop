@@ -144,6 +144,8 @@ class TemplateMapper(Component):
                         model_name='prestashop.product.combination')
                     variant = backend_adapter.read(int(prod['id']))
                     code = variant.get(self.backend_record.matching_product_ch)
+                    if not code:
+                        continue
                     if self.backend_record.matching_product_ch == 'reference':
                         product = self.env['product.product'].search(
                             [('default_code', '=', code)])
