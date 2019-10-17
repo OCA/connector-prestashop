@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2019-10-17 03:32+0000\n"
+"Last-Translator: Guillaume Masson <guillaume.masson@meta-it.fr>\n"
 "Language-Team: none\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.8\n"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund_state
@@ -33,52 +35,52 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_product_variant_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Variantes d'article"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Articles"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier_purchase_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_purchase_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template_purchase_count
 msgid "# Purchases"
-msgstr ""
+msgstr "# Achats"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier_sales_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_sales_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template_sales_count
 msgid "# Sales"
-msgstr ""
+msgstr "# Ventes"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address_supplier_invoice_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_supplier_invoice_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr ""
+msgstr "# Factures fournisseurs"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr ""
+msgstr "# de Factures"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address_purchase_order_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_purchase_order_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier_purchase_order_count
 msgid "# of Purchase Order"
-msgstr ""
+msgstr "# de Commandes d'achat"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address_sale_order_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_sale_order_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier_sale_order_count
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# de Commandes de vente"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_category_type
