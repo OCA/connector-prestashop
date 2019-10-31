@@ -113,7 +113,7 @@ class PrestashopSaleOrder(models.Model):
                 continue
             with sale.backend_id.work_on(self._name) as work:
                 exporter = work.component(usage='sale.order.state.exporter')
-                return exporter.run(self, new_state)
+                return exporter.run(sale, new_state)
 
 
 class SaleOrderLine(models.Model):

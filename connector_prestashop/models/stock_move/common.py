@@ -40,7 +40,7 @@ class StockQuant(models.Model):
         ps_locations = location_obj.get_prestashop_stock_locations()
         for quant in self:
             prev_location = quant.location_id
-            super(StockQuant, self).write(vals)
+            super(StockQuant, quant).write(vals)
             if set([prev_location, quant.location_id]) & set(ps_locations):
                 quant.invalidate_cache()
                 quant.product_id.update_prestashop_qty()
@@ -78,7 +78,7 @@ class StockMove(models.Model):
         for move in self:
             prev_location = move.location_id
             prev_location_dest = move.location_dest_id
-            super(StockMove, self).write(vals)
+            super(StockMove, move).write(vals)
             if set([prev_location, prev_location_dest, move.location_id,
                     move.location_dest_id]) & set(ps_locations):
                 move.invalidate_cache()
