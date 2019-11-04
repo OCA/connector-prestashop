@@ -20,7 +20,7 @@ def external_to_bool(field, binding=None):
             return False
         ext_bool = record[field]
         if isinstance(ext_bool, bool):
-            result = record
+            result = ext_bool
         else:
             result = True
             if ext_bool == '0':
