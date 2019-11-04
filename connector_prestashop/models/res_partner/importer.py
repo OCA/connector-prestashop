@@ -9,6 +9,7 @@ from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, external_to_m2o, only_create)
+from odoo.addons.connector_prestashop.components.mapper import external_to_bool
 
 
 class PartnerImportMapper(Component):
@@ -22,7 +23,7 @@ class PartnerImportMapper(Component):
         ('email', 'email'),
         ('newsletter', 'newsletter'),
         ('company', 'company'),
-        ('active', 'active'),
+        (external_to_bool('active'), 'active'),
         ('note', 'comment'),
         (external_to_m2o('id_shop_group'), 'shop_group_id'),
         (external_to_m2o('id_shop'), 'shop_id'),

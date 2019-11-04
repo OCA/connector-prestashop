@@ -5,6 +5,30 @@ from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.components.mapper import mapping
 
 
+def external_to_bool(field, binding=None):
+    """ A modifier intended to be used on the ``direct`` mappings.
+
+    For a field from a backend which is a boolean, convert the Prestashop
+    value ('0' or '1') to python boolean.
+
+    Example::
+        direct = [(external_to_bool('available_for_order')), 'available_for_order']
+    :param field: name of the source field in the record
+    """
+    def modifier(self, record, to_attr):
+        if not record[field]:
+            return False
+        ext_bool = record[field]
+        if isinstance(ext_bool, bool):
+            result = record
+        else:
+            result = True
+            if ext_bool == '0':
+                result = False
+        return result
+    return modifier
+
+
 class PrestashopImportMapper(AbstractComponent):
     _name = 'prestashop.import.mapper'
     _inherit = ['base.prestashop.connector', 'base.import.mapper']

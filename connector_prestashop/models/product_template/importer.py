@@ -14,6 +14,7 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     mapping, external_to_m2o, only_create)
+from odoo.addons.connector_prestashop.components.mapper import external_to_bool
 from odoo.exceptions import ValidationError
 
 
@@ -49,8 +50,8 @@ class TemplateMapper(Component):
         (external_to_m2o('id_shop_default'), 'default_shop_id'),
         ('link_rewrite', 'link_rewrite'),
         ('reference', 'reference'),
-        ('available_for_order', 'available_for_order'),
-        ('on_sale', 'on_sale'),
+        (external_to_bool('available_for_order'), 'available_for_order'),
+        (external_to_bool('on_sale'), 'on_sale'),
     ]
 
     def _apply_taxes(self, tax, price):

@@ -5,6 +5,7 @@ from odoo import _
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, external_to_m2o
+from odoo.addons.connector_prestashop.components.mapper import external_to_bool
 
 import datetime
 import logging
@@ -29,7 +30,7 @@ class ProductCategoryMapper(Component):
         ('meta_keywords', 'meta_keywords'),
         ('meta_title', 'meta_title'),
         (external_to_m2o('id_shop_default'), 'default_shop_id'),
-        ('active', 'active'),
+        (external_to_bool('active'), 'active'),
         ('position', 'position')
     ]
 

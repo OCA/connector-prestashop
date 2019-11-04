@@ -4,6 +4,7 @@
 from odoo.addons.queue_job.exception import FailedJobError
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector_prestashop.components.mapper import external_to_bool
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class SupplierMapper(Component):
     direct = [
         ('name', 'name'),
         ('id', 'prestashop_id'),
-        ('active', 'active'),
+        (external_to_bool('active'), 'active'),
     ]
 
     @mapping
