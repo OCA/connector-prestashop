@@ -119,6 +119,11 @@ class TemplateAdapter(Component):
         prestashop_data['product'].pop('manufacturer_name', False)
         prestashop_data['product'].pop('quantity', False)
 
+        # Remove position_in_category to avoid these PrestaShop issues:
+        # https://github.com/PrestaShop/PrestaShop/issues/14903
+        # https://github.com/PrestaShop/PrestaShop/issues/15380
+        prestashop_data['product'].pop('position_in_category', False)
+
         full_attributes = prestashop_data['product'].copy()
         for field in attributes:
             if field != 'associations':
