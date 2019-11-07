@@ -66,11 +66,10 @@ class PrestashopProductTemplateListener(Component):
         """ Called when a record is written """
         record.with_delay().export_record(fields=fields)
         if 'minimal_quantity' in fields:
-            for binding in record.prestashop_bind_ids:
-                binding.odoo_id.mapped(
-                    'product_variant_ids.prestashop_bind_ids').write({
-                        'minimal_quantity': binding.minimal_quantity
-                    })
+            record.product_variant_ids.mapped(
+                'prestashop_combinations_bind_ids').filtered(
+                    lambda cb: cb.backend_id == record.backend_id).write({
+                        'minimal_quantity': record.minimal_quantity})
 
 
 class ProductTemplateListener(Component):
