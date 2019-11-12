@@ -16,19 +16,26 @@ class IrTranslation(models.Model):
         for translation in self:
             if translation.type == 'model':
                 # get model and ir_field
-                model, fieldname = self.name.split(',')
-                model_obj = self.env[model]
-                instance = model_obj.browse(self.res_id)
+                model, fieldname = translation.name.split(',')
+                model_obj = translation.env[model]
+                instance = model_obj.browse(translation.res_id)
                 instance_vals = instance.read([fieldname])[0]
                 untranslated_content = instance_vals[fieldname]
-                instance.write({fieldname: untranslated_content})
+                instance.with_context(
+                    catalog_manager_force_translation=True
+                ).write({fieldname: untranslated_content})
         return True
 
     @api.multi
     def write(self, vals):
-        res = super(IrTranslation, self).write(vals)
+        res = False
+        for translation in self:
+            if translation.env.context.get(
+                    'catalog_manager_force_translation', False):
+                continue
+            res = super(IrTranslation, self).write(vals)
 
-        self.write_on_source_model()
+            self.write_on_source_model()
         return res
 
     @api.model
