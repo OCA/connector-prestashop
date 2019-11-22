@@ -5,7 +5,7 @@
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
     changed_by, m2o_to_external, mapping)
-
+from odoo.addons.queue_job.exception import FailedJobError
 
 def to_empty_date(field):
     """ A modifier intended to be used on the ``direct`` mappings.
@@ -72,8 +72,14 @@ class SpecificPriceMapper(Component):
             product_tmpl = record.product_id.product_tmpl_id
             vals['id_product_attribute'] = combination_binder.to_external(
                 record.product_id, wrap=True)
+            if not vals['id_product_attribute']:
+                raise FailedJobError(
+                    'There is no attribute in PrestaShop for Odoo combination')
         vals['id_product'] = template_binder.to_external(
             product_tmpl, wrap=True)
+        if not vals['id_product']:
+            raise FailedJobError(
+                'There is no product in PrestaShop for Odoo template')
         return vals
 
     @changed_by('compute_price', 'fixed_price', 'percent_price')
