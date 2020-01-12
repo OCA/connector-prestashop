@@ -189,7 +189,8 @@ class ProductCombinationMapper(Component):
         code = record.get('reference')
         if not code:
             code = "%s_%s" % (record['id_product'], record['id'])
-        if not self._product_code_exists(code):
+        if (not self._product_code_exists(code) or
+                self.backend_record.matching_product_ch == 'reference'):
             return {'default_code': code}
         i = 1
         current_code = '%s_%s' % (code, i)

@@ -115,6 +115,7 @@ class PrestashopAddressMixin(models.AbstractModel):
         string='Updated At (on PrestaShop)',
         readonly=True,
     )
+    company = fields.Char(string='Company')
 
 
 class PrestashopAddress(models.Model):

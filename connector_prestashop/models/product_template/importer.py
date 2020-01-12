@@ -209,7 +209,8 @@ class TemplateMapper(Component):
             code = "backend_%d_product_%s" % (
                 self.backend_record.id, record['id']
             )
-        if not self._template_code_exists(code):
+        if (not self._template_code_exists(code) or
+                self.backend_record.matching_product_ch == 'reference'):
             return {'default_code': code}
         i = 1
         current_code = '%s_%d' % (code, i)
