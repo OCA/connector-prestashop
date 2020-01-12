@@ -1,6 +1,6 @@
-queue_job
+queue
 connector
-connector_ecommerce
+connector-ecommerce
 product-attribute
 sale-workflow
 server-tools
