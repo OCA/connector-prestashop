@@ -83,7 +83,8 @@ class ProductImageAdapter(Component):
         # TODO: odoo logic in the adapter? :-(
         url = '{}/{}'.format(self._prestashop_model, attributes['id_product'])
         url_del = '{}/{}/{}/{}'.format(
-            api._api_url, self._prestashop_model, attributes['id_product'], id_)
+            api._api_url, self._prestashop_model, attributes['id_product'],
+            id_)
         try:
             api._execute(url_del, 'DELETE')
         except:
