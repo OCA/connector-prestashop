@@ -201,6 +201,9 @@ class ProductTemplateExportMapper(Component):
         ('low_stock_threshold', 'low_stock_threshold'),
         ('low_stock_alert', 'low_stock_alert'),
         ('default_code', 'reference'),
+        (m2o_to_external(
+            'product_brand_id',
+            binding='prestashop.product.brand'), 'id_manufacturer'),
     ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [
