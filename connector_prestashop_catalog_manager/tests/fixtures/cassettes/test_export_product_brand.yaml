@@ -10,31 +10,28 @@ interactions:
       Content-Type: [text/xml]
       User-Agent: [python-requests/2.11.1]
     method: POST
-    uri: http://www.prestashop_catalogmanager10.com/api/manufacturers
+    uri: http://localhost:8080/api/manufacturers
   response:
     body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
-        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<manufacturer>\n\t<id><![CDATA[10]]></id>\n\t<active><![CDATA[1]]></active>\n\t<link_rewrite
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<manufacturer>\n\t<id><![CDATA[14]]></id>\n\t<active><![CDATA[1]]></active>\n\t<link_rewrite
         notFilterable=\"true\"><![CDATA[new-brand]]></link_rewrite>\n\t<name><![CDATA[New
-        brand]]></name>\n\t<date_add><![CDATA[2020-02-06 10:57:36]]></date_add>\n\t<date_upd><![CDATA[2020-02-06
-        10:57:36]]></date_upd>\n\t<description><language id=\"1\"></language><language
-        id=\"2\"></language><language id=\"3\"></language></description>\n\t<short_description><language
-        id=\"1\"></language><language id=\"2\"></language><language id=\"3\"></language></short_description>\n\t<meta_title><language
-        id=\"1\"></language><language id=\"2\"></language><language id=\"3\"></language></meta_title>\n\t<meta_description><language
-        id=\"1\"></language><language id=\"2\"></language><language id=\"3\"></language></meta_description>\n\t<meta_keywords><language
-        id=\"1\"></language><language id=\"2\"></language><language id=\"3\"></language></meta_keywords>\n<associations>\n<addresses
+        brand]]></name>\n\t<date_add><![CDATA[2020-02-06 18:16:53]]></date_add>\n\t<date_upd><![CDATA[2020-02-06
+        18:16:53]]></date_upd>\n\t<description><language id=\"1\"></language></description>\n\t<short_description><language
+        id=\"1\"></language></short_description>\n\t<meta_title><language id=\"1\"></language></meta_title>\n\t<meta_description><language
+        id=\"1\"></language></meta_description>\n\t<meta_keywords><language id=\"1\"></language></meta_keywords>\n<associations>\n<addresses
         nodeType=\"address\" api=\"addresses\"/>\n</associations>\n</manufacturer>\n</prestashop>\n"}
     headers:
-      access-time: ['1580983056']
+      access-time: ['1581009413']
       connection: [keep-alive]
-      content-length: ['1082']
-      content-sha1: [ae46a7297bc2b0209b14a833f98c5f0af9517df7]
+      content-length: ['802']
+      content-sha1: [4c9faea22f246917d392a77fa137b7adf312b696]
       content-type: [text/xml;charset=utf-8]
-      date: ['Thu, 06 Feb 2020 09:57:36 GMT']
-      execution-time: ['0.014']
+      date: ['Thu, 06 Feb 2020 17:16:53 GMT']
+      execution-time: ['0.016']
       psws-version: [1.6.1.22]
       server: [nginx/1.10.3 (Ubuntu)]
-      set-cookie: ['PrestaShop-6afe1be0fe41e536d378c33ccb8576a7=808f2e7baac97d280182a998e8bf51f51c70ea946221b2ce96c2209b243bb1af%3AERwbwgjnbPhegaRWNyAjEPXE1wl77p7gVPd0trzO5B3f8cQFoGx2CGfZlCxeec3OsUC7W3nSouUzF5YBUf95xh%2ByF0jDZeiBz%2BFRGg7LF8o%3D;
-          expires=Wed, 26-Feb-2020 09:57:36 GMT; Max-Age=1728000; path=/; domain=www.prestashop_catalogmanager10.com;
+      set-cookie: ['PrestaShop-6afe1be0fe41e536d378c33ccb8576a7=70fe1813ab881a88b93cae0c0b17932ce2c31a2a23a428085e404b798b0b57f5%3AERwbwgjnbPhegaRWNyAjEBSV37qybRlOe7gRV3My9ws7tUTjvDrto87GEN6i4LKN6ERP2fCILkNsEMee7E3G5LxiZ0xlfI3ztXDxbrmmZQM%3D;
+          expires=Wed, 26-Feb-2020 17:16:53 GMT; Max-Age=1728000; path=/; domain=localhost:8080;
           HttpOnly']
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]

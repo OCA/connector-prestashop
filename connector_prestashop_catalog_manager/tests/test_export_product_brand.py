@@ -49,6 +49,8 @@ class TestExportProductBrand(CatalogManagerTransactionCase):
 
     @assert_no_job_delayed
     def test_export_product_brand_onwrite(self):
+        self._bind_brand()
+
         # check no export delayed
         self.assertEqual(
             0, self.instance_delay_record.export_record.call_count)
