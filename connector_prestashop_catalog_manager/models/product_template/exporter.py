@@ -204,6 +204,7 @@ class ProductTemplateExportMapper(Component):
         (m2o_to_external(
             'product_brand_id',
             binding='prestashop.product.brand'), 'id_manufacturer'),
+        ('visibility', 'visibility'),
     ]
     # handled by base mapping `translatable_fields`
     _translatable_fields = [
