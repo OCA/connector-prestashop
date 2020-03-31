@@ -362,17 +362,23 @@ class TemplateMapper(Component):
             return {"type": "service"}
         return {"type": "product"}
 
+    # TODO FIXME
+    #    @mapping
+    #    def extras_features(self, record):
+    #        mapper = self.component(usage='feature.product.import.mapper')
+    #        return mapper.map_record(record).values(**self.options)
+    #
+    #    @mapping
+    #    def extras_manufacturer(self, record):
+    #        mapper = self.component(usage='manufacturer.product.import.mapper')
+    #        return mapper.map_record(record).values(**self.options)
 
-# TODO FIXME
-#    @mapping
-#    def extras_features(self, record):
-#        mapper = self.component(usage='feature.product.import.mapper')
-#        return mapper.map_record(record).values(**self.options)
-#
-#    @mapping
-#    def extras_manufacturer(self, record):
-#        mapper = self.component(usage='manufacturer.product.import.mapper')
-#        return mapper.map_record(record).values(**self.options)
+    @mapping
+    def visibility(self, record):
+        visibility = record.get("visibility")
+        if visibility not in ("both", "catalog", "search"):
+            visibility = "none"
+        return {"visibility": visibility}
 
 
 class FeaturesProductImportMapper(Component):

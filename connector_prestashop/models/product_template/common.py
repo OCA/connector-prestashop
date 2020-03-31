@@ -151,6 +151,16 @@ class PrestashopProductTemplate(models.Model):
     )
     low_stock_threshold = fields.Integer(string="Low Stock Threshold")
     low_stock_alert = fields.Boolean(string="Low Stock Alert")
+    visibility = fields.Selection(
+        string="Visibility",
+        selection=[
+            ("both", "All shop"),
+            ("catalog", "Only Catalog"),
+            ("search", "Only search results"),
+            ("none", "Hidden"),
+        ],
+        default="both",
+    )
 
     def import_products(self, backend, since_date=None, **kwargs):
         filters = None
