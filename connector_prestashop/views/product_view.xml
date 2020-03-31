@@ -126,6 +126,7 @@
                     <field name="on_sale" />
                     <field name="low_stock_threshold" />
                     <field name="low_stock_alert" />
+                    <field name="visibility" />
                 </group>
             </form>
        </field>
@@ -139,6 +140,7 @@
                 <field name="date_add" />
                 <field name="date_upd" />
                 <field name="quantity" />
+                <field name="visibility" />
                 <field name="prestashop_id" />
                 <field name="reference" />
                 <field name="no_export" />
