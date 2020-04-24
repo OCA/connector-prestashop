@@ -184,10 +184,19 @@ class AddressImporter(Component):
     _inherit = 'prestashop.importer'
     _apply_on = 'prestashop.address'
 
-    def _check_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:]
-        partner_model = self.env['res.partner']
-        return partner_model.simple_vat_check(vat_country, vat_number)
+    def _check_vat(self, vat_number, partner_country):
+        vat_country, vat_number_ = self.env["res.partner"]._split_vat(
+            vat_number
+        )
+        if not self.env["res.partner"].simple_vat_check(
+                vat_country, vat_number_):
+            # if fails, check with country code from country
+            country_code = partner_country.code
+            if country_code:
+                if not self.env["res.partner"].simple_vat_check(
+                        country_code.lower(), vat_number):
+                    return False
+        return True
 
     def _after_import(self, binding):
         record = self.prestashop_record
@@ -199,7 +208,7 @@ class AddressImporter(Component):
             vat_number = record['dni'].replace('.', '').replace(
                 ' ', '').replace('-', '')
         if vat_number:
-            if self._check_vat(vat_number):
+            if self._check_vat(vat_number, binding.odoo_id.country_id):
                 binding.parent_id.write({'vat': vat_number})
             else:
                 msg = _('Please, check the VAT number: %s') % vat_number
