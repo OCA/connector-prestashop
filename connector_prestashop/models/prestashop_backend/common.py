@@ -148,24 +148,13 @@ class PrestashopBackend(models.Model):
     # matching_customer_ch = fields.Many2one(
     #     comodel_name='prestashop.partner.field', string="Matched field",
     #     help="Field that will be matched.")
-
-    quantity_field = fields.Selection(
-        [('qty_available', 'Available Quantity'),
-         ('virtual_available', 'Forecast quantity'),
-         ('immediately_usable_qty', 'Available to promise'),
-         ('potential_qty', 'Potential')],
-        help="Some of this options may need some additionnal modules you'll "
-        "have to install by yourself from "
-        "https://github.com/OCA/stock-logistics-warehouse",
-        required=True,
-        default='virtual_available')
     tz = fields.Selection(
         _tz_get, 'Timezone', size=64,
         help="The timezone of the backend. Used to synchronize the sale order "
         "date.")
     product_qty_field = fields.Selection(
         selection=[
-            ('immediately_usable_qty', 'Immediately usable qty'),
+            ('qty_available_not_res', 'Immediately usable qty'),
             ('qty_available', 'Qty available'),
         ],
         string='Product qty',
@@ -182,7 +171,7 @@ class PrestashopBackend(models.Model):
             # virtual_available for example, we would need to recompute
             # the prestashop qty at stock move level, it can't work to
             # recompute it only at quant level, like it is done today
-            if backend.product_qty_field == 'immediately_usable_qty':
+            if backend.product_qty_field == 'qty_available_not_res':
                 module = self.env['ir.module.module'].sudo().search(
                     [('name', '=', 'stock_available_unreserved')], limit=1)
                 if not module or module.state != 'installed':
