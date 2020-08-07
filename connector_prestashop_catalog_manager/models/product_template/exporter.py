@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields
@@ -7,6 +6,8 @@ from datetime import timedelta
 from odoo.addons.connector.components.mapper import (
     mapping, m2o_to_external, changed_by)
 from odoo.addons.component.core import Component
+
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import unicodedata
 import re
@@ -199,7 +200,6 @@ class ProductTemplateExportMapper(Component):
             binding='prestashop.product.category'), 'id_category_default'),
         ('state', 'state'),
         ('low_stock_threshold', 'low_stock_threshold'),
-        ('low_stock_alert', 'low_stock_alert'),
         ('default_code', 'reference'),
         (m2o_to_external(
             'product_brand_id',
@@ -288,7 +288,10 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def date_add(self, record):
         # When export a record the date_add in PS is null.
-        return {'date_add': record.create_date}
+        return {
+            'date_add': record.create_date.strftime(
+                DEFAULT_SERVER_DATETIME_FORMAT)
+        }
 
     @mapping
     def default_image(self, record):
@@ -298,3 +301,7 @@ class ProductTemplateExportMapper(Component):
             ps_image_id = binder.to_external(default_image, wrap=True)
             if ps_image_id:
                 return {'id_default_image': ps_image_id}
+
+    @mapping
+    def low_stock_alert(self, record):
+        return {'low_stock_alert': '1' if record.low_stock_alert else '0'}

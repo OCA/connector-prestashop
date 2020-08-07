@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2011-2013 Camptocamp
 # Copyright 2011-2013 Akretion
 # Copyright 2015 AvanzOSC
@@ -7,7 +6,7 @@
 
 {
     "name": "Prestashop-Odoo Catalog Manager",
-    "version": "10.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "AGPL-3",
     "depends": [
         "connector_prestashop",
