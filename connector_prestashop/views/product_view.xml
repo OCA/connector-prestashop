@@ -95,7 +95,7 @@
            <field name="categ_ids" position="after">
                <field
                     name="prestashop_default_category_id"
-                    domain="[('id', 'in', categ_ids and categ_ids[0] and categ_ids[0][2] or False)]"
+                    domain="[('id', 'in', categ_ids)]"
                     options="{'no_create': True}"
                 />
            </field>
