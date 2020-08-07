@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
@@ -55,7 +54,7 @@ class ProductProductListener(Component):
                 usage='binder', model_name='prestashop.product.combination')
             prestashop_id = binder.to_external(binding)
             binding.with_delay().export_delete_record(
-                binding._name, binding.backend_id, prestashop_id, record)
+                binding.backend_id, prestashop_id)
         record.prestashop_combinations_bind_ids.unlink()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
@@ -124,11 +123,9 @@ class AttributeListener(Component):
                 model_name='prestashop.product.combination.option')
             prestashop_id = binder.to_external(binding)
             if prestashop_id:
-                record = binding.get_map_record_vals()
                 self.env['prestashop.product.combination.option'].\
                     with_delay().export_delete_record(
-                        binding._name, binding.backend_id, prestashop_id,
-                        record)
+                        binding.backend_id, prestashop_id)
 
 
 class AttributeValueListener(Component):
@@ -155,8 +152,6 @@ class AttributeValueListener(Component):
                 model_name='prestashop.product.combination.option.value')
             prestashop_id = binder.to_external(binding)
             if prestashop_id:
-                record = binding.get_map_record_vals()
                 self.env['prestashop.product.combination.option.value'].\
                     with_delay().export_delete_record(
-                        binding._name, binding.backend_id, prestashop_id,
-                        record)
+                        binding.backend_id, prestashop_id)

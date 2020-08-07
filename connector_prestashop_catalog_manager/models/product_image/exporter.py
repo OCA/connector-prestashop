@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp.addons.connector_prestashop.components.backend_adapter import (
@@ -43,7 +42,11 @@ class ProductImageExporter(Component):
                 return _('Nothing to export.')
             # special check on data before export
             self._validate_data(record)
-            self.prestashop_id = self._create(record)
+            exported_vals = self._create(record)
+            if exported_vals and exported_vals.get('prestashop')\
+                    and exported_vals['prestashop'].get('image'):
+                self.prestashop_id = int(
+                    exported_vals['prestashop']['image'].get('id'))
             self._after_export()
         self._link_image_to_url()
         message = _('Record exported with ID %s on Prestashop.')

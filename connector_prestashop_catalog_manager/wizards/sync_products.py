@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, api
@@ -16,7 +15,7 @@ class SyncProducts(models.TransientModel):
             try:
                 for bind in product.prestashop_bind_ids:
                     bind.resync()
-            except Exception, e:
+            except Exception as e:
                 _logger.info('id %s, attributes %s\n', str(product.id), e)
 
     @api.multi

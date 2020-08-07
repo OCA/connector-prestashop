@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields
@@ -7,6 +6,8 @@ from datetime import timedelta
 from odoo.addons.connector.components.mapper import (
     mapping, m2o_to_external, changed_by)
 from odoo.addons.component.core import Component
+
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import unicodedata
 import re
@@ -89,6 +90,24 @@ class ProductTemplateExporter(Component):
         else:
             return 1 + self._parent_length(categ.parent_id)
 
+    def export_brand(self, brand):
+        if not brand:
+            return
+        brand_binder = self.binder_for('prestashop.product.brand')
+        ext_id = brand_binder.to_external(brand, wrap=True)
+        if ext_id:
+            return ext_id
+
+        ps_brand_obj = self.env['prestashop.product.brand']
+        res = {
+            'backend_id': self.backend_record.id,
+            'odoo_id': brand.id,
+            'link_rewrite': get_slug(brand.name),
+        }
+        binding = ps_brand_obj.with_context(
+            connector_no_export=True).create(res)
+        binding.export_record()
+
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
         super(ProductTemplateExporter, self)._export_dependencies()
@@ -99,6 +118,8 @@ class ProductTemplateExporter(Component):
 
         for category in self.binding.categ_ids:
             self.export_categories(category)
+
+        self.export_brand(self.binding.product_brand_id)
 
         for line in self.binding.attribute_line_ids:
             attribute_ext_id = attribute_binder.to_external(
@@ -199,7 +220,6 @@ class ProductTemplateExportMapper(Component):
             binding='prestashop.product.category'), 'id_category_default'),
         ('state', 'state'),
         ('low_stock_threshold', 'low_stock_threshold'),
-        ('low_stock_alert', 'low_stock_alert'),
         ('default_code', 'reference'),
         (m2o_to_external(
             'product_brand_id',
@@ -288,7 +308,10 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def date_add(self, record):
         # When export a record the date_add in PS is null.
-        return {'date_add': record.create_date}
+        return {
+            'date_add': record.create_date.strftime(
+                DEFAULT_SERVER_DATETIME_FORMAT)
+        }
 
     @mapping
     def default_image(self, record):
@@ -298,3 +321,7 @@ class ProductTemplateExportMapper(Component):
             ps_image_id = binder.to_external(default_image, wrap=True)
             if ps_image_id:
                 return {'id_default_image': ps_image_id}
+
+    @mapping
+    def low_stock_alert(self, record):
+        return {'low_stock_alert': '1' if record.low_stock_alert else '0'}
