@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.addons.connector.components.mapper import mapping, changed_by
@@ -169,6 +168,16 @@ class ProductCombinationExportMapper(Component):
             }
         }
 
+    @mapping
+    def low_stock_alert(self, record):
+        low_stock_alert = False
+        if record.product_tmpl_id.prestashop_bind_ids:
+            for presta_prod_tmpl in record.product_tmpl_id.prestashop_bind_ids:
+                if presta_prod_tmpl.low_stock_alert:
+                    low_stock_alert = True
+                    break
+        return {'low_stock_alert': '1' if low_stock_alert else '0'}
+
 
 class ProductCombinationOptionExporter(Component):
     _name = 'prestashop.product.combination.option.exporter'
@@ -187,7 +196,7 @@ class ProductCombinationOptionExportMapper(Component):
 
     direct = [
         ('prestashop_position', 'position'),
-        ('group_type', 'group_type'),
+        ('type', 'group_type'),
     ]
 
     _translatable_fields = [
