@@ -168,7 +168,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         """ Update records on the external system """
         raise NotImplementedError
 
-    def delete(self, id_):
+    def delete(self, id_, attributes=None):
         """ Delete a record on the external system """
         raise NotImplementedError
 
@@ -251,7 +251,7 @@ class GenericAdapter(AbstractComponent):
             return res["prestashop"][self._export_node_name_res]["id"]
         return res
 
-    def delete(self, resource, ids):
+    def delete(self, resource, ids, attributes=None):
         _logger.debug("method delete, model %s, ids %s", resource, str(ids))
         # Delete a record(s) on the external system
         return self.client.delete(resource, ids)

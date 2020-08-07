@@ -73,7 +73,7 @@ class ProductImageAdapter(Component):
             files=[
                 (
                     "image",
-                    attributes["filename"].encode("utf-8"),
+                    attributes["filename"],
                     base64.b64decode(attributes["content"]),
                 )
             ],
@@ -101,7 +101,8 @@ class ProductImageAdapter(Component):
             ],
         )
 
-    def delete(self, resource, id_):
+    def delete(self, resource, id_, attributes=None):
         """ Delete a record on the external system """
         api = self.connect()
-        return api.delete(resource, resource_ids=id_)
+        url_del = "{}/{}".format(resource, attributes["id_product"])
+        return api.delete(url_del, resource_ids=id_)

@@ -1,6 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+import threading
 from contextlib import contextmanager
 
 import psycopg2
@@ -125,7 +126,7 @@ class PrestashopExporter(AbstractComponent):
         binding = None
         # wrap is typically True if the relation is a 'product.product'
         # record but the binding model is 'prestashop.product.product'
-        wrap = relation._model._name != binding_model
+        wrap = relation._name != binding_model
         if wrap and hasattr(relation, binding_field_name):
             domain = [
                 (self._openerp_field, "=", relation.id),
@@ -159,7 +160,9 @@ class PrestashopExporter(AbstractComponent):
                     binding = model_c.create(_bind_values)
                     # Eager commit to avoid having 2 jobs
                     # exporting at the same time.
-                    self._cr.commit()  # pylint: disable=invalid-commit
+                    # do never commit during tests
+                    if not getattr(threading.currentThread(), "testing", False):
+                        model_c._cr.commit()  # pylint: disable=invalid-commit
         else:
             # If prestashop_bind_ids does not exist we are typically in a
             # "direct" binding (the binding record is the same record).
