@@ -62,12 +62,12 @@ class PrestashopBinding(models.AbstractModel):
             exporter = work.component(usage="record.exporter")
             return exporter.run(self, fields)
 
-    def export_delete_record(self, backend, external_id):
+    def export_delete_record(self, backend, external_id, attributes=None):
         """ Delete a record on PrestaShop """
         self.check_active(backend)
         with backend.work_on(self._name) as work:
             deleter = work.component(usage="record.exporter.deleter")
-            return deleter.run(external_id)
+            return deleter.run(external_id, attributes)
 
     # TODO: Research
     def resync(self):
