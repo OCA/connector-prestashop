@@ -7,7 +7,9 @@
             <field name="arch" type="xml">
                 <form string="Export Products">
                     <group>
-                        <label string="Active selected products"/>
+                        <div>
+                            <p>Active selected products</p>
+                        </div>
                     </group>
                     <group>
                         <field name="force_status"/>
@@ -37,7 +39,9 @@
             <field name="arch" type="xml">
                 <form string="Export Products">
                     <group>
-                        <label string="deactive selected products"/>
+                        <div>
+                            <p>Dective selected products</p>
+                        </div>
                     </group>
                     <footer>
                         <button name="deactive_products" type="object"

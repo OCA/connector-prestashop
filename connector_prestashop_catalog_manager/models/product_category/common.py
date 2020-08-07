@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo.tools import config
@@ -135,8 +134,6 @@ class ProductCategoryListener(Component):
                 model_name='prestashop.product.category')
             prestashop_id = binder.to_external(binding)
             if prestashop_id:
-                record = binding.get_map_record_vals()
                 self.env['prestashop.product.category'].\
                     with_delay().export_delete_record(
-                        binding._name, binding.backend_id, prestashop_id,
-                        record)
+                        binding.backend_id, prestashop_id)
