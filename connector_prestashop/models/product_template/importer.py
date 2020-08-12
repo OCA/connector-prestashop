@@ -539,7 +539,8 @@ class ProductTemplateImporter(Component):
 
     def deactivate_default_product(self, binding):
         if binding.product_variant_count != 1:
-            for product in binding.product_variant_ids:
+            for product in binding.with_context(
+                    active_test=True).product_variant_ids:
                 if not product.attribute_value_ids:
                     self.env['product.product'].browse(product.id).write(
                         {'active': False})
