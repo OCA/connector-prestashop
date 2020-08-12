@@ -3,5 +3,5 @@ prestapyt >= 0.9.0
 unidecode
 bs4
 # tests dependencies
-freezegun
+freezegun==0.3.12
 vcrpy
