@@ -45,8 +45,6 @@ class ProductBrandListener(Component):
                 model_name='prestashop.product.brand')
             prestashop_id = binder.to_external(binding)
             if prestashop_id:
-                record = binding.get_map_record_vals()
                 self.env['prestashop.product.brand'].\
                     with_delay().export_delete_record(
-                        binding._name, binding.backend_id, prestashop_id,
-                        record)
+                        binding.backend_id, prestashop_id)

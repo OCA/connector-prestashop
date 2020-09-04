@@ -37,9 +37,10 @@ class PrestashopProductImageListener(Component):
                 binder = work.component(
                     usage='binder', model_name='prestashop.product.image')
                 prestashop_id = binder.to_external(binding)
+                attributes = {
+                    'id_product': template.prestashop_id,
+                }
                 if prestashop_id:
-                    record = binding.get_map_record_vals()
                     self.env['prestashop.product.image'].\
                         with_delay().export_delete_record(
-                            binding._name, binding.backend_id,
-                            prestashop_id, record)
+                            binding.backend_id, prestashop_id, attributes)

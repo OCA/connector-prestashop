@@ -90,6 +90,24 @@ class ProductTemplateExporter(Component):
         else:
             return 1 + self._parent_length(categ.parent_id)
 
+    def export_brand(self, brand):
+        if not brand:
+            return
+        brand_binder = self.binder_for('prestashop.product.brand')
+        ext_id = brand_binder.to_external(brand, wrap=True)
+        if ext_id:
+            return ext_id
+
+        ps_brand_obj = self.env['prestashop.product.brand']
+        res = {
+            'backend_id': self.backend_record.id,
+            'odoo_id': brand.id,
+            'link_rewrite': get_slug(brand.name),
+        }
+        binding = ps_brand_obj.with_context(
+            connector_no_export=True).create(res)
+        binding.export_record()
+
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
         super(ProductTemplateExporter, self)._export_dependencies()
@@ -100,6 +118,8 @@ class ProductTemplateExporter(Component):
 
         for category in self.binding.categ_ids:
             self.export_categories(category)
+
+        self.export_brand(self.binding.product_brand_id)
 
         for line in self.binding.attribute_line_ids:
             attribute_ext_id = attribute_binder.to_external(
