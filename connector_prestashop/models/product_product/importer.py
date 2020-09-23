@@ -219,15 +219,10 @@ class ProductCombinationMapper(Component):
         return tax_group.tax_ids
 
     def _apply_taxes(self, tax, price):
-        if self.backend_record.taxes_included == tax.price_include:
-            return price
-        factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
-        if self.backend_record.taxes_included:
-            if not tax.price_include:
-                return price / factor_tax
-        else:
-            if tax.price_include:
-                return price * factor_tax
+        if tax.price_include:
+            factor_tax = tax.price_include and (1 + tax.amount / 100) or 1.0
+            return price * factor_tax
+        return price
 
     @mapping
     def specific_price(self, record):
