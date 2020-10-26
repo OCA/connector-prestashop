@@ -279,7 +279,11 @@ class SaleOrderImportMapper(Component):
         if self.backend_record.tz:
             local = pytz.timezone(self.backend_record.tz)
             naive = fields.Datetime.from_string(date_order)
-            local_dt = local.localize(naive, is_dst=None)
+            try:
+                local_dt = local.localize(naive, is_dst=None)
+            except (pytz.NonExistentTimeError, pytz.AmbiguousTimeError):
+                local_dt = local.localize(naive+timedelta(hours=1),
+                                          is_dst=None)
             date_order = fields.Datetime.to_string(local_dt.astimezone(
                 pytz.utc))
         return {'date_order': date_order}
