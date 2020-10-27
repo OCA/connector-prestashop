@@ -11,6 +11,7 @@
     "depends": [
         "connector_prestashop",
         "product_categ_image",
+        "product_multi_image",
     ],
     "author": "Akretion,"
               "AvanzOSC,"
