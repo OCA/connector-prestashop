@@ -8,7 +8,7 @@
             ref="connector_prestashop.product_connector_presta_form_view"/>
     <field name="type">form</field>
     <field name="arch" type="xml">
-        <xpath expr="/form/group[2]" position="inside">
+        <xpath expr="/form/sheet" position="inside">
             <group col="4" colspan="4">
                 <field name="meta_title"/>
                 <field name="meta_description"/>
