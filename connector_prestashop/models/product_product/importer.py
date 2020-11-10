@@ -120,6 +120,7 @@ class ProductCombinationMapper(Component):
     def combination_default(self, record):
         return {"default_on": bool(int(record["default_on"] or 0))}
 
+    @only_create
     @mapping
     def product_tmpl_id(self, record):
         template = self.get_main_template_binding(record)
