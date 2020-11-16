@@ -118,6 +118,8 @@ class RefundMapper(Component):
         order_line = self._get_shipping_order_line(record)
         if not order_line:
             return None
+        if isinstance(order_line, list):
+            order_line = order_line[0]
         if not record["shipping_cost"] == "1":
             return None
         if self.backend_record.taxes_included:

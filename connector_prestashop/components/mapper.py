@@ -29,7 +29,20 @@ class PrestashopExportMapper(AbstractComponent):
             if column["type"] == "boolean":
                 return res and 1 or 0
             elif column["type"] == "float":
-                res = str(res)
+                set_precision = False
+                if isinstance(res, (float, int)) and from_attr in self.model._fields:
+                    # force float precision:
+                    digits = self.model._fields[from_attr].digits
+                    if digits and digits[1] in (2, 3, 6):
+                        if digits[1] == 2:
+                            res = "{:.2f}".format(res)
+                        elif digits[1] == 3:
+                            res = "{:.3f}".format(res)
+                        elif digits[1] == 6:
+                            res = "{:.6f}".format(res)
+                        set_precision = True
+                if not set_precision:
+                    res = str(res)
         return res
 
 
