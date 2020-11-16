@@ -374,7 +374,7 @@ class PrestashopBackend(models.Model):
     @api.model
     def _scheduler_import_payment_methods(self, domain=None):
         backends = self.search(domain or [])
-        backends.import_payment_methods()
+        backends.import_payment_modes()
         backends.import_refunds()
 
     @api.model
