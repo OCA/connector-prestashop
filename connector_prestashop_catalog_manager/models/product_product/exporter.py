@@ -132,7 +132,8 @@ class ProductCombinationExportMapper(Component):
 
     @mapping
     def cost_price(self, record):
-        return {'wholesale_price': record.standard_price}
+        wholesale_price = float('{:.2f}'.format(record.standard_price))
+        return {'wholesale_price': wholesale_price}
 
     def _get_product_option_value(self, record):
         option_value = []
