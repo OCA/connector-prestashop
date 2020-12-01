@@ -150,8 +150,15 @@ class ProductCombinationMapper(Component):
 
     @mapping
     def weight(self, record):
+        prestashop_product_tmpl_obj = self.env["prestashop.product.template"]
         combination_weight = float(record.get("weight", "0.0"))
-        main_weight = float(self.work.parent_presta_record.get("weight", 0.0))
+        if not hasattr(self.work, "parent_presta_record"):
+            presta_product_tmpl = prestashop_product_tmpl_obj.search(
+                [("prestashop_id", "=", record["id_product"])]
+            )
+            main_weight = presta_product_tmpl.weight
+        else:
+            main_weight = float(self.work.parent_presta_record.get("weight", 0.0))
         weight = main_weight + combination_weight
         return {"weight": weight}
 
