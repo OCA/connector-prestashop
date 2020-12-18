@@ -35,7 +35,7 @@ class ProductImageExporter(Component):
                 return _('Nothing to export.')
             # special check on data before export
             self._validate_data(record)
-            self.prestashop_id = self._update(record)
+            exported_vals = self._update(record)
         else:
             record = map_record.values(for_create=True)
             if not record:
@@ -43,11 +43,12 @@ class ProductImageExporter(Component):
             # special check on data before export
             self._validate_data(record)
             exported_vals = self._create(record)
-            if exported_vals and exported_vals.get('prestashop')\
-                    and exported_vals['prestashop'].get('image'):
-                self.prestashop_id = int(
-                    exported_vals['prestashop']['image'].get('id'))
-            self._after_export()
+        self._after_export()
+        if exported_vals and exported_vals.get('prestashop')\
+                and exported_vals['prestashop'].get('image'):
+            self.prestashop_id = int(
+                exported_vals['prestashop']['image'].get('id'))
+
         self._link_image_to_url()
         message = _('Record exported with ID %s on Prestashop.')
         return message % self.prestashop_id
@@ -141,5 +142,9 @@ class ProductImageExportMapper(Component):
     def filename(self, record):
         file_name = record.filename
         if not file_name:
-            file_name = '.'.join(self._get_file_name(record))
+            name_tuple = self._get_file_name(record)
+            if name_tuple[1].startswith('.'):
+                file_name = ''.join(name_tuple)
+            else:
+                file_name = '.'.join(name_tuple)
         return {'filename': file_name}
