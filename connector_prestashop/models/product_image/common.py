@@ -95,7 +95,7 @@ class ProductImageAdapter(Component):
             files=[
                 (
                     "image",
-                    attributes["filename"].encode("utf-8"),
+                    attributes["filename"],
                     base64.b64decode(attributes["content"]),
                 )
             ],
