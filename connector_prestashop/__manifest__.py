@@ -6,7 +6,7 @@
 
 {
     "name": "PrestaShop-Odoo connector",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "depends": [
         "account",
@@ -18,7 +18,7 @@
         "purchase",
     ],
     "external_dependencies": {
-        'python': [
+        "python": [
             "html2text",
             "prestapyt",
             # tests dependencies
@@ -28,35 +28,33 @@
         ],
     },
     "author": "Akretion,"
-              "Camptocamp,"
-              "AvanzOSC,"
-              "Tecnativa,"
-              "Mind And Go,"
-              "Odoo Community Association (OCA)",
-
+    "Camptocamp,"
+    "AvanzOSC,"
+    "Tecnativa,"
+    "Mind And Go,"
+    "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
-    'demo': [
-        'demo/backend.xml',
+    "demo": [
+        "demo/backend.xml",
     ],
-    'data': [
-        'data/cron.xml',
-        'data/product_decimal_precision.xml',
-        'data/ecommerce_data.xml',
-        'views/prestashop_backend_view.xml',
-        'views/product_view.xml',
-        'views/product_category_view.xml',
-        'views/image_view.xml',
-        'views/delivery_view.xml',
-        'views/connector_prestashop_menu.xml',
-        'views/partner_view.xml',
-        'views/sale_view.xml',
-        'views/account_view.xml',
-        'views/stock_view.xml',
-        'security/ir.model.access.csv',
-        'security/prestashop_security.xml',
-
+    "data": [
+        "data/cron.xml",
+        "data/product_decimal_precision.xml",
+        "data/ecommerce_data.xml",
+        "views/prestashop_backend_view.xml",
+        "views/product_view.xml",
+        "views/product_category_view.xml",
+        "views/image_view.xml",
+        "views/delivery_view.xml",
+        "views/connector_prestashop_menu.xml",
+        "views/partner_view.xml",
+        "views/sale_view.xml",
+        "views/account_view.xml",
+        "views/stock_view.xml",
+        "security/ir.model.access.csv",
+        "security/prestashop_security.xml",
     ],
-    'installable': True,
+    "installable": True,
     "application": True,
 }

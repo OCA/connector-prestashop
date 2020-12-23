@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record id="view_sale_order_state_form" model="ir.ui.view">
@@ -8,15 +8,15 @@
             <form string="Sale order State">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="State"/>
+                        <label for="name" class="oe_edit_only" string="State" />
                         <h1>
-                            <field name="name" placeholder="State name..."/>
+                            <field name="name" placeholder="State name..." />
                         </h1>
                     </div>
                     <notebook>
                        <page name="connector" string="Connector">
                             <group string="PrestaShop Bindings">
-                                <field name="prestashop_bind_ids" nolabel="1"/>
+                                <field name="prestashop_bind_ids" nolabel="1" />
                             </group>
                        </page>
                     </notebook>
@@ -30,7 +30,7 @@
         <field name="model">sale.order.state</field>
         <field name="arch" type="xml">
             <tree string="Sale order State">
-                <field name="name"/>
+                <field name="name" />
             </tree>
         </field>
     </record>
@@ -40,22 +40,22 @@
         <field name="model">prestashop.sale.order.state</field>
         <field name="arch" type="xml">
             <tree string="Sale order State">
-                <field name="backend_id"/>
-                <field name="prestashop_id"/>
+                <field name="backend_id" />
+                <field name="prestashop_id" />
             </tree>
         </field>
     </record>
 
    <record id="view_stock_form" model="ir.ui.view">
         <field name="model">stock.warehouse</field>
-        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="inherit_id" ref="stock.view_warehouse" />
         <field name="arch" type="xml">
             <xpath expr='//notebook' position='before'>
                 <group string="PrestaShop">
                     <field name="prestashop_bind_ids" nolabel="1">
                         <tree name="prestashop_binding">
                             <field name="odoo_id" />
-                            <field name="shop_group_id"/>
+                            <field name="shop_group_id" />
                         </tree>
                     </field>
                 </group>
@@ -69,13 +69,13 @@
         <field name="arch" type="xml">
             <form string="Sale order State">
                 <group>
-                    <field name="backend_id"/>
-                    <field name="prestashop_id"/>
+                    <field name="backend_id" />
+                    <field name="prestashop_id" />
                 </group>
                 <group>
                     <field name="openerp_state_ids" nolabel="1" mode="tree">
                         <tree string="States" editable="top">
-                            <field name="name"/>
+                            <field name="name" />
                         </tree>
                     </field>
                 </group>
@@ -89,7 +89,7 @@
         <field name="res_model">sale.order.state</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_sale_order_state_tree"/>
+        <field name="view_id" ref="view_sale_order_state_tree" />
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Here are the sale order states mapped with e-commerce.
@@ -105,7 +105,8 @@
         name="Sale Order States"
         action="action_prestashop_sale_order_state_form"
         parent="sale.menu_sale_config"
-        sequence="50"/>
+        sequence="50"
+    />
 
     <record id="view_prestashop_sale_order_form" model="ir.ui.view">
         <field name="name">prestashop.sale.order.form</field>
@@ -113,18 +114,18 @@
         <field name="arch" type="xml">
             <form string="Prestashop Sale Order">
                 <group name="binding">
-                    <field name="backend_id"/>
-                    <field name="prestashop_id"/>
+                    <field name="backend_id" />
+                    <field name="prestashop_id" />
                 </group>
                 <group name="references">
-                    <field name="prestashop_invoice_number"/>
-                    <field name="prestashop_delivery_number"/>
+                    <field name="prestashop_invoice_number" />
+                    <field name="prestashop_delivery_number" />
                 </group>
                 <group name="amounts">
-                    <field name="total_amount"/>
-                    <field name="total_amount_tax"/>
-                    <field name="total_shipping_tax_included"/>
-                    <field name="total_shipping_tax_excluded"/>
+                    <field name="total_amount" />
+                    <field name="total_amount_tax" />
+                    <field name="total_shipping_tax_included" />
+                    <field name="total_shipping_tax_excluded" />
                 </group>
             </form>
         </field>
@@ -140,11 +141,11 @@
                 <attribute name="invisible">0</attribute>
            </page>
            <page name="connector" position="inside">
-                <separator string="PrestaShop"/>
+                <separator string="PrestaShop" />
                 <field name="prestashop_bind_ids" readonly="True">
                     <tree string="PrestaShop Binding">
-                        <field name="total_amount"/>
-                        <field name="total_amount_tax"/>
+                        <field name="total_amount" />
+                        <field name="total_amount_tax" />
                     </tree>
                 </field>
 

@@ -5,12 +5,10 @@ from contextlib import contextmanager
 
 import psycopg2
 
-
 from odoo import _, exceptions
+
 from odoo.addons.component.core import AbstractComponent
-
 from odoo.addons.connector.exception import RetryableJobError
-
 
 _logger = logging.getLogger(__name__)
 
@@ -25,9 +23,9 @@ _logger = logging.getLogger(__name__)
 class PrestashopBaseExporter(AbstractComponent):
     """ Base exporter for PrestaShop """
 
-    _name = 'prestashop.base.exporter'
-    _inherit = ['base.exporter', 'base.prestashop.connector']
-    _usage = 'record.exporter'
+    _name = "prestashop.base.exporter"
+    _inherit = ["base.exporter", "base.prestashop.connector"]
+    _usage = "record.exporter"
 
     def __init__(self, environment):
         """
@@ -43,7 +41,7 @@ class PrestashopBaseExporter(AbstractComponent):
         return self.model.browse(self.binding_id)
 
     def run(self, binding, *args, **kwargs):
-        """ Run the synchronization
+        """Run the synchronization
 
         :param binding_id: identifier of the binding record to export
         """
@@ -71,10 +69,10 @@ class PrestashopBaseExporter(AbstractComponent):
 class PrestashopExporter(AbstractComponent):
     """ A common flow for the exports to PrestaShop """
 
-    _name = 'prestashop.exporter'
-    _inherit = 'prestashop.base.exporter'
+    _name = "prestashop.exporter"
+    _inherit = "prestashop.base.exporter"
 
-    _openerp_field = 'odoo_id'
+    _openerp_field = "odoo_id"
 
     def __init__(self, environment):
         """
@@ -90,7 +88,7 @@ class PrestashopExporter(AbstractComponent):
 
     @contextmanager
     def _retry_unique_violation(self):
-        """ Context manager: catch Unique constraint error and retry the
+        """Context manager: catch Unique constraint error and retry the
         job later.
 
         When we execute several jobs workers concurrently, it happens
@@ -109,24 +107,30 @@ class PrestashopExporter(AbstractComponent):
         except psycopg2.IntegrityError as err:
             if err.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
                 raise RetryableJobError(
-                    'A database error caused the failure of the job:\n'
-                    '%s\n\n'
-                    'Likely due to 2 concurrent jobs wanting to create '
-                    'the same record. The job will be retried later.' % err)
+                    "A database error caused the failure of the job:\n"
+                    "%s\n\n"
+                    "Likely due to 2 concurrent jobs wanting to create "
+                    "the same record. The job will be retried later." % err
+                )
             else:
                 raise
 
     def _get_or_create_binding(
-            self, relation, binding_model,
-            binding_field_name='prestashop_bind_ids',
-            bind_values=None):
+        self,
+        relation,
+        binding_model,
+        binding_field_name="prestashop_bind_ids",
+        bind_values=None,
+    ):
         binding = None
         # wrap is typically True if the relation is a 'product.product'
         # record but the binding model is 'prestashop.product.product'
         wrap = relation._model._name != binding_model
         if wrap and hasattr(relation, binding_field_name):
-            domain = [(self._openerp_field, '=', relation.id),
-                      ('backend_id', '=', self.backend_record.id)]
+            domain = [
+                (self._openerp_field, "=", relation.id),
+                ("backend_id", "=", self.backend_record.id),
+            ]
             model = self.env[binding_model].with_context(active_test=False)
             binding = model.search(domain)
             if binding:
@@ -138,15 +142,19 @@ class PrestashopExporter(AbstractComponent):
                 # prestashop.product.product, it is exported, but we need to
                 # create the binding for the template.
 
-                _bind_values = {'backend_id': self.backend_record.id,
-                                self._openerp_field: relation.id}
+                _bind_values = {
+                    "backend_id": self.backend_record.id,
+                    self._openerp_field: relation.id,
+                }
                 _bind_values.update(bind_values or {})
                 # If 2 jobs create it at the same time, retry
                 # one later. A unique constraint (backend_id,
                 # odoo_id) should exist on the binding model
                 with self._retry_unique_violation():
-                    model_c = self.env[binding_model].sudo().with_context(
-                        connector_no_export=True
+                    model_c = (
+                        self.env[binding_model]
+                        .sudo()
+                        .with_context(connector_no_export=True)
                     )
                     binding = model_c.create(_bind_values)
                     # Eager commit to avoid having 2 jobs
@@ -159,11 +167,16 @@ class PrestashopExporter(AbstractComponent):
             binding = relation
         return binding
 
-    def _export_dependency(self, relation, binding_model,
-                           exporter_class=None,
-                           component_usage='record.exporter',
-                           binding_field_name='prestashop_bind_ids',
-                           bind_values=None, force_sync=False):
+    def _export_dependency(
+        self,
+        relation,
+        binding_model,
+        exporter_class=None,
+        component_usage="record.exporter",
+        binding_field_name="prestashop_bind_ids",
+        bind_values=None,
+        force_sync=False,
+    ):
         """
         Export a dependency. The exporter class is a subclass of
         ``PrestashopExporter``.  A more precise class can be defined.
@@ -207,15 +220,16 @@ class PrestashopExporter(AbstractComponent):
             return
 
         binding = self._get_or_create_binding(
-            relation, binding_model,
+            relation,
+            binding_model,
             binding_field_name=binding_field_name,
-            bind_values=bind_values)
+            bind_values=bind_values,
+        )
 
         rel_binder = self.binder_for(binding_model)
 
         if not rel_binder.to_external(binding) or force_sync:
-            exporter = self.component(usage=component_usage,
-                                      model_name=binding_model)
+            exporter = self.component(usage=component_usage, model_name=binding_model)
             exporter.run(binding)
         return binding
 
@@ -228,7 +242,7 @@ class PrestashopExporter(AbstractComponent):
         return self.mapper.map_record(self.binding)
 
     def _validate_data(self, data):
-        """ Check if the values to import are correct
+        """Check if the values to import are correct
 
         Pro-actively check before the ``Model.create`` or
         ``Model.update`` if some fields are missing
@@ -247,7 +261,7 @@ class PrestashopExporter(AbstractComponent):
         return self.backend_adapter.write(self.prestashop_id, data)
 
     def _lock(self):
-        """ Lock the binding record.
+        """Lock the binding record.
 
         Lock the binding record so we are sure that only one export
         job is running for this record if concurrent jobs have to export the
@@ -264,19 +278,24 @@ class PrestashopExporter(AbstractComponent):
         Uses ``NO KEY UPDATE``, to avoid FK accesses
         being blocked in PSQL > 9.3.
         """
-        sql = ("SELECT id FROM %s WHERE ID = %%s FOR NO KEY UPDATE NOWAIT" %
-               self.model._table)
+        sql = (
+            "SELECT id FROM %s WHERE ID = %%s FOR NO KEY UPDATE NOWAIT"
+            % self.model._table
+        )
         try:
-            self.env.cr.execute(sql, (self.binding_id,),
-                                log_exceptions=False)
+            self.env.cr.execute(sql, (self.binding_id,), log_exceptions=False)
         except psycopg2.OperationalError:
-            _logger.info('A concurrent job is already exporting the same '
-                         'record (%s with id %s). Job delayed later.',
-                         self.model._name, self.binding_id)
+            _logger.info(
+                "A concurrent job is already exporting the same "
+                "record (%s with id %s). Job delayed later.",
+                self.model._name,
+                self.binding_id,
+            )
             raise RetryableJobError(
-                'A concurrent job is already exporting the same record '
-                '(%s with id %s). The job will be retried later.' %
-                (self.model._name, self.binding_id))
+                "A concurrent job is already exporting the same record "
+                "(%s with id %s). The job will be retried later."
+                % (self.model._name, self.binding_id)
+            )
 
     def _run(self, fields=None, **kwargs):
         """ Flow of the synchronization, implemented in inherited classes"""
@@ -284,7 +303,7 @@ class PrestashopExporter(AbstractComponent):
         assert self.binding
 
         if not self.binding.exists():
-            return _('Record to export does no longer exist.')
+            return _("Record to export does no longer exist.")
 
         if self._has_to_skip():
             return
@@ -301,28 +320,30 @@ class PrestashopExporter(AbstractComponent):
         if self.prestashop_id:
             record = map_record.values()
             if not record:
-                return _('Nothing to export.')
+                return _("Nothing to export.")
             # special check on data before export
             self._validate_data(record)
             self._update(record)
         else:
             record = map_record.values(for_create=True)
             if not record:
-                return _('Nothing to export.')
+                return _("Nothing to export.")
             # special check on data before export
             self._validate_data(record)
             self.prestashop_id = self._create(record)
             if self.prestashop_id == 0:
                 raise exceptions.Warning(
-                    _("Record on PrestaShop have not been created"))
+                    _("Record on PrestaShop have not been created")
+                )
 
-        message = _('Record exported with ID %s on PrestaShop.')
+        message = _("Record exported with ID %s on PrestaShop.")
         return message % self.prestashop_id
 
 
 class TranslationPrestashopExporter(AbstractComponent):
-    _name = 'translation.prestashop.exporter'
-    _inherit = 'prestashop.exporter'
+    _name = "translation.prestashop.exporter"
+    _inherit = "prestashop.exporter"
+
 
 #    @property
 #    def mapper(self):

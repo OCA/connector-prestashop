@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   connector_prestashop for Odoo
   Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
   The licence is in the file __openerp__.py
 -->
-
 <odoo>
 
     <record id="view_partner_form" model="ir.ui.view">
@@ -17,7 +16,7 @@
             </page>
             <page name="connector" position="inside">
                 <group string="PrestaShop Bindings">
-                    <field  name="prestashop_bind_ids" nolabel="1"/>
+                    <field name="prestashop_bind_ids" nolabel="1" />
                 </group>
             </page>
         </field>
@@ -29,14 +28,14 @@
         <field name="arch" type="xml">
             <form string="PrestaShop Partner">
                 <group>
-                    <field name="shop_group_id"/>
-                    <field name="backend_id"/>
-                    <field name="prestashop_id"/>
-                    <field name="company"/>
-                    <field name="date_add"/>
-                    <field name="date_upd"/>
-                    <field name="group_ids" widget="many2many_tags"/>
-                    <field name="newsletter"/>
+                    <field name="shop_group_id" />
+                    <field name="backend_id" />
+                    <field name="prestashop_id" />
+                    <field name="company" />
+                    <field name="date_add" />
+                    <field name="date_upd" />
+                    <field name="group_ids" widget="many2many_tags" />
+                    <field name="newsletter" />
                 </group>
             </form>
         </field>
@@ -47,12 +46,10 @@
         <field name="model">prestashop.res.partner</field>
         <field name="arch" type="xml">
             <tree string="PrestaShop Partner">
-                <field name="backend_id"/>
-                <field name="shop_group_id"/>
-                <field name="company"/>
-                <button name="resync"
-                    type="object"
-                    string="Resync" />
+                <field name="backend_id" />
+                <field name="shop_group_id" />
+                <field name="company" />
+                <button name="resync" type="object" string="Resync" />
             </tree>
         </field>
     </record>
@@ -63,13 +60,13 @@
         <field name="arch" type="xml">
             <form string="PrestaShop Address">
                 <group>
-                    <field name="shop_group_id"/>
-                    <field name="backend_id"/>
-                    <field name="prestashop_partner_id"/>
-                    <field name="prestashop_id"/>
-                    <field name="date_add"/>
-                    <field name="date_upd"/>
-                    <field name="vat_number"/>
+                    <field name="shop_group_id" />
+                    <field name="backend_id" />
+                    <field name="prestashop_partner_id" />
+                    <field name="prestashop_id" />
+                    <field name="date_add" />
+                    <field name="date_upd" />
+                    <field name="vat_number" />
                 </group>
             </form>
         </field>
@@ -80,8 +77,8 @@
         <field name="model">prestashop.address</field>
         <field name="arch" type="xml">
             <tree string="PrestaShop Address">
-                <field name="backend_id"/>
-                <field name="shop_group_id"/>
+                <field name="backend_id" />
+                <field name="shop_group_id" />
             </tree>
         </field>
     </record>
@@ -94,11 +91,11 @@
             <field name="parent_id" position="after">
                 <field name="prestashop_bind_ids">
                     <form string="PrestaShop">
-                        <field name="backend_id"/>
-                        <field name="prestashop_id"/>
+                        <field name="backend_id" />
+                        <field name="prestashop_id" />
                     </form>
                     <tree string="PrestaShop">
-                        <field name="backend_id"/>
+                        <field name="backend_id" />
                     </tree>
                 </field>
             </field>
@@ -111,13 +108,13 @@
         <field name="arch" type="xml">
             <form string="PrestaShop Partner Category">
                 <group name="binding" string="Binding">
-                    <field name="backend_id"/>
-                    <field name="prestashop_id"/>
+                    <field name="backend_id" />
+                    <field name="prestashop_id" />
                 </group>
                 <group name="information" string="Information">
-                    <field name="name"/>
-                    <field name="date_add"/>
-                    <field name="date_upd"/>
+                    <field name="name" />
+                    <field name="date_add" />
+                    <field name="date_upd" />
                 </group>
             </form>
         </field>
@@ -128,9 +125,9 @@
         <field name="model">prestashop.res.partner.category</field>
         <field name="arch" type="xml">
             <tree string="PrestaShop Partner Category">
-                <field name="backend_id"/>
-                <field name="prestashop_id"/>
-                <field name="name"/>
+                <field name="backend_id" />
+                <field name="prestashop_id" />
+                <field name="name" />
             </tree>
         </field>
     </record>

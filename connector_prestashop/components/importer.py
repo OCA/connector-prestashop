@@ -6,12 +6,8 @@ from contextlib import closing, contextmanager
 import odoo
 from odoo import _
 
-from odoo.addons.queue_job.exception import (
-    RetryableJobError,
-    FailedJobError,
-)
-
 from odoo.addons.component.core import AbstractComponent
+from odoo.addons.queue_job.exception import FailedJobError, RetryableJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -28,12 +24,12 @@ def import_batch():
 
 
 class PrestashopBaseImporter(AbstractComponent):
-    _name = 'prestashop.base.importer'
-    _inherit = ['base.importer', 'base.prestashop.connector']
+    _name = "prestashop.base.importer"
+    _inherit = ["base.importer", "base.prestashop.connector"]
 
-    def _import_dependency(self, prestashop_id, binding_model,
-                           importer_class=None, always=False,
-                           **kwargs):
+    def _import_dependency(
+        self, prestashop_id, binding_model, importer_class=None, always=False, **kwargs
+    ):
         """
         Import a dependency. The importer class is a subclass of
         ``PrestashopImporter``. A specific class can be defined.
@@ -60,17 +56,16 @@ class PrestashopBaseImporter(AbstractComponent):
             importer_class = PrestashopImporter
         binder = self.binder_for(binding_model)
         if always or not binder.to_internal(prestashop_id):
-            importer = self.component(usage='record.importer',
-                                      model_name=binding_model)
+            importer = self.component(usage="record.importer", model_name=binding_model)
             importer.run(prestashop_id, **kwargs)
 
 
 class PrestashopImporter(AbstractComponent):
     """ Base importer for PrestaShop """
 
-    _name = 'prestashop.importer'
-    _inherit = 'prestashop.base.importer'
-    _usage = 'record.importer'
+    _name = "prestashop.importer"
+    _inherit = "prestashop.base.importer"
+    _usage = "record.importer"
 
     def __init__(self, environment):
         """
@@ -94,14 +89,14 @@ class PrestashopImporter(AbstractComponent):
         return
 
     def _map_data(self):
-        """ Returns an instance of
+        """Returns an instance of
         :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.prestashop_record)
 
     def _validate_data(self, data):
-        """ Check if the values to import are correct
+        """Check if the values to import are correct
 
         Pro-actively check before the ``Model.create`` or
         ``Model.update`` if some fields are missing
@@ -118,7 +113,7 @@ class PrestashopImporter(AbstractComponent):
         return dict(self._context, connector_no_export=True, **kwargs)
 
     def _create_context(self):
-        return {'connector_no_export': True}
+        return {"connector_no_export": True}
 
     def _create_data(self, map_record):
         return map_record.values(for_create=True)
@@ -130,11 +125,8 @@ class PrestashopImporter(AbstractComponent):
         """ Create the OpenERP record """
         # special check on data before import
         self._validate_data(data)
-        binding = self.model.with_context(
-            **self._create_context()
-        ).create(data)
-        _logger.debug(
-            '%d created from prestashop %s', binding, self.prestashop_id)
+        binding = self.model.with_context(**self._create_context()).create(data)
+        _logger.debug("%d created from prestashop %s", binding, self.prestashop_id)
         return binding
 
     def _update(self, binding, data):
@@ -142,12 +134,11 @@ class PrestashopImporter(AbstractComponent):
         # special check on data before import
         self._validate_data(data)
         binding.with_context(connector_no_export=True).write(data)
-        _logger.debug(
-            '%d updated from prestashop %s', binding, self.prestashop_id)
+        _logger.debug("%d updated from prestashop %s", binding, self.prestashop_id)
         return
 
     def _before_import(self):
-        """ Hook called before the import, when we have the PrestaShop
+        """Hook called before the import, when we have the PrestaShop
         data"""
         return
 
@@ -157,7 +148,7 @@ class PrestashopImporter(AbstractComponent):
 
     @contextmanager
     def do_in_new_connector_env(self, model_name=None):
-        """ Context manager that yields a new connector environment
+        """Context manager that yields a new connector environment
 
         Using a new Odoo Environment thus a new PG transaction.
 
@@ -165,22 +156,20 @@ class PrestashopImporter(AbstractComponent):
         for instance to see if another transaction already made the work.
         """
         with odoo.api.Environment.manage():
-            registry = odoo.modules.registry.Registry(
-                self.env.cr.dbname
-            )
+            registry = odoo.modules.registry.Registry(self.env.cr.dbname)
             with closing(registry.cursor()) as cr:
                 try:
-                    new_env = odoo.api.Environment(cr, self.env.uid,
-                                                   self.env.context)
+                    new_env = odoo.api.Environment(cr, self.env.uid, self.env.context)
                     # connector_env = self.connector_env.create_environment(
                     #     self.backend_record.with_env(new_env),
                     #     model_name or self.model._name,
                     #     connector_env=self.connector_env
                     # )
                     with self.backend_record.with_env(new_env).work_on(
-                            self.model._name) as work2:
+                        self.model._name
+                    ) as work2:
                         yield work2
-                except:
+                except BaseException:
                     cr.rollback()
                     raise
                 else:
@@ -234,26 +223,25 @@ class PrestashopImporter(AbstractComponent):
             # binder = new_connector_env.get_connector_unit(Binder)
             if binder.to_internal(self.prestashop_id):
                 raise RetryableJobError(
-                    'Concurrent error. The job will be retried later',
+                    "Concurrent error. The job will be retried later",
                     seconds=RETRY_WHEN_CONCURRENT_DETECTED,
-                    ignore_retry=True
+                    ignore_retry=True,
                 )
 
     def run(self, prestashop_id, **kwargs):
-        """ Run the synchronization
+        """Run the synchronization
 
         :param prestashop_id: identifier of the record on PrestaShop
         """
         self.prestashop_id = prestashop_id
-        lock_name = 'import({}, {}, {}, {})'.format(
+        lock_name = "import({}, {}, {}, {})".format(
             self.backend_record._name,
             self.backend_record.id,
             self.model._name,
             self.prestashop_id,
         )
         # Keep a lock on this import until the transaction is committed
-        self.advisory_lock_or_retry(lock_name,
-                                    retry_seconds=RETRY_ON_ADVISORY_LOCK)
+        self.advisory_lock_or_retry(lock_name, retry_seconds=RETRY_ON_ADVISORY_LOCK)
         if not self.prestashop_record:
             self.prestashop_record = self._get_prestashop_data()
 
@@ -271,7 +259,7 @@ class PrestashopImporter(AbstractComponent):
         self._import(binding, **kwargs)
 
     def _import(self, binding, **kwargs):
-        """ Import the external record.
+        """Import the external record.
 
         Can be inherited to modify for instance the session
         (change current user, values in context, ...)
@@ -299,13 +287,14 @@ class PrestashopImporter(AbstractComponent):
 
 
 class BatchImporter(AbstractComponent):
-    """ The role of a BatchImporter is to search for a list of
+    """The role of a BatchImporter is to search for a list of
     items to import, then it can either import them directly or delay
     the import of each item separately.
     """
-    _name = 'prestashop.batch.importer'
-    _inherit = ['base.importer', 'base.prestashop.connector']
-    _usage = 'batch.importer'
+
+    _name = "prestashop.batch.importer"
+    _inherit = ["base.importer", "base.prestashop.connector"]
+    _usage = "batch.importer"
 
     page_size = 1000
 
@@ -313,7 +302,7 @@ class BatchImporter(AbstractComponent):
         """ Run the synchronization """
         if filters is None:
             filters = {}
-        if 'limit' in filters:
+        if "limit" in filters:
             self._run_page(filters, **kwargs)
             return
         # Without this copy, the parameter we add, like the limit may also
@@ -323,13 +312,11 @@ class BatchImporter(AbstractComponent):
         # here for the customer type.
         filters = filters.copy()
         page_number = 0
-        filters['limit'] = '%d,%d' % (
-            page_number * self.page_size, self.page_size)
+        filters["limit"] = "%d,%d" % (page_number * self.page_size, self.page_size)
         record_ids = self._run_page(filters, **kwargs)
         while len(record_ids) == self.page_size:
             page_number += 1
-            filters['limit'] = '%d,%d' % (
-                page_number * self.page_size, self.page_size)
+            filters["limit"] = "%d,%d" % (page_number * self.page_size, self.page_size)
             record_ids = self._run_page(filters, **kwargs)
 
     def _run_page(self, filters, **kwargs):
@@ -345,37 +332,38 @@ class BatchImporter(AbstractComponent):
 
 
 class DirectBatchImporter(AbstractComponent):
-    """ Import the PrestaShop Shop Groups + Shops
+    """Import the PrestaShop Shop Groups + Shops
 
     They are imported directly because this is a rare and fast operation,
     performed from the UI.
     """
-    _name = 'prestashop.direct.batch.importer'
-    _inherit = 'prestashop.batch.importer'
+
+    _name = "prestashop.direct.batch.importer"
+    _inherit = "prestashop.batch.importer"
     _model_name = None
 
     def _import_record(self, external_id):
         """ Import the record directly """
         self.env[self.model._name].import_record(
-            backend=self.backend_record,
-            prestashop_id=external_id)
+            backend=self.backend_record, prestashop_id=external_id
+        )
 
 
 class DelayedBatchImporter(AbstractComponent):
     """ Delay import of the records """
 
-    _name = 'prestashop.delayed.batch.importer'
-    _inherit = 'prestashop.batch.importer'
+    _name = "prestashop.delayed.batch.importer"
+    _inherit = "prestashop.batch.importer"
     _model_name = None
 
     def _import_record(self, external_id, **kwargs):
         """ Delay the import of the records"""
-        priority = kwargs.pop('priority', None)
-        eta = kwargs.pop('eta', None)
-        max_retries = kwargs.pop('max_retries', None)
-        description = kwargs.pop('description', None)
-        channel = kwargs.pop('channel', None)
-        identity_key = kwargs.pop('identity_key', None)
+        priority = kwargs.pop("priority", None)
+        eta = kwargs.pop("eta", None)
+        max_retries = kwargs.pop("max_retries", None)
+        description = kwargs.pop("description", None)
+        channel = kwargs.pop("channel", None)
+        identity_key = kwargs.pop("identity_key", None)
 
         self.env[self.model._name].with_delay(
             priority=priority,
@@ -383,23 +371,23 @@ class DelayedBatchImporter(AbstractComponent):
             max_retries=max_retries,
             description=description,
             channel=channel,
-            identity_key=identity_key
+            identity_key=identity_key,
         ).import_record(
-            backend=self.backend_record,
-            prestashop_id=external_id,
-            **kwargs)
+            backend=self.backend_record, prestashop_id=external_id, **kwargs
+        )
 
 
 class TranslatableRecordImporter(AbstractComponent):
     """ Import one translatable record """
-    _name = 'prestashop.translatable.record.importer'
-    _inherit = 'prestashop.importer'
+
+    _name = "prestashop.translatable.record.importer"
+    _inherit = "prestashop.importer"
 
     _model_name = []
 
     _translatable_fields = {}
     # TODO set default language on the backend
-    _default_language = 'en_US'
+    _default_language = "en_US"
     _mandatory_translation = True
 
     def __init__(self, environment):
@@ -413,7 +401,7 @@ class TranslatableRecordImporter(AbstractComponent):
         self.other_langs_data = None
 
     def _get_odoo_language(self, prestashop_id):
-        language_binder = self.binder_for('prestashop.res.lang')
+        language_binder = self.binder_for("prestashop.res.lang")
         erp_language = language_binder.to_internal(prestashop_id)
         return erp_language
 
@@ -421,14 +409,14 @@ class TranslatableRecordImporter(AbstractComponent):
         languages = {}
         for field in self._translatable_fields[self.model._name]:
             # TODO FIXME in prestapyt
-            if not isinstance(record[field]['language'], list):
-                record[field]['language'] = [record[field]['language']]
-            for language in record[field]['language']:
-                if not language or language['attrs']['id'] in languages:
+            if not isinstance(record[field]["language"], list):
+                record[field]["language"] = [record[field]["language"]]
+            for language in record[field]["language"]:
+                if not language or language["attrs"]["id"] in languages:
                     continue
-                erp_lang = self._get_odoo_language(language['attrs']['id'])
+                erp_lang = self._get_odoo_language(language["attrs"]["id"])
                 if erp_lang:
-                    languages[language['attrs']['id']] = erp_lang.code
+                    languages[language["attrs"]["id"]] = erp_lang.code
         return languages
 
     def _split_per_language(self, record, fields=None):
@@ -451,18 +439,17 @@ class TranslatableRecordImporter(AbstractComponent):
         languages = self.find_each_language(record)
         if not languages:
             raise FailedJobError(
-                _('No language mapping defined. '
-                  'Run "Synchronize base data".')
+                _("No language mapping defined. " 'Run "Synchronize base data".')
             )
         model_name = self.model._name
-        for language_id, language_code in languages.items():
+        for _language_id, language_code in languages.items():
             split_record[language_code] = record.copy()
         _fields = self._translatable_fields[model_name]
         if fields:
             _fields = [x for x in _fields if x in fields]
         for field in _fields:
-            for language in record[field]['language']:
-                current_id = language['attrs']['id']
+            for language in record[field]["language"]:
+                current_id = language["attrs"]["id"]
                 code = languages.get(current_id)
                 if not code and self._mandatory_translation:
                     # TODO: be nicer here.
@@ -472,30 +459,32 @@ class TranslatableRecordImporter(AbstractComponent):
                     # We should present skip the language
                     # and maybe show a message to users.
                     raise FailedJobError(
-                        _('No language could be found for the Prestashop lang '
-                          'with id "%s". Run "Synchronize base data" again.') %
-                        (current_id,)
+                        _(
+                            "No language could be found for the Prestashop lang "
+                            'with id "%s". Run "Synchronize base data" again.'
+                        )
+                        % (current_id,)
                     )
                 elif not code:
                     continue
-                split_record[code][field] = language['value']
+                split_record[code][field] = language["value"]
         return split_record
 
     def _create_context(self):
         context = super(TranslatableRecordImporter, self)._create_context()
         if self.main_lang:
-            context['lang'] = self.main_lang
+            context["lang"] = self.main_lang
         return context
 
     def _map_data(self):
-        """ Returns an instance of
+        """Returns an instance of
         :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.main_lang_data)
 
     def _import(self, binding, **kwargs):
-        """ Import the external record.
+        """Import the external record.
 
         Can be inherited to modify for instance the session
         (change current user, values in context, ...)

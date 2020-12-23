@@ -5,11 +5,11 @@ from odoo.addons.component.core import AbstractComponent
 
 
 class BasePrestaShopConnectorComponent(AbstractComponent):
-    """ Base PrestaShop Connector Component
+    """Base PrestaShop Connector Component
 
     All components of this connector should inherit from it.
     """
 
-    _name = 'base.prestashop.connector'
-    _inherit = 'base.connector'
-    _collection = 'prestashop.backend'
+    _name = "base.prestashop.connector"
+    _inherit = "base.connector"
+    _collection = "prestashop.backend"

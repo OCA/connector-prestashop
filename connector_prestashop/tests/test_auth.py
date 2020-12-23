@@ -4,20 +4,18 @@
 
 from odoo import exceptions
 
-from .common import recorder, PrestashopTransactionCase
+from .common import PrestashopTransactionCase, recorder
 
 
 class TestAuth(PrestashopTransactionCase):
-
     @recorder.use_cassette
     def test_auth_success(self):
-        self.assertEqual('draft', self.backend_record.state)
+        self.assertEqual("draft", self.backend_record.state)
         self.backend_record.button_check_connection()
-        self.assertEqual('checked', self.backend_record.state)
+        self.assertEqual("checked", self.backend_record.state)
 
     @recorder.use_cassette
     def test_auth_failure(self):
-        self.backend_record.webservice_key = 'xyz'
-        with self.assertRaisesRegexp(exceptions.UserError,
-                                     u'Connection failed'):
+        self.backend_record.webservice_key = "xyz"
+        with self.assertRaisesRegexp(exceptions.UserError, u"Connection failed"):
             self.backend_record.button_check_connection()

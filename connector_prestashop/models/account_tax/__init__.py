@@ -1,2 +1,2 @@
-from  . import common
+from . import common
 from . import importer
