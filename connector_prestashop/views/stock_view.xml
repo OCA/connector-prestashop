@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <openerp>
 <data>
 
@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/group" position="inside">
                 <group string="PrestaShop Information">
-                    <field name="prestashop_synchronized"/>
+                    <field name="prestashop_synchronized" />
                 </group>
         </xpath>
         </field>

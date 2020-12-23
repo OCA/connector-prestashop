@@ -4,7 +4,7 @@ from odoo import _, api, models
 
 
 class QueueJob(models.Model):
-    _inherit = 'queue.job'
+    _inherit = "queue.job"
 
     @api.multi
     def related_action_record(self, binding_id_pos=0):
@@ -16,11 +16,11 @@ class QueueJob(models.Model):
         odoo_name = record.odoo_id._name
 
         action = {
-            'name': _(odoo_name),
-            'type': 'ir.actions.act_window',
-            'res_model': odoo_name,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_id': record.odoo_id.id,
+            "name": _(odoo_name),
+            "type": "ir.actions.act_window",
+            "res_model": odoo_name,
+            "view_type": "form",
+            "view_mode": "form",
+            "res_id": record.odoo_id.id,
         }
         return action
