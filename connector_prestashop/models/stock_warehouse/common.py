@@ -21,7 +21,6 @@ class PrestashopShop(models.Model):
     _inherit = "prestashop.binding"
     _description = "PrestaShop Shop"
 
-    @api.multi
     @api.depends("shop_group_id", "shop_group_id.backend_id")
     def _compute_backend_id(self):
         for shop in self:
@@ -42,7 +41,6 @@ class PrestashopShop(models.Model):
         required=True,
         readonly=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     backend_id = fields.Many2one(
         compute="_compute_backend_id",

@@ -26,7 +26,6 @@ class PrestashopResPartnerCategory(models.Model):
         string="Partner Category",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     date_add = fields.Datetime(
         string="Created At (on PrestaShop)",
