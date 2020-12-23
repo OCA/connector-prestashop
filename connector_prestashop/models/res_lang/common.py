@@ -15,7 +15,6 @@ class PrestashopResLang(models.Model):
         required=True,
         ondelete="cascade",
         string="Language",
-        oldname="openerp_id",
     )
     active = fields.Boolean(
         string="Active in PrestaShop",
