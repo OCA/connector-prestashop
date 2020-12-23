@@ -16,7 +16,6 @@ class PrestashopResCountry(models.Model):
         required=True,
         ondelete="cascade",
         string="Country",
-        oldname="openerp_id",
     )
 
 

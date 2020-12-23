@@ -3,12 +3,10 @@
 import logging
 from datetime import timedelta
 
-import openerp.addons.decimal_precision as dp
-
 from odoo import api, fields, models
 
+import odoo.addons.decimal_precision as dp
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.job import job, related_action
 
 _logger = logging.getLogger(__name__)
 
@@ -33,7 +31,6 @@ class PrestashopSaleOrder(models.Model):
         string="Sale Order",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     prestashop_order_line_ids = fields.One2many(
         comodel_name="prestashop.sale.order.line",
@@ -68,7 +65,6 @@ class PrestashopSaleOrder(models.Model):
         readonly=True,
     )
 
-    @job(default_channel="root.prestashop")
     def import_orders_since(self, backend, since_date=None, **kwargs):
         """ Prepare the import of orders modified on PrestaShop """
         filters = None
@@ -88,9 +84,6 @@ class PrestashopSaleOrder(models.Model):
         backend.import_orders_since = next_check_datetime
         return True
 
-    @job(default_channel="root.prestashop")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_tracking_number(self):
         """ Export the tracking number of a delivery order. """
         self.ensure_one()
@@ -98,7 +91,6 @@ class PrestashopSaleOrder(models.Model):
             exporter = work.component(usage="tracking.exporter")
             return exporter.run(self)
 
-    @api.multi
     def find_prestashop_state(self):
         self.ensure_one()
         state_list_model = self.env["sale.order.state.list"]
@@ -108,9 +100,6 @@ class PrestashopSaleOrder(models.Model):
                 return state_list.prestashop_state_id.prestashop_id
         return None
 
-    @job(default_channel="root.prestashop")
-    @related_action(action="related_action_unwrap_binding")
-    @api.multi
     def export_sale_state(self):
         for sale in self:
             new_state = sale.find_prestashop_state()
@@ -146,7 +135,6 @@ class PrestashopSaleOrderLine(models.Model):
         string="Sale Order line",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     prestashop_order_id = fields.Many2one(
         comodel_name="prestashop.sale.order",
@@ -175,7 +163,6 @@ class PrestashopSaleOrderLineDiscount(models.Model):
         string="Sale Order line",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     prestashop_order_id = fields.Many2one(
         comodel_name="prestashop.sale.order",
