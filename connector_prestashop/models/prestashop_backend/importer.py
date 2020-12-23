@@ -4,7 +4,7 @@ from odoo.addons.component.core import Component
 
 
 class MetadataBatchImporter(Component):
-    """ Import the records directly, without delaying the jobs.
+    """Import the records directly, without delaying the jobs.
 
     Import the PrestShop Websites, Shop Groups and Shops
 
@@ -14,9 +14,9 @@ class MetadataBatchImporter(Component):
 
     """
 
-    _name = 'prestashop.metadata.batch.importer'
-    _inherit = 'prestashop.direct.batch.importer'
+    _name = "prestashop.metadata.batch.importer"
+    _inherit = "prestashop.direct.batch.importer"
     _apply_on = [
-        'prestashop.shop.group',
-        'prestashop.shop',
+        "prestashop.shop.group",
+        "prestashop.shop",
     ]
