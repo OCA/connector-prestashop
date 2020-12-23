@@ -4,7 +4,6 @@ from odoo import api, fields, models
 
 from odoo.addons import decimal_precision as dp
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.job import job
 
 
 class ProductProduct(models.Model):
@@ -20,7 +19,6 @@ class ProductProduct(models.Model):
         string="Price Impact", digits=dp.get_precision("Product Price")
     )
 
-    @api.multi
     def update_prestashop_qty(self):
         for product in self:
             if product.product_variant_count > 1:
@@ -32,7 +30,6 @@ class ProductProduct(models.Model):
             for prestashop_product in product.product_tmpl_id.prestashop_bind_ids:
                 prestashop_product.recompute_prestashop_qty()
 
-    @api.multi
     def update_prestashop_quantities(self):
         for product in self:
             product_template = product.product_tmpl_id
@@ -61,7 +58,6 @@ class ProductProduct(models.Model):
                     product.mapped("product_template_attribute_value_ids.price_extra")
                 )
 
-    @api.multi
     def _set_variants_default_on(self, default_on_list=None):
         if self.env.context.get("skip_check_default_variant", False):
             return True
@@ -89,7 +85,6 @@ class ProductProduct(models.Model):
         res._set_variants_default_on()
         return res
 
-    @api.multi
     def write(self, vals):
         if not vals.get("active", True):
             vals["default_on"] = False
@@ -98,13 +93,11 @@ class ProductProduct(models.Model):
         self._set_variants_default_on(default_on_list)
         return res
 
-    @api.multi
     def unlink(self):
         self.write({"default_on": False, "active": False})
         res = super(ProductProduct, self).unlink()
         return res
 
-    @api.multi
     def open_product_template(self):
         """
         Utility method used to add an "Open Product Template"
@@ -134,7 +127,6 @@ class PrestashopProductCombination(models.Model):
         string="Product",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     main_template_id = fields.Many2one(
         comodel_name="prestashop.product.template",
@@ -147,7 +139,6 @@ class PrestashopProductCombination(models.Model):
     )
     reference = fields.Char(string="Original reference")
 
-    @job(default_channel="root.prestashop")
     def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
         backend = self.backend_id
@@ -156,7 +147,6 @@ class PrestashopProductCombination(models.Model):
             return exporter.run(self, fields)
 
     @api.model
-    @job(default_channel="root.prestashop")
     def export_product_quantities(self, backend):
         self.search(
             [
@@ -164,7 +154,6 @@ class PrestashopProductCombination(models.Model):
             ]
         ).recompute_prestashop_qty()
 
-    @job(default_channel="root.prestashop")
     def set_product_image_variant(self, backend, combination_ids, **kwargs):
         with backend.work_on(self._name) as work:
             importer = work.component(usage="record.importer")
@@ -191,7 +180,6 @@ class PrestashopProductCombinationOption(models.Model):
         string="Attribute",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     prestashop_position = fields.Integer("PrestaShop Position")
     public_name = fields.Char(string="Public Name", translate=True)
@@ -217,7 +205,6 @@ class PrestashopProductCombinationOptionValue(models.Model):
         string="Attribute",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     prestashop_position = fields.Integer(
         string="PrestaShop Position",

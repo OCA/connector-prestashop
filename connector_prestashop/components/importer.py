@@ -175,6 +175,7 @@ class PrestashopImporter(AbstractComponent):
                 else:
                     # Despite what pylint says, this a perfectly valid
                     # commit (in a new cursor). Disable the warning.
+                    self.model.flush()
                     cr.commit()  # pylint: disable=invalid-commit
 
     def _check_in_new_connector_env(self):
@@ -244,7 +245,6 @@ class PrestashopImporter(AbstractComponent):
         self.advisory_lock_or_retry(lock_name, retry_seconds=RETRY_ON_ADVISORY_LOCK)
         if not self.prestashop_record:
             self.prestashop_record = self._get_prestashop_data()
-
         binding = self._get_binding()
         if not binding:
             self._check_in_new_connector_env()
