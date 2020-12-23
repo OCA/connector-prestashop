@@ -36,7 +36,6 @@ class PrestashopAccountTaxGroup(models.Model):
         string="Tax Group",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
 

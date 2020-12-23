@@ -37,7 +37,6 @@ class PrestashopSaleOrderState(models.Model):
         required=True,
         ondelete="cascade",
         string="Sale Order State",
-        oldname="openerp_id",
     )
 
 
