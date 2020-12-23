@@ -4,9 +4,9 @@ from odoo.addons.component.core import Component
 
 
 class OrderCarriers(Component):
-    _name = 'prestashop.order_carrier.adapter'
-    _inherit = 'prestashop.adapter'
-    _apply_on = '__not_exit_prestashop.order_carrier'
+    _name = "prestashop.order_carrier.adapter"
+    _inherit = "prestashop.adapter"
+    _apply_on = "__not_exit_prestashop.order_carrier"
 
-    _prestashop_model = 'order_carriers'
-    _export_node_name = 'order_carrier'
+    _prestashop_model = "order_carriers"
+    _export_node_name = "order_carrier"
