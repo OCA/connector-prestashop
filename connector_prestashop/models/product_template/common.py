@@ -8,7 +8,6 @@ from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
-from odoo.addons.queue_job.job import job
 
 from ...components.backend_adapter import retryable_error
 
@@ -43,7 +42,6 @@ class ProductTemplate(models.Model):
     def _compute_quantities(self):
         return super(ProductTemplate, self)._compute_quantities()
 
-    @api.multi
     def update_prestashop_quantities(self):
         for template in self:
             # Recompute product template PrestaShop qty
@@ -59,7 +57,6 @@ class ProductQtyMixin(models.AbstractModel):
     _name = "prestashop.product.qty.mixin"
     _description = "Prestashop mixin shared between product and template"
 
-    @api.multi
     def recompute_prestashop_qty(self):
         # group products by backend
         backends = defaultdict(set)
@@ -71,7 +68,6 @@ class ProductQtyMixin(models.AbstractModel):
             products._recompute_prestashop_qty_backend(backend)
         return True
 
-    @api.multi
     def _recompute_prestashop_qty_backend(self, backend):
         locations = backend._get_locations_for_stock_quantities()
         self_loc = self.with_context(location=locations.ids, compute_child=False)
@@ -104,7 +100,6 @@ class PrestashopProductTemplate(models.Model):
         required=True,
         ondelete="cascade",
         string="Template",
-        oldname="openerp_id",
     )
     # TODO FIXME what name give to field present in
     # prestashop_product_product and product_product
@@ -155,7 +150,6 @@ class PrestashopProductTemplate(models.Model):
         string="If stock shortage",
     )
 
-    @job(default_channel="root.prestashop")
     def import_products(self, backend, since_date=None, **kwargs):
         filters = None
         if since_date:
@@ -173,13 +167,11 @@ class PrestashopProductTemplate(models.Model):
         backend.import_products_since = now_fmt
         return True
 
-    @job(default_channel="root.prestashop")
     def import_inventory(self, backend):
         with backend.work_on("_import_stock_available") as work:
             importer = work.component(usage="batch.importer")
             return importer.run()
 
-    @job(default_channel="root.prestashop")
     def export_inventory(self, fields=None):
         """ Export the inventory configuration and quantity of a product. """
         backend = self.backend_id
@@ -187,7 +179,6 @@ class PrestashopProductTemplate(models.Model):
             exporter = work.component(usage="inventory.exporter")
             return exporter.run(self, fields)
 
-    @job(default_channel="root.prestashop")
     def export_product_quantities(self, backend=None):
         self.search([("backend_id", "=", backend.id)]).recompute_prestashop_qty()
 

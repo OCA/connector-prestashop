@@ -15,7 +15,6 @@ class PrestashopResCurrency(models.Model):
         string="Currency",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
 

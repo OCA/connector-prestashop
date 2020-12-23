@@ -25,7 +25,6 @@ class PrestashopGroupsPricelist(models.Model):
         required=True,
         ondelete="cascade",
         string="Odoo Pricelist",
-        oldname="openerp_id",
     )
 
 

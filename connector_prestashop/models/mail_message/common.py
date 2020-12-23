@@ -25,7 +25,6 @@ class PrestashopMailMessage(models.Model):
         required=True,
         ondelete="cascade",
         string="Message",
-        oldname="openerp_id",
     )
 
 

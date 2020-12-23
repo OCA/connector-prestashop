@@ -25,7 +25,6 @@ class PrestashopProductCategory(models.Model):
         required=True,
         ondelete="cascade",
         string="Product Category",
-        oldname="openerp_id",
     )
     default_shop_id = fields.Many2one(comodel_name="prestashop.shop")
     date_add = fields.Datetime(string="Created At (on PrestaShop)", readonly=True)

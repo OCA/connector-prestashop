@@ -6,7 +6,6 @@ from odoo import _, api, models
 class QueueJob(models.Model):
     _inherit = "queue.job"
 
-    @api.multi
     def related_action_record(self, binding_id_pos=0):
         self.ensure_one()
 

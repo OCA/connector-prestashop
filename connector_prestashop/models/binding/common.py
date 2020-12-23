@@ -3,7 +3,6 @@
 from odoo import api, fields, models
 
 from odoo.addons.connector.exception import RetryableJobError
-from odoo.addons.queue_job.job import job, related_action
 
 
 class PrestashopBinding(models.AbstractModel):
@@ -37,7 +36,6 @@ class PrestashopBinding(models.AbstractModel):
                 "The job will be retried later." % (backend.name,)
             )
 
-    @job(default_channel="root.prestashop")
     @api.model
     def import_record(self, backend, prestashop_id, force=False):
         """ Import a record from PrestaShop """
@@ -46,7 +44,6 @@ class PrestashopBinding(models.AbstractModel):
             importer = work.component(usage="record.importer")
             return importer.run(prestashop_id, force=force)
 
-    @job(default_channel="root.prestashop")
     @api.model
     def import_batch(self, backend, filters=None, **kwargs):
         """ Prepare a batch import of records from PrestaShop """
@@ -57,9 +54,6 @@ class PrestashopBinding(models.AbstractModel):
             importer = work.component(usage="batch.importer")
             return importer.run(filters=filters, **kwargs)
 
-    @job(default_channel="root.prestashop")
-    @related_action(action="related_action_record")
-    @api.multi
     def export_record(self, fields=None):
         """ Export a record on PrestaShop """
         self.ensure_one()
@@ -68,7 +62,6 @@ class PrestashopBinding(models.AbstractModel):
             exporter = work.component(usage="record.exporter")
             return exporter.run(self, fields)
 
-    @job(default_channel="root.prestashop")
     def export_delete_record(self, backend, external_id):
         """ Delete a record on PrestaShop """
         self.check_active(backend)
@@ -77,7 +70,6 @@ class PrestashopBinding(models.AbstractModel):
             return deleter.run(external_id)
 
     # TODO: Research
-    @api.multi
     def resync(self):
         func = self.import_record
         if self.env.context.get("connector_delay"):

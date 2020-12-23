@@ -3,7 +3,6 @@
 from odoo import fields, models
 
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.job import job
 
 
 class ResPartner(models.Model):
@@ -63,7 +62,6 @@ class PrestashopResPartner(models.Model):
         string="Partner",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     backend_id = fields.Many2one(
         related="shop_group_id.backend_id",
@@ -85,7 +83,6 @@ class PrestashopResPartner(models.Model):
     newsletter = fields.Boolean(string="Newsletter")
     birthday = fields.Date(string="Birthday")
 
-    @job(default_channel="root.prestashop")
     def import_customers_since(self, backend_record=None, since_date=None, **kwargs):
         """ Prepare the import of partners modified on PrestaShop """
         filters = None
@@ -144,7 +141,6 @@ class PrestashopAddress(models.Model):
         string="Partner",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     shop_group_id = fields.Many2one(
         comodel_name="prestashop.shop.group",

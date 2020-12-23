@@ -28,7 +28,6 @@ class PrestashopSupplier(models.Model):
         string="Partner",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
     def import_suppliers(self, backend, since_date, **kwargs):
@@ -63,7 +62,6 @@ class PrestashopProductSupplierinfo(models.Model):
         string="Supplier info",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
 

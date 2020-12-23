@@ -20,7 +20,6 @@ class PrestashopDeliveryCarrier(models.Model):
         string="Delivery carrier",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
     id_reference = fields.Integer(
         string="Reference ID",

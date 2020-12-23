@@ -2,11 +2,10 @@
 
 import base64
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.tools import config
 
 from odoo.addons.component.core import Component
-from odoo.addons.queue_job.job import job
 
 from ...components.backend_adapter import PrestaShopWebServiceImage
 
@@ -31,11 +30,8 @@ class PrestashopProductImage(models.Model):
         required=True,
         ondelete="cascade",
         string="Product image",
-        oldname="openerp_id",
     )
 
-    @job(default_channel="root.prestashop")
-    @api.multi
     def import_product_image(self, backend, product_tmpl_id, image_id, **kwargs):
         """Import a product image"""
         with backend.work_on(self._name) as work:

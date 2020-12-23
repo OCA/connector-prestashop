@@ -36,7 +36,6 @@ class StockQuant(models.Model):
             quant.product_id.update_prestashop_qty()
         return quant
 
-    @api.multi
     def write(self, vals):
         location_obj = self.env["stock.location"]
         ps_locations = location_obj.get_prestashop_stock_locations()
@@ -48,7 +47,6 @@ class StockQuant(models.Model):
                 quant.product_id.update_prestashop_qty()
         return True
 
-    @api.multi
     def unlink(self):
         ps_locations = self.env["stock.location"].get_prestashop_stock_locations()
         self.filtered(lambda x: x.location_id in ps_locations).mapped(

@@ -12,7 +12,6 @@ from odoo.addons.connector.components.mapper import (
     mapping,
     only_create,
 )
-from odoo.addons.queue_job.job import job
 
 _logger = logging.getLogger(__name__)
 
@@ -403,7 +402,6 @@ class ImportInventory(models.TransientModel):
     _name = "_import_stock_available"
     _description = "Dummy Import Inventory Transient model"
 
-    @job(default_channel="root.prestashop")
     @api.model
     def import_record(self, backend, prestashop_id, record=None, **kwargs):
         """ Import a record from PrestaShop """

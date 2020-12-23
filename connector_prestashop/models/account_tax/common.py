@@ -18,7 +18,6 @@ class PrestashopAccountTax(models.Model):
         string="Tax",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
 
