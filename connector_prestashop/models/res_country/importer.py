@@ -10,6 +10,7 @@ class CountryImporter(Component):
 
     _erp_field = "code"
     _ps_field = "iso_code"
+    _filters = {"filter[active]": "1"}
 
     def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
         # All code in Odoo have 2 char, it seems dangerous to cut the code

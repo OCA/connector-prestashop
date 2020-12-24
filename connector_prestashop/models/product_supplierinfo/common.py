@@ -22,6 +22,7 @@ class PrestashopSupplier(models.Model):
     _name = "prestashop.supplier"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"res.partner": "odoo_id"}
+    _description = "Supplier prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="res.partner",
@@ -56,6 +57,7 @@ class PrestashopProductSupplierinfo(models.Model):
     _name = "prestashop.product.supplierinfo"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"product.supplierinfo": "odoo_id"}
+    _description = "Product supplierinfo prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="product.supplierinfo",

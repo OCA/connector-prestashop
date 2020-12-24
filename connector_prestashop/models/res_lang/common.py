@@ -9,6 +9,7 @@ class PrestashopResLang(models.Model):
     _name = "prestashop.res.lang"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"res.lang": "odoo_id"}
+    _description = "Shop lang prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="res.lang",
