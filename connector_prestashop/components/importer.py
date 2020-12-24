@@ -175,7 +175,9 @@ class PrestashopImporter(AbstractComponent):
                 else:
                     # Despite what pylint says, this a perfectly valid
                     # commit (in a new cursor). Disable the warning.
-                    self.model.flush()
+                    self.env[
+                        "base"
+                    ].flush()  # TODO FIXME check if and why flush is mandatory here
                     cr.commit()  # pylint: disable=invalid-commit
 
     def _check_in_new_connector_env(self):
