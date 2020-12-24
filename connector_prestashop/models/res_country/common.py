@@ -10,6 +10,7 @@ class PrestashopResCountry(models.Model):
     _name = "prestashop.res.country"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"res.country": "odoo_id"}
+    _description = "Country prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="res.country",

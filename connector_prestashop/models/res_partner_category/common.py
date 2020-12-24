@@ -20,6 +20,7 @@ class PrestashopResPartnerCategory(models.Model):
     _name = "prestashop.res.partner.category"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"res.partner.category": "odoo_id"}
+    _description = "Partner category prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="res.partner.category",
