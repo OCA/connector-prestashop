@@ -553,8 +553,8 @@ class ProductTemplateImporter(Component):
         super(ProductTemplateImporter, self)._after_import(binding)
         self.import_images(binding)
         self.import_supplierinfo(binding)
-        self.import_combinations()
         self.attribute_line(binding)
+        self.import_combinations()
         self.deactivate_default_product(binding)
         self.checkpoint_default_category_missing(binding)
 
@@ -568,41 +568,50 @@ class ProductTemplateImporter(Component):
 
     def deactivate_default_product(self, binding):
         if binding.product_variant_count != 1:
-            for product in binding.with_context(active_test=True).product_variant_ids:
-                if not product.attribute_value_ids:
+            for product in binding.product_variant_ids:
+                if not product.product_template_attribute_value_ids:
                     self.env["product.product"].browse(product.id).write(
                         {"active": False}
                     )
 
     def attribute_line(self, binding):
-        attr_line_value_ids = []
-        for attr_line in binding.attribute_line_ids:
-            attr_line_value_ids.extend(attr_line.value_ids.ids)
-        template_id = binding.odoo_id.id
-        products = self.env["product.product"].search(
-            [("product_tmpl_id", "=", template_id)]
+        record = self.prestashop_record
+        template = binding.odoo_id
+        attribute_values = {}
+        option_value_binder = self.binder_for(
+            "prestashop.product.combination.option.value"
         )
-        if products:
-            attribute_ids = []
-            for product in products:
-                for attribute_value in product.attribute_value_ids:
-                    attribute_ids.append(attribute_value.attribute_id.id)
-                    # filter unique id for create relation
-            for attribute_id in set(attribute_ids):
-                values = products.mapped("attribute_value_ids").filtered(
-                    lambda x: (
-                        x.attribute_id.id == attribute_id
-                        and x.id not in attr_line_value_ids
-                    )
+
+        ps_key = self.backend_record.get_version_ps_key("product_option_value")
+        option_values = (
+            record.get("associations", {})
+            .get("product_option_values", {})
+            .get(ps_key, [])
+        )
+        if not isinstance(option_values, list):
+            option_values = [option_values]
+
+        for option_value in option_values:
+            value = option_value_binder.to_internal(option_value["id"]).odoo_id
+            attr_id = value.attribute_id.id
+            value_id = value.id
+            if attr_id not in attribute_values:
+                attribute_values[attr_id] = []
+            attribute_values[attr_id].append(value_id)
+        for attr_id, value_ids in attribute_values.items():
+            attr_line = template.attribute_line_ids.filtered(
+                lambda l: l.attribute_id.id == attr_id
+            )
+            if attr_line:
+                attr_line.write({"value_ids": [(6, 0, value_ids)]})
+            else:
+                attr_line = self.env["product.template.attribute.line"].create(
+                    {
+                        "attribute_id": attr_id,
+                        "product_tmpl_id": template.id,
+                        "value_ids": [(6, 0, value_ids)],
+                    }
                 )
-                if values:
-                    self.env["product.template.attribute.line"].create(
-                        {
-                            "attribute_id": attribute_id,
-                            "product_tmpl_id": template_id,
-                            "value_ids": [(6, 0, values.ids)],
-                        }
-                    )
 
     def _import_combination(self, combination, **kwargs):
         """Import a combination
@@ -682,6 +691,33 @@ class ProductTemplateImporter(Component):
         self._import_default_category()
         self._import_categories()
         self._import_manufacturer()
+
+        record = self.prestashop_record
+        ps_key = self.backend_record.get_version_ps_key("product_option_value")
+        option_values = (
+            record.get("associations", {})
+            .get("product_option_values", {})
+            .get(ps_key, [])
+        )
+        if not isinstance(option_values, list):
+            option_values = [option_values]
+        backend_adapter = self.component(
+            usage="backend.adapter",
+            model_name="prestashop.product.combination.option.value",
+        )
+        #        presta_option_values = []
+        for option_value in option_values:
+            option_value = backend_adapter.read(option_value["id"])
+            self._import_dependency(
+                option_value["id_attribute_group"],
+                "prestashop.product.combination.option",
+            )
+            self._import_dependency(
+                option_value["id"], "prestashop.product.combination.option.value"
+            )
+
+    #            presta_option_values.append(option_value)
+    #        self.template_attribute_lines(presta_option_values)
 
     def _import_manufacturer(self):
         self.component(usage="manufacturer.product.importer").import_manufacturer(
