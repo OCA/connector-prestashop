@@ -9,10 +9,11 @@ class PrestashopResCurrency(models.Model):
     _name = "prestashop.res.currency"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"res.currency": "odoo_id"}
+    _description = "Currency prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
+        string="Odoo Currency",
         required=True,
         ondelete="cascade",
     )

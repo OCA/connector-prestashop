@@ -35,9 +35,7 @@ class SupplierMapper(Component):
     @mapping
     def supplier(self, record):
         return {
-            "supplier": True,
             "is_company": True,
-            "customer": False,
         }
 
     @mapping
@@ -64,15 +62,6 @@ class SupplierImporter(Component):
         except ZeroDivisionError:
             del record["image"]
             return super(SupplierImporter, self)._create(record)
-
-    def _after_import(self, binding):
-        super(SupplierImporter, self)._after_import(binding)
-        binder = self.binder_for()
-        ps_id = binder.to_external(binding)
-        self.env["prestashop.product.supplierinfo"].with_delay().import_batch(
-            self.backend_record,
-            filters={"filter[id_supplier]": "%d" % ps_id},
-        )
 
 
 class SupplierBatchImporter(Component):
