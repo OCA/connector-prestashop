@@ -24,6 +24,7 @@ class PrestashopProductImage(models.Model):
     _name = "prestashop.product.image"
     _inherit = "prestashop.binding"
     _inherits = {"base_multi_image.image": "odoo_id"}
+    _description = "Product image prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="base_multi_image.image",

@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 
-from odoo.addons import decimal_precision as dp
 from odoo.addons.component.core import Component
 
 
@@ -15,9 +14,7 @@ class ProductProduct(models.Model):
         string="PrestaShop Bindings (combinations)",
     )
     default_on = fields.Boolean(string="Default On")
-    impact_price = fields.Float(
-        string="Price Impact", digits=dp.get_precision("Product Price")
-    )
+    impact_price = fields.Float(string="Price Impact", digits="Product Price")
 
     def update_prestashop_qty(self):
         for product in self:
@@ -121,10 +118,11 @@ class PrestashopProductCombination(models.Model):
         "prestashop.product.qty.mixin",
     ]
     _inherits = {"product.product": "odoo_id"}
+    _description = "Product product prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
+        string="Odoo Product",
         required=True,
         ondelete="cascade",
     )
@@ -174,10 +172,11 @@ class PrestashopProductCombinationOption(models.Model):
     _name = "prestashop.product.combination.option"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"product.attribute": "odoo_id"}
+    _description = "Product combination option prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="product.attribute",
-        string="Attribute",
+        string="Odoo Attribute",
         required=True,
         ondelete="cascade",
     )
@@ -199,10 +198,11 @@ class PrestashopProductCombinationOptionValue(models.Model):
     _name = "prestashop.product.combination.option.value"
     _inherit = "prestashop.binding"
     _inherits = {"product.attribute.value": "odoo_id"}
+    _description = "Product combination option valueprestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="product.attribute.value",
-        string="Attribute",
+        string="Odoo Option",
         required=True,
         ondelete="cascade",
     )

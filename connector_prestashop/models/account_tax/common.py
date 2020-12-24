@@ -12,6 +12,7 @@ class PrestashopAccountTax(models.Model):
     # This allows us to create duplicated taxes.
     _inherit = "prestashop.binding"
     _inherits = {"account.tax": "odoo_id"}
+    _description = "Acccount Tax Prestashop Bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="account.tax",

@@ -19,6 +19,7 @@ class PrestashopGroupsPricelist(models.Model):
     _name = "prestashop.groups.pricelist"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"product.pricelist": "odoo_id"}
+    _description = "Group pricelist prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="product.pricelist",

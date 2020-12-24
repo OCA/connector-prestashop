@@ -45,7 +45,7 @@ class PrestashopPartnerMixin(models.AbstractModel):
         help="This field is synchronized with the field "
         "'Default customer group' in PrestaShop.",
     )
-    company = fields.Char(string="Company")
+    company = fields.Char(string="Partner Company")
 
 
 class PrestashopResPartner(models.Model):
@@ -56,6 +56,7 @@ class PrestashopResPartner(models.Model):
     ]
     _inherits = {"res.partner": "odoo_id"}
     _rec_name = "shop_group_id"
+    _description = "Partner prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="res.partner",
@@ -111,7 +112,7 @@ class PrestashopAddressMixin(models.AbstractModel):
         string="Updated At (on PrestaShop)",
         readonly=True,
     )
-    company = fields.Char(string="Company")
+    company = fields.Char(string="Address Company")
 
 
 class PrestashopAddress(models.Model):
@@ -122,6 +123,7 @@ class PrestashopAddress(models.Model):
     ]
     _inherits = {"res.partner": "odoo_id"}
     _rec_name = "odoo_id"
+    _description = "Addreses prestashop bindings"
 
     prestashop_partner_id = fields.Many2one(
         comodel_name="prestashop.res.partner",

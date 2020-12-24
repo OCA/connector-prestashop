@@ -79,26 +79,27 @@ class TemplateMapper(Component):
         price = self._apply_taxes(tax, price)
         return {"list_price": price}
 
-    @mapping
-    def tags_to_text(self, record):
-        associations = record.get("associations", {})
-        tags = associations.get("tags", {}).get(
-            self.backend_record.get_version_ps_key("tag"), []
-        )
-        tag_adapter = self.component(
-            usage="backend.adapter", model_name="_prestashop_product_tag"
-        )
-        if not isinstance(tags, list):
-            tags = [tags]
-        if tags:
-            ps_tags = tag_adapter.search(
-                filters={
-                    "filter[id]": "[%s]" % "|".join(x["id"] for x in tags),
-                    "display": "[name]",
-                }
-            )
-            if ps_tags:
-                return {"tags": ",".join(x["name"] for x in ps_tags)}
+    # obsolete ? TODO clean all tags stuff of create a field to store it
+    #    @mapping
+    #    def tags_to_text(self, record):
+    #        associations = record.get("associations", {})
+    #        tags = associations.get("tags", {}).get(
+    #            self.backend_record.get_version_ps_key("tag"), []
+    #        )
+    #        tag_adapter = self.component(
+    #            usage="backend.adapter", model_name="_prestashop_product_tag"
+    #        )
+    #        if not isinstance(tags, list):
+    #            tags = [tags]
+    #        if tags:
+    #            ps_tags = tag_adapter.search(
+    #                filters={
+    #                    "filter[id]": "[%s]" % "|".join(x["id"] for x in tags),
+    #                    "display": "[name]",
+    #                }
+    #            )
+    #            if ps_tags:
+    #                return {"tags": ",".join(x["name"] for x in ps_tags)}
 
     @mapping
     def name(self, record):
@@ -552,9 +553,9 @@ class ProductTemplateImporter(Component):
     def _after_import(self, binding):
         super(ProductTemplateImporter, self)._after_import(binding)
         self.import_images(binding)
-        self.import_supplierinfo(binding)
         self.attribute_line(binding)
         self.import_combinations()
+        self.import_supplierinfo(binding)
         self.deactivate_default_product(binding)
         self.checkpoint_default_category_missing(binding)
 
@@ -568,7 +569,8 @@ class ProductTemplateImporter(Component):
 
     def deactivate_default_product(self, binding):
         if binding.product_variant_count != 1:
-            for product in binding.product_variant_ids:
+            # avoid unactiving already unactive variant
+            for product in binding.with_context(active_test=True).product_variant_ids:
                 if not product.product_template_attribute_value_ids:
                     self.env["product.product"].browse(product.id).write(
                         {"active": False}
