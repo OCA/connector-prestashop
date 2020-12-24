@@ -30,6 +30,7 @@ class PrestashopAccountTaxGroup(models.Model):
     _name = "prestashop.account.tax.group"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"account.tax.group": "odoo_id"}
+    _description = "Account Tax Group Prestashop Bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="account.tax.group",

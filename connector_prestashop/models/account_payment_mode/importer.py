@@ -31,6 +31,7 @@ class PaymentModeBatchImporter(Component):
                 ("type", "=", "bank"),
                 ("company_id", "=", self.backend_record.company_id.id),
             ],
+            limit=1,
         )
         if len(journals) != 1:
             return

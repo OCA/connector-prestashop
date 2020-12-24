@@ -5,7 +5,6 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 
-import odoo.addons.decimal_precision as dp
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
@@ -25,6 +24,7 @@ class PrestashopSaleOrder(models.Model):
     _name = "prestashop.sale.order"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"sale.order": "odoo_id"}
+    _description = "Sale order prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="sale.order",
@@ -46,22 +46,22 @@ class PrestashopSaleOrder(models.Model):
     prestashop_delivery_number = fields.Char("PrestaShop Delivery Number")
     total_amount = fields.Float(
         string="Total amount in PrestaShop",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         readonly=True,
     )
     total_amount_tax = fields.Float(
         string="Total tax in PrestaShop",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         readonly=True,
     )
     total_shipping_tax_included = fields.Float(
-        string="Total shipping in PrestaShop",
-        digits=dp.get_precision("Account"),
+        string="Total shipping with tax in PrestaShop",
+        digits="Account",
         readonly=True,
     )
     total_shipping_tax_excluded = fields.Float(
-        string="Total shipping in PrestaShop",
-        digits=dp.get_precision("Account"),
+        string="Total shipping without tax in PrestaShop",
+        digits="Account",
         readonly=True,
     )
 
@@ -129,6 +129,7 @@ class PrestashopSaleOrderLine(models.Model):
     _name = "prestashop.sale.order.line"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"sale.order.line": "odoo_id"}
+    _description = "Sale order line prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="sale.order.line",
@@ -157,6 +158,7 @@ class PrestashopSaleOrderLineDiscount(models.Model):
     _name = "prestashop.sale.order.line.discount"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"sale.order.line": "odoo_id"}
+    _description = "Sale order line discount prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="sale.order.line",
