@@ -19,29 +19,65 @@ class ProductCombinationImporter(Component):
     _inherit = "prestashop.importer"
     _apply_on = "prestashop.product.combination"
 
-    def _import_dependencies(self):
+    #    def _import_dependencies(self):
+    #        record = self.prestashop_record
+    #        ps_key = self.backend_record.get_version_ps_key("product_option_value")
+    #        option_values = (
+    #            record.get("associations", {})
+    #            .get("product_option_values", {})
+    #            .get(ps_key, [])
+    #        )
+    #        if not isinstance(option_values, list):
+    #            option_values = [option_values]
+    #        backend_adapter = self.component(
+    #            usage="backend.adapter",
+    #            model_name="prestashop.product.combination.option.value",
+    #        )
+    #        presta_option_values = []
+    #        for option_value in option_values:
+    #            option_value = backend_adapter.read(option_value["id"])
+    #            self._import_dependency(
+    #                option_value["id_attribute_group"],
+    #                "prestashop.product.combination.option",
+    #            )
+    #            self._import_dependency(
+    #                option_value["id"], "prestashop.product.combination.option.value"
+    #            )
+    #            presta_option_values.append(option_value)
+    #        self.template_attribute_lines(presta_option_values)
+
+    def template_attribute_lines(self, option_values):
         record = self.prestashop_record
-        ps_key = self.backend_record.get_version_ps_key("product_option_value")
-        option_values = (
-            record.get("associations", {})
-            .get("product_option_values", {})
-            .get(ps_key, [])
+        template_binder = self.binder_for("prestashop.product.template")
+        template = template_binder.to_internal(record["id_product"]).odoo_id
+        attribute_values = {}
+        option_value_binder = self.binder_for(
+            "prestashop.product.combination.option.value"
         )
-        if not isinstance(option_values, list):
-            option_values = [option_values]
-        backend_adapter = self.component(
-            usage="backend.adapter",
-            model_name="prestashop.product.combination.option.value",
-        )
+        option_binder = self.binder_for("prestashop.product.combination.option")
         for option_value in option_values:
-            option_value = backend_adapter.read(option_value["id"])
-            self._import_dependency(
-                option_value["id_attribute_group"],
-                "prestashop.product.combination.option",
+            attr_id = option_binder.to_internal(
+                option_value["id_attribute_group"]
+            ).odoo_id.id
+            value_id = option_value_binder.to_internal(option_value["id"]).odoo_id.id
+            if attr_id not in attribute_values:
+                attribute_values[attr_id] = []
+            attribute_values[attr_id].append(value_id)
+        for attr_id, value_ids in attribute_values.items():
+            attr_line = template.attribute_line_ids.filtered(
+                lambda l: l.attribute_id.id == attr_id
             )
-            self._import_dependency(
-                option_value["id"], "prestashop.product.combination.option.value"
-            )
+            if attr_line:
+                attr_line.write({"value_ids": [(6, 0, value_ids)]})
+            else:
+                attr_line = self.env["product.template.attribute.line"].create(
+                    {
+                        "attribute_id": attr_id,
+                        "product_tmpl_id": template.id,
+                        "value_ids": [(6, 0, value_ids)],
+                    }
+                )
+            attr_line._update_product_template_attribute_values()
 
     def _after_import(self, binding):
         super(ProductCombinationImporter, self)._after_import(binding)
@@ -154,23 +190,29 @@ class ProductCombinationMapper(Component):
             .get("product_option_values", {})
             .get(self.backend_record.get_version_ps_key("product_option_value"), [])
         )
+        template_binding = self.get_main_template_binding(record)
+        template = template_binding.odoo_id
         if type(option_values) is dict:
             option_values = [option_values]
-
+        tmpl_values = template.attribute_line_ids.mapped("product_template_value_ids")
         for option_value in option_values:
             option_value_binder = self.binder_for(
                 "prestashop.product.combination.option.value"
             )
             option_value_binding = option_value_binder.to_internal(option_value["id"])
+            tmpl_value = tmpl_values.filtered(
+                lambda v: v.product_attribute_value_id.id
+                == option_value_binding.odoo_id.id
+            )
             assert option_value_binding, "must have a binding for the option"
-            yield option_value_binding.odoo_id
+            yield tmpl_value
 
     @mapping
     def attribute_value_ids(self, record):
         results = []
-        for option_value_object in self._get_option_value(record):
-            results.append(option_value_object.id)
-        return {"attribute_value_ids": [(6, 0, results)]}
+        for tmpl_attr_value in self._get_option_value(record):
+            results.append(tmpl_attr_value.id)
+        return {"product_template_attribute_value_ids": [(6, 0, results)]}
 
     @mapping
     def main_template_id(self, record):
@@ -282,8 +324,36 @@ class ProductCombinationMapper(Component):
                     )
                     if product:
                         return {"odoo_id": product.id}
-        else:
-            return {}
+        return {}
+
+
+#        template = self.get_main_template_binding(record).odoo_id
+#        # variant are created automatically after template import.
+#        # match it
+#
+#        ps_key = self.backend_record.get_version_ps_key("product_option_value")
+#        option_values = (
+#            record.get("associations", {})
+#            .get("product_option_values", {})
+#            .get(ps_key, [])
+#        )
+#        if not isinstance(option_values, list):
+#            option_values = [option_values]
+#        option_value_binder = self.binder_for(
+#            "prestashop.product.combination.option.value"
+#        )
+#        value_ids = [
+#            option_value_binder.to_internal(option_value["id"]).odoo_id.id
+#            for option_value in option_values
+#        ]
+#        for variant in template.product_variant_ids:
+#            if sorted(
+#                variant.product_template_attribute_value_ids.mapped(
+#                    "product_attribute_value_id"
+#                ).ids
+#            ) == sorted(value_ids):
+#                return {"odoo_id": variant.id}
+#        return {}
 
 
 class ProductCombinationOptionImporter(Component):
@@ -315,9 +385,7 @@ class ProductCombinationOptionMapper(Component):
     _inherit = "prestashop.import.mapper"
     _apply_on = "prestashop.product.combination.option"
 
-    direct = [
-        ("group_type", "type"),
-    ]
+    direct = []
 
     @mapping
     def backend_id(self, record):
@@ -354,6 +422,10 @@ class ProductCombinationOptionMapper(Component):
         else:
             name = record["name"]
         return {"name": name}
+
+    @mapping
+    def create_variant(self, record):
+        return {"create_variant": "no_variant"}
 
 
 class ProductCombinationOptionValueAdapter(Component):
