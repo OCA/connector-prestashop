@@ -5,7 +5,6 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 
-from odoo.addons import decimal_precision as dp
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
 
@@ -94,6 +93,7 @@ class PrestashopProductTemplate(models.Model):
         "prestashop.product.qty.mixin",
     ]
     _inherits = {"product.template": "odoo_id"}
+    _description = "Product template prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="product.template",
@@ -104,7 +104,7 @@ class PrestashopProductTemplate(models.Model):
     # TODO FIXME what name give to field present in
     # prestashop_product_product and product_product
     always_available = fields.Boolean(
-        string="Active",
+        string="Active Prestashop",
         default=True,
         help="If checked, this product is considered always available",
     )
@@ -112,7 +112,7 @@ class PrestashopProductTemplate(models.Model):
         string="Computed Quantity", help="Last computed quantity to send to PrestaShop."
     )
     description_html = fields.Html(
-        string="Description",
+        string="Description HTML",
         translate=True,
         help="HTML description from PrestaShop",
     )
@@ -143,7 +143,7 @@ class PrestashopProductTemplate(models.Model):
     on_sale = fields.Boolean(string="Show on sale icon")
     wholesale_price = fields.Float(
         string="Cost Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
     )
     out_of_stock = fields.Selection(
         [("0", "Refuse order"), ("1", "Accept order"), ("2", "Default prestashop")],

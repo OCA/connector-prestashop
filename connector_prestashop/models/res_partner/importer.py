@@ -86,10 +86,6 @@ class PartnerImportMapper(Component):
         return {"lang": erp_lang.code}
 
     @mapping
-    def customer(self, record):
-        return {"customer": True}
-
-    @mapping
     def company_id(self, record):
         return {"company_id": self.backend_record.company_id.id}
 
@@ -161,10 +157,6 @@ class AddressImportMapper(Component):
         parts = [record["firstname"], record["lastname"]]
         name = " ".join(p.strip() for p in parts if p.strip())
         return {"name": name}
-
-    @mapping
-    def customer(self, record):
-        return {"customer": True}
 
     @mapping
     def country(self, record):

@@ -124,16 +124,6 @@ class ProductCombinationImporter(Component):
         self.env["prestashop.product.supplierinfo"].with_delay().import_batch(
             self.backend_record, filters=filters
         )
-        ps_product_template = binding
-        template_id = ps_product_template.product_tmpl_id.id
-        ps_supplierinfos = self.env["prestashop.product.supplierinfo"].search(
-            [("product_tmpl_id", "=", template_id)]
-        )
-        for ps_supplierinfo in ps_supplierinfos:
-            try:
-                ps_supplierinfo.resync()
-            except PrestaShopWebServiceError:
-                ps_supplierinfo.odoo_id.unlink()
 
 
 class ProductCombinationMapper(Component):
@@ -324,36 +314,34 @@ class ProductCombinationMapper(Component):
                     )
                     if product:
                         return {"odoo_id": product.id}
+
+        template = self.get_main_template_binding(record).odoo_id
+        # if variant already exists linked it since we can't have 2 variants with
+        # the exact same attributes
+
+        ps_key = self.backend_record.get_version_ps_key("product_option_value")
+        option_values = (
+            record.get("associations", {})
+            .get("product_option_values", {})
+            .get(ps_key, [])
+        )
+        if not isinstance(option_values, list):
+            option_values = [option_values]
+        option_value_binder = self.binder_for(
+            "prestashop.product.combination.option.value"
+        )
+        value_ids = [
+            option_value_binder.to_internal(option_value["id"]).odoo_id.id
+            for option_value in option_values
+        ]
+        for variant in template.product_variant_ids:
+            if sorted(
+                variant.product_template_attribute_value_ids.mapped(
+                    "product_attribute_value_id"
+                ).ids
+            ) == sorted(value_ids):
+                return {"odoo_id": variant.id}
         return {}
-
-
-#        template = self.get_main_template_binding(record).odoo_id
-#        # variant are created automatically after template import.
-#        # match it
-#
-#        ps_key = self.backend_record.get_version_ps_key("product_option_value")
-#        option_values = (
-#            record.get("associations", {})
-#            .get("product_option_values", {})
-#            .get(ps_key, [])
-#        )
-#        if not isinstance(option_values, list):
-#            option_values = [option_values]
-#        option_value_binder = self.binder_for(
-#            "prestashop.product.combination.option.value"
-#        )
-#        value_ids = [
-#            option_value_binder.to_internal(option_value["id"]).odoo_id.id
-#            for option_value in option_values
-#        ]
-#        for variant in template.product_variant_ids:
-#            if sorted(
-#                variant.product_template_attribute_value_ids.mapped(
-#                    "product_attribute_value_id"
-#                ).ids
-#            ) == sorted(value_ids):
-#                return {"odoo_id": variant.id}
-#        return {}
 
 
 class ProductCombinationOptionImporter(Component):
@@ -425,7 +413,13 @@ class ProductCombinationOptionMapper(Component):
 
     @mapping
     def create_variant(self, record):
-        return {"create_variant": "no_variant"}
+        # seems the best way. If we do it in automatic, we could have too much variants
+        # compared to prestashop if we got more thant 1 attributes, which seems
+        # totally possible. If we put no variant, and we delete one value on prestashop
+        # product won't be inative by odoo
+        # with dynamic, prestashop create it on product import, odoo inactive it if
+        # deleted on prestashop...
+        return {"create_variant": "dynamic"}
 
 
 class ProductCombinationOptionValueAdapter(Component):

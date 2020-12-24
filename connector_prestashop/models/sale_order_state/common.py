@@ -26,6 +26,7 @@ class PrestashopSaleOrderState(models.Model):
     _name = "prestashop.sale.order.state"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"sale.order.state": "odoo_id"}
+    _description = "Sale order state prestashop bindings"
 
     openerp_state_ids = fields.One2many(
         comodel_name="sale.order.state.list",

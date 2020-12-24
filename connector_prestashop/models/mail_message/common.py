@@ -19,6 +19,7 @@ class PrestashopMailMessage(models.Model):
     _name = "prestashop.mail.message"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"mail.message": "odoo_id"}
+    _description = "Mail message prestashop bindings"
 
     odoo_id = fields.Many2one(
         comodel_name="mail.message",
