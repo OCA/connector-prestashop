@@ -217,7 +217,7 @@ class TemplateMapper(Component):
         if self.has_combinations(record):
             return self._match_combination_odoo_record(record)
         else:
-            return self._match_combination_odoo_record(record)
+            return self._match_template_odoo_record(record)
 
     def _template_code_exists(self, code):
         model = self.env["product.template"]
