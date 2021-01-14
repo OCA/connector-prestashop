@@ -310,8 +310,19 @@ class SaleOrderImportMapper(Component):
         return {"date_order": date_order}
 
     def finalize(self, map_record, values):
-        onchange = self.component("ecommerce.onchange.manager.sale.order")
-        return onchange.play(values, values["prestashop_order_line_ids"])
+        sale_vals = dict([(k, v) for k, v in values.items() if k in self.env['sale.order']._fields.keys()])
+        sale_vals = self.env['sale.order'].play_onchanges(sale_vals, ['payment_mode_id', 'workflow_process_id', 'fiscal_position_id', 'partner_id', 'partner_shipping_id', 'partner_invoice_id'])
+        values.update(sale_vals) 
+        presta_line_list = []
+        for line_vals_command in values["prestashop_order_line_ids"]:
+            if line_vals_command[0] in (0, 1):  # create or update values
+                presta_line_vals = line_vals_command[2]
+                line_vals = dict([(k, v) for k, v in presta_line_vals.items() if k in self.env['sale.order.line']._fields.keys()])
+                line_vals = self.env['sale.order.line'].play_onchanges(line_vals, ['product_id'])
+                presta_line_vals.update(line_vals)
+                presta_line_list.append((line_vals_command[0], line_vals_command[1], presta_line_vals))
+        values['prestashop_order_line_ids'] = presta_line_list
+        return values
 
 
 class SaleOrderImporter(Component):
