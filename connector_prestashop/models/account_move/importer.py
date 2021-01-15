@@ -134,12 +134,10 @@ class RefundMapper(Component):
         sale_order = binder.to_internal(record["id_order"], unwrap=True)
         if not sale_order.carrier_id:
             return None
-        # carrier could have changed, check for any carrier product
-        carrier_products = self.env["delivery.carrier"].search([]).mapped("product_id")
         sale_order_line_ids = self.env["sale.order.line"].search(
             [
                 ("order_id", "=", sale_order.id),
-                ("product_id", "in", carrier_products.ids),
+                ("is_delivery", "=", True),
             ]
         )
         if not sale_order_line_ids:
