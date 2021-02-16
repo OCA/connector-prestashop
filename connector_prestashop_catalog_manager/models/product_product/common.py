@@ -58,8 +58,6 @@ class ProductProductListener(Component):
         record.prestashop_combinations_bind_ids.unlink()
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(
-        record.prestashop_combinations_bind_ids, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         for field in self.EXCLUDE_FIELDS:
@@ -74,8 +72,9 @@ class ProductProductListener(Component):
                 # PS has to uncheck actual default combination first
                 priority = 99
             for binding in record.prestashop_combinations_bind_ids:
-                binding.with_delay(priority=priority).export_record(
-                    fields=fields)
+                if not self.need_to_export(binding, fields):
+                    binding.with_delay(priority=priority).export_record(
+                        fields=fields)
 
 
 class PrestashopAttributeListener(Component):

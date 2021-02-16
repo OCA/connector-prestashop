@@ -77,15 +77,13 @@ class ProductTemplateListener(Component):
     _apply_on = 'product.template'
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
-    @skip_if(lambda self, record, **kwargs: self.need_to_export(
-        record.prestashop_bind_ids, **kwargs))
     def on_record_write(self, record, fields=None):
         """ Called when a record is written """
         for binding in record.prestashop_bind_ids:
             # when assigning a product.attribute to a product.template,
             # write is called 2 times.
             # To avoid duplicates entries on Prestashop, ignore the empty write
-            if fields:
+            if fields and not self.need_to_export(binding, fields):
                 binding.with_delay().export_record(fields=fields)
 
     @skip_if(lambda self, record, **kwargs: self.no_connector_export(record))
