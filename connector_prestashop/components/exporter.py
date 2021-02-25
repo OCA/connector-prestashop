@@ -82,7 +82,7 @@ class PrestashopExporter(AbstractComponent):
         super(PrestashopExporter, self).__init__(environment)
         self.binding = None
 
-    def _has_to_skip(self):
+    def _has_to_skip(self, binding=False):
         """ Return True if the export can be skipped """
         return False
 

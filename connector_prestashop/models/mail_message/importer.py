@@ -56,7 +56,7 @@ class MailMessageImporter(Component):
         if record["id_customer"] != "0":
             self._import_dependency(record["id_customer"], "prestashop.res.partner")
 
-    def _has_to_skip(self):
+    def _has_to_skip(self, binding=False):
         record = self.prestashop_record
         if not record.get("id_order"):
             return "no id_order"

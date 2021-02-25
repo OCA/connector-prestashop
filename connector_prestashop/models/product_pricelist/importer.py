@@ -29,7 +29,6 @@ class ProductPricelistMapper(Component):
     def versions(self, record):
         item = {
             "min_quantity": 0,
-            "sequence": 5,
             "base": "list_price",
             "compute_price": "percentage",
             "percent_price": float(record["reduction"]),

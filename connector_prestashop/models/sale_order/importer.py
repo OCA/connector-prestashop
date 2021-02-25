@@ -425,9 +425,9 @@ class SaleOrderImporter(Component):
             message=msg,
         )
 
-    def _has_to_skip(self):
+    def _has_to_skip(self, binding=False):
         """ Return True if the import can be skipped """
-        if self._get_binding():
+        if binding:
             return True
         rules = self.component(usage="sale.import.rule")
         try:

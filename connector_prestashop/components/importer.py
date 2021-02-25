@@ -80,7 +80,7 @@ class PrestashopImporter(AbstractComponent):
         """ Return the raw prestashop data for ``self.prestashop_id`` """
         return self.backend_adapter.read(self.prestashop_id)
 
-    def _has_to_skip(self):
+    def _has_to_skip(self, binding=False):
         """ Return True if the import can be skipped """
         return False
 
@@ -251,7 +251,7 @@ class PrestashopImporter(AbstractComponent):
         if not binding:
             self._check_in_new_connector_env()
 
-        skip = self._has_to_skip()
+        skip = self._has_to_skip(binding=binding)
         if skip:
             return skip
 
