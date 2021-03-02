@@ -170,7 +170,11 @@ class ProductCombinationMapper(Component):
     @mapping
     def product_tmpl_id(self, record):
         template = self.get_main_template_binding(record)
-        return {"product_tmpl_id": template.odoo_id.id}
+        product_binder = self.binder_for("prestashop.product.combination")
+        product = product_binder.to_internal(record["id"])
+        if not product or product.product_tmpl_id.id != template.odoo_id.id:
+            return {"product_tmpl_id": template.odoo_id.id}
+        return {}
 
     @mapping
     def from_main_template(self, record):
