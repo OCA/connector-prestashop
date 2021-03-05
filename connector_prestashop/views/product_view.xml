@@ -48,7 +48,7 @@
                 <attribute name="invisible">0</attribute>
            </page>
            <page name="connector" position="inside">
-               <div attrs="{'invisible': [('product_variant_count', '>', 1)]}">
+               <div attrs="{'invisible': [('attribute_line_ids', '!=', [])]}">
                    <p>To show PrestaShop binding go to: <button
                             name="open_product_template"
                             type="object"
@@ -58,7 +58,7 @@
                </div>
                 <group
                     string="PrestaShop Bindings"
-                    attrs="{'invisible': [('product_variant_count', '=', 1)]}"
+                    attrs="{'invisible': [('attribute_line_ids', '=', [])]}"
                 >
                     <field name="prestashop_combinations_bind_ids" nolabel="1" />
                 </group>
