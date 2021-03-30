@@ -125,6 +125,21 @@ class ProductCombinationImporter(Component):
             self.backend_record, filters=filters
         )
 
+    def _import(self, binding, **kwargs):
+        # We need to pass the template presta record because we need it
+        # for combination mapper
+        if not hasattr(self.work, 'parent_presta_record'):
+            tmpl_adapter = self.component(
+                usage="backend.adapter",
+                model_name='prestashop.product.template')
+            tmpl_record = tmpl_adapter.read(
+                self.prestashop_record.get('147585'))
+            self.work.parent_presta_record = tmpl_record
+            if "parent_presta_record" not in self.work._propagate_kwargs:
+                self.work._propagate_kwargs.append("parent_presta_record")
+        return super()._import(binding, **kwargs)
+
+
 
 class ProductCombinationMapper(Component):
     _name = "prestashop.product.combination.mapper"
