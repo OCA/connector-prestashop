@@ -1,12 +1,12 @@
 <odoo noupdate="1">
 
     <record model="queue.job.channel" id="channel_prestashop_import">
-        <field name="name">Prestashop Import</field>
+        <field name="name">prestashop_import</field>
         <field name="parent_id" ref="queue_job.channel_root" />
     </record>
 
     <record model="queue.job.channel" id="channel_prestashop_export">
-        <field name="name">Prestashop Export</field>
+        <field name="name">prestashop_export</field>
         <field name="parent_id" ref="queue_job.channel_root" />
     </record>
 
