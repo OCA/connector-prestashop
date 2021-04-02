@@ -1846,12 +1846,6 @@ msgid "HTML description from PrestaShop"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier_has_checkpoint
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_has_checkpoint
-msgid "Has Checkpoint"
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order_need_cancel
 msgid "Has been canceled on the backend, need to be canceled."
 msgstr ""
