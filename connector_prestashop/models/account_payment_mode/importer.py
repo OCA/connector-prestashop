@@ -44,4 +44,4 @@ class PaymentModeBatchImporter(Component):
                 "payment_method_id": payment_method.id,
             }
         )
-        self.backend_record.add_checkpoint(mode, message=None)
+        # TODO add activity to warn the user it has  to configure something?

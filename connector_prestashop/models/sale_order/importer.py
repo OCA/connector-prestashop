@@ -414,16 +414,12 @@ class SaleOrderImporter(Component):
     def _after_import(self, binding):
         super(SaleOrderImporter, self)._after_import(binding)
         self._add_shipping_line(binding)
-        self.checkpoint_line_without_template(binding)
+        self.warning_line_without_template(binding)
 
-    def checkpoint_line_without_template(self, binding):
+    def warning_line_without_template(self, binding):
         if not self.line_template_errors:
             return
-        msg = _("Product(s) used in the sales order could not be imported.")
-        self.backend_record.add_checkpoint(
-            binding,
-            message=msg,
-        )
+        # TODO create activity + post message on sale
 
     def _has_to_skip(self, binding=False):
         """ Return True if the import can be skipped """

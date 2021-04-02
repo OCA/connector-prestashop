@@ -557,15 +557,13 @@ class ProductTemplateImporter(Component):
         self.import_combinations()
         self.import_supplierinfo(binding)
         self.deactivate_default_product(binding)
-        self.checkpoint_default_category_missing(binding)
+        self.warning_default_category_missing(binding)
 
-    def checkpoint_default_category_missing(self, binding):
+    def warning_default_category_missing(self, binding):
         if self.default_category_error:
-            msg = _("The default category could not be imported.")
-            self.backend_record.add_checkpoint(
-                binding,
-                message=msg,
-            )
+            pass
+            # msg = _("The default category could not be imported.")
+            # TODO post msg / create activity
 
     def deactivate_default_product(self, binding):
         if binding.product_variant_count != 1:
@@ -741,7 +739,7 @@ class ProductTemplateImporter(Component):
                     record["id_category_default"], "prestashop.product.category"
                 )
             except PrestaShopWebServiceError:
-                # a checkpoint will be added in _after_import (because
+                # an activity will be added in _after_import (because
                 # we'll know the binding at this point)
                 self.default_category_error = True
 

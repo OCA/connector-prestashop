@@ -6,7 +6,6 @@ from odoo import _, api, exceptions, fields, models
 
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.component.core import Component
-from odoo.addons.connector.models import checkpoint
 
 from ...components.backend_adapter import api_handle_errors
 
@@ -223,20 +222,6 @@ class PrestashopBackend(models.Model):
     @api.model
     def _default_pricelist_id(self):
         return self.env["product.pricelist"].search([], limit=1)
-
-    def add_checkpoint(self, record, message=""):
-        """
-        @param message: used with this
-        https://github.com/OCA/connector/issues/37
-        """
-        self.ensure_one()
-        record.ensure_one()
-        chk_point = checkpoint.add_checkpoint(
-            self.env, record._name, record.id, self._name, self.id
-        )
-        if message:
-            chk_point.message_post(body=message)
-        return chk_point
 
     def button_reset_to_draft(self):
         self.ensure_one()

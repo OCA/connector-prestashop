@@ -210,10 +210,7 @@ class AddressImporter(Component):
                 binding.parent_id.write({"vat": vat_number})
             else:
                 msg = _("Please, check the VAT number: %s") % vat_number
-                self.backend_record.add_checkpoint(
-                    binding.parent_id,
-                    message=msg,
-                )
+                # TODO create activity to warn the vat is incorrect ?
 
 
 class AddressBatchImporter(Component):
