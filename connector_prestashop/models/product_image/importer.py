@@ -76,19 +76,13 @@ class ProductImageImporter(Component):
 
         try:
             super(ProductImageImporter, self).run(image_id, **kwargs)
-        except PrestaShopWebServiceError as error:
+        except PrestaShopWebServiceError:
             binder = self.binder_for("prestashop.product.template")
             template = binder.to_internal(template_id, unwrap=True)
+            # TODO add activity to warn about he failure
             if template:
-                msg = _("Import of image id `%s` failed. " "Error: `%s`") % (
-                    image_id,
-                    error.msg,
-                )
-                self.backend_record.add_checkpoint(template, message=msg)
-            else:
-                msg = _(
-                    "Import of image id `%s` of PrestaShop product "
-                    "with id `%s` failed. "
-                    "Error: `%s`"
-                ) % (image_id, template_id, error.msg)
-                self.backend_record.add_checkpoint()
+                pass
+#                msg = _("Import of image id `%s` failed. " "Error: `%s`") % (
+#                    image_id,
+#                    error.msg,
+#                )

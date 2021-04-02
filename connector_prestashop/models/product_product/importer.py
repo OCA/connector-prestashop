@@ -112,7 +112,7 @@ class ProductCombinationImporter(Component):
                         {"image_ids": [(6, 0, [x.id for x in images])]}
                     )
             except PrestaShopWebServiceError:
-                # TODO: don't we track anything here? Maybe a checkpoint?
+                # TODO: don't we track anything here? Maybe an activity?
                 pass
 
     def import_supplierinfo(self, binding):
