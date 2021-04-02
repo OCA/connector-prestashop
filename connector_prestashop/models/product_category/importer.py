@@ -91,25 +91,23 @@ class ProductCategoryImporter(Component):
                 self._import_dependency(
                     record["id_parent"], "prestashop.product.category"
                 )
-            except PrestaShopWebServiceError as e:
-                msg = _("Parent category for `%s` " "cannot be imported. " "Error: %s")
+            except PrestaShopWebServiceError:
+#                msg = _("Parent category for `%s` " "cannot be imported. " "Error: %s")
                 binder = self.binder_for()
                 category = binder.to_internal(record["id"])
+                # TODO add activity to warn about this failure
                 if category:
-                    name = category.name
-                else:
-                    # not imported yet, retrieve name in default lang
-                    values = self._split_per_language(
-                        record,
-                        fields=[
-                            "name",
-                        ],
-                    )
-                    name = values[self._default_language]["name"]
-
-                self.backend_record.add_checkpoint(
-                    category, message=msg % (name, str(e))
-                )
+                    pass
+#                    name = category.name
+#                else:
+#                    # not imported yet, retrieve name in default lang
+#                    values = self._split_per_language(
+#                        record,
+#                        fields=[
+#                            "name",
+#                        ],
+#                    )
+#                    name = values[self._default_language]["name"]
 
 
 class ProductCategoryBatchImporter(Component):
