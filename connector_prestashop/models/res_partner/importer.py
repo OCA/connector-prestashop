@@ -79,11 +79,15 @@ class PartnerImportMapper(Component):
     def lang(self, record):
         binder = self.binder_for("prestashop.res.lang")
         erp_lang = None
+        # We can't put unactive lang so ensure it is active.
+        # if not lang, take the one on company
         if record.get("id_lang"):
             erp_lang = binder.to_internal(record["id_lang"])
+            erp_lang = erp_lang.filtered('active')
+            lang = erp_lang.code
         if not erp_lang:
-            erp_lang = self.env.ref("base.lang_en")
-        return {"lang": erp_lang.code}
+            lang = self.env.company.partner_id.lang
+        return {"lang": lang}
 
     @mapping
     def company_id(self, record):
