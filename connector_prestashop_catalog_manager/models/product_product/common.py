@@ -76,6 +76,13 @@ class ProductProductListener(Component):
                     binding.with_delay(priority=priority).export_record(
                         fields=fields)
 
+    def on_product_price_changed(self, record):
+        fields = ['standard_price', 'impact_price', 'lst_price', 'list_price']
+        for binding in record.prestashop_combinations_bind_ids:
+            if not self.need_to_export(binding, fields):
+                binding.with_delay(priority=20).export_record(
+                    fields=fields)
+
 
 class PrestashopAttributeListener(Component):
     _name = 'prestashop.attribute.event.listener'
