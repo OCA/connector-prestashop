@@ -41,5 +41,10 @@ class IrTranslation(models.Model):
     def create(self, vals):
         res = super(IrTranslation, self).create(vals)
 
-        res.write_on_source_model()
+        if not self.env.context.get(
+                'catalog_manager_ignore_translation', False):
+            # It is called from a binding creation so,
+            # Once the binding will be created, it will export everything.
+            # this way we avoid job duplicities exporting the same instance
+            res.write_on_source_model()
         return res

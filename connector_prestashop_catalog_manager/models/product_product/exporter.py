@@ -116,8 +116,20 @@ class ProductCombinationExportMapper(Component):
     def main_template_id(self, record):
         return {'id_product': self.get_main_template_id(record)}
 
+    @changed_by('impact_price')
     @mapping
     def _unit_price_impact(self, record):
+        pricelist = record.backend_id.pricelist_id
+        if pricelist:
+            tmpl_prices = pricelist.get_products_price(
+                [record.odoo_id.product_tmpl_id], [1.0], [None])
+            tmpl_price = tmpl_prices.get(record.odoo_id.product_tmpl_id.id)
+            product_prices = pricelist.get_products_price(
+                [record.odoo_id], [1.0], [None])
+            product_price = product_prices.get(record.odoo_id.id)
+            extra_to_export = product_price - tmpl_price
+        else:
+            extra_to_export = record.impact_price
         tax = record.taxes_id[:1]
         if tax.price_include and tax.amount_type == 'percent':
             # 6 is the rounding precision used by PrestaShop for the
@@ -125,11 +137,12 @@ class ProductCombinationExportMapper(Component):
             # price from the 6 digits rounded value
             return {
                 'price': round(
-                    record.impact_price / self._get_factor_tax(tax), 6)
+                    extra_to_export / self._get_factor_tax(tax), 6)
             }
         else:
-            return {'price': record.impact_price}
+            return {'price': extra_to_export}
 
+    @changed_by('standard_price')
     @mapping
     def cost_price(self, record):
         wholesale_price = float('{:.2f}'.format(record.standard_price))

@@ -247,16 +247,23 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def list_price(self, record):
         tax = record.taxes_id
+        pricelist = record.backend_id.pricelist_id
+        if pricelist:
+            prices = pricelist.get_products_price(
+                [record.odoo_id], [1.0], [None])
+            price_to_export = prices.get(record.odoo_id.id)
+        else:
+            price_to_export = record.list_price
         if tax.price_include and tax.amount_type == 'percent':
             # 6 is the rounding precision used by PrestaShop for the
             # tax excluded price.  we can get back a 2 digits tax included
             # price from the 6 digits rounded value
             return {
                 'price': str(
-                    round(record.list_price / self._get_factor_tax(tax), 6))
+                    round(price_to_export / self._get_factor_tax(tax), 6))
             }
         else:
-            return {'price': str(record.list_price)}
+            return {'price': str(price_to_export)}
 
     def _get_product_category(self, record):
         ext_categ_ids = []
