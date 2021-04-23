@@ -129,6 +129,18 @@ class SupplierInfoMapper(Component):
     def required(self, record):
         return {"min_qty": 0.0, "delay": 1}
 
+    @mapping
+    def sequence(self, record):
+        # In case of variants, we have sometime one supplier info by variant
+        # and one dummy supplierinfo with no variant. We put a lower sequence
+        # on no variant supplier info so the _select_seller system takes
+        # first the one which has variants set
+        if record["id_product_attribute"] != "0":
+            sequence = 5
+        else:
+            sequence = 50
+        return {'sequence': sequence}
+
 
 class SupplierInfoImporter(Component):
     _name = "prestashop.product.supplierinfo.importer"
