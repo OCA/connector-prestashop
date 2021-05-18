@@ -329,20 +329,21 @@ class SaleOrderImportMapper(Component):
         values.update(sale_vals)
         presta_line_list = []
         for line_vals_command in values["prestashop_order_line_ids"]:
-            if line_vals_command[0] in (0, 1):  # create or update values
-                presta_line_vals = line_vals_command[2]
-                line_vals = {
-                    k: v
-                    for k, v in presta_line_vals.items()
-                    if k in self.env["sale.order.line"]._fields.keys()
-                }
-                line_vals = self.env["sale.order.line"].play_onchanges(
-                    line_vals, ["product_id"]
-                )
-                presta_line_vals.update(line_vals)
-                presta_line_list.append(
-                    (line_vals_command[0], line_vals_command[1], presta_line_vals)
-                )
+            if line_vals_command[0] not in (0, 1):  # create or update values
+                continue
+            presta_line_vals = line_vals_command[2]
+            line_vals = {
+                k: v
+                for k, v in presta_line_vals.items()
+                if k in self.env["sale.order.line"]._fields.keys()
+            }
+            line_vals = self.env["sale.order.line"].play_onchanges(
+                line_vals, ["product_id"]
+            )
+            presta_line_vals.update(line_vals)
+            presta_line_list.append(
+                (line_vals_command[0], line_vals_command[1], presta_line_vals)
+            )
         values["prestashop_order_line_ids"] = presta_line_list
         return values
 
@@ -357,13 +358,22 @@ class SaleOrderImporter(Component):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(SaleOrderImporter, self).__init__(environment)
+        super().__init__(environment)
         self.line_template_errors = []
 
     def _import_dependencies(self):
         record = self.prestashop_record
-        self._import_dependency(record["id_customer"], "prestashop.res.partner")
-        self._import_dependency(record["id_address_invoice"], "prestashop.address")
+        self._import_dependency(
+            record["id_customer"],
+            "prestashop.res.partner",
+            address_type="contact",
+        )
+        if record["id_address_invoice"] != record["id_address_delivery"]:
+            self._import_dependency(
+                record["id_address_invoice"],
+                "prestashop.address",
+                address_type="invoice",
+            )
         self._import_dependency(
             record["id_address_delivery"],
             "prestashop.address",
@@ -372,6 +382,7 @@ class SaleOrderImporter(Component):
             # it is not rare that the customer changes an existing address
             # at the same time he orders.
             always=True,
+            address_type="delivery",
         )
 
         if record["id_carrier"] != "0":
@@ -427,13 +438,13 @@ class SaleOrderImporter(Component):
         binding.odoo_id.recompute()
 
     def _create(self, data):
-        binding = super(SaleOrderImporter, self)._create(data)
+        binding = super()._create(data)
         if binding.fiscal_position_id:
             binding.odoo_id._compute_tax_id()
         return binding
 
     def _after_import(self, binding):
-        super(SaleOrderImporter, self)._after_import(binding)
+        super()._after_import(binding)
         self._add_shipping_line(binding)
         self.warning_line_without_template(binding)
 

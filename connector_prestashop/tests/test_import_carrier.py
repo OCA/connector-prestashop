@@ -2,8 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from collections import namedtuple
-
-import mock
+from unittest import mock
 
 from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
 
@@ -14,7 +13,7 @@ class TestImportCarrier(PrestashopTransactionCase):
     """ Test the import of partner from PrestaShop """
 
     def setUp(self):
-        super(TestImportCarrier, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
         self.shop_group = self.env["prestashop.shop.group"].search([])
