@@ -41,29 +41,32 @@
 
     <!--This is a product inherited form that will be dynamically populated-->
     <record id="product_normal_form_view" model="ir.ui.view">
-       <field name="model">product.product</field>
-       <field name="inherit_id" ref="connector_base_product.product_normal_form_view" />
-       <field name="arch" type="xml">
-           <page name="connector" position="attributes">
-                <attribute name="invisible">0</attribute>
-           </page>
-           <page name="connector" position="inside">
-               <div attrs="{'invisible': [('attribute_line_ids', '!=', [])]}">
-                   <p>To show PrestaShop binding go to: <button
+        <field name="model">product.product</field>
+        <field
+            name="inherit_id"
+            ref="connector_base_product.product_normal_form_view"
+        />
+        <field name="arch" type="xml">
+            <page name="connector" position="attributes">
+                 <attribute name="invisible">0</attribute>
+            </page>
+            <page name="connector" position="inside">
+                <div attrs="{'invisible': [('product_variant_count', '>', 1)]}">
+                    <p>To show PrestaShop binding go to: <button
                             name="open_product_template"
                             type="object"
                             string="product template"
                             class="oe_link"
                         /></p>
-               </div>
-                <group
+                </div>
+                 <group
                     string="PrestaShop Bindings"
                     attrs="{'invisible': [('attribute_line_ids', '=', [])]}"
                 >
-                    <field name="prestashop_combinations_bind_ids" nolabel="1" />
-                </group>
-           </page>
-       </field>
+                     <field name="prestashop_combinations_bind_ids" nolabel="1" />
+                 </group>
+            </page>
+        </field>
     </record>
 
     <!--This is a product inherited form that will be dynamically populated-->
@@ -107,7 +110,8 @@
        <field name="arch" type="xml">
             <form string="prestashop fields">
                 <sheet>
-                    <group>
+                    <group col="1">
+                        <field name="name" />
                         <field name="backend_id" />
                         <field name="default_shop_id" />
                         <field name="no_export" />
@@ -115,7 +119,7 @@
                         <field name="description_short_html" />
                         <field name="description_html" />
                     </group>
-                    <group>
+                    <group col="4" colspan="4">
                         <field name="date_add" />
                         <field name="date_upd" />
                         <field name="sale_ok" />
@@ -138,6 +142,7 @@
         <field name="model">prestashop.product.template</field>
         <field name="arch" type="xml">
             <tree string="prestashop product" create="0">
+                <field name="name" />
                 <field name="backend_id" string="Backend" />
                 <field name="date_add" />
                 <field name="date_upd" />
@@ -154,6 +159,18 @@
                 />
                 <button name="resync" type="object" string="Resync" />
             </tree>
+        </field>
+    </record>
+
+    <record id="product_connector_presta_search" model="ir.ui.view">
+        <field name="name">prestashop.product.template.search</field>
+        <field name="model">prestashop.product.template</field>
+        <field name="arch" type="xml">
+            <search string="Prestashop Product">
+                <field name="prestashop_id" />
+                <field name="name" />
+                <field name="reference" />
+            </search>
         </field>
     </record>
 
@@ -174,6 +191,11 @@
         <field name="model">prestashop.product.combination</field>
         <field name="arch" type="xml">
             <tree string="prestashop product">
+                <field name="name" />
+                <field
+                    name="product_template_attribute_value_ids"
+                    widget="many2many_tags"
+                />
                 <field name="backend_id" string="Backend" />
                 <field name="quantity" />
                 <field name="prestashop_id" />

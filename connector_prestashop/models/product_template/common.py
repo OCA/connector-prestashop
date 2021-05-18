@@ -3,6 +3,8 @@
 import logging
 from collections import defaultdict
 
+from prestapyt import PrestaShopWebServiceDict
+
 from odoo import api, fields, models
 
 from odoo.addons.component.core import Component
@@ -11,11 +13,6 @@ from odoo.addons.component_event import skip_if
 from ...components.backend_adapter import retryable_error
 
 _logger = logging.getLogger(__name__)
-
-try:
-    from prestapyt import PrestaShopWebServiceDict
-except ImportError:
-    _logger.debug("Cannot import from `prestapyt`")
 
 
 class ProductTemplate(models.Model):
@@ -32,6 +29,7 @@ class ProductTemplate(models.Model):
         string="PrestaShop Default Category",
         ondelete="restrict",
     )
+    default_image_id = fields.Integer(string="PrestaShop Default Image ID")
 
     # TODO remove when https://github.com/odoo/odoo/pull/30024 is merged
     @api.depends(
@@ -39,7 +37,7 @@ class ProductTemplate(models.Model):
         "product_variant_ids.stock_quant_ids",
     )
     def _compute_quantities(self):
-        return super(ProductTemplate, self)._compute_quantities()
+        return super()._compute_quantities()
 
     def update_prestashop_quantities(self):
         for template in self:
@@ -125,10 +123,7 @@ class PrestashopProductTemplate(models.Model):
     default_shop_id = fields.Many2one(
         comodel_name="prestashop.shop", string="Default shop", required=True
     )
-    link_rewrite = fields.Char(
-        string="Friendly URL",
-        translate=True,
-    )
+    link_rewrite = fields.Char(string="Friendly URL", required=True, translate=True)
     available_for_order = fields.Boolean(
         string="Available for Order Taking",
         default=True,

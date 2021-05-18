@@ -81,7 +81,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
     """ Base class for Tests with Prestashop """
 
     def setUp(self):
-        super(PrestashopTransactionCase, self).setUp()
+        super().setUp()
         self.backend_record = self.env.ref(
             "connector_prestashop.prestashop_backend_demo"
         )
@@ -328,7 +328,11 @@ class PrestashopTransactionCase(SavepointComponentCase):
         ).account_id = self.tax_account
 
     def _create_product_binding(
-        self, name=None, template_ps_id=None, variant_ps_id=None
+        self,
+        name=None,
+        template_ps_id=None,
+        variant_ps_id=None,
+        link_rewrite="link-rewrite",
     ):
         product = self.env["product.product"].create(
             {
@@ -342,6 +346,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
             template.id,
             prestashop_id=template_ps_id,
             default_shop_id=self.shop.id,
+            link_rewrite=link_rewrite,
         )
         return self.create_binding_no_export(
             "prestashop.product.combination",
@@ -357,7 +362,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
 
 class ExportStockQuantityCase(PrestashopTransactionCase):
     def setUp(self):
-        super(ExportStockQuantityCase, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
         self.shop_group = self.env["prestashop.shop.group"].search([])
