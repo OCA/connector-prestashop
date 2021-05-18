@@ -24,15 +24,16 @@ class RefundImporter(Component):
         if invoice.amount_total == float(self.prestashop_record["amount"]):
             invoice.action_invoice_open()
         # TODO else add activity to warn about differnt amount
-#        else:
-#            message=_(
-#                "The refund for order %s has a different amount "
-#                "in PrestaShop and in Odoo."
-#            )
-#            % invoice.origin,
+
+    #        else:
+    #            message=_(
+    #                "The refund for order %s has a different amount "
+    #                "in PrestaShop and in Odoo."
+    #            )
+    #            % invoice.origin,
 
     def _after_import(self, binding):
-        super(RefundImporter, self)._after_import(binding)
+        super()._after_import(binding)
         self._open_refund(binding)
 
 

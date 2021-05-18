@@ -310,18 +310,40 @@ class SaleOrderImportMapper(Component):
         return {"date_order": date_order}
 
     def finalize(self, map_record, values):
-        sale_vals = dict([(k, v) for k, v in values.items() if k in self.env['sale.order']._fields.keys()])
-        sale_vals = self.env['sale.order'].play_onchanges(sale_vals, ['payment_mode_id', 'workflow_process_id', 'fiscal_position_id', 'partner_id', 'partner_shipping_id', 'partner_invoice_id'])
-        values.update(sale_vals) 
+        sale_vals = {
+            k: v
+            for k, v in values.items()
+            if k in self.env["sale.order"]._fields.keys()
+        }
+        sale_vals = self.env["sale.order"].play_onchanges(
+            sale_vals,
+            [
+                "payment_mode_id",
+                "workflow_process_id",
+                "fiscal_position_id",
+                "partner_id",
+                "partner_shipping_id",
+                "partner_invoice_id",
+            ],
+        )
+        values.update(sale_vals)
         presta_line_list = []
         for line_vals_command in values["prestashop_order_line_ids"]:
             if line_vals_command[0] in (0, 1):  # create or update values
                 presta_line_vals = line_vals_command[2]
-                line_vals = dict([(k, v) for k, v in presta_line_vals.items() if k in self.env['sale.order.line']._fields.keys()])
-                line_vals = self.env['sale.order.line'].play_onchanges(line_vals, ['product_id'])
+                line_vals = {
+                    k: v
+                    for k, v in presta_line_vals.items()
+                    if k in self.env["sale.order.line"]._fields.keys()
+                }
+                line_vals = self.env["sale.order.line"].play_onchanges(
+                    line_vals, ["product_id"]
+                )
                 presta_line_vals.update(line_vals)
-                presta_line_list.append((line_vals_command[0], line_vals_command[1], presta_line_vals))
-        values['prestashop_order_line_ids'] = presta_line_list
+                presta_line_list.append(
+                    (line_vals_command[0], line_vals_command[1], presta_line_vals)
+                )
+        values["prestashop_order_line_ids"] = presta_line_list
         return values
 
 
@@ -335,7 +357,7 @@ class SaleOrderImporter(Component):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(SaleOrderImporter, self).__init__(environment)
+        super().__init__(environment)
         self.line_template_errors = []
 
     def _import_dependencies(self):
@@ -406,13 +428,13 @@ class SaleOrderImporter(Component):
         binding.odoo_id.recompute()
 
     def _create(self, data):
-        binding = super(SaleOrderImporter, self)._create(data)
+        binding = super()._create(data)
         if binding.fiscal_position_id:
             binding.odoo_id._compute_tax_id()
         return binding
 
     def _after_import(self, binding):
-        super(SaleOrderImporter, self)._after_import(binding)
+        super()._after_import(binding)
         self._add_shipping_line(binding)
         self.warning_line_without_template(binding)
 

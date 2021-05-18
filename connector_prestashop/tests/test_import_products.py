@@ -25,7 +25,7 @@ class TestImportProduct(PrestashopTransactionCase):
     """ Test the import of partner from PrestaShop """
 
     def setUp(self):
-        super(TestImportProduct, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
 
@@ -41,7 +41,7 @@ class TestImportProduct(PrestashopTransactionCase):
         self.patch_delay_record.start()
 
     def tearDown(self):
-        super(TestImportProduct, self).tearDown()
+        super().tearDown()
         self.patch_delay_record.stop()
 
     @freeze_time("2016-09-13 00:00:00")

@@ -78,21 +78,21 @@ class ProductProduct(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(ProductProduct, self).create(vals)
+        res = super().create(vals)
         res._set_variants_default_on()
         return res
 
     def write(self, vals):
         if not vals.get("active", True):
             vals["default_on"] = False
-        res = super(ProductProduct, self).write(vals)
+        res = super().write(vals)
         default_on_list = vals.get("default_on", False) and self.ids or []
         self._set_variants_default_on(default_on_list)
         return res
 
     def unlink(self):
         self.write({"default_on": False, "active": False})
-        res = super(ProductProduct, self).unlink()
+        res = super().unlink()
         return res
 
     def open_product_template(self):

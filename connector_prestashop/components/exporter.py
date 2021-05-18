@@ -33,7 +33,7 @@ class PrestashopBaseExporter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(PrestashopBaseExporter, self).__init__(environment)
+        super().__init__(environment)
         self.prestashop_id = None
         self.binding_id = None
 
@@ -80,7 +80,7 @@ class PrestashopExporter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(PrestashopExporter, self).__init__(environment)
+        super().__init__(environment)
         self.binding = None
 
     def _has_to_skip(self, binding=False):

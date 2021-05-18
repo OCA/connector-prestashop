@@ -25,7 +25,7 @@ class TestImportSale(PrestashopTransactionCase):
     """ Test the import of partner from PrestaShop """
 
     def setUp(self):
-        super(TestImportSale, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
 

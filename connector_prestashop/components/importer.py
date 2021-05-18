@@ -72,7 +72,7 @@ class PrestashopImporter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(PrestashopImporter, self).__init__(environment)
+        super().__init__(environment)
         self.prestashop_id = None
         self.prestashop_record = None
 
@@ -397,7 +397,7 @@ class TranslatableRecordImporter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(TranslatableRecordImporter, self).__init__(environment)
+        super().__init__(environment)
         self.main_lang_data = None
         self.main_lang = None
         self.other_langs_data = None
@@ -473,7 +473,7 @@ class TranslatableRecordImporter(AbstractComponent):
         return split_record
 
     def _create_context(self):
-        context = super(TranslatableRecordImporter, self)._create_context()
+        context = super()._create_context()
         if self.main_lang:
             context["lang"] = self.main_lang
         return context
@@ -503,7 +503,7 @@ class TranslatableRecordImporter(AbstractComponent):
 
         self.other_langs_data = split_record
 
-        super(TranslatableRecordImporter, self)._import(binding)
+        super()._import(binding)
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """

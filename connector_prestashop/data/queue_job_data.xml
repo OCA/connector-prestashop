@@ -71,7 +71,7 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-    
+
     <record
         id="job_function_prestashop_import_record_partner_category"
         model="queue.job.function"

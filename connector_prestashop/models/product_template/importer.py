@@ -420,7 +420,7 @@ class ProductInventoryBatchImporter(Component):
         if filters is None:
             filters = {}
         filters["display"] = "[id,id_product,id_product_attribute]"
-        _super = super(ProductInventoryBatchImporter, self)
+        _super = super()
         return _super.run(filters, **kwargs)
 
     def _run_page(self, filters, **kwargs):
@@ -492,7 +492,7 @@ class ProductInventoryImporter(Component):
     def run(self, prestashop_id, record=None, **kwargs):
         assert record
         self.prestashop_record = record
-        return super(ProductInventoryImporter, self).run(prestashop_id, **kwargs)
+        return super().run(prestashop_id, **kwargs)
 
     def _import(self, binding, **kwargs):
         record = self.prestashop_record
@@ -547,11 +547,11 @@ class ProductTemplateImporter(Component):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(ProductTemplateImporter, self).__init__(environment)
+        super().__init__(environment)
         self.default_category_error = False
 
     def _after_import(self, binding):
-        super(ProductTemplateImporter, self)._after_import(binding)
+        super()._after_import(binding)
         self.import_images(binding)
         self.attribute_line(binding)
         self.import_combinations()

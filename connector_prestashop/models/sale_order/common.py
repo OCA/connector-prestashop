@@ -151,7 +151,7 @@ class PrestashopSaleOrderLine(models.Model):
             [("id", "=", vals["prestashop_order_id"])], limit=1
         )
         vals["order_id"] = ps_sale_order.odoo_id.id
-        return super(PrestashopSaleOrderLine, self).create(vals)
+        return super().create(vals)
 
 
 class PrestashopSaleOrderLineDiscount(models.Model):
@@ -180,7 +180,7 @@ class PrestashopSaleOrderLineDiscount(models.Model):
             [("id", "=", vals["prestashop_order_id"])], limit=1
         )
         vals["order_id"] = ps_sale_order.odoo_id.id
-        return super(PrestashopSaleOrderLineDiscount, self).create(vals)
+        return super().create(vals)
 
 
 class OrderPaymentModel(models.TransientModel):

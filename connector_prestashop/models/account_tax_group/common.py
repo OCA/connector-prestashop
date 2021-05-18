@@ -52,4 +52,4 @@ class TaxGroupAdapter(Component):
         if filters is None:
             filters = {}
         filters["filter[deleted]"] = 0
-        return super(TaxGroupAdapter, self).search(filters)
+        return super().search(filters)

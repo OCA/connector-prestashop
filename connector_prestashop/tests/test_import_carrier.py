@@ -14,7 +14,7 @@ class TestImportCarrier(PrestashopTransactionCase):
     """ Test the import of partner from PrestaShop """
 
     def setUp(self):
-        super(TestImportCarrier, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
         self.shop_group = self.env["prestashop.shop.group"].search([])

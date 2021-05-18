@@ -3,8 +3,6 @@
 import datetime
 import logging
 
-from odoo import _
-
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import external_to_m2o, mapping
 
@@ -92,12 +90,14 @@ class ProductCategoryImporter(Component):
                     record["id_parent"], "prestashop.product.category"
                 )
             except PrestaShopWebServiceError:
-#                msg = _("Parent category for `%s` " "cannot be imported. " "Error: %s")
+                # msg = _("Parent category for `%s` cannot be imported. Error: %s")
                 binder = self.binder_for()
                 category = binder.to_internal(record["id"])
                 # TODO add activity to warn about this failure
                 if category:
                     pass
+
+
 #                    name = category.name
 #                else:
 #                    # not imported yet, retrieve name in default lang

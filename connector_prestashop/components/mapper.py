@@ -20,10 +20,7 @@ class PrestashopExportMapper(AbstractComponent):
     _usage = "export.mapper"
 
     def _map_direct(self, record, from_attr, to_attr):
-        res = (
-            super(PrestashopExportMapper, self)._map_direct(record, from_attr, to_attr)
-            or ""
-        )
+        res = super()._map_direct(record, from_attr, to_attr) or ""
         if isinstance(from_attr, str):
             column = self.model.fields_get()[from_attr]
             if column["type"] == "boolean":
@@ -43,7 +40,7 @@ class TranslationPrestashopExportMapper(AbstractComponent):
 
         It adds the translatable fields in the set.
         """
-        changed_by = super(TranslationPrestashopExportMapper, self).changed_by_fields()
+        changed_by = super().changed_by_fields()
         if getattr(self, "_translatable_fields", None):
             for from_attr, __ in self._translatable_fields:
                 fieldname = self._direct_source_field_name(from_attr)

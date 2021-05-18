@@ -39,7 +39,7 @@ class ProductTemplate(models.Model):
         "product_variant_ids.stock_quant_ids",
     )
     def _compute_quantities(self):
-        return super(ProductTemplate, self)._compute_quantities()
+        return super()._compute_quantities()
 
     def update_prestashop_quantities(self):
         for template in self:

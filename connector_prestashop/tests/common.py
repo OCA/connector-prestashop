@@ -81,7 +81,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
     """ Base class for Tests with Prestashop """
 
     def setUp(self):
-        super(PrestashopTransactionCase, self).setUp()
+        super().setUp()
         self.backend_record = self.env.ref(
             "connector_prestashop.prestashop_backend_demo"
         )
@@ -348,7 +348,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
 
 class ExportStockQuantityCase(PrestashopTransactionCase):
     def setUp(self):
-        super(ExportStockQuantityCase, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
         self.shop_group = self.env["prestashop.shop.group"].search([])

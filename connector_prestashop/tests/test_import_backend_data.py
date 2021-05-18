@@ -19,7 +19,7 @@ ExpectedShop = namedtuple(
 
 class TestImportBackendData(PrestashopTransactionCase):
     def setUp(self):
-        super(TestImportBackendData, self).setUp()
+        super().setUp()
 
     @recorder.use_cassette
     @assert_no_job_delayed

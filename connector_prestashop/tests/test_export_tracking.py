@@ -8,7 +8,7 @@ from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
 
 class TestExportPicking(PrestashopTransactionCase):
     def setUp(self):
-        super(TestExportPicking, self).setUp()
+        super().setUp()
         self.sync_metadata()
 
         mock_delay_record = mock.MagicMock()
@@ -100,7 +100,7 @@ class TestExportPicking(PrestashopTransactionCase):
         self.sale.procurement_group_id = procurement_group.id
 
     def tearDown(self):
-        super(TestExportPicking, self).tearDown()
+        super().tearDown()
         self.patch_delay_record.stop()
 
     @assert_no_job_delayed
