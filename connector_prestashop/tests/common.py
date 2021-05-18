@@ -296,15 +296,6 @@ class PrestashopTransactionCase(SavepointComponentCase):
         liabilities_account = self.env.ref(
             "account.data_account_type_current_liabilities"
         )
-        self.tax_account = self.env["account.account"].create(
-            {
-                "company_id": company.id,
-                "code": "tax",
-                "name": "Tax Account",
-                "user_type_id": liabilities_account.id,
-                "reconcile": False,
-            }
-        )
         self.tax_20 = self.env["account.tax"].create(
             {
                 "name": "20.0%",
@@ -313,8 +304,17 @@ class PrestashopTransactionCase(SavepointComponentCase):
                 "type_tax_use": "sale",
                 "company_id": company.id,
                 "tax_group_id": self.env.ref("account.tax_group_taxes").id,
-                "account_id": self.tax_account.id,
                 "price_include": False,
+            }
+        )
+        self.tax_account = self.env["account.account"].create(
+            {
+                "company_id": company.id,
+                "code": "tax",
+                "name": "Tax Account",
+                "user_type_id": liabilities_account.id,
+                "reconcile": False,
+                "tax_ids": [self.tax_20.id],
             }
         )
 
@@ -355,13 +355,14 @@ class ExportStockQuantityCase(PrestashopTransactionCase):
         self.shop = self.env["prestashop.shop"].search([])
 
     def _change_product_qty(self, product, qty):
+        # TODO find location for stock change
         location = (
             self.backend_record.stock_location_id
             or self.backend_record.warehouse_id.lot_stock_id
         )
         vals = {
-            "location_id": location.id,
             "product_id": product.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
             "new_quantity": qty,
         }
         qty_change = self.env["stock.change.product.qty"].create(vals)

@@ -217,12 +217,6 @@
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
 
-    <record id="job_function_prestashop_import_sale_order" model="queue.job.function">
-        <field name="model_id" ref="connector_prestashop.model_prestashop_sale_order" />
-        <field name="method">import_orders_since</field>
-        <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
-    </record>
-
     <record id="job_function_prestashop_import_products" model="queue.job.function">
         <field
             name="model_id"
@@ -253,18 +247,6 @@
             ref="connector_prestashop.model_prestashop_product_template"
         />
         <field name="method">export_inventory</field>
-        <field name="channel_id" ref="connector_prestashop.channel_prestashop_export" />
-    </record>
-
-    <record
-        id="job_function_prestashop_export_product_quantities"
-        model="queue.job.function"
-    >
-        <field
-            name="model_id"
-            ref="connector_prestashop.model_prestashop_product_template"
-        />
-        <field name="method">export_product_quantities</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_export" />
     </record>
 

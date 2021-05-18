@@ -3,7 +3,7 @@
 
 from collections import namedtuple
 
-import mock
+from unittest import mock
 
 from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
 

@@ -504,14 +504,15 @@ class ProductInventoryImporter(Component):
         else:
             products = binding.odoo_id
 
+        # TODO find location for stock change
         location = (
             self.backend_record.stock_location_id
             or self.backend_record.warehouse_id.lot_stock_id
         )
         for product in products:
             vals = {
-                "location_id": location.id,
                 "product_id": product.id,
+                "product_tmpl_id": product.product_tmpl_id.id,
                 "new_quantity": qty,
             }
             template_qty = self.env["stock.change.product.qty"].create(vals)
