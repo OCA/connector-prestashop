@@ -1,7 +1,7 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mock
+from unittest import mock
 
 from .common import ExportStockQuantityCase, assert_no_job_delayed, recorder
 
@@ -14,6 +14,7 @@ class TestExportStockQuantity(ExportStockQuantityCase):
             name="Faded Short Sleeves T-shirt",
             template_ps_id=1,
             variant_ps_id=1,
+            link_rewrite="faded-short-sleeves-tshirt",
         )
         base_qty = variant_binding.qty_available
         base_prestashop_qty = variant_binding.quantity

@@ -157,6 +157,9 @@ Contributors
 * Florent THOMAS <florent.thomas@mind-and-go.com>
 * Francisco Fernández <ffernandez@planetatic.com>
 * Florian da Costa <florian.dacosta@akretion.com>
+* Marc Poch <mpoch@planetatic.com>
+* JesusVMayor <jesus@comunitea.com>
+* Hai Lang <hailn@trobz.com>
 
 Maintainer
 ----------

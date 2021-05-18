@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from collections import namedtuple
+from unittest import mock
 
-import mock
 from freezegun import freeze_time
 
 from odoo import fields
@@ -28,7 +28,7 @@ class TestImportPartner(PrestashopTransactionCase):
     """ Test the import of partner from PrestaShop """
 
     def setUp(self):
-        super(TestImportPartner, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
 

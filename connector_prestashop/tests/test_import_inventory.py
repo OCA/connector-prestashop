@@ -1,8 +1,7 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-
-import mock
+from unittest import mock
 
 from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
 
@@ -11,7 +10,7 @@ class TestImportInventory(PrestashopTransactionCase):
     """ Test the import of partner from PrestaShop """
 
     def setUp(self):
-        super(TestImportInventory, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
         self.shop_group = self.env["prestashop.shop.group"].search([])
@@ -65,6 +64,7 @@ class TestImportInventory(PrestashopTransactionCase):
             name="Faded Short Sleeves T-shirt",
             template_ps_id=1,
             variant_ps_id=1,
+            link_rewrite="faded-short-sleeves-tshirt",
         )
 
         template = variant_binding.odoo_id.product_tmpl_id
@@ -89,6 +89,7 @@ class TestImportInventory(PrestashopTransactionCase):
             name="Faded Short Sleeves T-shirt",
             template_ps_id=1,
             variant_ps_id=1,
+            link_rewrite="faded-short-sleeves-tshirt",
         )
 
         template = variant_binding.odoo_id.product_tmpl_id
