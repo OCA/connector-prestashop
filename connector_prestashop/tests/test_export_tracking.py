@@ -1,14 +1,14 @@
 # © 2016 Camptocamp SA
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mock
+from unittest import mock
 
 from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
 
 
 class TestExportPicking(PrestashopTransactionCase):
     def setUp(self):
-        super(TestExportPicking, self).setUp()
+        super().setUp()
         self.sync_metadata()
 
         mock_delay_record = mock.MagicMock()
@@ -37,6 +37,7 @@ class TestExportPicking(PrestashopTransactionCase):
             product_tmpl_1.id,
             prestashop_id=2,
             default_shop_id=self.shop.id,
+            link_rewrite="faded-short-sleeves-tshirt",
         )
         self.create_binding_no_export(
             "prestashop.product.combination",
@@ -100,7 +101,7 @@ class TestExportPicking(PrestashopTransactionCase):
         self.sale.procurement_group_id = procurement_group.id
 
     def tearDown(self):
-        super(TestExportPicking, self).tearDown()
+        super().tearDown()
         self.patch_delay_record.stop()
 
     @assert_no_job_delayed
@@ -113,7 +114,9 @@ class TestExportPicking(PrestashopTransactionCase):
     def test_event_tracking_number__prestashop_sale(self):
         """ Test that tracking number is exported """
         self.create_binding_no_export(
-            "prestashop.sale.order", self.sale.id, prestashop_id=2
+            "prestashop.sale.order",
+            self.sale.id,
+            prestashop_id=2,
         )
         self.picking.carrier_tracking_ref = "xyz"
 
@@ -124,7 +127,9 @@ class TestExportPicking(PrestashopTransactionCase):
     @assert_no_job_delayed
     def test_export_tracking_number(self):
         sale_binding = self.create_binding_no_export(
-            "prestashop.sale.order", self.sale.id, prestashop_id=2
+            "prestashop.sale.order",
+            self.sale.id,
+            prestashop_id=2,
         )
         self.picking.carrier_tracking_ref = "xyz"
         cassette_name = "test_export_tracking_number"

@@ -4995,4 +4995,56 @@ interactions:
         X-Powered-By: [PrestaShop Webservice]
         content-length: ["1436"]
       status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.11.1]
+      method: GET
+      uri: http://localhost:8080/api/manufacturers/1
+    response:
+      body:
+        {
+          string:
+            !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<manufacturer>\n\t<id><![CDATA[1]]></id>\n\t<active><![CDATA[1]]></active>\n\t<link_rewrite
+            notFilterable=\"true\"><![CDATA[fashion-manufacturer]]></link_rewrite>\n\t<name><![CDATA[Fashion
+            Manufacturer]]></name>\n\t<date_add><![CDATA[2019-01-10
+            13:28:05]]></date_add>\n\t<date_upd><![CDATA[2019-01-10
+            13:28:05]]></date_upd>\n\t<description><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[]]></language></description>\n\t<short_description><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[]]></language></short_description>\n\t<meta_title><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[]]></language></meta_title>\n\t<meta_description><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[]]></language></meta_description>\n\t<meta_keywords><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[]]></language></meta_keywords>\n<associations>\n<addresses
+            nodeType=\"address\" api=\"addresses\">\n\t<address
+            xlink:href=\"http://localhost:8080/api/addresses/3\">\n\t<id
+            xlink:href=\"http://localhost:8080/api/addresses/3\"><![CDATA[3]]></id>\n\t</address>\n</addresses>\n</associations>\n</manufacturer>\n</prestashop>\n",
+        }
+      headers:
+        access-time: ["1581004126"]
+        connection: [keep-alive]
+        content-length: ["1446"]
+        content-sha1: [92d1ae5449008fa15d24e1576cac85f39cf5c9bc]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Thu, 06 Feb 2020 15:48:46 GMT"]
+        execution-time: ["0.003"]
+        psws-version: [1.6.1.22]
+        server: [nginx/1.10.3 (Ubuntu)]
+        set-cookie:
+          [
+            "PrestaShop-6afe1be0fe41e536d378c33ccb8576a7=25838518c031a2279c0dd13dc28f303100337ebdbe3de38c89edc5d3ceb48de7%3AERwbwgjnbPhegaRWNyAjEOXSdyyrlCh8%2FLUO97BxeGYlx5XKDdM4AONvjRBMS3brgbFqadMp5dSI97uc43svIvJw9%2FpAD%2FWtXZVESnPQvGs%3D;
+            expires=Wed, 26-Feb-2020 15:48:46 GMT; Max-Age=1728000; path=/;
+            domain=localhost:8080; HttpOnly",
+          ]
+        transfer-encoding: [chunked]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
 version: 1

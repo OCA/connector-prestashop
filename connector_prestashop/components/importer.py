@@ -1,6 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
+import threading
 from contextlib import closing, contextmanager
 
 import odoo
@@ -72,7 +73,7 @@ class PrestashopImporter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(PrestashopImporter, self).__init__(environment)
+        super().__init__(environment)
         self.prestashop_id = None
         self.prestashop_record = None
 
@@ -178,7 +179,8 @@ class PrestashopImporter(AbstractComponent):
                     self.env[
                         "base"
                     ].flush()  # TODO FIXME check if and why flush is mandatory here
-                    cr.commit()  # pylint: disable=invalid-commit
+                    if not getattr(threading.currentThread(), "testing", False):
+                        cr.commit()  # pylint: disable=invalid-commit
 
     def _check_in_new_connector_env(self):
         # with self.do_in_new_connector_env() as new_connector_env:
@@ -390,8 +392,6 @@ class TranslatableRecordImporter(AbstractComponent):
     _model_name = []
 
     _translatable_fields = {}
-    # TODO set default language on the backend
-    _default_language = "en_US"
     _mandatory_translation = True
 
     def __init__(self, environment):
@@ -399,7 +399,7 @@ class TranslatableRecordImporter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(TranslatableRecordImporter, self).__init__(environment)
+        super().__init__(environment)
         self.main_lang_data = None
         self.main_lang = None
         self.other_langs_data = None
@@ -475,7 +475,7 @@ class TranslatableRecordImporter(AbstractComponent):
         return split_record
 
     def _create_context(self):
-        context = super(TranslatableRecordImporter, self)._create_context()
+        context = super()._create_context()
         if self.main_lang:
             context["lang"] = self.main_lang
         return context
@@ -496,16 +496,17 @@ class TranslatableRecordImporter(AbstractComponent):
         """
         # split prestashop data for every lang
         split_record = self._split_per_language(self.prestashop_record)
-        if self._default_language in split_record:
-            self.main_lang_data = split_record[self._default_language]
-            self.main_lang = self._default_language
-            del split_record[self._default_language]
+        _default_language = self.backend_record.default_language.code
+        if _default_language in split_record:
+            self.main_lang_data = split_record[_default_language]
+            self.main_lang = _default_language
+            del split_record[_default_language]
         else:
             self.main_lang, self.main_lang_data = split_record.popitem()
 
         self.other_langs_data = split_record
 
-        super(TranslatableRecordImporter, self)._import(binding)
+        super()._import(binding)
 
     def _after_import(self, binding):
         """ Hook called at the end of the import """

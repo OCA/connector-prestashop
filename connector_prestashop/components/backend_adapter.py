@@ -4,6 +4,7 @@ import base64
 import logging
 from contextlib import contextmanager
 
+from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
 from requests.exceptions import (
     ConnectionError as ConnError,
     HTTPError,
@@ -17,11 +18,6 @@ from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.exception import NetworkRetryableError
 
 _logger = logging.getLogger(__name__)
-
-try:
-    from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
-except ImportError:
-    _logger.debug("Cannot import from `prestapyt`")
 
 
 def retryable_error(func):
@@ -135,7 +131,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(PrestaShopCRUDAdapter, self).__init__(environment)
+        super().__init__(environment)
         self.prestashop = PrestaShopLocation(
             self.backend_record.location, self.backend_record.webservice_key
         )

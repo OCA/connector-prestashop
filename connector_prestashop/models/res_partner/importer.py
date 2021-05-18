@@ -115,7 +115,7 @@ class ResPartnerImporter(Component):
             self._import_dependency(group["id"], "prestashop.res.partner.category")
 
     def _after_import(self, binding):
-        super(ResPartnerImporter, self)._after_import(binding)
+        super()._after_import(binding)
         binder = self.binder_for()
         ps_id = binder.to_external(binding)
         self.env["prestashop.address"].with_delay(priority=10).import_batch(
@@ -183,13 +183,27 @@ class AddressImportMapper(Component):
     def type(self, record):
         # do not set 'contact', otherwise the address fields are shared with
         # the parent
-        return {"type": "other"}
+        return {"type": record.get("address_type", "other")}
 
 
 class AddressImporter(Component):
     _name = "prestashop.address.importer"
     _inherit = "prestashop.importer"
     _apply_on = "prestashop.address"
+
+    def run(self, prestashop_id, **kwargs):
+        if "address_type" in kwargs:
+            self._address_type = kwargs.pop("address_type")
+        # else: let mapper to set default value
+        super().run(prestashop_id, **kwargs)
+
+    def _map_data(self):
+        map_record = super()._map_data()
+        try:
+            map_record.source["address_type"] = self._address_type
+        except AttributeError:  # pragma: no cover
+            pass  # let mapper to set default value
+        return map_record
 
     def _check_vat(self, vat_number, partner_country):
         vat_country, vat_number_ = self.env["res.partner"]._split_vat(vat_number)

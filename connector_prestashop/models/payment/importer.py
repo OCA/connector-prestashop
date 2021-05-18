@@ -12,7 +12,7 @@ class PaymentMethodImporter(Component):
         if filters is None:
             filters = {}
         filters["display"] = "[id,payment]"
-        return super(PaymentMethodImporter, self).run(filters, **kwargs)
+        return super().run(filters, **kwargs)
 
     def _import_record(self, record):
         ids = self.env["payment.method"].search(

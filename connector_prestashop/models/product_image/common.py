@@ -45,8 +45,8 @@ class ProductImageAdapter(Component):
     _inherit = "prestashop.crud.adapter"
     _apply_on = "prestashop.product.image"
     _prestashop_image_model = "products"
-    _prestashop_model = "/images/products"
-    _export_node_name = "/images/products"
+    _prestashop_model = "images/products"
+    _export_node_name = "images/products"
     _export_node_name_res = "image"
     # pylint: disable=method-required-super
 
@@ -104,5 +104,7 @@ class ProductImageAdapter(Component):
     def delete(self, resource, id_, attributes=None):
         """ Delete a record on the external system """
         api = self.connect()
+        # The uri should be image/products/id_product/id_image. The url_del
+        # must not include id_image. That is being done by api.delete.
         url_del = "{}/{}".format(resource, attributes["id_product"])
         return api.delete(url_del, resource_ids=id_)

@@ -6,7 +6,8 @@ from odoo.addons.component.core import Component
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _name = "product.product"
+    _inherit = [_name, "base_multi_image.owner"]
 
     prestashop_combinations_bind_ids = fields.One2many(
         comodel_name="prestashop.product.combination",
@@ -80,21 +81,21 @@ class ProductProduct(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(ProductProduct, self).create(vals)
+        res = super().create(vals)
         res._set_variants_default_on()
         return res
 
     def write(self, vals):
         if not vals.get("active", True):
             vals["default_on"] = False
-        res = super(ProductProduct, self).write(vals)
+        res = super().write(vals)
         default_on_list = vals.get("default_on", False) and self.ids or []
         self._set_variants_default_on(default_on_list)
         return res
 
     def unlink(self):
         self.write({"default_on": False, "active": False})
-        res = super(ProductProduct, self).unlink()
+        res = super().unlink()
         return res
 
     def open_product_template(self):
@@ -184,6 +185,11 @@ class PrestashopProductCombinationOption(models.Model):
     )
     prestashop_position = fields.Integer("PrestaShop Position")
     public_name = fields.Char(string="Public Name", translate=True)
+    group_type = fields.Selection(
+        [("color", "Color"), ("radio", "Radio"), ("select", "Select")],
+        string="Type",
+        default="select",
+    )
 
 
 class ProductAttributeValue(models.Model):

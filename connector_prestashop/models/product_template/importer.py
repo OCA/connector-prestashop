@@ -322,6 +322,11 @@ class TemplateMapper(Component):
             return {"prestashop_default_category_id": category.id}
 
     @mapping
+    def default_image_id(self, record):
+        image_id = record.get("id_default_image", {}).get("value", -1)
+        return {"default_image_id": image_id}
+
+    @mapping
     def backend_id(self, record):
         return {"backend_id": self.backend_record.id}
 
@@ -348,7 +353,11 @@ class TemplateMapper(Component):
             record["id_tax_rules_group"],
             unwrap=True,
         )
-        return tax_group.tax_ids
+        tax_ids = tax_group.tax_ids
+        if tax_group:
+            ERROR = "Tax group `{}` should have one and only one tax, currently have {}"
+            assert len(tax_ids) == 1, _(ERROR).format(tax_group.name, len(tax_ids))
+        return tax_ids
 
     @mapping
     def taxes_id(self, record):
@@ -429,7 +438,7 @@ class ProductInventoryBatchImporter(Component):
         if filters is None:
             filters = {}
         filters["display"] = "[id,id_product,id_product_attribute]"
-        _super = super(ProductInventoryBatchImporter, self)
+        _super = super()
         return _super.run(filters, **kwargs)
 
     def _run_page(self, filters, **kwargs):
@@ -501,7 +510,7 @@ class ProductInventoryImporter(Component):
     def run(self, prestashop_id, record=None, **kwargs):
         assert record
         self.prestashop_record = record
-        return super(ProductInventoryImporter, self).run(prestashop_id, **kwargs)
+        return super().run(prestashop_id, **kwargs)
 
     def _import(self, binding, **kwargs):
         record = self.prestashop_record
@@ -552,11 +561,11 @@ class ProductTemplateImporter(Component):
         :param environment: current environment (backend, session, ...)
         :type environment: :py:class:`connector.connector.ConnectorEnvironment`
         """
-        super(ProductTemplateImporter, self).__init__(environment)
+        super().__init__(environment)
         self.default_category_error = False
 
     def _after_import(self, binding):
-        super(ProductTemplateImporter, self)._after_import(binding)
+        super()._after_import(binding)
         self.import_images(binding)
         self.attribute_line(binding)
         self.import_combinations()
@@ -574,12 +583,12 @@ class ProductTemplateImporter(Component):
         # don't consider product as having variant if they are unactive.
         # don't try to inactive a product if it is already inactive.
         binding = binding.with_context(active_test=True)
-        if binding.product_variant_count != 1:
-            for product in binding.product_variant_ids:
-                if not product.product_template_attribute_value_ids:
-                    self.env["product.product"].browse(product.id).write(
-                        {"active": False}
-                    )
+        if binding.product_variant_count == 1:
+            return
+        for product in binding.product_variant_ids:
+            if product.product_template_attribute_value_ids:
+                continue
+            self.env["product.product"].browse(product.id).write({"active": False})
 
     def attribute_line(self, binding):
         record = self.prestashop_record

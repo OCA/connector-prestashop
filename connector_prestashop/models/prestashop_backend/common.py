@@ -163,6 +163,12 @@ class PrestashopBackend(models.Model):
         default="qty_available",
         required=True,
     )
+    default_language = fields.Many2one(
+        comodel_name="res.lang",
+        default=lambda self: self.env["res.lang"]
+        .search([("code", "=", self.env.user.lang)])[0]
+        .id,
+    )
 
     @api.constrains("product_qty_field")
     def check_product_qty_field_dependencies_installed(self):

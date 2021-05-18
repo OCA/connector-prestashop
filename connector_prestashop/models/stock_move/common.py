@@ -31,7 +31,7 @@ class StockQuant(models.Model):
     def create(self, vals):
         location_obj = self.env["stock.location"]
         ps_locations = location_obj.get_prestashop_stock_locations()
-        quant = super(StockQuant, self).create(vals)
+        quant = super().create(vals)
         if quant.location_id in ps_locations:
             quant.product_id.update_prestashop_qty()
         return quant
@@ -41,7 +41,7 @@ class StockQuant(models.Model):
         ps_locations = location_obj.get_prestashop_stock_locations()
         for quant in self:
             location = quant.location_id
-            super(StockQuant, self).write(vals)
+            super().write(vals)
             if location in ps_locations:
                 quant.invalidate_cache()
                 quant.product_id.update_prestashop_qty()
@@ -52,7 +52,7 @@ class StockQuant(models.Model):
         self.filtered(lambda x: x.location_id in ps_locations).mapped(
             "product_id"
         ).update_prestashop_qty()
-        return super(StockQuant, self).unlink()
+        return super().unlink()
 
 
 class PrestashopStockPickingListener(Component):

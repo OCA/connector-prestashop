@@ -69,4 +69,4 @@ class DeliveryCarrierAdapter(Component):
         if filters is None:
             filters = {}
         filters["filter[deleted]"] = 0
-        return super(DeliveryCarrierAdapter, self).search(filters)
+        return super().search(filters)

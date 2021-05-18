@@ -13,8 +13,8 @@
         "base_vat",  # for vat validation on partner address
         "product",
         "product_multi_category",  # oca/product-attribute
+        "product_multi_image",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
-        "base_multi_image",  # oca/server-tools
         "purchase",
         "onchange_helper",
     ],
@@ -36,10 +36,10 @@
     "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
-    "demo": [
-        "demo/backend.xml",
-    ],
+    "demo": [],
     "data": [
+        "security/ir.model.access.csv",
+        "security/prestashop_security.xml",
         "data/queue_job_data.xml",
         "data/cron.xml",
         "data/product_decimal_precision.xml",
@@ -54,8 +54,8 @@
         "views/sale_view.xml",
         "views/account_view.xml",
         "views/stock_view.xml",
-        "security/ir.model.access.csv",
-        "security/prestashop_security.xml",
+        "views/queue_job_views.xml",
+        "demo/backend.xml",
     ],
     "installable": True,
     "application": True,
