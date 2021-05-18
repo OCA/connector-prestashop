@@ -58,10 +58,10 @@ class SupplierImporter(Component):
 
     def _create(self, record):
         try:
-            return super(SupplierImporter, self)._create(record)
+            return super()._create(record)
         except ZeroDivisionError:
             del record["image"]
-            return super(SupplierImporter, self)._create(record)
+            return super()._create(record)
 
 
 class SupplierBatchImporter(Component):

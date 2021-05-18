@@ -71,18 +71,21 @@ class ProductImageImporter(Component):
     def run(self, template_id, image_id, **kwargs):
         self.template_id = template_id
         self.image_id = image_id
+        binder = self.binder_for("prestashop.product.template")
+        product_tmpl = binder.to_internal(template_id, unwrap=True)
 
         try:
-            super(ProductImageImporter, self).run(image_id, **kwargs)
+            super().run(image_id, **kwargs)
         except PrestaShopWebServiceError:
-            binder = self.binder_for("prestashop.product.template")
-            template = binder.to_internal(template_id, unwrap=True)
             # TODO add activity to warn about he failure
-            if template:
+            if product_tmpl:
                 pass
-
-
-#                msg = _("Import of image id `%s` failed. " "Error: `%s`") % (
-#                    image_id,
-#                    error.msg,
-#                )
+        # msg = _("Import of image id `%s` failed. " "Error: `%s`") % (
+        #     image_id,
+        #     error.msg,
+        # )
+        if str(product_tmpl.default_image_id) != str(image_id):
+            return
+        self.binder_for("prestashop.product.image")
+        image = binder.to_internal(image_id, unwrap=True)
+        product_tmpl.image_1920 = image.image_main

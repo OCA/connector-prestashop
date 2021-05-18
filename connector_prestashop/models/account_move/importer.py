@@ -36,7 +36,7 @@ class RefundImporter(Component):
     #            % invoice.origin,
 
     def _after_import(self, binding):
-        super(RefundImporter, self)._after_import(binding)
+        super()._after_import(binding)
         self._open_refund(binding)
 
     def _has_to_skip(self, binding=False):
