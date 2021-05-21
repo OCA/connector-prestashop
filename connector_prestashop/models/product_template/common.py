@@ -32,6 +32,7 @@ class ProductTemplate(models.Model):
         string="PrestaShop Default Category",
         ondelete="restrict",
     )
+    default_image_id = fields.Integer(string="PrestaShop Default Image ID")
 
     # TODO remove when https://github.com/odoo/odoo/pull/30024 is merged
     @api.depends(

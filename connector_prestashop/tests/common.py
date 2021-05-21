@@ -356,10 +356,10 @@ class ExportStockQuantityCase(PrestashopTransactionCase):
 
     def _change_product_qty(self, product, qty):
         # TODO find location for stock change
-        location = (
-            self.backend_record.stock_location_id
-            or self.backend_record.warehouse_id.lot_stock_id
-        )
+        # location = (
+        #     self.backend_record.stock_location_id
+        #     or self.backend_record.warehouse_id.lot_stock_id
+        # )
         vals = {
             "product_id": product.id,
             "product_tmpl_id": product.product_tmpl_id.id,

@@ -129,26 +129,6 @@
                             <group>
                                 <div>
                                     <label
-                                        string="Import customer groups and customers since"
-                                        class="oe_inline"
-                                        for="import_partners_since"
-                                    />
-                                    <field
-                                        name="import_partners_since"
-                                        class="oe_inline"
-                                        nolabel="1"
-                                    />
-                                </div>
-                                <button
-                                    name="import_customers_since"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import in background"
-                                />
-                            </group>
-                            <group>
-                                <div>
-                                    <label
                                         string="Import product categories and products"
                                         class="oe_inline"
                                         for="import_products_since"
@@ -161,6 +141,15 @@
                                 </div>
                                 <button
                                     name="import_products"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"
+                                />
+                            </group>
+                            <group>
+                                <span>Import stock quantities</span>
+                                <button
+                                    name="import_stock_qty"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
@@ -182,6 +171,26 @@
                                 </div>
                                 <button
                                     name="import_payment_modes"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"
+                                />
+                            </group>
+                            <group>
+                                <div>
+                                    <label
+                                        string="Import customer groups and customers since"
+                                        class="oe_inline"
+                                        for="import_partners_since"
+                                    />
+                                    <field
+                                        name="import_partners_since"
+                                        class="oe_inline"
+                                        nolabel="1"
+                                    />
+                                </div>
+                                <button
+                                    name="import_customers_since"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
@@ -248,7 +257,7 @@
                                 />
                             </group>
                             <group>
-                                    <span>Import carriers</span>
+                                <span>Import carriers</span>
                                 <div>
                                     <button
                                         name="import_carriers"
@@ -258,22 +267,15 @@
                                     />
                                 </div>
                             </group>
+                        </page>
+                        <page string="Export">
                             <group>
-                                    <span>Export stock quantities</span>
+                                <span>Export stock quantities</span>
                                 <button
                                     name="update_product_stock_qty"
                                     type="object"
                                     class="oe_highlight"
                                     string="Export in background"
-                                />
-                            </group>
-                            <group>
-                                    <span>Import stock quantities</span>
-                                <button
-                                    name="import_stock_qty"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import in background"
                                 />
                             </group>
                         </page>

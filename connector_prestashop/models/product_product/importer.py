@@ -88,32 +88,29 @@ class ProductCombinationImporter(Component):
             usage="backend.adapter", model_name="prestashop.product.combination"
         )
         for combination in combinations:
+            record = backend_adapter.read(combination["id"])
+            associations = record.get("associations", {})
             try:
-                record = backend_adapter.read(combination["id"])
-                associations = record.get("associations", {})
                 ps_images = associations.get("images", {}).get(
                     self.backend_record.get_version_ps_key("image"), {}
                 )
-                binder = self.binder_for("prestashop.product.image")
-                if not isinstance(ps_images, list):
-                    ps_images = [ps_images]
-                if "id" in ps_images[0]:
-                    images = [
-                        binder.to_internal(x.get("id"), unwrap=True) for x in ps_images
-                    ]
-                else:
-                    images = []
-                if images:
-                    product_binder = self.binder_for("prestashop.product.combination")
-                    product_product = product_binder.to_internal(
-                        combination["id"], unwrap=True
-                    )
-                    product_product.with_context(connector_no_export=True).write(
-                        {"image_ids": [(6, 0, [x.id for x in images])]}
-                    )
             except PrestaShopWebServiceError:
                 # TODO: don't we track anything here? Maybe an activity?
-                pass
+                return
+            binder = self.binder_for("prestashop.product.image")
+            if not isinstance(ps_images, list):
+                ps_images = [ps_images]
+            if "id" in ps_images[0]:
+                images = [
+                    binder.to_internal(x.get("id"), unwrap=True) for x in ps_images
+                ]
+            else:
+                return
+            product_binder = self.binder_for("prestashop.product.combination")
+            product = product_binder.to_internal(combination["id"], unwrap=True)
+            product.with_context(connector_no_export=True).write(
+                {"image_ids": [(6, 0, [x.id for x in images])]}
+            )
 
     def import_supplierinfo(self, binding):
         ps_id = self._get_prestashop_data()["id"]

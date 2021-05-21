@@ -319,6 +319,11 @@ class TemplateMapper(Component):
             return {"prestashop_default_category_id": category.id}
 
     @mapping
+    def default_image_id(self, record):
+        image_id = record.get("id_default_image", {}).get("value", -1)
+        return {"default_image_id": image_id}
+
+    @mapping
     def backend_id(self, record):
         return {"backend_id": self.backend_record.id}
 
@@ -505,10 +510,10 @@ class ProductInventoryImporter(Component):
             products = binding.odoo_id
 
         # TODO find location for stock change
-        location = (
-            self.backend_record.stock_location_id
-            or self.backend_record.warehouse_id.lot_stock_id
-        )
+        # location = (
+        #     self.backend_record.stock_location_id
+        #     or self.backend_record.warehouse_id.lot_stock_id
+        # )
         for product in products:
             vals = {
                 "product_id": product.id,
