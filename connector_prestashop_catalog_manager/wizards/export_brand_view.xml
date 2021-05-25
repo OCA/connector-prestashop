@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2020 PlanetaTIC - Marc Poch <mpoch@planetatic.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
-
 <odoo>
 <data>
 
@@ -11,28 +10,33 @@
         <field name="arch" type="xml">
             <form string="Export Product Brand">
                 <group>
-                    <field name="backend_id"/>
-                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]"/>
+                    <field name="backend_id" />
+                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]" />
                 </group>
                 <footer>
-                    <button name="export_product_brands" type="object"
-                            string="Export" class="oe_highlight"/>
+                    <button
+                            name="export_product_brands"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
+                        />
                     or
-                    <button string="Cancel" class="oe_link"
-                            special="cancel"/>
+                    <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
             </form>
         </field>
     </record>
 
-    <act_window id="act_export_prestashop_product_brand"
-                name="Export To PrestaShop"
-                res_model="wiz.prestashop.export.product.brand"
-                src_model="product.brand"
-                view_mode="form"
-                target="new"
-                key2="client_action_multi"
-                view_id="export_product_brand_form"/>
+    <act_window
+            id="act_export_prestashop_product_brand"
+            name="Export To PrestaShop"
+            res_model="wiz.prestashop.export.product.brand"
+            src_model="product.brand"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            view_id="export_product_brand_form"
+        />
 
 </data>
 </odoo>
