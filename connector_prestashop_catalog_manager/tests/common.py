@@ -2,14 +2,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from os.path import dirname, join
+from unittest import mock
 
-import mock
-from openerp.addons.connector_prestashop.tests.common import PrestashopTransactionCase
+from odoo.addons.connector_prestashop.tests.common import PrestashopTransactionCase
 
 
 class CatalogManagerTransactionCase(PrestashopTransactionCase):
     def setUp(self):
-        super(CatalogManagerTransactionCase, self).setUp()
+        super().setUp()
         self.sync_metadata()
         self.base_mapping()
         self.shop_group = self.env["prestashop.shop.group"].search([])
@@ -26,5 +26,5 @@ class CatalogManagerTransactionCase(PrestashopTransactionCase):
         self.cassette_library_dir = join(dirname(__file__), "fixtures/cassettes")
 
     def tearDown(self):
-        super(CatalogManagerTransactionCase, self).tearDown()
+        super().tearDown()
         self.patch_delay_record.stop()

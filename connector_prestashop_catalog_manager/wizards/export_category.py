@@ -1,12 +1,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 from ..models.product_template.exporter import get_slug
 
 
 class PrestashopExportCategory(models.TransientModel):
     _name = "wiz.prestashop.export.category"
+    _description = "Prestashop Export Category"
 
     def _default_backend(self):
         return self.env["prestashop.backend"].search([], limit=1).id
@@ -25,7 +26,6 @@ class PrestashopExportCategory(models.TransientModel):
         string="Shop",
     )
 
-    @api.multi
     def export_categories(self):
         self.ensure_one()
         category_obj = self.env["product.category"]

@@ -1,7 +1,7 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector_prestashop.tests.common import (
+from odoo.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
 )
@@ -12,7 +12,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductCategory(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductCategory, self).setUp()
+        super().setUp()
 
         # create and bind parent
         parent = self.env["product.category"].create({"name": "Home"})
@@ -47,8 +47,10 @@ class TestExportProductCategory(CatalogManagerTransactionCase):
         )
         self.assertEqual(1, len(bindings))
         # check export delayed
+        # sequence of fields is from ./wizards/export_category.py
+        # > def export_categories
         self.instance_delay_record.export_record.assert_called_once_with(
-            fields=["default_shop_id", "backend_id", "odoo_id", "link_rewrite"]
+            fields=["backend_id", "default_shop_id", "link_rewrite", "odoo_id"]
         )
 
     @assert_no_job_delayed
@@ -99,20 +101,24 @@ class TestExportProductCategory(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_category = body["prestashop"]["category"]
             # check basic fields
-            for field, value in {
-                "active": "1",
-                "id_parent": "2",
-                "id_shop_default": "1",
-                "position": "1",
-            }.items():
+            for field, value in list(
+                {
+                    "active": "1",
+                    "id_parent": "2",
+                    "id_shop_default": "1",
+                    "position": "1",
+                }.items()
+            ):
                 self.assertEqual(value, ps_category[field])
             # check translatable fields
-            for field, value in {
-                "description": "<p>New category description</p>",
-                "link_rewrite": "new-category",
-                "meta_description": "New category meta description",
-                "meta_keywords": "New category keywords",
-                "meta_title": "New category meta title",
-                "name": "New category",
-            }.items():
+            for field, value in list(
+                {
+                    "description": "<p>New category description</p>",
+                    "link_rewrite": "new-category",
+                    "meta_description": "New category meta description",
+                    "meta_keywords": "New category keywords",
+                    "meta_title": "New category meta title",
+                    "name": "New category",
+                }.items()
+            ):
                 self.assertEqual(value, ps_category[field]["language"]["value"])

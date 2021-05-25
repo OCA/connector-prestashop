@@ -2,8 +2,9 @@
 
 import re
 import unicodedata
+from functools import reduce
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 try:
@@ -26,12 +27,11 @@ def get_slug(name):
 
 class ExportMultipleProducts(models.TransientModel):
     _name = "export.multiple.products"
+    _description = "Export Multiple Products"
 
-    @api.multi
     def _default_backend(self):
         return self.env["prestashop.backend"].search([], limit=1).id
 
-    @api.multi
     def _default_shop(self):
         return self.env["prestashop.shop"].search([], limit=1).id
 
@@ -81,7 +81,6 @@ class ExportMultipleProducts(models.TransientModel):
                         }
                     )
 
-    @api.multi
     def set_category(self):
         product_obj = self.env["product.template"]
         for product in product_obj.browse(self.env.context["active_ids"]):
@@ -104,19 +103,17 @@ class ExportMultipleProducts(models.TransientModel):
         if len(product.product_variant_ids) > 1 and not product.attribute_line_ids:
             check_count = reduce(
                 lambda x, y: x * y,
-                map(lambda x: len(x.value_ids), product.attribute_line_ids),
+                [len(x.value_ids) for x in product.attribute_line_ids],
             )
             if check_count < len(product.product_variant_ids):
                 return False
         return True
 
-    @api.multi
     def export_variant_stock(self):
         template_obj = self.env["product.template"]
         products = template_obj.browse(self.env.context["active_ids"])
         products.update_prestashop_quantities()
 
-    @api.multi
     def create_prestashop_template(self, product):
         presta_tmpl_obj = self.env["prestashop.product.template"]
         return presta_tmpl_obj.create(
@@ -128,7 +125,6 @@ class ExportMultipleProducts(models.TransientModel):
             }
         )
 
-    @api.multi
     def export_products(self):
         self.ensure_one()
         product_obj = self.env["product.template"]

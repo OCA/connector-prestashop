@@ -1,8 +1,6 @@
 # © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-import openerp.addons.decimal_precision as dp
-
 from odoo import fields, models
 
 from odoo.addons.component.core import Component
@@ -19,7 +17,7 @@ class PrestashopProductTemplate(models.Model):
     online_only = fields.Boolean(string="Online Only")
     additional_shipping_cost = fields.Float(
         string="Additional Shipping Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
         help="Additionnal Shipping Price for the product on Prestashop",
     )
     available_now = fields.Char(string="Available Now", translate=True)
@@ -31,6 +29,17 @@ class PrestashopProductTemplate(models.Model):
         default=1,
     )
     state = fields.Boolean(string="State", default=True)
+    visibility = fields.Char(translate=True)
+    low_stock_threshold = fields.Integer(
+        string="Low Stock Threshold",
+        help="Low Stock Threshold",
+        default=0,
+    )
+    low_stock_alert = fields.Integer(
+        string="Low Stock Alert",
+        help="Low Stock Alert",
+        default=0,
+    )
 
 
 class PrestashopProductTemplateListener(Component):
@@ -89,9 +98,9 @@ class ProductTemplateListener(Component):
 class TemplateAdapter(Component):
     _inherit = "prestashop.product.template.adapter"
 
-    def write(self, id, attributes=None):
+    def write(self, id_, attributes=None):
         # Prestashop wants all product data:
-        prestashop_data = self.client.get(self._prestashop_model, id)
+        prestashop_data = self.client.get(self._prestashop_model, id_)
 
         # Remove read-only fields:
         prestashop_data["product"].pop("manufacturer_name", False)
@@ -103,15 +112,14 @@ class TemplateAdapter(Component):
         prestashop_data["product"].pop("position_in_category", False)
 
         full_attributes = prestashop_data["product"].copy()
+        fa_assoc = full_attributes["associations"]
         for field in attributes:
             if field != "associations":
                 full_attributes[field] = attributes[field]
-            else:
-                for association in attributes["associations"]:
-                    full_attributes["associations"][association] = attributes[
-                        "associations"
-                    ][association]
+                continue
+            for association, value in attributes["associations"].items():
+                fa_assoc[association] = value
 
-        res = super(TemplateAdapter, self).write(id, full_attributes)
+        res = super().write(id_, full_attributes)
 
         return res

@@ -1,10 +1,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class SyncProducts(models.TransientModel):
     _name = "active.deactive.products"
+    _description = "Activate/Deactivate Products"
 
     force_status = fields.Boolean(
         string="Force Status",
@@ -19,10 +20,10 @@ class SyncProducts(models.TransientModel):
                 if bind.always_available != status or self.force_status:
                     bind.always_available = status
 
-    @api.multi
     def active_products(self):
-        self._change_status(True)
+        for product in self:
+            product._change_status(True)
 
-    @api.multi
     def deactive_products(self):
-        self._change_status(False)
+        for product in self:
+            product._change_status(False)
