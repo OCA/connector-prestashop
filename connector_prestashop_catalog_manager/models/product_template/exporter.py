@@ -131,7 +131,7 @@ class ProductTemplateExporter(Component):
     def export_variants(self):
         combination_obj = self.env["prestashop.product.combination"]
         for product in self.binding.product_variant_ids:
-            if not product.attribute_value_ids:
+            if not product.product_template_attribute_value_ids:
                 continue
             combination_ext = combination_obj.search(
                 [
@@ -312,7 +312,7 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def available_date(self, record):
         if record.available_date:
-            return {"available_date": record.available_date}
+            return {"available_date": record.available_date.strftime('%Y-%m-%d')}
         return {}
 
     @mapping

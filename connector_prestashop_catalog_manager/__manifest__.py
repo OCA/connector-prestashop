@@ -12,6 +12,7 @@
         "connector_prestashop",
         "product_categ_image",
         "product_multi_image",
+        "product_brand",
     ],
     "author": "Akretion,"
     "AvanzOSC,"

@@ -31,6 +31,17 @@ class PrestashopProductTemplate(models.Model):
         default=1,
     )
     state = fields.Boolean(string="State", default=True)
+    visibility = fields.Char(translate=True)
+    low_stock_threshold = fields.Integer(
+        string="Low Stock Threshold",
+        help="Low Stock Threshold",
+        default=0,
+    )
+    low_stock_alert = fields.Integer(
+        string="Low Stock Alert",
+        help="Low Stock Alert",
+        default=0,
+    )
 
 
 class PrestashopProductTemplateListener(Component):
