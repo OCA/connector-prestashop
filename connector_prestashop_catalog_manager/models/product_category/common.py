@@ -25,13 +25,13 @@ class PrestashopCategImage(models.Model):
     _name = "prestashop.categ.image"
     _inherit = "prestashop.binding.odoo"
     _inherits = {"product.category": "odoo_id"}
+    _description = "Prestashop Category Image"
 
     odoo_id = fields.Many2one(
         comodel_name="product.category",
         string="Product",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
 
@@ -56,28 +56,31 @@ class CategImageAdapter(Component):
         )
 
     def read(self, category_id, image_id, options=None):
+        # pylint: disable=method-required-super
         api = self.connect()
         return api.get_image(
             self._prestashop_image_model, category_id, image_id, options=options
         )
 
     def create(self, attributes=None):
+        # pylint: disable=method-required-super
         api = self.connect()
         image_binary = attributes["image"]
         img_filename = attributes["name"]
-        image_url = "images/%s/%s" % (
+        image_url = "images/{}/{}".format(
             self._prestashop_image_model,
             str(attributes["categ_id"]),
         )
         return api.add(image_url, files=[("image", img_filename, image_binary)])
 
-    def write(self, id, attributes=None):
+    def write(self, id_, attributes=None):
+        # pylint: disable=method-required-super
         api = self.connect()
         image_binary = attributes["image"]
         img_filename = attributes["name"]
         delete_url = "images/%s" % (self._prestashop_image_model)
         api.delete(delete_url, str(attributes["categ_id"]))
-        image_url = "images/%s/%s" % (
+        image_url = "images/{}/{}".format(
             self._prestashop_image_model,
             str(attributes["categ_id"]),
         )

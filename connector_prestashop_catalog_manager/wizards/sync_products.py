@@ -2,13 +2,14 @@
 
 import logging
 
-from odoo import api, models
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
 
 class SyncProducts(models.TransientModel):
     _name = "sync.products"
+    _description = "Synchronize Products"
 
     def _bind_resync(self, product_ids):
         products = self.env["product.template"].browse(product_ids)
@@ -19,10 +20,10 @@ class SyncProducts(models.TransientModel):
             except Exception as e:
                 _logger.info("id %s, attributes %s\n", str(product.id), e)
 
-    @api.multi
     def sync_products(self):
-        self._bind_resync(self.env.context["active_ids"])
+        for product in self:
+            product._bind_resync(product.env.context["active_ids"])
 
-    @api.multi
     def sync_all_products(self):
-        self._bind_resync([])
+        for product in self:
+            product._bind_resync([])

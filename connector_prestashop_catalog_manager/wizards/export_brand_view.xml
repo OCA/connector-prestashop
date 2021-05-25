@@ -2,7 +2,6 @@
 <!-- Copyright 2020 PlanetaTIC - Marc Poch <mpoch@planetatic.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-<data>
 
     <record id="export_product_brand_form" model="ir.ui.view">
         <field name="name">wiz.prestashop.export.product.brand.form</field>
@@ -15,28 +14,25 @@
                 </group>
                 <footer>
                     <button
-                            name="export_product_brands"
-                            type="object"
-                            string="Export"
-                            class="oe_highlight"
-                        />
+                        name="export_product_brands"
+                        type="object"
+                        string="Export"
+                        class="oe_highlight"
+                    />
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
             </form>
         </field>
     </record>
+    <record model="ir.actions.act_window" id="act_export_prestashop_product_brand">
+        <field name="name">Export To PrestaShop</field>
+        <field name="res_model">wiz.prestashop.export.product.brand</field>
+        <field name="binding_model_id" ref="product_brand.model_product_brand" />
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="export_product_brand_form" />
+    </record>
 
-    <act_window
-            id="act_export_prestashop_product_brand"
-            name="Export To PrestaShop"
-            res_model="wiz.prestashop.export.product.brand"
-            src_model="product.brand"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            view_id="export_product_brand_form"
-        />
-
-</data>
 </odoo>

@@ -1,7 +1,7 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector_prestashop.tests.common import (
+from odoo.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
 )
@@ -11,7 +11,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductBrand(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductBrand, self).setUp()
+        super().setUp()
 
         # create and bind parent
         parent = self.env["product.brand"].create({"name": "Home"})
@@ -85,7 +85,9 @@ class TestExportProductBrand(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_brand = body["prestashop"]["manufacturers"]
             # check name
-            for field, value in {
-                "name": "New brand",
-            }.items():
+            for field, value in list(
+                {
+                    "name": "New brand",
+                }.items()
+            ):
                 self.assertEqual(value, ps_brand[field])

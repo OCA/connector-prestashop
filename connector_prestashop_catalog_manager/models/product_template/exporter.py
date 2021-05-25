@@ -34,7 +34,7 @@ class ProductTemplateExporter(Component):
     _apply_on = "prestashop.product.template"
 
     def _create(self, record):
-        res = super(ProductTemplateExporter, self)._create(record)
+        res = super()._create(record)
         self.write_binging_vals(self.binding, record)
         return res["prestashop"]["product"]["id"]
 
@@ -51,7 +51,7 @@ class ProductTemplateExporter(Component):
         ]
         trans = self.component(usage="record.importer")
         splitted_record = trans._split_per_language(ps_record)
-        for lang_code, prestashop_record in splitted_record.items():
+        for lang_code, prestashop_record in list(splitted_record.items()):
             vals = {}
             for key in keys_to_update:
                 vals[key[0]] = prestashop_record[key[1]]
@@ -104,7 +104,7 @@ class ProductTemplateExporter(Component):
 
     def _export_dependencies(self):
         """Export the dependencies for the product"""
-        super(ProductTemplateExporter, self)._export_dependencies()
+        super()._export_dependencies()
         attribute_binder = self.binder_for("prestashop.product.combination.option")
         option_binder = self.binder_for("prestashop.product.combination.option.value")
 
@@ -131,7 +131,7 @@ class ProductTemplateExporter(Component):
     def export_variants(self):
         combination_obj = self.env["prestashop.product.combination"]
         for product in self.binding.product_variant_ids:
-            if not product.attribute_value_ids:
+            if not product.product_template_attribute_value_ids:
                 continue
             combination_ext = combination_obj.search(
                 [
@@ -312,7 +312,7 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def available_date(self, record):
         if record.available_date:
-            return {"available_date": record.available_date}
+            return {"available_date": record.available_date.strftime("%Y-%m-%d")}
         return {}
 
     @mapping
