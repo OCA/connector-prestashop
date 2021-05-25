@@ -19,10 +19,10 @@ class SyncProducts(models.TransientModel):
                 if bind.always_available != status or self.force_status:
                     bind.always_available = status
 
-    @api.multi
     def active_products(self):
-        self._change_status(True)
+        for product in self:
+            product._change_status(True)
 
-    @api.multi
     def deactive_products(self):
-        self._change_status(False)
+        for product in self:
+            product._change_status(False)

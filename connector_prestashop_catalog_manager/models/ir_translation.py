@@ -7,7 +7,6 @@ from odoo import api, models
 class IrTranslation(models.Model):
     _inherit = "ir.translation"
 
-    @api.multi
     def write_on_source_model(self):
         """Force a write on source model to make catalog_manager
         export the translation
@@ -25,20 +24,19 @@ class IrTranslation(models.Model):
                 )
         return True
 
-    @api.multi
     def write(self, vals):
         res = False
         for translation in self:
             if translation.env.context.get("catalog_manager_force_translation", False):
                 continue
-            res = super(IrTranslation, self).write(vals)
+            res = super().write(vals)
 
             self.write_on_source_model()
         return res
 
     @api.model
     def create(self, vals):
-        res = super(IrTranslation, self).create(vals)
+        res = super().create(vals)
 
         if not self.env.context.get("catalog_manager_ignore_translation", False):
             # It is called from a binding creation so,

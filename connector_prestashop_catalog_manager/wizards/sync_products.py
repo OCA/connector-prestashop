@@ -19,10 +19,10 @@ class SyncProducts(models.TransientModel):
             except Exception as e:
                 _logger.info("id %s, attributes %s\n", str(product.id), e)
 
-    @api.multi
     def sync_products(self):
-        self._bind_resync(self.env.context["active_ids"])
+        for product in self:
+            product._bind_resync(product.env.context["active_ids"])
 
-    @api.multi
     def sync_all_products(self):
-        self._bind_resync([])
+        for product in self:
+            product._bind_resync([])

@@ -12,7 +12,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductImage(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductImage, self).setUp()
+        super().setUp()
 
         # create and bind template
         template = self.env["product.template"].create(

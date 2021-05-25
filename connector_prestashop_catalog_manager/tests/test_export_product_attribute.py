@@ -11,7 +11,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductAttribute(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductAttribute, self).setUp()
+        super().setUp()
 
         # create and bind attribute
         attribute_size = self.env["product.attribute"].create(

@@ -24,7 +24,6 @@ class PrestashopExportProductBrand(models.TransientModel):
         string="Shop",
     )
 
-    @api.multi
     def export_product_brands(self):
         self.ensure_one()
         brand_obj = self.env["product.brand"]

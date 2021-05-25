@@ -12,7 +12,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProduct(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProduct, self).setUp()
+        super().setUp()
 
         # create and bind category
         category_home = self.env["product.category"].create(

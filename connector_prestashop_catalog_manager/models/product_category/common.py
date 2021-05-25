@@ -31,7 +31,6 @@ class PrestashopCategImage(models.Model):
         string="Product",
         required=True,
         ondelete="cascade",
-        oldname="openerp_id",
     )
 
 

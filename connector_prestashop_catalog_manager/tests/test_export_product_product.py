@@ -1,7 +1,7 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-import mock
+from unittest import mock
 from openerp.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
@@ -12,7 +12,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductProduct(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductProduct, self).setUp()
+        super().setUp()
 
         # create and bind template
         template = self.env["product.template"].create(

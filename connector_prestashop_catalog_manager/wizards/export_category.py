@@ -25,7 +25,6 @@ class PrestashopExportCategory(models.TransientModel):
         string="Shop",
     )
 
-    @api.multi
     def export_categories(self):
         self.ensure_one()
         category_obj = self.env["product.category"]

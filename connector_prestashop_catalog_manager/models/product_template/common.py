@@ -112,6 +112,6 @@ class TemplateAdapter(Component):
                         "associations"
                     ][association]
 
-        res = super(TemplateAdapter, self).write(id, full_attributes)
+        res = super().write(id, full_attributes)
 
         return res

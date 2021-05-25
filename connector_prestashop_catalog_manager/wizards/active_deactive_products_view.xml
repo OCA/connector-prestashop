@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<openerp>
-    <data>
+<odoo>
         <record model="ir.ui.view" id="active_product_form">
             <field name="name">active.product.form</field>
             <field name="model">active.deactive.products</field>
@@ -27,16 +26,15 @@
                 </form>
             </field>
         </record>
-        <act_window
-            name="Active Products"
-            res_model="active.deactive.products"
-            src_model="product.template"
-            view_mode="form"
-            target="new"
-            view_id="active_product_form"
-            key2="client_action_multi"
-            id="act_active_products"
-        />
+        <record model="ir.actions.act_window" id="act_active_products">
+            <field name="name">Active Products</field>
+            <field name="res_model">active.deactive.products</field>
+            <!--field name="src_model">product.template</field!-->
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="active_product_form"/>
+            <!--field name="key2">client_action_multi</field!-->
+        </record>
 
         <record model="ir.ui.view" id="deactive_product_form">
             <field name="name">deactive.product.form</field>
@@ -61,15 +59,14 @@
                 </form>
             </field>
         </record>
-        <act_window
-            name="Deactive Products"
-            res_model="active.deactive.products"
-            src_model="product.template"
-            view_mode="form"
-            target="new"
-            view_id="deactive_product_form"
-            key2="client_action_multi"
-            id="act_deactive_products"
-        />
-    </data>
-</openerp>
+        <record model="ir.actions.act_window" id="act_deactive_products">
+            <field name="name">Deactive Products</field>
+            <field name="res_model">active.deactive.products</field>
+            <!--field name="src_model">product.template</field!-->
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="deactive_product_form"/>
+            <!--field name="key2">client_action_multi</field!-->
+        </record>
+
+</odoo>

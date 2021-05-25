@@ -18,7 +18,7 @@ class ProductCombinationExporter(Component):
         :param record: browse record to create in prestashop
         :return integer: Prestashop record id
         """
-        res = super(ProductCombinationExporter, self)._create(record)
+        res = super()._create(record)
         return res["prestashop"]["combination"]["id"]
 
     def _export_images(self):
@@ -212,7 +212,7 @@ class ProductCombinationOptionExporter(Component):
     _apply_on = "prestashop.product.combination.option"
 
     def _create(self, record):
-        res = super(ProductCombinationOptionExporter, self)._create(record)
+        res = super()._create(record)
         return res["prestashop"]["product_option"]["id"]
 
 
@@ -238,7 +238,7 @@ class ProductCombinationOptionValueExporter(Component):
     _apply_on = "prestashop.product.combination.option.value"
 
     def _create(self, record):
-        res = super(ProductCombinationOptionValueExporter, self)._create(record)
+        res = super()._create(record)
         return res["prestashop"]["product_option_value"]["id"]
 
     def _export_dependencies(self):

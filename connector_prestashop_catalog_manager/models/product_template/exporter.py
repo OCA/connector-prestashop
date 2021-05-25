@@ -34,7 +34,7 @@ class ProductTemplateExporter(Component):
     _apply_on = "prestashop.product.template"
 
     def _create(self, record):
-        res = super(ProductTemplateExporter, self)._create(record)
+        res = super()._create(record)
         self.write_binging_vals(self.binding, record)
         return res["prestashop"]["product"]["id"]
 
@@ -104,7 +104,7 @@ class ProductTemplateExporter(Component):
 
     def _export_dependencies(self):
         """ Export the dependencies for the product"""
-        super(ProductTemplateExporter, self)._export_dependencies()
+        super()._export_dependencies()
         attribute_binder = self.binder_for("prestashop.product.combination.option")
         option_binder = self.binder_for("prestashop.product.combination.option.value")
 

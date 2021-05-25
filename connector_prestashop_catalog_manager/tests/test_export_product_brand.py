@@ -11,7 +11,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductBrand(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductBrand, self).setUp()
+        super().setUp()
 
         # create and bind parent
         parent = self.env["product.brand"].create({"name": "Home"})
