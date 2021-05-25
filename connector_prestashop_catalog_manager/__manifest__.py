@@ -6,12 +6,13 @@
 
 {
     "name": "Prestashop-Odoo Catalog Manager",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "depends": [
         "connector_prestashop",
         "product_categ_image",
         "product_multi_image",
+        "product_brand",
     ],
     "author": "Akretion,"
     "AvanzOSC,"

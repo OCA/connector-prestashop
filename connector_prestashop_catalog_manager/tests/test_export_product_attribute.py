@@ -1,7 +1,7 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector_prestashop.tests.common import (
+from odoo.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
 )
@@ -11,7 +11,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProductAttribute(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProductAttribute, self).setUp()
+        super().setUp()
 
         # create and bind attribute
         attribute_size = self.env["product.attribute"].create(
@@ -75,7 +75,7 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
     @assert_no_job_delayed
     def test_export_product_attribute_onwrite(self):
         # bind attribute
-        binding = self._bind_attribute()
+        self._bind_attribute()
         # check no export delayed
         self.assertEqual(0, self.instance_delay_record.export_record.call_count)
         # write in value
@@ -83,7 +83,10 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
         # check export delayed
         self.assertEqual(1, self.instance_delay_record.export_record.call_count)
         # write in binding
-        binding.group_type = "radio"
+        # binding.display_type = "radio" --> This triggered below 2 events
+        # attribute.event.listener.on_record_write calling export_record
+        # prestashop.attribute.event.listener.on_record_write calling export_record
+        self.attribute.display_type = "radio"
         # check export delayed again
         self.assertEqual(2, self.instance_delay_record.export_record.call_count)
 
@@ -130,16 +133,20 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_option = body["prestashop"]["product_options"]
             # check basic fields
-            for field, value in {
-                "group_type": "select",
-                "position": "4",
-            }.items():
+            for field, value in list(
+                {
+                    "group_type": "select",
+                    "position": "4",
+                }.items()
+            ):
                 self.assertEqual(value, ps_option[field])
             # check translatable fields
-            for field, value in {
-                "name": "New attribute",
-                "public_name": "New attribute",
-            }.items():
+            for field, value in list(
+                {
+                    "name": "New attribute",
+                    "public_name": "New attribute",
+                }.items()
+            ):
                 self.assertEqual(value, ps_option[field]["language"]["value"])
 
     @assert_no_job_delayed
@@ -167,13 +174,17 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_option = body["prestashop"]["product_option_value"]
             # check basic fields
-            for field, value in {
-                "id_attribute_group": "1",
-                "value": "New value",
-            }.items():
+            for field, value in list(
+                {
+                    "id_attribute_group": "1",
+                    "value": "New value",
+                }.items()
+            ):
                 self.assertEqual(value, ps_option[field])
             # check translatable fields
-            for field, value in {
-                "name": "New value",
-            }.items():
+            for field, value in list(
+                {
+                    "name": "New value",
+                }.items()
+            ):
                 self.assertEqual(value, ps_option[field]["language"]["value"])

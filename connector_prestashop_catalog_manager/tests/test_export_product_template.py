@@ -1,7 +1,7 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector_prestashop.tests.common import (
+from odoo.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
 )
@@ -12,7 +12,7 @@ from .common import CatalogManagerTransactionCase
 
 class TestExportProduct(CatalogManagerTransactionCase):
     def setUp(self):
-        super(TestExportProduct, self).setUp()
+        super().setUp()
 
         # create and bind category
         category_home = self.env["product.category"].create(
@@ -91,6 +91,7 @@ class TestExportProduct(CatalogManagerTransactionCase):
             8,
             **{
                 "default_shop_id": self.shop.id,
+                "link_rewrite": "new-product",
             }
         ).with_context(connector_no_export=False)
 
@@ -109,8 +110,10 @@ class TestExportProduct(CatalogManagerTransactionCase):
         bindings = self.env[binding_model].search([("odoo_id", "=", self.template.id)])
         self.assertEqual(1, len(bindings))
         # check export delayed
+        # sequence of fields is from ./wizards/export_multiple_products.py
+        # > def create_prestashop_template
         self.instance_delay_record.export_record.assert_called_once_with(
-            fields=["default_shop_id", "backend_id", "odoo_id", "link_rewrite"]
+            fields=["backend_id", "default_shop_id", "link_rewrite", "odoo_id"]
         )
 
     @assert_no_job_delayed
@@ -224,36 +227,40 @@ class TestExportProduct(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_product = body["prestashop"]["product"]
             # check basic fields
-            for field, value in {
-                "active": "1",
-                "additional_shipping_cost": "1.0",
-                "available_date": "2016-08-29",
-                "available_for_order": "1",
-                "barcode": "8411788010150",
-                "id_category_default": "5",
-                "id_shop_default": "1",
-                "minimal_quantity": "2",
-                "on_sale": "1",
-                "online_only": "1",
-                "price": "20.0",
-                "reference": "NEW_PRODUCT",
-                "show_price": "1",
-                "weight": "0.1",
-                "wholesale_price": "10.0",
-                "id_manufacturer": "1",
-            }.items():
+            for field, value in list(
+                {
+                    "active": "1",
+                    "additional_shipping_cost": "1.0",
+                    "available_date": "2016-08-29",
+                    "available_for_order": "1",
+                    "barcode": "8411788010150",
+                    "id_category_default": "5",
+                    "id_shop_default": "1",
+                    "minimal_quantity": "2",
+                    "on_sale": "1",
+                    "online_only": "1",
+                    "price": "20.0",
+                    "reference": "NEW_PRODUCT",
+                    "show_price": "1",
+                    "weight": "0.1",
+                    "wholesale_price": "10.0",
+                    "id_manufacturer": "1",
+                }.items()
+            ):
                 self.assertEqual(value, ps_product[field])
             # check translatable fields
-            for field, value in {
-                "available_later": "New product available later",
-                "available_now": "New product available now",
-                "description": "<p>New product description</p>",
-                "description_short": "<p>New product description short" "</p>",
-                "link_rewrite": "new-product",
-                "meta_description": "New product meta description",
-                "meta_keywords": "New product meta keywords",
-                "meta_title": "New product meta title",
-                "name": "New product",
-                "tags": "New product tags",
-            }.items():
+            for field, value in list(
+                {
+                    "available_later": "New product available later",
+                    "available_now": "New product available now",
+                    "description": "<p>New product description</p>",
+                    "description_short": "<p>New product description short" "</p>",
+                    "link_rewrite": "new-product",
+                    "meta_description": "New product meta description",
+                    "meta_keywords": "New product meta keywords",
+                    "meta_title": "New product meta title",
+                    "name": "New product",
+                    "tags": "New product tags",
+                }.items()
+            ):
                 self.assertEqual(value, ps_product[field]["language"]["value"])

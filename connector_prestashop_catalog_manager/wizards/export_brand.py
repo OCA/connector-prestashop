@@ -1,11 +1,12 @@
 # Copyright 2020 PlanetaTIC - Marc Poch <mpoch@planetatic.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class PrestashopExportProductBrand(models.TransientModel):
     _name = "wiz.prestashop.export.product.brand"
+    _description = "Prestashop Export Product Brand"
 
     def _default_backend(self):
         return self.env["prestashop.backend"].search([], limit=1).id
@@ -24,7 +25,6 @@ class PrestashopExportProductBrand(models.TransientModel):
         string="Shop",
     )
 
-    @api.multi
     def export_product_brands(self):
         self.ensure_one()
         brand_obj = self.env["product.brand"]

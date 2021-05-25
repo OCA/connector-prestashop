@@ -3,14 +3,13 @@
 import os
 import os.path
 
-from openerp.addons.connector_prestashop.components.backend_adapter import (
-    PrestaShopWebServiceImage,
-)
-
 from odoo.tools.translate import _
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
+from odoo.addons.connector_prestashop.components.backend_adapter import (
+    PrestaShopWebServiceImage,
+)
 
 
 class ProductImageExporter(Component):
@@ -31,7 +30,7 @@ class ProductImageExporter(Component):
         map_record = self.mapper.map_record(self.binding)
 
         if self.prestashop_id:
-            record = map_record.values()
+            record = list(map_record.values())
             if not record:
                 return _("Nothing to export.")
             # special check on data before export
@@ -100,7 +99,7 @@ class ProductImageExportMapper(Component):
                 file_name = os.path.splitext(os.path.basename(record.odoo_id.url))
             elif storage == "db":
                 if not record.odoo_id.filename:
-                    file_name = "%s_%s.jpg" % (
+                    file_name = "{}_{}.jpg".format(
                         record.odoo_id.owner_model,
                         record.odoo_id.owner_id,
                     )

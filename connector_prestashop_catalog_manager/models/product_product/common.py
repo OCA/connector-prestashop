@@ -33,7 +33,7 @@ class PrestashopProductProductListener(Component):
     @skip_if(lambda self, record, **kwargs: self.need_to_export(record, **kwargs))
     def on_record_write(self, record, fields=None):
         """Called when a record is written"""
-        inventory_fields = PrestashopProductQuantityListener._get_inventory_fields()
+        inventory_fields = PrestashopProductQuantityListener._get_inventory_fields(self)
         fields = list(set(fields).difference(set(inventory_fields)))
         if fields:
             record.with_delay().export_record(fields=fields)
@@ -63,12 +63,12 @@ class ProductProductListener(Component):
         for field in self.EXCLUDE_FIELDS:
             if field in fields:
                 fields.remove(field)
-        if "active" in fields:
+        if "active" in fields and not record["active"]:
             self.prestashop_product_combination_unlink(record)
             return
         if fields:
             priority = 20
-            if "default_on" in fields:
+            if "default_on" in fields and record["default_on"]:
                 # PS has to uncheck actual default combination first
                 priority = 99
             for binding in record.prestashop_combinations_bind_ids:
