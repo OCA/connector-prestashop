@@ -392,7 +392,7 @@ class SaleOrderImporter(Component):
             except PrestaShopWebServiceError as err:
                 # we ignore it, the order line will be imported without product
                 _logger.error(
-                    "PrestaShop product %s could not be imported, " "error: %s",
+                    "PrestaShop product %s could not be imported, error: %s",
                     row["product_id"],
                     err,
                 )
@@ -406,8 +406,8 @@ class SaleOrderImporter(Component):
                     # we ignore it, the order line will be imported without
                     # product
                     _logger.error(
-                        "PrestaShop combination %s could not be "
-                        "imported, error: %s" % row["product_attribute_id"],
+                        "PrestaShop combination %s could not be imported, error: %s",
+                        row["product_attribute_id"],
                         err,
                     )
 
