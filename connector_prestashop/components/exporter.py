@@ -73,7 +73,7 @@ class PrestashopExporter(AbstractComponent):
     _name = "prestashop.exporter"
     _inherit = "prestashop.base.exporter"
 
-    _openerp_field = "odoo_id"
+    _odoo_field = "odoo_id"
 
     def __init__(self, environment):
         """
@@ -129,7 +129,7 @@ class PrestashopExporter(AbstractComponent):
         wrap = relation._name != binding_model
         if wrap and hasattr(relation, binding_field_name):
             domain = [
-                (self._openerp_field, "=", relation.id),
+                (self._odoo_field, "=", relation.id),
                 ("backend_id", "=", self.backend_record.id),
             ]
             model = self.env[binding_model].with_context(active_test=False)
@@ -145,7 +145,7 @@ class PrestashopExporter(AbstractComponent):
 
                 _bind_values = {
                     "backend_id": self.backend_record.id,
-                    self._openerp_field: relation.id,
+                    self._odoo_field: relation.id,
                 }
                 _bind_values.update(bind_values or {})
                 # If 2 jobs create it at the same time, retry

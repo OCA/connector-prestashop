@@ -126,10 +126,7 @@ class PrestashopProductTemplate(models.Model):
     default_shop_id = fields.Many2one(
         comodel_name="prestashop.shop", string="Default shop", required=True
     )
-    link_rewrite = fields.Char(
-        string="Friendly URL",
-        translate=True,
-    )
+    link_rewrite = fields.Char(string="Friendly URL", required=True, translate=True)
     available_for_order = fields.Boolean(
         string="Available for Order Taking",
         default=True,

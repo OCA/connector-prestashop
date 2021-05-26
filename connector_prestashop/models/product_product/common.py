@@ -183,6 +183,11 @@ class PrestashopProductCombinationOption(models.Model):
     )
     prestashop_position = fields.Integer("PrestaShop Position")
     public_name = fields.Char(string="Public Name", translate=True)
+    group_type = fields.Selection(
+        [("color", "Color"), ("radio", "Radio"), ("select", "Select")],
+        string="Type",
+        default="select",
+    )
 
 
 class ProductAttributeValue(models.Model):
