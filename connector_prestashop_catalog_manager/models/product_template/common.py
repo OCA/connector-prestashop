@@ -114,14 +114,13 @@ class TemplateAdapter(Component):
         prestashop_data["product"].pop("position_in_category", False)
 
         full_attributes = prestashop_data["product"].copy()
+        fa_assoc = full_attributes["associations"]
         for field in attributes:
             if field != "associations":
                 full_attributes[field] = attributes[field]
-            else:
-                for association in attributes["associations"]:
-                    full_attributes["associations"][association] = attributes[
-                        "associations"
-                    ][association]
+                continue
+            for association, value in attributes["associations"].items():
+                fa_assoc[association] = value
 
         res = super().write(id, full_attributes)
 

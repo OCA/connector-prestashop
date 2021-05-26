@@ -312,7 +312,7 @@ class ProductTemplateExportMapper(Component):
     @mapping
     def available_date(self, record):
         if record.available_date:
-            return {"available_date": record.available_date.strftime('%Y-%m-%d')}
+            return {"available_date": record.available_date.strftime("%Y-%m-%d")}
         return {}
 
     @mapping

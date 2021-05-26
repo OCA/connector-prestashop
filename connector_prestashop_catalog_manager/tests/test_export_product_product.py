@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from unittest import mock
+
 from openerp.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
@@ -74,7 +75,7 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
         # create product
         self.product = self.env["product.product"].create(
             {
-                "attribute_value_ids": [
+                "product_template_attribute_value_ids": [
                     (
                         6,
                         False,

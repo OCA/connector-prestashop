@@ -15,11 +15,11 @@
                     </group>
                     <footer>
                         <button
-                            name="active_products"
-                            type="object"
-                            string="Active"
-                            class="oe_highlight"
-                        />
+                        name="active_products"
+                        type="object"
+                        string="Active"
+                        class="oe_highlight"
+                    />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
@@ -32,7 +32,7 @@
             <!--field name="src_model">product.template</field!-->
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="active_product_form"/>
+            <field name="view_id" ref="active_product_form" />
             <!--field name="key2">client_action_multi</field!-->
         </record>
 
@@ -48,11 +48,11 @@
                     </group>
                     <footer>
                         <button
-                            name="deactive_products"
-                            type="object"
-                            string="Deactive"
-                            class="oe_highlight"
-                        />
+                        name="deactive_products"
+                        type="object"
+                        string="Deactive"
+                        class="oe_highlight"
+                    />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
@@ -65,7 +65,7 @@
             <!--field name="src_model">product.template</field!-->
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="deactive_product_form"/>
+            <field name="view_id" ref="deactive_product_form" />
             <!--field name="key2">client_action_multi</field!-->
         </record>
 

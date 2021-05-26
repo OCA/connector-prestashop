@@ -14,11 +14,11 @@
                 </group>
                 <footer>
                     <button
-                            name="export_product_brands"
-                            type="object"
-                            string="Export"
-                            class="oe_highlight"
-                        />
+                        name="export_product_brands"
+                        type="object"
+                        string="Export"
+                        class="oe_highlight"
+                    />
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
@@ -32,7 +32,7 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <!--field name="key2">client_action_multi</field!-->
-        <field name="view_id" ref="export_product_brand_form"/>
+        <field name="view_id" ref="export_product_brand_form" />
     </record>
 
 </odoo>

@@ -7,10 +7,7 @@
             <form string="Export Products">
                 <group>
                     <field name="backend_id" />
-                    <field
-                        name="shop_id"
-                        domain="[('backend_id', '=', backend_id)]"
-                    />
+                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]" />
                 </group>
                 <footer>
                     <button
@@ -32,7 +29,7 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <!--field name="key2">client_action_multi</field!-->
-        <field name="view_id" ref="export_multiple_products_form"/>
+        <field name="view_id" ref="export_multiple_products_form" />
     </record>
 
     <record model="ir.ui.view" id="export_variant_stock_form">
@@ -60,7 +57,7 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <!--field name="key2">client_action_multi</field!-->
-        <field name="view_id" ref="export_variant_stock_form"/>
+        <field name="view_id" ref="export_variant_stock_form" />
     </record>
 
 </odoo>

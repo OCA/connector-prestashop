@@ -50,7 +50,7 @@ class ProductCombinationExporter(Component):
         option_binder = self.binder_for("prestashop.product.combination.option.value")
         Option = self.env["prestashop.product.combination.option"]
         OptionValue = self.env["prestashop.product.combination.option.value"]
-        for value in self.binding.attribute_value_ids:
+        for value in self.binding.product_template_attribute_value_ids:
             prestashop_option_id = attribute_binder.to_external(
                 value.attribute_id.id, wrap=True
             )
@@ -71,7 +71,9 @@ class ProductCombinationExporter(Component):
                         }
                     )
                 option_binding.export_record()
-            prestashop_value_id = option_binder.to_external(value.id, wrap=True)
+            prestashop_value_id = option_binder.to_external(
+                value.product_attribute_value_id.id, wrap=True
+            )
             if not prestashop_value_id:
                 value_binding = OptionValue.search(
                     [
@@ -91,7 +93,7 @@ class ProductCombinationExporter(Component):
                     ).create(
                         {
                             "backend_id": self.backend_record.id,
-                            "odoo_id": value.id,
+                            "odoo_id": value.product_attribute_value_id.id,
                             "id_attribute_group": option_binding.id,
                         }
                     )
@@ -168,8 +170,10 @@ class ProductCombinationExportMapper(Component):
     def _get_product_option_value(self, record):
         option_value = []
         option_binder = self.binder_for("prestashop.product.combination.option.value")
-        for value in record.attribute_value_ids:
-            value_ext_id = option_binder.to_external(value.id, wrap=True)
+        for value in record.product_template_attribute_value_ids:
+            value_ext_id = option_binder.to_external(
+                value.product_attribute_value_id.id, wrap=True
+            )
             if value_ext_id:
                 option_value.append({"id": value_ext_id})
         return option_value
@@ -183,7 +187,7 @@ class ProductCombinationExportMapper(Component):
                 images.append({"id": image_ext_id})
         return images
 
-    @changed_by("attribute_value_ids", "image_ids")
+    @changed_by("product_template_attribute_value_ids", "image_ids")
     @mapping
     def associations(self, record):
         return {
@@ -223,7 +227,7 @@ class ProductCombinationOptionExportMapper(Component):
 
     direct = [
         ("prestashop_position", "position"),
-        ("type", "group_type"),
+        ("display_type", "group_type"),
     ]
 
     _translatable_fields = [

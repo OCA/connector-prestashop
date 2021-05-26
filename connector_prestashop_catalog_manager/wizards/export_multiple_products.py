@@ -4,7 +4,7 @@ import re
 import unicodedata
 from functools import reduce
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 try:

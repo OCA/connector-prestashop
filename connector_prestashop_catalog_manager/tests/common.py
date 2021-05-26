@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from os.path import dirname, join
-
 from unittest import mock
+
 from openerp.addons.connector_prestashop.tests.common import PrestashopTransactionCase
 
 
