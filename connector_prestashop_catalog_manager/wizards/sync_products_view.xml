@@ -25,10 +25,10 @@
     <record model="ir.actions.act_window" id="act_presta_sync_products">
         <field name="name">Sync Products</field>
         <field name="res_model">sync.products</field>
-        <!--field name="src_model">product.template</field!-->
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <!--field name="key2">client_action_multi</field!-->
         <field name="view_id" ref="sync_products_form" />
     </record>
 </odoo>

@@ -4,7 +4,7 @@
 from os.path import dirname, join
 from unittest import mock
 
-from openerp.addons.connector_prestashop.tests.common import PrestashopTransactionCase
+from odoo.addons.connector_prestashop.tests.common import PrestashopTransactionCase
 
 
 class CatalogManagerTransactionCase(PrestashopTransactionCase):

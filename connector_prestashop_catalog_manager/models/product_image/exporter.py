@@ -3,7 +3,7 @@
 import os
 import os.path
 
-from openerp.addons.connector_prestashop.components.backend_adapter import (
+from odoo.addons.connector_prestashop.components.backend_adapter import (
     PrestaShopWebServiceImage,
 )
 

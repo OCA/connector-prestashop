@@ -3,7 +3,7 @@
 
 from unittest import mock
 
-from openerp.addons.connector_prestashop.tests.common import (
+from odoo.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
 )

@@ -1,7 +1,7 @@
 # © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-import openerp.addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp
 
 from odoo import fields, models
 

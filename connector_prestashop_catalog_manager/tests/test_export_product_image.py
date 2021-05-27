@@ -1,11 +1,11 @@
 # © 2018 PlanetaTIC
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from openerp.addons.connector_prestashop.tests.common import (
+from odoo.addons.connector_prestashop.tests.common import (
     assert_no_job_delayed,
     recorder,
 )
-from openerp.modules.module import get_resource_path
+from odoo.modules.module import get_resource_path
 
 from .common import CatalogManagerTransactionCase
 

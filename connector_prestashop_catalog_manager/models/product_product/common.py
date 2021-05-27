@@ -63,12 +63,12 @@ class ProductProductListener(Component):
         for field in self.EXCLUDE_FIELDS:
             if field in fields:
                 fields.remove(field)
-        if "active" in fields:
+        if "active" in fields and not record['active']:
             self.prestashop_product_combination_unlink(record)
             return
         if fields:
             priority = 20
-            if "default_on" in fields:
+            if "default_on" in fields and record['default_on']:
                 # PS has to uncheck actual default combination first
                 priority = 99
             for binding in record.prestashop_combinations_bind_ids:

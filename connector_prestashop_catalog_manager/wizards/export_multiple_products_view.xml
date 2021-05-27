@@ -4,7 +4,7 @@
         <field name="name">export.multiple.products.form</field>
         <field name="model">export.multiple.products</field>
         <field name="arch" type="xml">
-            <form string="Export Products">
+            <form string="Export Products to Prestashop">
                 <group>
                     <field name="backend_id" />
                     <field name="shop_id" domain="[('backend_id', '=', backend_id)]" />
@@ -23,12 +23,12 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="act_export_multiple_products">
-        <field name="name">Export Products</field>
+        <field name="name">Export Products to Prestashop</field>
         <field name="res_model">export.multiple.products</field>
-        <!--field name="src_model">product.template</field!-->
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <!--field name="key2">client_action_multi</field!-->
         <field name="view_id" ref="export_multiple_products_form" />
     </record>
 
@@ -53,10 +53,10 @@
     <record model="ir.actions.act_window" id="act_export_products_stock">
         <field name="name">Export Products Stock</field>
         <field name="res_model">export.multiple.products</field>
-        <!--field name="src_model">product.template</field!-->
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <!--field name="key2">client_action_multi</field!-->
         <field name="view_id" ref="export_variant_stock_form" />
     </record>
 
