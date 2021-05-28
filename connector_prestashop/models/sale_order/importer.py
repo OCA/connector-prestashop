@@ -311,7 +311,7 @@ class SaleOrderImportMapper(Component):
 
     def finalize(self, map_record, values):
         sale_vals = dict([(k, v) for k, v in values.items() if k in self.env['sale.order']._fields.keys()])
-        sale_vals = self.env['sale.order'].play_onchanges(sale_vals, ['payment_mode_id', 'workflow_process_id', 'fiscal_position_id', 'partner_id', 'partner_shipping_id', 'partner_invoice_id'])
+        sale_vals = self.env['sale.order'].play_onchanges(sale_vals, ['fiscal_position_id', 'partner_id', 'partner_shipping_id', 'partner_invoice_id', 'payment_mode_id', 'workflow_process_id'])
         values.update(sale_vals) 
         presta_line_list = []
         for line_vals_command in values["prestashop_order_line_ids"]:
@@ -385,8 +385,8 @@ class SaleOrderImporter(Component):
                     # product
                     _logger.error(
                         "PrestaShop combination %s could not be "
-                        "imported, error: %s" % row["product_attribute_id"],
-                        err,
+                        "imported, error: %s", (row["product_attribute_id"],
+                        err),
                     )
 
     def _add_shipping_line(self, binding):
