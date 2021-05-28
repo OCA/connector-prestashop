@@ -20,8 +20,8 @@ class MailMessageMapper(Component):
         return {"backend_id": self.backend_record.id}
 
     @mapping
-    def type(self, record):
-        return {"type": "comment"}
+    def message_type(self, record):
+        return {"message_type": "comment"}
 
     @mapping
     def object_ref(self, record):
