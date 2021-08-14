@@ -57,17 +57,17 @@ Getting started
 
 Available addons
 ----------------
-addon | version | summary
---- | --- | ---
-[connector_prestashop](connector_prestashop/) | 10.0.1.1.0 | PrestaShop-Odoo connector
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[connector_prestashop](connector_prestashop/) | 10.0.1.1.0 |  | PrestaShop-Odoo connector
 
 
 Unported addons
 ---------------
-addon | version | summary
---- | --- | ---
-[connector_prestashop_catalog_manager](connector_prestashop_catalog_manager/) | 9.0.1.0.2 (unported) | Prestashop-Odoo Catalog Manager
-[connector_prestashop_customize_example](connector_prestashop_customize_example/) | 8.0.1.0.0 (unported) | Prestashop Connector Customization Example
-[connector_prestashop_manufacturer](connector_prestashop_manufacturer/) | 9.0.1.0.0 (unported) | Import manufacturers from PrestaShop
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[connector_prestashop_catalog_manager](connector_prestashop_catalog_manager/) | 9.0.1.0.2 (unported) |  | Prestashop-Odoo Catalog Manager
+[connector_prestashop_customize_example](connector_prestashop_customize_example/) | 8.0.1.0.0 (unported) |  | Prestashop Connector Customization Example
+[connector_prestashop_manufacturer](connector_prestashop_manufacturer/) | 9.0.1.0.0 (unported) |  | Import manufacturers from PrestaShop
 
 [//]: # (end addons)
