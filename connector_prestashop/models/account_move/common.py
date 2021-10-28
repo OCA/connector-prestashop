@@ -17,21 +17,23 @@ class AccountMove(models.Model):
     def action_post(self):
         so_obj = self.env["prestashop.sale.order"]
         line_replacement = {}
-        for invoice in self:
-            sale_order = so_obj.search([("name", "=", invoice.ref)])
+        for move in self:
+            if move.move_type != "out_invoice":
+                continue
+            sale_order = so_obj.search([("name", "=", move.invoice_origin)])
             if not sale_order:
                 continue
             sale_order = sale_order[0]
             discount_product_id = sale_order.backend_id.discount_product_id.id
-            for invoice_line in invoice.invoice_line_ids:
+            for invoice_line in move.invoice_line_ids:
                 if invoice_line.product_id.id != discount_product_id:
                     continue
                 amount = invoice_line.price_subtotal
-                partner = invoice.partner_id.commercial_partner_id
+                partner = move.partner_id.commercial_partner_id
                 refund = self._find_refund(-1 * amount, partner)
                 if refund:
                     invoice_line.unlink()
-                    line_replacement[invoice] = refund
+                    line_replacement[move] = refund
         result = super().action_post()
         # reconcile invoice with refund
         for invoice, refund in line_replacement.items():
@@ -43,13 +45,13 @@ class AccountMove(models.Model):
         move_line_obj = self.env["account.move.line"]
         move_lines = move_line_obj.search(
             [
-                ("move_id", "=", invoice.move_id.id),
+                ("move_id", "=", invoice.id),
                 ("debit", "!=", 0.0),
             ]
         )
         move_lines += move_line_obj.search(
             [
-                ("move_id", "=", refund.move_id.id),
+                ("move_id", "=", refund.id),
                 ("credit", "!=", 0.0),
             ]
         )
