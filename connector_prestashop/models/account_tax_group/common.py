@@ -28,7 +28,10 @@ class AccountTaxGroup(models.Model):
 
 class PrestashopAccountTaxGroup(models.Model):
     _name = "prestashop.account.tax.group"
-    _inherit = "prestashop.binding.odoo"
+    # Since the prestashop tax group change its ID when updated we could
+    # end up with multiple tax group binding with the same backend_id/odoo_id
+    # that is why we do not inherit prestashop.odoo.binding
+    _inherit = "prestashop.binding"
     _inherits = {"account.tax.group": "odoo_id"}
     _description = "Account Tax Group Prestashop Bindings"
 
