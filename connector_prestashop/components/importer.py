@@ -247,7 +247,9 @@ class PrestashopImporter(AbstractComponent):
         self.advisory_lock_or_retry(lock_name, retry_seconds=RETRY_ON_ADVISORY_LOCK)
         if not self.prestashop_record:
             self.prestashop_record = self._get_prestashop_data()
-        binding = self._get_binding()
+        # put back a not active test domain so the rest of the import process
+        # happen in normal conditions
+        binding = self._get_binding().with_context(active_test=True)
         if not binding:
             self._check_in_new_connector_env()
 

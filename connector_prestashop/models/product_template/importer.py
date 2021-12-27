@@ -566,9 +566,11 @@ class ProductTemplateImporter(Component):
             # TODO post msg / create activity
 
     def deactivate_default_product(self, binding):
+        # don't consider product as having variant if they are unactive.
+        # don't try to inactive a product if it is already inactive.
+        binding = binding.with_context(active_test=True)
         if binding.product_variant_count != 1:
-            # avoid unactiving already unactive variant
-            for product in binding.with_context(active_test=True).product_variant_ids:
+            for product in binding.product_variant_ids:
                 if not product.product_template_attribute_value_ids:
                     self.env["product.product"].browse(product.id).write(
                         {"active": False}
@@ -599,11 +601,11 @@ class ProductTemplateImporter(Component):
                 attribute_values[attr_id] = []
             attribute_values[attr_id].append(value_id)
         for attr_id, value_ids in attribute_values.items():
-            attr_line = template.attribute_line_ids.filtered(
-                lambda l: l.attribute_id.id == attr_id
-            )
+            attr_line = template.with_context(
+                active_test=False
+            ).attribute_line_ids.filtered(lambda l: l.attribute_id.id == attr_id)
             if attr_line:
-                attr_line.write({"value_ids": [(6, 0, value_ids)]})
+                attr_line.write({"value_ids": [(6, 0, value_ids)], "active": True})
             else:
                 attr_line = self.env["product.template.attribute.line"].create(
                     {
