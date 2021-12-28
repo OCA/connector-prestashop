@@ -12,6 +12,7 @@ from odoo.addons.connector.components.mapper import (
     mapping,
     only_create,
 )
+from odoo.addons.queue_job.exception import FailedJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -686,7 +687,10 @@ class ProductTemplateImporter(Component):
         for ps_supplierinfo in ps_supplierinfos:
             try:
                 ps_supplierinfo.resync()
-            except PrestaShopWebServiceError:
+            # PrestaShopWebServiceError is transformed in FailedJobError when
+            # supplierinfo can't fetch combination dependency. If combination has been
+            # removed, we want to clean the supplierinfo too)
+            except (PrestaShopWebServiceError, FailedJobError):
                 ps_supplierinfo.odoo_id.unlink()
 
     def _import_dependencies(self):
