@@ -3,6 +3,8 @@
 import logging
 from datetime import timedelta
 
+from prestapyt import PrestaShopWebServiceDict
+
 from odoo import api, fields, models
 
 from odoo.addons.component.core import Component
@@ -204,6 +206,20 @@ class SaleOrderAdapter(Component):
 
     def update_sale_state(self, prestashop_id, datas):
         return self.client.add("order_histories", datas)
+
+    def search(self, filters=None):
+        result = super().search(filters=filters)
+        shops = self.env["prestashop.shop"].search(
+            [("backend_id", "=", self.backend_record.id)]
+        )
+        for shop in shops:
+            if not shop.default_url:
+                continue
+            api = PrestaShopWebServiceDict(
+                "%s/api" % shop.default_url, self.prestashop.webservice_key
+            )
+            result += api.search(self._prestashop_model, filters)
+        return result
 
 
 class SaleOrderLineAdapter(Component):
