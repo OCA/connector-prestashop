@@ -213,15 +213,6 @@ class RefundMapper(Component):
         return {"move_type": "out_refund"}
 
     @mapping
-    def account_id(self, record):
-        binder = self.binder_for("prestashop.res.partner")
-        partner = binder.to_internal(record["id_customer"])
-        partner = partner.with_context(
-            company_id=self.backend_record.company_id.id,
-        )
-        return {"account_id": partner.property_account_receivable_id.id}
-
-    @mapping
     def company_id(self, record):
         return {"company_id": self.backend_record.company_id.id}
 
