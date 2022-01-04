@@ -110,13 +110,15 @@ class RefundMapper(Component):
         order_line = self._get_shipping_order_line(record)
         if not order_line:
             return None
-        if record["shipping_cost"] == "1":
-            price_unit = order_line.price_unit
+        if not record["shipping_cost"] == "1":
+            return None
+        if self.backend_record.taxes_included:
+            price_unit = record["total_shipping_tax_incl"]
         else:
-            price_unit = record["shipping_cost_amount"]
+            price_unit = record["total_shipping_tax_excl"]
         if price_unit in [0.0, "0.00"]:
             return None
-        product = self.env["product.product"].browse(order_line.product_id)
+        product = order_line.product_id
         account = product.property_account_income_id
         if not account:
             account = product.categ_id.property_account_income_categ_id
