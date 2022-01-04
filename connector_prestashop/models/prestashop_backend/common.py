@@ -350,6 +350,10 @@ class PrestashopBackend(models.Model):
         self.search(domain or []).update_product_stock_qty()
 
     @api.model
+    def _scheduler_import_refunds(self, domain=None):
+        self.search(domain or []).import_refunds()
+
+    @api.model
     def _scheduler_import_sale_orders(self, domain=None):
         self.search(domain or []).import_sale_orders()
 
