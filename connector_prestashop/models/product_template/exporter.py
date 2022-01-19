@@ -15,10 +15,14 @@ class ProductInventoryExporter(Component):
         return {"filter[id_product]": prestashop_id, "filter[id_product_attribute]": 0}
 
     def get_quantity_vals(self, template):
-        return {
+        vals = {
             "quantity": int(template.quantity),
-            "out_of_stock": int(template.out_of_stock),
         }
+        # Send out_of_stock only if filled. If not it means we do not manage it and
+        # we do not want to set it to refuse order by default
+        if template.out_of_stock:
+            vals["out_of_stock"] = int(template.out_of_stock)
+        return vals
 
     def run(self, template, fields):
         """ Export the product inventory to PrestaShop """
