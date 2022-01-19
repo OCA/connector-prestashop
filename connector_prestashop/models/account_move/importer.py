@@ -36,6 +36,11 @@ class RefundImporter(Component):
         super(RefundImporter, self)._after_import(binding)
         self._open_refund(binding)
 
+    def _has_to_skip(self, binding=False):
+        """ Return True if the import can be skipped """
+        if binding:
+            return True
+
 
 class RefundMapper(Component):
     _name = "prestashop.refund.mapper"
