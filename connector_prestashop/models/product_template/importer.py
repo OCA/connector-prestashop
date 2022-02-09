@@ -601,12 +601,17 @@ class ProductTemplateImporter(Component):
             if attr_id not in attribute_values:
                 attribute_values[attr_id] = []
             attribute_values[attr_id].append(value_id)
+
+        remaining_attr_lines = template.with_context(
+            active_test=False
+        ).attribute_line_ids
         for attr_id, value_ids in attribute_values.items():
             attr_line = template.with_context(
                 active_test=False
             ).attribute_line_ids.filtered(lambda l: l.attribute_id.id == attr_id)
             if attr_line:
                 attr_line.write({"value_ids": [(6, 0, value_ids)], "active": True})
+                remaining_attr_lines -= attr_line
             else:
                 attr_line = self.env["product.template.attribute.line"].create(
                     {
@@ -615,6 +620,8 @@ class ProductTemplateImporter(Component):
                         "value_ids": [(6, 0, value_ids)],
                     }
                 )
+        if remaining_attr_lines:
+            remaining_attr_lines.unlink()
 
     def _import_combination(self, combination, **kwargs):
         """Import a combination
