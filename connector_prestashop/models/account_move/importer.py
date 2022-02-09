@@ -21,7 +21,10 @@ class RefundImporter(Component):
 
     def _open_refund(self, binding):
         invoice = binding.odoo_id
-        if invoice.amount_total == float(self.prestashop_record["amount"]):
+        if invoice.amount_total == (
+            float(self.prestashop_record["amount"])
+            + float(self.prestashop_record["shipping_cost_amount"])
+        ):
             invoice.action_post()
         # TODO else add activity to warn about differnt amount
 
