@@ -2,7 +2,7 @@
 <!--
   connector_prestashop for Odoo
   Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
-  The licence is in the file __openerp__.py
+  The licence is in the file __manifest__.py
 -->
 <odoo>
 
