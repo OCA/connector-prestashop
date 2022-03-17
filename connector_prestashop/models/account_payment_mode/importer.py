@@ -35,7 +35,7 @@ class PaymentModeBatchImporter(Component):
         )
         if len(journals) != 1:
             return
-        mode = self.model.create(
+        self.model.create(
             {
                 "name": record["payment"],
                 "company_id": self.backend_record.company_id.id,
