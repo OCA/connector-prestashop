@@ -313,10 +313,19 @@ class PrestashopTransactionCase(SavepointComponentCase):
                 "type_tax_use": "sale",
                 "company_id": company.id,
                 "tax_group_id": self.env.ref("account.tax_group_taxes").id,
-                "account_id": self.tax_account.id,
                 "price_include": False,
             }
         )
+        self.set_tax_account(self.tax_20, self.tax_account)
+
+    def set_tax_account(self, tax, tax_account, for_invoice=True):
+        if for_invoice:
+            repartition_lines = tax.invoice_repartition_line_ids
+        else:
+            repartition_lines = tax.refund_repartition_line_ids
+        repartition_lines.filtered(
+            lambda line: line.repartition_type == "tax"
+        ).account_id = self.tax_account
 
     def _create_product_binding(
         self, name=None, template_ps_id=None, variant_ps_id=None
@@ -355,13 +364,9 @@ class ExportStockQuantityCase(PrestashopTransactionCase):
         self.shop = self.env["prestashop.shop"].search([])
 
     def _change_product_qty(self, product, qty):
-        location = (
-            self.backend_record.stock_location_id
-            or self.backend_record.warehouse_id.lot_stock_id
-        )
         vals = {
-            "location_id": location.id,
             "product_id": product.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
             "new_quantity": qty,
         }
         qty_change = self.env["stock.change.product.qty"].create(vals)

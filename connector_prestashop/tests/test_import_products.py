@@ -17,7 +17,8 @@ ExpectedProductCategory = namedtuple(
 ExpectedTemplate = namedtuple("ExpectedProduct", "name categ_id categ_ids list_price")
 
 ExpectedVariant = namedtuple(
-    "ExpectedVariant", "default_code standard_price attribute_value_ids"
+    "ExpectedVariant",
+    "default_code standard_price product_template_attribute_value_ids",
 )
 
 
@@ -43,6 +44,10 @@ class TestImportProduct(PrestashopTransactionCase):
     def tearDown(self):
         super(TestImportProduct, self).tearDown()
         self.patch_delay_record.stop()
+
+    def get_ptav(self, from_pav):
+        for_pav = [("product_attribute_value_id", "in", from_pav.ids)]
+        return self.env["product.template.attribute.value"].search(for_pav)
 
     @freeze_time("2016-09-13 00:00:00")
     @assert_no_job_delayed
@@ -167,37 +172,43 @@ class TestImportProduct(PrestashopTransactionCase):
         value_blue = PSValue.search(
             [("backend_id", "=", self.backend_record.id), ("name", "=", "Blue")]
         ).odoo_id
+        s_orange = self.get_ptav(value_s + value_orange)
+        s_blue = self.get_ptav(value_s + value_blue)
+        m_orange = self.get_ptav(value_m + value_orange)
+        m_blue = self.get_ptav(value_m + value_blue)
+        l_orange = self.get_ptav(value_l + value_orange)
+        l_blue = self.get_ptav(value_l + value_blue)
 
         expected_variants = [
             ExpectedVariant(
                 default_code="1_1",
                 standard_price=4.95,
-                attribute_value_ids=value_s + value_orange,
+                product_template_attribute_value_ids=s_orange,
             ),
             ExpectedVariant(
                 default_code="1_2",
                 standard_price=4.95,
-                attribute_value_ids=value_s + value_blue,
+                product_template_attribute_value_ids=s_blue,
             ),
             ExpectedVariant(
                 default_code="1_3",
                 standard_price=4.95,
-                attribute_value_ids=value_m + value_orange,
+                product_template_attribute_value_ids=m_orange,
             ),
             ExpectedVariant(
                 default_code="1_4",
                 standard_price=4.95,
-                attribute_value_ids=value_m + value_blue,
+                product_template_attribute_value_ids=m_blue,
             ),
             ExpectedVariant(
                 default_code="1_5",
                 standard_price=4.95,
-                attribute_value_ids=value_l + value_orange,
+                product_template_attribute_value_ids=l_orange,
             ),
             ExpectedVariant(
                 default_code="1_6",
                 standard_price=4.95,
-                attribute_value_ids=value_l + value_blue,
+                product_template_attribute_value_ids=l_blue,
             ),
         ]
 

@@ -87,7 +87,7 @@ interactions:
         Connection: [keep-alive]
         User-Agent: [python-requests/2.20.0]
       method: GET
-      uri: http://172.30.0.5/api/countries
+      uri: http://172.30.0.5/api/countries?filter%5Bactive%5D=1
     response:
       body: {string: '<?xml version="1.0" encoding="UTF-8"?>
 
@@ -987,8 +987,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[31]]></call_prefix>\n\
             \t<iso_code><![CDATA[NL]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNNN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNNN
             LL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Netherlands]]></language></name>\n</country>\n</prestashop>\n"}
@@ -1110,8 +1109,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[420]]></call_prefix>\n\
             \t<iso_code><![CDATA[CZ]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN
             NN]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Czech Republic]]></language></name>\n</country>\n</prestashop>\n"}
@@ -1191,8 +1189,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[46]]></call_prefix>\n\
             \t<iso_code><![CDATA[SE]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN
             NN]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Sweden]]></language></name>\n</country>\n</prestashop>\n"}
@@ -1355,8 +1352,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[421]]></call_prefix>\n\
             \t<iso_code><![CDATA[SK]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN
             NN]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Slovakia]]></language></name>\n</country>\n</prestashop>\n"}
@@ -1601,8 +1597,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[356]]></call_prefix>\n\
             \t<iso_code><![CDATA[MT]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLL
             NNNN]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Malta]]></language></name>\n</country>\n</prestashop>\n"}
@@ -1845,8 +1840,7 @@ interactions:
             <id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[1]]></call_prefix>\n\
             \t<iso_code><![CDATA[CA]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[1]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LNL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LNL
             NLN]]></zip_code_format>\n\t<display_tax_label><![CDATA[0]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Canada]]></language></name>\n</country>\n</prestashop>\n"}
@@ -2904,8 +2898,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[91]]></call_prefix>\n\
             \t<iso_code><![CDATA[IN]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[NNN
             NNN]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[India]]></language></name>\n</country>\n</prestashop>\n"}
@@ -7237,8 +7230,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[PN]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Pitcairn]]></language></name>\n</country>\n</prestashop>\n"}
@@ -7645,8 +7637,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[IO]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[British Indian Ocean Territory]]></language></name>\n</country>\n\
@@ -8666,8 +8657,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[GG]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLN
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Guernsey]]></language></name>\n</country>\n</prestashop>\n"}
@@ -8789,8 +8779,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[IM]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[CN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[CN
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Man Island]]></language></name>\n</country>\n</prestashop>\n"}
@@ -8829,8 +8818,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[JE]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[CN\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[CN
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Jersey]]></language></name>\n</country>\n</prestashop>\n"}
@@ -9647,8 +9635,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[FK]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Falkland Islands]]></language></name>\n</country>\n</prestashop>\n"}
@@ -10420,8 +10407,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[GS]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[South Georgia and the South Sandwich
@@ -10504,8 +10490,7 @@ interactions:
             \t<id_currency><![CDATA[0]]></id_currency>\n\t<call_prefix><![CDATA[0]]></call_prefix>\n\
             \t<iso_code><![CDATA[TC]]></iso_code>\n\t<active><![CDATA[0]]></active>\n\t\
             <contains_states><![CDATA[0]]></contains_states>\n\t<need_identification_number><![CDATA[0]]></need_identification_number>\n\
-            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL\
-            \
+            \t<need_zip_code><![CDATA[1]]></need_zip_code>\n\t<zip_code_format><![CDATA[LLLL
             NLL]]></zip_code_format>\n\t<display_tax_label><![CDATA[1]]></display_tax_label>\n\
             \t<name><language id=\"1\" xlink:href=\"http://172.30.0.5/api/languages/1\"\
             ><![CDATA[Turks and Caicos

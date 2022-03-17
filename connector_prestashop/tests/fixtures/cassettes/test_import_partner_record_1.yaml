@@ -17,8 +17,7 @@ interactions:
             xlink:href=\"http://172.24.0.3/api/languages/1\"\
             ><![CDATA[1]]></id_lang>\n\t<newsletter_date_add><![CDATA[2013-12-13
             08:19:15]]></newsletter_date_add>\n\
-            \t<ip_registration_newsletter></ip_registration_newsletter>\n\t<last_passwd_gen><![CDATA[2016-09-02\
-            \
+            \t<ip_registration_newsletter></ip_registration_newsletter>\n\t<last_passwd_gen><![CDATA[2016-09-02
             08:37:21]]></last_passwd_gen>\n\t<secure_key><![CDATA[e2aac4f92c46b32d8fad76b68e85af69]]></secure_key>\n\
             \t<deleted><![CDATA[0]]></deleted>\n\t<passwd><![CDATA[7a93bfb25b8eee73034fad735ae5a4f5]]></passwd>\n\
             \t<lastname><![CDATA[DOE]]></lastname>\n\t<firstname><![CDATA[John]]></firstname>\n\

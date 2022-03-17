@@ -22,8 +22,7 @@ interactions:
             15:13:51]]></date_add>\n\t<date_upd><![CDATA[2016-12-07\
             \ 15:13:51]]></date_upd>\n\t<name><language id=\"1\"
             xlink:href=\"http://172.22.0.4/api/languages/1\"\
-            ><![CDATA[T-shirts]]></language></name>\n\t<link_rewrite><language id=\"1\"\
-            \
+            ><![CDATA[T-shirts]]></language></name>\n\t<link_rewrite><language id=\"1\"
             xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[tshirts]]></language></link_rewrite>\n\
             \t<description><language id=\"1\"
             xlink:href=\"http://172.22.0.4/api/languages/1\"\
@@ -95,8 +94,7 @@ interactions:
             sleeves,\
             \ tank tops, 3/4 sleeves and more.</p>\r\n<p>Find the cut that suits you
             the\
-            \ best!</p>]]></language></description>\n\t<meta_title><language id=\"1\"\
-            \
+            \ best!</p>]]></language></description>\n\t<meta_title><language id=\"1\"
             xlink:href=\"http://172.22.0.4/api/languages/1\"><![CDATA[]]></language></meta_title>\n\
             \t<meta_description><language id=\"1\"
             xlink:href=\"http://172.22.0.4/api/languages/1\"\

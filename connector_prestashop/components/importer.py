@@ -37,11 +37,11 @@ class PrestashopBaseImporter(AbstractComponent):
         :param prestashop_id: id of the prestashop id to import
         :param binding_model: name of the binding model for the relation
         :type binding_model: str | unicode
-        :param importer_cls: :py:class:`openerp.addons.connector.\
+        :param importer_cls: :py:class:`odoo.addons.connector.\
                                         connector.ConnectorUnit`
                              class or parent class to use for the export.
                              By default: PrestashopImporter
-        :type importer_cls: :py:class:`openerp.addons.connector.\
+        :type importer_cls: :py:class:`odoo.addons.connector.\
                                        connector.MetaConnectorUnit`
         :param always: if True, the record is updated even if it already
                        exists,
@@ -90,7 +90,7 @@ class PrestashopImporter(AbstractComponent):
 
     def _map_data(self):
         """Returns an instance of
-        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+        :py:class:`~odoo.addons.connector.unit.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.prestashop_record)
@@ -106,7 +106,7 @@ class PrestashopImporter(AbstractComponent):
         return
 
     def _get_binding(self):
-        """Return the openerp id from the prestashop id"""
+        """Return the odoo id from the prestashop id"""
         return self.binder.to_internal(self.prestashop_id)
 
     def _context(self, **kwargs):
@@ -122,7 +122,7 @@ class PrestashopImporter(AbstractComponent):
         return map_record.values()
 
     def _create(self, data):
-        """ Create the OpenERP record """
+        """ Create the odoo record """
         # special check on data before import
         self._validate_data(data)
         binding = self.model.with_context(**self._create_context()).create(data)
@@ -130,7 +130,7 @@ class PrestashopImporter(AbstractComponent):
         return binding
 
     def _update(self, binding, data):
-        """ Update an OpenERP record """
+        """ Update an odoo record """
         # special check on data before import
         self._validate_data(data)
         binding.with_context(connector_no_export=True).write(data)
@@ -482,7 +482,7 @@ class TranslatableRecordImporter(AbstractComponent):
 
     def _map_data(self):
         """Returns an instance of
-        :py:class:`~openerp.addons.connector.unit.mapper.MapRecord`
+        :py:class:`~odoo.addons.connector.unit.mapper.MapRecord`
 
         """
         return self.mapper.map_record(self.main_lang_data)

@@ -197,14 +197,14 @@ class PrestashopExporter(AbstractComponent):
                      of error.
 
         :param relation: record to export if not already exported
-        :type relation: :py:class:`openerp.models.BaseModel`
+        :type relation: :py:class:`odoo.models.BaseModel`
         :param binding_model: name of the binding model for the relation
         :type binding_model: str | unicode
-        :param exporter_cls: :py:class:`openerp.addons.connector.\
+        :param exporter_cls: :py:class:`odoo.addons.connector.\
                                         connector.ConnectorUnit`
                              class or parent class to use for the export.
                              By default: PrestashopExporter
-        :type exporter_cls: :py:class:`openerp.addons.connector.\
+        :type exporter_cls: :py:class:`odoo.addons.connector.\
                                        connector.MetaConnectorUnit`
         :param component_usage: 'usage' to look for to find the Component to
                                 for the export, by default 'record.exporter'

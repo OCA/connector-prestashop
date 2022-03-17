@@ -211,7 +211,7 @@ class ProductCombinationMapper(Component):
             yield tmpl_value
 
     @mapping
-    def attribute_value_ids(self, record):
+    def product_template_attribute_value_ids(self, record):
         results = []
         for tmpl_attr_value in self._get_option_value(record):
             results.append(tmpl_attr_value.id)
@@ -432,7 +432,11 @@ class ProductCombinationOptionMapper(Component):
         # product won't be inative by odoo
         # with dynamic, prestashop create it on product import, odoo inactive it if
         # deleted on prestashop...
-        return {"create_variant": "dynamic"}
+        # We avoid "You cannot change the Variants Creation Mode of the attribute"
+        # error by not changing the attribute when there is existing record
+        odoo_id = self.odoo_id(record)
+        if not odoo_id:
+            return {"create_variant": "dynamic"}
 
 
 class ProductCombinationOptionValueAdapter(Component):

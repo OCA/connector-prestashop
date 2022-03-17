@@ -11,8 +11,7 @@ interactions:
     response:
       body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
             xmlns:xlink=\"\
-            http://www.w3.org/1999/xlink\">\n<order>\n\t<id><![CDATA[5]]></id>\n\t<id_address_delivery\
-            \
+            http://www.w3.org/1999/xlink\">\n<order>\n\t<id><![CDATA[5]]></id>\n\t<id_address_delivery
             xlink:href=\"http://172.30.0.5/api/addresses/4\"><![CDATA[4]]></id_address_delivery>\n\
             \t<id_address_invoice
             xlink:href=\"http://172.30.0.5/api/addresses/4\"><![CDATA[4]]></id_address_invoice>\n\
@@ -143,8 +142,7 @@ interactions:
     response:
       body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
             xmlns:xlink=\"\
-            http://www.w3.org/1999/xlink\">\n<address>\n\t<id><![CDATA[4]]></id>\n\t<id_customer\
-            \
+            http://www.w3.org/1999/xlink\">\n<address>\n\t<id><![CDATA[4]]></id>\n\t<id_customer
             xlink:href=\"http://172.30.0.5/api/customers/1\"><![CDATA[1]]></id_customer>\n\
             \t<id_manufacturer><![CDATA[0]]></id_manufacturer>\n\t<id_supplier><![CDATA[0]]></id_supplier>\n\
             \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_country xlink:href=\"\
@@ -201,8 +199,7 @@ interactions:
             \t<product_attribute_id xlink:href=\"http://172.30.0.5/api/combinations/1\"\
             ><![CDATA[1]]></product_attribute_id>\n\t<product_quantity_reinjected><![CDATA[0]]></product_quantity_reinjected>\n\
             \t<group_reduction><![CDATA[0.00]]></group_reduction>\n\t<discount_quantity_applied><![CDATA[0]]></discount_quantity_applied>\n\
-            \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00\
-            \
+            \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00
             00:00:00]]></download_deadline>\n\t<id_order_invoice><![CDATA[0]]></id_order_invoice>\n\
             \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
             \t<product_name><![CDATA[Faded Short Sleeve T-shirts - Color : Orange, Size\
@@ -266,8 +263,7 @@ interactions:
             \t<product_attribute_id xlink:href=\"http://172.30.0.5/api/combinations/7\"\
             ><![CDATA[7]]></product_attribute_id>\n\t<product_quantity_reinjected><![CDATA[0]]></product_quantity_reinjected>\n\
             \t<group_reduction><![CDATA[0.00]]></group_reduction>\n\t<discount_quantity_applied><![CDATA[0]]></discount_quantity_applied>\n\
-            \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00\
-            \
+            \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00
             00:00:00]]></download_deadline>\n\t<id_order_invoice><![CDATA[0]]></id_order_invoice>\n\
             \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
             \t<product_name><![CDATA[Blouse - Color : Black, Size :
@@ -331,8 +327,7 @@ interactions:
             xlink:href=\"http://172.30.0.5/api/combinations/13\"\
             ><![CDATA[13]]></product_attribute_id>\n\t<product_quantity_reinjected><![CDATA[0]]></product_quantity_reinjected>\n\
             \t<group_reduction><![CDATA[0.00]]></group_reduction>\n\t<discount_quantity_applied><![CDATA[0]]></discount_quantity_applied>\n\
-            \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00\
-            \
+            \t<download_hash></download_hash>\n\t<download_deadline><![CDATA[0000-00-00
             00:00:00]]></download_deadline>\n\t<id_order_invoice><![CDATA[0]]></id_order_invoice>\n\
             \t<id_warehouse><![CDATA[0]]></id_warehouse>\n\t<id_shop><![CDATA[1]]></id_shop>\n\
             \t<product_name><![CDATA[Printed Dress - Color : Orange, Size :

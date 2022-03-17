@@ -51,7 +51,7 @@ def api_handle_errors(message=""):
     It is meant to be used when a model does a direct
     call to a job using the API (not using job.delay()).
     Avoid to have unhandled errors raising on front of the user,
-    instead, they are presented as :class:`openerp.exceptions.UserError`.
+    instead, they are presented as :class:`odoo.exceptions.UserError`.
     """
     if message:
         message = message + "\n\n"

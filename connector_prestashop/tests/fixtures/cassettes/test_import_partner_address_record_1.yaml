@@ -20,8 +20,7 @@ interactions:
             \t<alias><![CDATA[My
             address]]></alias>\n\t<company></company>\n\t<lastname><![CDATA[DOE]]></lastname>\n\
             \t<firstname><![CDATA[John]]></firstname>\n\t<vat_number></vat_number>\n\t\
-            <address1><![CDATA[16, Main street]]></address1>\n\t<address2><![CDATA[2nd\
-            \
+            <address1><![CDATA[16, Main street]]></address1>\n\t<address2><![CDATA[2nd
             floor]]></address2>\n\t<postcode><![CDATA[75002]]></postcode>\n\t<city><![CDATA[Paris]]></city>\n\
             \t<other></other>\n\t<phone><![CDATA[0102030405]]></phone>\n\t<phone_mobile></phone_mobile>\n\
             \t<dni></dni>\n\t<deleted><![CDATA[0]]></deleted>\n\t<date_add><![CDATA[2016-09-02\

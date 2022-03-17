@@ -10,7 +10,7 @@ class PrestashopBinding(models.AbstractModel):
     _inherit = "external.binding"
     _description = "PrestaShop Binding (abstract)"
 
-    # 'odoo_id': openerp-side id must be declared in concrete model
+    # 'odoo_id': odoo-side id must be declared in concrete model
     backend_id = fields.Many2one(
         comodel_name="prestashop.backend",
         string="PrestaShop Backend",
