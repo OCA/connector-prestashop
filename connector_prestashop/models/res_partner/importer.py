@@ -1,5 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+import logging
+
 from odoo import _
 
 from odoo.addons.component.core import Component
@@ -8,6 +10,8 @@ from odoo.addons.connector.components.mapper import (
     mapping,
     only_create,
 )
+
+_logger = logging.getLogger(__name__)
 
 
 class PartnerImportMapper(Component):
@@ -83,7 +87,7 @@ class PartnerImportMapper(Component):
         # if not lang, take the one on company
         if record.get("id_lang"):
             erp_lang = binder.to_internal(record["id_lang"])
-            erp_lang = erp_lang.filtered('active')
+            erp_lang = erp_lang.filtered("active")
             lang = erp_lang.code
         if not erp_lang:
             lang = self.env.company.partner_id.lang
@@ -215,6 +219,7 @@ class AddressImporter(Component):
             else:
                 msg = _("Please, check the VAT number: %s") % vat_number
                 # TODO create activity to warn the vat is incorrect ?
+                _logger.warn(msg)
 
 
 class AddressBatchImporter(Component):

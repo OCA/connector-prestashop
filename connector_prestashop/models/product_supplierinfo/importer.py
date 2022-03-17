@@ -139,7 +139,7 @@ class SupplierInfoMapper(Component):
             sequence = 5
         else:
             sequence = 50
-        return {'sequence': sequence}
+        return {"sequence": sequence}
 
 
 class SupplierInfoImporter(Component):
