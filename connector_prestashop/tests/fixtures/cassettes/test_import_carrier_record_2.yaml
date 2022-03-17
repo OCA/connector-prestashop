@@ -13,9 +13,7 @@ interactions:
             <prestashop
             xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<carrier>\n\t<id><![CDATA[2]]></id>\n\
             \t<deleted><![CDATA[0]]></deleted>\n\t<is_module><![CDATA[0]]></is_module>\n\
-            \t<id_tax_rules_group
-            xlink:href=\"http://172.22.0.4/api/tax_rule_groups/1\"\
-            \
+            \t<id_tax_rules_group xlink:href=\"http://172.22.0.4/api/tax_rule_groups/1\"
             notFilterable=\"true\"><![CDATA[1]]></id_tax_rules_group>\n\t<id_reference><![CDATA[2]]></id_reference>\n\
             \t<name><![CDATA[My carrier]]></name>\n\t<active><![CDATA[1]]></active>\n\t\
             <is_free><![CDATA[0]]></is_free>\n\t<url></url>\n\t<shipping_handling><![CDATA[1]]></shipping_handling>\n\
