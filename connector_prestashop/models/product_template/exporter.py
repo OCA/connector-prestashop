@@ -25,7 +25,7 @@ class ProductInventoryExporter(Component):
         return vals
 
     def run(self, template, fields):
-        """ Export the product inventory to PrestaShop """
+        """Export the product inventory to PrestaShop"""
         adapter = self.component(
             usage="backend.adapter", model_name="_import_stock_available"
         )

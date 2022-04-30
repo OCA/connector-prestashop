@@ -25,7 +25,7 @@ ExpectedAddress = namedtuple(
 
 
 class TestImportPartner(PrestashopTransactionCase):
-    """ Test the import of partner from PrestaShop """
+    """Test the import of partner from PrestaShop"""
 
     def setUp(self):
         super().setUp()
@@ -40,7 +40,7 @@ class TestImportPartner(PrestashopTransactionCase):
     def test_import_partner_since(self):
         from_date = fields.Datetime.to_datetime("2016-09-01 00:00:00")
         self.backend_record.import_partners_since = from_date
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_customers_since()
             delay_record_instance = delay_record_mock.return_value
@@ -54,7 +54,7 @@ class TestImportPartner(PrestashopTransactionCase):
     def test_import_partner_batch(self):
         from_date = "2016-09-01 00:00:00"
         self.backend_record.import_partners_since = from_date
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette("test_import_partner_batch") as cassette, mock.patch(
@@ -87,7 +87,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_partner_category_record(self):
-        """ Import a partner category """
+        """Import a partner category"""
         with recorder.use_cassette("test_import_partner_category_record_1"):
             self.env["prestashop.res.partner.category"].import_record(
                 self.backend_record, 3
@@ -108,14 +108,14 @@ class TestImportPartner(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_partner_record(self):
-        """ Import a partner """
+        """Import a partner"""
 
         category = self.env["res.partner.category"].create({"name": "Customer"})
         category_binding = self.create_binding_no_export(
             "prestashop.res.partner.category", category.id, 3
         )
 
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with recorder.use_cassette("test_import_partner_record_1"), mock.patch(
             delay_record_path
         ) as delay_record_mock:
@@ -147,7 +147,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_partner_address_batch(self):
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         cassette_name = "test_import_partner_address_batch"
@@ -175,7 +175,7 @@ class TestImportPartner(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_partner_address_record(self):
-        """ Import a partner address """
+        """Import a partner address"""
 
         partner = self.env["res.partner"].create({"name": "Customer"})
         self.create_binding_no_export(

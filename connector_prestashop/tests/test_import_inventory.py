@@ -7,7 +7,7 @@ from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
 
 
 class TestImportInventory(PrestashopTransactionCase):
-    """ Test the import of partner from PrestaShop """
+    """Test the import of partner from PrestaShop"""
 
     def setUp(self):
         super().setUp()
@@ -18,8 +18,8 @@ class TestImportInventory(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_inventory_delay(self):
-        """ Backend button delay a job to delay inventory import """
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        """Backend button delay a job to delay inventory import"""
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_stock_qty()
             delay_record_instance = delay_record_mock.return_value
@@ -29,7 +29,7 @@ class TestImportInventory(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_inventory_batch(self):
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette(
@@ -59,7 +59,7 @@ class TestImportInventory(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_inventory_record_template(self):
-        """ Import the inventory for a template"""
+        """Import the inventory for a template"""
         variant_binding = self._create_product_binding(
             name="Faded Short Sleeves T-shirt",
             template_ps_id=1,
@@ -84,7 +84,7 @@ class TestImportInventory(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_inventory_record_variant(self):
-        """ Import the inventory for a variant"""
+        """Import the inventory for a variant"""
         variant_binding = self._create_product_binding(
             name="Faded Short Sleeves T-shirt",
             template_ps_id=1,

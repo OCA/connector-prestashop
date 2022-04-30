@@ -35,21 +35,21 @@ class SaleImportRule(Component):
     _usage = "sale.import.rule"
 
     def _rule_always(self, record, mode):
-        """ Always import the order """
+        """Always import the order"""
         return True
 
     def _rule_never(self, record, mode):
-        """ Never import the order """
+        """Never import the order"""
         raise NothingToDoJob(
             "Orders with payment modes %s "
             "are never imported." % record["payment"]["method"]
         )
 
     def _rule_paid(self, record, mode):
-        """ Import the order only if it has received a payment """
+        """Import the order only if it has received a payment"""
         if self._get_paid_amount(record) == 0.0:
             raise OrderImportRuleRetry(
-                "The order has not been paid.\n" "The import will be retried later."
+                "The order has not been paid.\nThe import will be retried later."
             )
 
     def _get_paid_amount(self, record):
@@ -104,7 +104,7 @@ class SaleImportRule(Component):
         self._rules[payment_mode.import_rule](self, record, payment_mode)
 
     def _rule_global(self, record, mode):
-        """ Rule always executed, whichever is the selected rule """
+        """Rule always executed, whichever is the selected rule"""
         order_id = record["id"]
         max_days = mode.days_before_cancel
         if not max_days:
@@ -455,7 +455,7 @@ class SaleOrderImporter(Component):
         # TODO create activity + post message on sale
 
     def _has_to_skip(self, binding=False):
-        """ Return True if the import can be skipped """
+        """Return True if the import can be skipped"""
         if binding:
             return True
         rules = self.component(usage="sale.import.rule")

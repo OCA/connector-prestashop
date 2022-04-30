@@ -64,7 +64,7 @@ class ProductImageImporter(Component):
     _apply_on = "prestashop.product.image"
 
     def _get_prestashop_data(self):
-        """ Return the raw PrestaShop data for ``self.prestashop_id`` """
+        """Return the raw PrestaShop data for ``self.prestashop_id``"""
         adapter = self.component(usage="backend.adapter", model_name=self.model._name)
         return adapter.read(self.template_id, self.image_id)
 
@@ -80,7 +80,7 @@ class ProductImageImporter(Component):
             # TODO add activity to warn about he failure
             if product_tmpl:
                 pass
-        # msg = _("Import of image id `%s` failed. " "Error: `%s`") % (
+        # msg = _("Import of image id `%s` failed. Error: `%s`") % (
         #     image_id,
         #     error.msg,
         # )
