@@ -62,7 +62,7 @@ class PrestashopBaseImporter(AbstractComponent):
 
 
 class PrestashopImporter(AbstractComponent):
-    """ Base importer for PrestaShop """
+    """Base importer for PrestaShop"""
 
     _name = "prestashop.importer"
     _inherit = "prestashop.base.importer"
@@ -78,15 +78,15 @@ class PrestashopImporter(AbstractComponent):
         self.prestashop_record = None
 
     def _get_prestashop_data(self):
-        """ Return the raw prestashop data for ``self.prestashop_id`` """
+        """Return the raw prestashop data for ``self.prestashop_id``"""
         return self.backend_adapter.read(self.prestashop_id)
 
     def _has_to_skip(self, binding=False):
-        """ Return True if the import can be skipped """
+        """Return True if the import can be skipped"""
         return False
 
     def _import_dependencies(self):
-        """ Import the dependencies for the record"""
+        """Import the dependencies for the record"""
         return
 
     def _map_data(self):
@@ -123,7 +123,7 @@ class PrestashopImporter(AbstractComponent):
         return map_record.values()
 
     def _create(self, data):
-        """ Create the odoo record """
+        """Create the odoo record"""
         # special check on data before import
         self._validate_data(data)
         binding = self.model.with_context(**self._create_context()).create(data)
@@ -131,7 +131,7 @@ class PrestashopImporter(AbstractComponent):
         return binding
 
     def _update(self, binding, data):
-        """ Update an odoo record """
+        """Update an odoo record"""
         # special check on data before import
         self._validate_data(data)
         binding.with_context(connector_no_export=True).write(data)
@@ -144,7 +144,7 @@ class PrestashopImporter(AbstractComponent):
         return
 
     def _after_import(self, binding):
-        """ Hook called at the end of the import """
+        """Hook called at the end of the import"""
         return
 
     @contextmanager
@@ -305,7 +305,7 @@ class BatchImporter(AbstractComponent):
     page_size = 1000
 
     def run(self, filters=None, **kwargs):
-        """ Run the synchronization """
+        """Run the synchronization"""
         if filters is None:
             filters = {}
         if "limit" in filters:
@@ -333,7 +333,7 @@ class BatchImporter(AbstractComponent):
         return record_ids
 
     def _import_record(self, record):
-        """ Import a record directly or delay the import of the record """
+        """Import a record directly or delay the import of the record"""
         raise NotImplementedError
 
 
@@ -349,21 +349,21 @@ class DirectBatchImporter(AbstractComponent):
     _model_name = None
 
     def _import_record(self, external_id):
-        """ Import the record directly """
+        """Import the record directly"""
         self.env[self.model._name].import_record(
             backend=self.backend_record, prestashop_id=external_id
         )
 
 
 class DelayedBatchImporter(AbstractComponent):
-    """ Delay import of the records """
+    """Delay import of the records"""
 
     _name = "prestashop.delayed.batch.importer"
     _inherit = "prestashop.batch.importer"
     _model_name = None
 
     def _import_record(self, external_id, **kwargs):
-        """ Delay the import of the records"""
+        """Delay the import of the records"""
         priority = kwargs.pop("priority", None)
         eta = kwargs.pop("eta", None)
         max_retries = kwargs.pop("max_retries", None)
@@ -384,7 +384,7 @@ class DelayedBatchImporter(AbstractComponent):
 
 
 class TranslatableRecordImporter(AbstractComponent):
-    """ Import one translatable record """
+    """Import one translatable record"""
 
     _name = "prestashop.translatable.record.importer"
     _inherit = "prestashop.importer"
@@ -509,7 +509,7 @@ class TranslatableRecordImporter(AbstractComponent):
         super()._import(binding)
 
     def _after_import(self, binding):
-        """ Hook called at the end of the import """
+        """Hook called at the end of the import"""
         for lang_code, lang_record in self.other_langs_data.items():
             map_record = self.mapper.map_record(lang_record)
             binding.with_context(

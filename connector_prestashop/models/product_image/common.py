@@ -102,7 +102,7 @@ class ProductImageAdapter(Component):
         )
 
     def delete(self, resource, id_, attributes=None):
-        """ Delete a record on the external system """
+        """Delete a record on the external system"""
         api = self.connect()
         # The uri should be image/products/id_product/id_image. The url_del
         # must not include id_image. That is being done by api.delete.

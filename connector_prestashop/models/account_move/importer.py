@@ -40,7 +40,7 @@ class RefundImporter(Component):
         self._open_refund(binding)
 
     def _has_to_skip(self, binding=False):
-        """ Return True if the import can be skipped """
+        """Return True if the import can be skipped"""
         if binding:
             return True
 
@@ -60,7 +60,7 @@ class RefundMapper(Component):
         journal = self.backend_record.refund_journal_id
         if not journal:
             raise MappingError(
-                _("The refund journal must be configured on " "the PrestaShop Backend.")
+                _("The refund journal must be configured on the PrestaShop Backend.")
             )
         return {"journal_id": journal.id}
 

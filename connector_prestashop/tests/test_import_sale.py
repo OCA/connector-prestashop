@@ -22,7 +22,7 @@ ExpectedSaleLine = namedtuple(
 
 
 class TestImportSale(PrestashopTransactionCase):
-    """ Test the import of partner from PrestaShop """
+    """Test the import of partner from PrestaShop"""
 
     def setUp(self):
         super().setUp()
@@ -37,7 +37,7 @@ class TestImportSale(PrestashopTransactionCase):
     def test_import_sales(self):
         from_date = fields.Datetime.to_datetime("2016-12-01 00:00:00")
         self.backend_record.import_orders_since = from_date
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_sale_orders()
             delay_record_instance = delay_record_mock.return_value
@@ -51,7 +51,7 @@ class TestImportSale(PrestashopTransactionCase):
     def test_import_sale_batch(self):
         from_date = "2019-01-23 00:00:00"
         self.backend_record.import_orders_since = from_date
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette("test_import_sale_batch") as cassette, mock.patch(
@@ -91,7 +91,7 @@ class TestImportSale(PrestashopTransactionCase):
     @freeze_time("2019-03-30 00:00:00")
     @assert_no_job_delayed
     def test_import_sale_record(self):
-        """ Import a sale order """
+        """Import a sale order"""
         # setup for sale order with id 5, create the dependencies
         mode_journal = self.env["account.journal"].search([], limit=1)
         payment_method_xmlid = "account.account_payment_method_manual_in"

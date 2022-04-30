@@ -86,7 +86,7 @@ class DeliveryCarrierBatchImporter(Component):
     _model_name = ["prestashop.delivery.carrier"]
 
     def run(self, filters=None, **kwargs):
-        """ Run the synchronization """
+        """Run the synchronization"""
         record_ids = self.backend_adapter.search(filters=filters)
         _logger.info(
             "search for prestashop carriers %s returned %s", filters, record_ids

@@ -32,7 +32,7 @@ def retryable_error(func):
             return func(*args, **kwargs)
         except (ConnError, Timeout, HTTPError) as err:
             raise NetworkRetryableError(
-                "A network error caused the failure of the job: " "%s" % str(err)
+                "A network error caused the failure of the job: %s" % str(err)
             )
         except Exception as e:
             raise e
@@ -65,7 +65,7 @@ def api_handle_errors(message=""):
         )
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
-            _("{}Error during synchronization with " "PrestaShop:\n\n{}").format(
+            _("{}Error during synchronization with PrestaShop:\n\n{}").format(
                 message, str(err)
             )
         )
@@ -118,7 +118,7 @@ class PrestaShopLocation(object):
 
 
 class PrestaShopCRUDAdapter(AbstractComponent):
-    """ External Records Adapter for PrestaShop """
+    """External Records Adapter for PrestaShop"""
 
     _name = "prestashop.crud.adapter"
     _inherit = ["base.backend.adapter", "base.prestashop.connector"]
@@ -148,7 +148,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         raise NotImplementedError
 
     def read(self, id_, attributes=None):
-        """ Returns the information of a record """
+        """Returns the information of a record"""
         raise NotImplementedError
 
     def search_read(self, filters=None):
@@ -157,19 +157,19 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         raise NotImplementedError
 
     def create(self, data):
-        """ Create a record on the external system """
+        """Create a record on the external system"""
         raise NotImplementedError
 
     def write(self, id_, data):
-        """ Update records on the external system """
+        """Update records on the external system"""
         raise NotImplementedError
 
     def delete(self, id_, attributes=None):
-        """ Delete a record on the external system """
+        """Delete a record on the external system"""
         raise NotImplementedError
 
     def head(self):
-        """ HEAD """
+        """HEAD"""
         raise NotImplementedError
 
 
@@ -219,7 +219,7 @@ class GenericAdapter(AbstractComponent):
         return res[first_key]
 
     def create(self, attributes=None):
-        """ Create a record on the external system """
+        """Create a record on the external system"""
         _logger.debug(
             "method create, model %s, attributes %s",
             self._prestashop_model,
@@ -233,7 +233,7 @@ class GenericAdapter(AbstractComponent):
         return res
 
     def write(self, id_, attributes=None):
-        """ Update records on the external system """
+        """Update records on the external system"""
         attributes["id"] = id_
         _logger.debug(
             "method write, model %s, attributes %s",
@@ -254,5 +254,5 @@ class GenericAdapter(AbstractComponent):
 
     @retryable_error
     def head(self, id_=None):
-        """ HEAD """
+        """HEAD"""
         return self.client.head(self._prestashop_model, resource_id=id_)

@@ -6,7 +6,7 @@ from odoo.addons.component.core import AbstractComponent
 
 
 class PrestashopDeleter(AbstractComponent):
-    """ Base deleter for PrestaShop """
+    """Base deleter for PrestaShop"""
 
     _name = "prestashop.deleter"
     _inherit = "base.deleter"

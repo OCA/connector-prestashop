@@ -318,7 +318,7 @@ class ProductCombinationMapper(Component):
     @only_create
     @mapping
     def odoo_id(self, record):
-        """ Will bind the product to an existing one with the same code """
+        """Will bind the product to an existing one with the same code"""
         if self.backend_record.matching_product_template:
             code = record.get(self.backend_record.matching_product_ch)
             if self.backend_record.matching_product_ch == "reference":

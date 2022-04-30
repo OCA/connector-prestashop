@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PrestashopBaseExporter(AbstractComponent):
-    """ Base exporter for PrestaShop """
+    """Base exporter for PrestaShop"""
 
     _name = "prestashop.base.exporter"
     _inherit = ["base.exporter", "base.prestashop.connector"]
@@ -38,7 +38,7 @@ class PrestashopBaseExporter(AbstractComponent):
         self.binding_id = None
 
     def _get_binding(self):
-        """ Return the raw Odoo data for ``self.binding_id`` """
+        """Return the raw Odoo data for ``self.binding_id``"""
         return self.model.browse(self.binding_id)
 
     def run(self, binding, *args, **kwargs):
@@ -60,7 +60,7 @@ class PrestashopBaseExporter(AbstractComponent):
         return result
 
     def _run(self, *args, **kwargs):
-        """ Flow of the synchronization, implemented in inherited classes"""
+        """Flow of the synchronization, implemented in inherited classes"""
         raise NotImplementedError
 
     def _after_export(self):
@@ -69,7 +69,7 @@ class PrestashopBaseExporter(AbstractComponent):
 
 
 class PrestashopExporter(AbstractComponent):
-    """ A common flow for the exports to PrestaShop """
+    """A common flow for the exports to PrestaShop"""
 
     _name = "prestashop.exporter"
     _inherit = "prestashop.base.exporter"
@@ -85,7 +85,7 @@ class PrestashopExporter(AbstractComponent):
         self.binding = None
 
     def _has_to_skip(self, binding=False):
-        """ Return True if the export can be skipped """
+        """Return True if the export can be skipped"""
         return False
 
     @contextmanager
@@ -238,11 +238,11 @@ class PrestashopExporter(AbstractComponent):
         return binding
 
     def _export_dependencies(self):
-        """ Export the dependencies for the record"""
+        """Export the dependencies for the record"""
         return
 
     def _map_data(self):
-        """ Convert the external record to Odoo """
+        """Convert the external record to Odoo"""
         return self.mapper.map_record(self.binding)
 
     def _validate_data(self, data):
@@ -256,11 +256,11 @@ class PrestashopExporter(AbstractComponent):
         return
 
     def _create(self, data):
-        """ Create the PrestaShop record """
+        """Create the PrestaShop record"""
         return self.backend_adapter.create(data)
 
     def _update(self, data):
-        """ Update an PrestaShop record """
+        """Update an PrestaShop record"""
         assert self.prestashop_id
         return self.backend_adapter.write(self.prestashop_id, data)
 
@@ -302,7 +302,7 @@ class PrestashopExporter(AbstractComponent):
             )
 
     def _run(self, fields=None, **kwargs):
-        """ Flow of the synchronization, implemented in inherited classes"""
+        """Flow of the synchronization, implemented in inherited classes"""
         assert self.binding_id
         assert self.binding
 

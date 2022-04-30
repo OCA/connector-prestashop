@@ -17,5 +17,5 @@ class TestAuth(PrestashopTransactionCase):
     @recorder.use_cassette
     def test_auth_failure(self):
         self.backend_record.webservice_key = "xyz"
-        with self.assertRaisesRegexp(exceptions.UserError, u"Connection failed"):
+        with self.assertRaisesRegexp(exceptions.UserError, "Connection failed"):
             self.backend_record.button_check_connection()

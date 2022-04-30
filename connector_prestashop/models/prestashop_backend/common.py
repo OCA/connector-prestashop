@@ -151,7 +151,7 @@ class PrestashopBackend(models.Model):
     tz = fields.Selection(
         _tz_get,
         "Timezone",
-        help="The timezone of the backend. Used to synchronize the sale order " "date.",
+        help="The timezone of the backend. Used to synchronize the sale order date.",
     )
     product_qty_field = fields.Selection(
         selection=[
@@ -410,13 +410,13 @@ class PrestashopBackend(models.Model):
             # stock for every warehouse, which is the last thing we
             # expect
             raise exceptions.UserError(
-                _("No internal location found to compute the product " "quantity.")
+                _("No internal location found to compute the product quantity.")
             )
         return locations
 
 
 class NoModelAdapter(Component):
-    """ Used to test the connection """
+    """Used to test the connection"""
 
     _name = "prestashop.adapter.test"
     _inherit = "prestashop.adapter"

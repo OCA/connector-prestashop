@@ -210,7 +210,7 @@ class TemplateMapper(Component):
     @only_create
     @mapping
     def odoo_id(self, record):
-        """ Will bind the product to an existing one with the same code """
+        """Will bind the product to an existing one with the same code"""
         #         product = self.env['product.template'].search(
         #             [('default_code', '=', record['reference'])], limit=1)
         #         if product:
@@ -423,7 +423,7 @@ class ImportInventory(models.TransientModel):
 
     @api.model
     def import_record(self, backend, prestashop_id, record=None, **kwargs):
-        """ Import a record from PrestaShop """
+        """Import a record from PrestaShop"""
         with backend.work_on(self._name) as work:
             importer = work.component(usage="record.importer")
             return importer.run(prestashop_id, record=record, **kwargs)
@@ -459,7 +459,7 @@ class ProductInventoryBatchImporter(Component):
         return records["stock_availables"]["stock_available"]
 
     def _import_record(self, record_id, record=None, **kwargs):
-        """ Delay the import of the records"""
+        """Delay the import of the records"""
         assert record
         self.env["_import_stock_available"].with_delay().import_record(
             self.backend_record, record_id, record=record, **kwargs
@@ -495,7 +495,7 @@ class ProductInventoryImporter(Component):
         return binder.to_internal(record["id_product_attribute"])
 
     def _import_dependencies(self):
-        """ Import the dependencies for the record"""
+        """Import the dependencies for the record"""
         record = self.prestashop_record
         self._import_dependency(record["id_product"], "prestashop.product.template")
         if record["id_product_attribute"] != "0":
@@ -536,7 +536,7 @@ class ProductInventoryImporter(Component):
 
 
 class ProductTemplateImporter(Component):
-    """ Import one translatable record """
+    """Import one translatable record"""
 
     _name = "prestashop.product.template.importer"
     _inherit = "prestashop.translatable.record.importer"

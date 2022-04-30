@@ -10,7 +10,7 @@ ExpectedCarrier = namedtuple("ExpectedCarrier", "name company_id")
 
 
 class TestImportCarrier(PrestashopTransactionCase):
-    """ Test the import of partner from PrestaShop """
+    """Test the import of partner from PrestaShop"""
 
     def setUp(self):
         super().setUp()
@@ -21,7 +21,7 @@ class TestImportCarrier(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_carriers(self):
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.import_carriers()
             delay_record_instance = delay_record_mock.return_value
@@ -29,7 +29,7 @@ class TestImportCarrier(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_products_batch(self):
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         # execute the batch job directly and replace the record import
         # by a mock (individual import is tested elsewhere)
         with recorder.use_cassette("test_import_carrier_batch") as cassette, mock.patch(
@@ -54,7 +54,7 @@ class TestImportCarrier(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_carrier_record(self):
-        """ Import a carrier """
+        """Import a carrier"""
         with recorder.use_cassette("test_import_carrier_record_2"):
             self.env["prestashop.delivery.carrier"].import_record(
                 self.backend_record, 2

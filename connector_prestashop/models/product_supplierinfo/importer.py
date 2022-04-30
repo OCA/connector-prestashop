@@ -50,7 +50,7 @@ class SupplierMapper(Component):
 
 
 class SupplierImporter(Component):
-    """ Import one simple record """
+    """Import one simple record"""
 
     _name = "prestashop.supplier.importer"
     _inherit = "prestashop.importer"

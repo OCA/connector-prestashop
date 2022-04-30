@@ -141,7 +141,7 @@ class PrestashopProductCombination(models.Model):
     reference = fields.Char(string="Original reference")
 
     def export_inventory(self, fields=None):
-        """ Export the inventory configuration and quantity of a product. """
+        """Export the inventory configuration and quantity of a product."""
         backend = self.backend_id
         with backend.work_on("prestashop.product.combination") as work:
             exporter = work.component(usage="inventory.exporter")

@@ -9,8 +9,8 @@ from .common import ExportStockQuantityCase, assert_no_job_delayed
 class TestExportStockQuantity(ExportStockQuantityCase):
     @assert_no_job_delayed
     def test_export_stock_qty_delay(self):
-        """ Backend button delay a job to delay stock quantities export """
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        """Backend button delay a job to delay stock quantities export"""
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with mock.patch(delay_record_path) as delay_record_mock:
             self.backend_record.update_product_stock_qty()
             delay_record_instance = delay_record_mock.return_value
@@ -20,7 +20,7 @@ class TestExportStockQuantity(ExportStockQuantityCase):
 
     @assert_no_job_delayed
     def test_job_recompute_prestashop_qty(self):
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
 
         variant_binding = self._create_product_binding(
             name="Faded Short Sleeves T-shirt",

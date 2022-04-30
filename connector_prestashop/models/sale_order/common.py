@@ -68,7 +68,7 @@ class PrestashopSaleOrder(models.Model):
     )
 
     def import_orders_since(self, backend, since_date=None, **kwargs):
-        """ Prepare the import of orders modified on PrestaShop """
+        """Prepare the import of orders modified on PrestaShop"""
         filters = None
         if since_date:
             filters = {"date": "1", "filter[date_upd]": ">[%s]" % (since_date)}
@@ -87,7 +87,7 @@ class PrestashopSaleOrder(models.Model):
         return True
 
     def export_tracking_number(self):
-        """ Export the tracking number of a delivery order. """
+        """Export the tracking number of a delivery order."""
         self.ensure_one()
         with self.backend_id.work_on(self._name) as work:
             exporter = work.component(usage="tracking.exporter")

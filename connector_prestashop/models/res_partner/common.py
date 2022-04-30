@@ -85,7 +85,7 @@ class PrestashopResPartner(models.Model):
     birthday = fields.Date(string="Birthday")
 
     def import_customers_since(self, backend_record=None, since_date=None, **kwargs):
-        """ Prepare the import of partners modified on PrestaShop """
+        """Prepare the import of partners modified on PrestaShop"""
         filters = None
         if since_date:
             filters = {"date": "1", "filter[date_upd]": ">[%s]" % since_date}

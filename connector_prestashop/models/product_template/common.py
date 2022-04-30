@@ -180,7 +180,7 @@ class PrestashopProductTemplate(models.Model):
             return importer.run()
 
     def export_inventory(self, fields=None):
-        """ Export the inventory configuration and quantity of a product. """
+        """Export the inventory configuration and quantity of a product."""
         backend = self.backend_id
         with backend.work_on("prestashop.product.template") as work:
             exporter = work.component(usage="inventory.exporter")

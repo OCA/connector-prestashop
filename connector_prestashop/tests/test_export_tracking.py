@@ -106,13 +106,13 @@ class TestExportPicking(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_event_tracking_number__not_prestashop_sale(self):
-        """ Test that nothing is exported """
+        """Test that nothing is exported"""
         self.picking.carrier_tracking_ref = "xyz"
         self.assertEqual(0, self.instance_delay_record.call_count)
 
     @assert_no_job_delayed
     def test_event_tracking_number__prestashop_sale(self):
-        """ Test that tracking number is exported """
+        """Test that tracking number is exported"""
         self.create_binding_no_export(
             "prestashop.sale.order",
             self.sale.id,
