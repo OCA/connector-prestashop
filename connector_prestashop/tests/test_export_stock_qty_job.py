@@ -9,7 +9,7 @@ from .common import ExportStockQuantityCase, assert_no_job_delayed, recorder
 class TestExportStockQuantity(ExportStockQuantityCase):
     @assert_no_job_delayed
     def test_job_export_qty(self):
-        """ Export a qty on PrestaShop """
+        """Export a qty on PrestaShop"""
         variant_binding = self._create_product_binding(
             name="Faded Short Sleeves T-shirt",
             template_ps_id=1,
@@ -21,7 +21,7 @@ class TestExportStockQuantity(ExportStockQuantityCase):
         self.assertEqual(0, base_qty)
         self.assertEqual(0, base_prestashop_qty)
 
-        delay_record_path = "odoo.addons.queue_job.models.base." "DelayableRecordset"
+        delay_record_path = "odoo.addons.queue_job.models.base.DelayableRecordset"
         with mock.patch(delay_record_path):
             self._change_product_qty(variant_binding.odoo_id, 42)
 

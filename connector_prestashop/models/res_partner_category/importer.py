@@ -31,7 +31,7 @@ class PartnerCategoryImportMapper(Component):
 
 
 class PartnerCategoryImporter(Component):
-    """ Import one translatable record """
+    """Import one translatable record"""
 
     _name = "prestashop.res.partner.category.importer"
     _inherit = "prestashop.translatable.record.importer"

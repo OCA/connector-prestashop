@@ -42,7 +42,7 @@ class MailMessageMapper(Component):
 
 
 class MailMessageImporter(Component):
-    """ Import one simple record """
+    """Import one simple record"""
 
     _name = "prestashop.mail.message.importer"
     _inherit = "prestashop.importer"

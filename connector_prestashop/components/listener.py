@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PrestashopListener(AbstractComponent):
-    """ Base Backend Adapter for the connectors """
+    """Base Backend Adapter for the connectors"""
 
     _name = "prestashop.connector.listener"
     _inherit = "base.connector.listener"
