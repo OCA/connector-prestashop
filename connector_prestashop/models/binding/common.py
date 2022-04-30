@@ -38,7 +38,7 @@ class PrestashopBinding(models.AbstractModel):
 
     @api.model
     def import_record(self, backend, prestashop_id, force=False):
-        """ Import a record from PrestaShop """
+        """Import a record from PrestaShop"""
         self.check_active(backend)
         with backend.work_on(self._name) as work:
             importer = work.component(usage="record.importer")
@@ -46,7 +46,7 @@ class PrestashopBinding(models.AbstractModel):
 
     @api.model
     def import_batch(self, backend, filters=None, **kwargs):
-        """ Prepare a batch import of records from PrestaShop """
+        """Prepare a batch import of records from PrestaShop"""
         self.check_active(backend)
         if filters is None:
             filters = {}
@@ -55,7 +55,7 @@ class PrestashopBinding(models.AbstractModel):
             return importer.run(filters=filters, **kwargs)
 
     def export_record(self, fields=None):
-        """ Export a record on PrestaShop """
+        """Export a record on PrestaShop"""
         self.ensure_one()
         self.check_active(self.backend_id)
         with self.backend_id.work_on(self._name) as work:
@@ -63,7 +63,7 @@ class PrestashopBinding(models.AbstractModel):
             return exporter.run(self, fields)
 
     def export_delete_record(self, backend, external_id, attributes=None):
-        """ Delete a record on PrestaShop """
+        """Delete a record on PrestaShop"""
         self.check_active(backend)
         with backend.work_on(self._name) as work:
             deleter = work.component(usage="record.exporter.deleter")

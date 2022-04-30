@@ -23,7 +23,7 @@ ExpectedVariant = namedtuple(
 
 
 class TestImportProduct(PrestashopTransactionCase):
-    """ Test the import of partner from PrestaShop """
+    """Test the import of partner from PrestaShop"""
 
     def setUp(self):
         super().setUp()
@@ -93,7 +93,7 @@ class TestImportProduct(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_product_record_category(self):
-        """ Import a product category """
+        """Import a product category"""
         with recorder.use_cassette("test_import_product_category_record_1"):
             for i in range(1, 6):
                 self.env["prestashop.product.category"].import_record(
@@ -118,7 +118,7 @@ class TestImportProduct(PrestashopTransactionCase):
 
     @assert_no_job_delayed
     def test_import_product_record(self):
-        """ Import a product """
+        """Import a product"""
         # product 1 is assigned to categories 1-5 on PrestaShop
         categs = self.env["product.category"]
         for idx in range(1, 6):

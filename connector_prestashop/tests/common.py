@@ -70,7 +70,7 @@ def assert_no_job_delayed(func):
         self.assertEqual(
             job_count,
             self.env["queue.job"].search_count([]),
-            "New jobs have been delayed during the test, this " "is unexpected.",
+            "New jobs have been delayed during the test, this is unexpected.",
         )
         return result
 
@@ -78,7 +78,7 @@ def assert_no_job_delayed(func):
 
 
 class PrestashopTransactionCase(SavepointComponentCase):
-    """ Base class for Tests with Prestashop """
+    """Base class for Tests with Prestashop"""
 
     def setUp(self):
         super().setUp()
@@ -190,10 +190,10 @@ class PrestashopTransactionCase(SavepointComponentCase):
         for record in equals:
             # same records
             message.append(
-                u" ✓ {}({})".format(
+                " ✓ {}({})".format(
                     model_name,
-                    u", ".join(
-                        u"%s: %s"
+                    ", ".join(
+                        "%s: %s"
                         % (field.replace("__", "."), get_record_field(record, field))
                         for field in fields
                     ),
@@ -202,10 +202,10 @@ class PrestashopTransactionCase(SavepointComponentCase):
         for expected in not_found:
             # missing records
             message.append(
-                u" - {}({})".format(
+                " - {}({})".format(
                     model_name,
-                    u", ".join(
-                        u"{}: {}".format(field.replace("__", "."), v)
+                    ", ".join(
+                        "{}: {}".format(field.replace("__", "."), v)
                         for field, v in expected._asdict().items()
                     ),
                 )
@@ -213,10 +213,10 @@ class PrestashopTransactionCase(SavepointComponentCase):
         for record in records:
             # extra records
             message.append(
-                u" + {}({})".format(
+                " + {}({})".format(
                     model_name,
-                    u", ".join(
-                        u"%s: %s"
+                    ", ".join(
+                        "%s: %s"
                         % (field.replace("__", "."), get_record_field(record, field))
                         for field in fields
                     ),
@@ -224,7 +224,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
             )
         if not_found or records:
             raise AssertionError(
-                u"Records do not match:\n\n{}".format("\n".join(message))
+                "Records do not match:\n\n{}".format("\n".join(message))
             )
 
     def sync_metadata(self):
