@@ -18,7 +18,7 @@ class PrestashopTrackingExporter(Component):
         return " ".join(trackings) if trackings else None
 
     def run(self, binding, **kwargs):
-        """ Export the tracking number of a picking to PrestaShop """
+        """Export the tracking number of a picking to PrestaShop"""
         # verify the picking is done + prestashop id exists
         tracking_adapter = self.component(
             usage="backend.adapter", model_name="__not_exit_prestashop.order_carrier"
