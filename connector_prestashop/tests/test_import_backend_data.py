@@ -3,6 +3,8 @@
 
 from collections import namedtuple
 
+from odoo import tools
+
 from .common import (
     PrestashopTransactionCase,
     assert_no_job_delayed,
@@ -61,8 +63,8 @@ class TestImportBackendData(PrestashopTransactionCase):
         auto_import_logger = (
             "odoo.addons.connector_prestashop.components.auto_matching_importer"
         )
-        with quiet_logger("vcr"), quiet_logger("urllib3"):
-            with quiet_logger(auto_import_logger):
+        with quiet_logger("urllib3"), quiet_logger(auto_import_logger):
+            with tools.mute_logger("vcr.cassette"):
                 self.backend_record.synchronize_basedata()
 
         langs = self.env["prestashop.res.lang"].search([])
