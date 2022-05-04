@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="product_category_connector_prestashop_tree_view" model="ir.ui.view">
+        <field name="model">prestashop.product.category</field>
+        <field name="arch" type="xml">
+            <tree string="PrestaShop Product Category" create="0">
+                <field name="backend_id" string="Backend" />
+                <field name="prestashop_id" />
+                <field name="date_add" />
+                <field name="date_upd" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_category_connector_prestashop_form_view" model="ir.ui.view">
+        <field name="name">prestashop.product.category.form.view</field>
+        <field name="model">prestashop.product.category</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="PrestaShop Product Category">
+                <group string="Primary Data">
+                    <field name="backend_id" string="Backend" />
+                    <field name="prestashop_id" />
+                    <field name="date_add" />
+                    <field name="date_upd" />
+                    <field name="position" />
+                </group>
+                <group string="Descriptions">
+                    <field name="description" />
+                    <field name="link_rewrite" />
+                    <field name="meta_description" />
+                    <field name="meta_keywords" />
+                    <field name="meta_title" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_category_prestashop_binding_form_view" model="ir.ui.view">
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='first']" position="after">
+                <group
+                    string="PrestaShop Binding"
+                    groups="connector.group_connector_manager"
+                >
+                    <field name="prestashop_bind_ids" nolabel="1" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
