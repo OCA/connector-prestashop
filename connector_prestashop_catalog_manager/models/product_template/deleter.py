@@ -6,8 +6,8 @@ from odoo.addons.component.core import Component
 
 
 class ProductCombinationOptionDeleter(Component):
-    _name = 'prestashop.product.template.deleter'
-    _inherit = 'prestashop.deleter'
+    _name = "prestashop.product.template.deleter"
+    _inherit = "prestashop.deleter"
     _apply_on = [
-        'prestashop.product.template',
+        "prestashop.product.template",
     ]
