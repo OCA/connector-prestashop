@@ -6,8 +6,8 @@ from odoo.addons.component.core import Component
 
 
 class ProductCategoryDeleter(Component):
-    _name = 'prestashop.product.category.deleter'
-    _inherit = 'prestashop.deleter'
+    _name = "prestashop.product.category.deleter"
+    _inherit = "prestashop.deleter"
     _apply_on = [
-        'prestashop.product.category',
+        "prestashop.product.category",
     ]
