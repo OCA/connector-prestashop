@@ -48,15 +48,13 @@ class PrestashopBackend(models.Model):
             ("production", "In Production"),
         ]
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     version = fields.Selection(
         selection="select_versions",
-        string="Version",
         required=True,
     )
-    location = fields.Char("Location")
+    location = fields.Char()
     webservice_key = fields.Char(
-        string="Webservice key",
         help="You have to put it in 'username' of the PrestaShop "
         "Webservice api path invite",
     )
@@ -90,7 +88,7 @@ class PrestashopBackend(models.Model):
     )
 
     taxes_included = fields.Boolean("Use tax included prices")
-    import_partners_since = fields.Datetime("Import partners since")
+    import_partners_since = fields.Datetime()
     import_orders_since = fields.Datetime("Import Orders since")
     import_payment_mode_since = fields.Datetime("Import Payment Modes since")
     import_products_since = fields.Datetime("Import Products since")
@@ -127,8 +125,8 @@ class PrestashopBackend(models.Model):
         string="Importable sale order states",
         help="If valued only orders matching these states will be imported.",
     )
-    active = fields.Boolean(string="Active", default=True)
-    state = fields.Selection(selection="_select_state", string="State", default="draft")
+    active = fields.Boolean(default=True)
+    state = fields.Selection(selection="_select_state", default="draft")
 
     verbose = fields.Boolean(help="Output requests details in the logs")
     debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
@@ -141,7 +139,6 @@ class PrestashopBackend(models.Model):
     )
 
     matching_customer = fields.Boolean(
-        string="Matching Customer",
         help="The selected fields will be matched to the ref field of the "
         "partner. Please adapt your datas consequently.",
     )

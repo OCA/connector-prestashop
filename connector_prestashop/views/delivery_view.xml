@@ -28,7 +28,7 @@
 <record id="view_prestashop_delivery_carrier_tree" model="ir.ui.view">
     <field name="model">prestashop.delivery.carrier</field>
     <field name="arch" type="xml">
-        <tree string="PrestaShop Carriers">
+        <tree>
             <field name="name_ext" />
             <field name="active_ext" />
             <field name="export_tracking" string="Export tracking" />

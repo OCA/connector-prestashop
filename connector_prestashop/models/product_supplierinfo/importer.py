@@ -157,8 +157,8 @@ class SupplierInfoImporter(Component):
                 self._import_dependency(
                     record["id_product_attribute"], "prestashop.product.combination"
                 )
-        except PrestaShopWebServiceError:
-            raise FailedJobError("Error fetching a dependency")
+        except PrestaShopWebServiceError as err:
+            raise FailedJobError("Error fetching a dependency") from err
 
 
 class SupplierInfoBatchImporter(Component):

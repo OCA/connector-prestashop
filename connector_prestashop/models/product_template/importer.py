@@ -565,13 +565,14 @@ class ProductTemplateImporter(Component):
         self.default_category_error = False
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self.import_images(binding)
         self.attribute_line(binding)
         self.import_combinations()
         self.import_supplierinfo(binding)
         self.deactivate_default_product(binding)
         self.warning_default_category_missing(binding)
+        return res
 
     def warning_default_category_missing(self, binding):
         if self.default_category_error:

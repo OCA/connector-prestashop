@@ -86,18 +86,18 @@ class SaleImportRule(Component):
         if not payment_mode:
             raise FailedJobError(
                 _(
-                    "The configuration is missing for the Payment Mode '%s'.\n\n"
+                    "Missing configuration for the Payment Mode '%(ps_payment_method)s'.\n\n"
                     "Resolution:\n"
                     " - Use the automatic import in 'Connectors > PrestaShop "
                     "Backends', button 'Import payment modes', or:\n"
                     "\n"
                     "- Go to 'Invoicing > Configuration > Management "
                     "> Payment Modes'\n"
-                    "- Create a new Payment Mode with name '%s'\n"
+                    "- Create a new Payment Mode with name '%(ps_payment_method)s'\n"
                     "-Eventually  link the Payment Method to an existing Workflow "
                     "Process or create a new one."
                 )
-                % (ps_payment_method, ps_payment_method)
+                % {"ps_payment_method": ps_payment_method}
             )
         self._rule_global(record, payment_mode)
         self._rule_state(record, payment_mode)
@@ -445,9 +445,10 @@ class SaleOrderImporter(Component):
         return binding
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self._add_shipping_line(binding)
         self.warning_line_without_template(binding)
+        return res
 
     def warning_line_without_template(self, binding):
         if not self.line_template_errors:
@@ -457,7 +458,11 @@ class SaleOrderImporter(Component):
     def _has_to_skip(self, binding=False):
         """Return True if the import can be skipped"""
         if binding:
-            return True
+            return int(
+                self.prestashop_record["current_state"]
+            ) not in self.backend_record.mapped(
+                "importable_order_state_ids.prestashop_bind_ids.prestashop_id"
+            )
         rules = self.component(usage="sale.import.rule")
         try:
             return rules.check(self.prestashop_record)
