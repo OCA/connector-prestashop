@@ -17,7 +17,7 @@ class PrestashopBinding(models.AbstractModel):
         required=True,
         ondelete="restrict",
     )
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
     prestashop_id = fields.Integer("ID on PrestaShop")
     no_export = fields.Boolean("No export to PrestaShop")
 

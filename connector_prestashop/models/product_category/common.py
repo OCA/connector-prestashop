@@ -30,15 +30,13 @@ class PrestashopProductCategory(models.Model):
     default_shop_id = fields.Many2one(comodel_name="prestashop.shop")
     date_add = fields.Datetime(string="Created At (on PrestaShop)", readonly=True)
     date_upd = fields.Datetime(string="Updated At (on PrestaShop)", readonly=True)
-    description = fields.Html(
-        string="Description", translate=True, help="HTML description from PrestaShop"
-    )
+    description = fields.Html(translate=True, help="HTML description from PrestaShop")
     link_rewrite = fields.Char(string="Friendly URL", translate=True)
-    meta_description = fields.Char("Meta description", translate=True)
-    meta_keywords = fields.Char(string="Meta keywords", translate=True)
-    meta_title = fields.Char(string="Meta title", translate=True)
-    active = fields.Boolean(string="Active", default=True)
-    position = fields.Integer(string="Position")
+    meta_description = fields.Char(translate=True)
+    meta_keywords = fields.Char(translate=True)
+    meta_title = fields.Char(translate=True)
+    active = fields.Boolean(default=True)
+    position = fields.Integer()
 
 
 class ProductCategoryAdapter(Component):

@@ -1,6 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import base64
+import logging
 
 from odoo import fields, models
 from odoo.tools import config
@@ -8,6 +9,8 @@ from odoo.tools import config
 from odoo.addons.component.core import Component
 
 from ...components.backend_adapter import PrestaShopWebServiceImage
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductImage(models.Model):
@@ -89,7 +92,7 @@ class ProductImageAdapter(Component):
         try:
             api._execute(url_del, "DELETE")
         except BaseException:
-            pass
+            _logger.info("Call to delete URL was failed. Ignoring error")
         return api.add(
             url,
             files=[

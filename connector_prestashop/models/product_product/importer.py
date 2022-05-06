@@ -46,6 +46,37 @@ class ProductCombinationImporter(Component):
     #            presta_option_values.append(option_value)
     #        self.template_attribute_lines(presta_option_values)
 
+    def _get_binding(
+        self,
+    ):
+        binding = super()._get_binding()
+        if not binding:
+            if self.backend_record.matching_product_template:
+                matching_field = self.backend_record.matching_product_ch
+                record = self.prestashop_record
+                if (
+                    matching_field == "barcode"
+                    and "barcode" not in record.keys()
+                    and "ean13" in record.keys()
+                ):
+                    matching_field = "ean13"
+                code = record.get(matching_field)
+                if self.backend_record.matching_product_ch == "reference":
+                    if code:
+                        binding = self.env["prestashop.product.combination"].search(
+                            [("default_code", "=", code)]
+                        )
+                        if len(binding) == 1:
+                            return binding
+                if self.backend_record.matching_product_ch == "barcode":
+                    if code:
+                        binding = self.env["prestashop.product.combination"].search(
+                            [("barcode", "=", code)]
+                        )
+                        if len(binding) == 1:
+                            return binding
+        return binding
+
     def template_attribute_lines(self, option_values):
         record = self.prestashop_record
         template_binder = self.binder_for("prestashop.product.template")
@@ -80,8 +111,9 @@ class ProductCombinationImporter(Component):
             attr_line._update_product_template_attribute_values()
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self.import_supplierinfo(binding)
+        return res
 
     def set_variant_images(self, combinations):
         backend_adapter = self.component(
@@ -129,7 +161,7 @@ class ProductCombinationImporter(Component):
             tmpl_adapter = self.component(
                 usage="backend.adapter", model_name="prestashop.product.template"
             )
-            tmpl_record = tmpl_adapter.read(self.prestashop_record.get("147585"))
+            tmpl_record = tmpl_adapter.read(self.prestashop_record.get("id_product"))
             self.work.parent_presta_record = tmpl_record
             if "parent_presta_record" not in self.work._propagate_kwargs:
                 self.work._propagate_kwargs.append("parent_presta_record")
@@ -320,7 +352,14 @@ class ProductCombinationMapper(Component):
     def odoo_id(self, record):
         """Will bind the product to an existing one with the same code"""
         if self.backend_record.matching_product_template:
-            code = record.get(self.backend_record.matching_product_ch)
+            matching_field = self.backend_record.matching_product_ch
+            if (
+                matching_field == "barcode"
+                and "barcode" not in record.keys()
+                and "ean13" in record.keys()
+            ):
+                matching_field = "ean13"
+            code = record.get(matching_field)
             if self.backend_record.matching_product_ch == "reference":
                 if code:
                     product = self.env["product.product"].search(
@@ -385,8 +424,9 @@ class ProductCombinationOptionImporter(Component):
             )
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self._import_values(binding)
+        return res
 
 
 class ProductCombinationOptionMapper(Component):

@@ -10,7 +10,7 @@ from urllib import parse
 
 from vcr import VCR
 
-from odoo.addons.component.tests.common import SavepointComponentCase
+from odoo.tests.common import TransactionCase
 
 _logger = logging.getLogger(__name__)
 try:
@@ -77,7 +77,7 @@ def assert_no_job_delayed(func):
     return functools.wraps(func)(_decorated)
 
 
-class PrestashopTransactionCase(SavepointComponentCase):
+class PrestashopTransactionCase(TransactionCase):
     """Base class for Tests with Prestashop"""
 
     def setUp(self):

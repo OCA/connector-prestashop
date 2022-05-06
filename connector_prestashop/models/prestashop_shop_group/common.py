@@ -10,7 +10,7 @@ class PrestashopShopGroup(models.Model):
     _inherit = "prestashop.binding"
     _description = "PrestaShop Shop Group"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
     shop_ids = fields.One2many(
         comodel_name="prestashop.shop",
         inverse_name="shop_group_id",

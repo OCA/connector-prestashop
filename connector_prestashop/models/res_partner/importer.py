@@ -1,8 +1,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import logging
+from datetime import datetime
 
 from odoo import _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
@@ -20,8 +22,6 @@ class PartnerImportMapper(Component):
     _apply_on = "prestashop.res.partner"
 
     direct = [
-        ("date_add", "date_add"),
-        ("date_upd", "date_upd"),
         ("email", "email"),
         ("newsletter", "newsletter"),
         ("company", "company"),
@@ -31,6 +31,22 @@ class PartnerImportMapper(Component):
         (external_to_m2o("id_shop"), "shop_id"),
         (external_to_m2o("id_default_group"), "default_category_id"),
     ]
+
+    @mapping
+    def date_add(self, record):
+        try:
+            datetime.strptime(record["date_add"], DEFAULT_SERVER_DATETIME_FORMAT)
+        except ValueError:
+            return {"date_add": False}
+        return {"date_add": record["date_add"]}
+
+    @mapping
+    def date_upd(self, record):
+        try:
+            datetime.strptime(record["date_upd"], DEFAULT_SERVER_DATETIME_FORMAT)
+        except ValueError:
+            return {"date_upd": False}
+        return {"date_upd": record["date_upd"]}
 
     @mapping
     def pricelist(self, record):
@@ -115,13 +131,14 @@ class ResPartnerImporter(Component):
             self._import_dependency(group["id"], "prestashop.res.partner.category")
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         binder = self.binder_for()
         ps_id = binder.to_external(binding)
         self.env["prestashop.address"].with_delay(priority=10).import_batch(
             backend=self.backend_record,
             filters={"filter[id_customer]": "%d" % (ps_id,)},
         )
+        return res
 
 
 class PartnerBatchImporter(Component):
@@ -195,13 +212,14 @@ class AddressImporter(Component):
         if "address_type" in kwargs:
             self._address_type = kwargs.pop("address_type")
         # else: let mapper to set default value
-        super().run(prestashop_id, **kwargs)
+        return super().run(prestashop_id, **kwargs)
 
     def _map_data(self):
         map_record = super()._map_data()
         try:
             map_record.source["address_type"] = self._address_type
         except AttributeError:  # pragma: no cover
+            _logger.info("Mapper can set the default values")
             pass  # let mapper to set default value
         return map_record
 

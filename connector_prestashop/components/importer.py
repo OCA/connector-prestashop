@@ -506,7 +506,7 @@ class TranslatableRecordImporter(AbstractComponent):
 
         self.other_langs_data = split_record
 
-        super()._import(binding)
+        return super()._import(binding)
 
     def _after_import(self, binding):
         """Hook called at the end of the import"""

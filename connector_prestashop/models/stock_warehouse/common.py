@@ -26,9 +26,7 @@ class PrestashopShop(models.Model):
         for shop in self:
             shop.backend_id = shop.shop_group_id.backend_id.id
 
-    name = fields.Char(
-        string="Name", help="The name of the method on the backend", required=True
-    )
+    name = fields.Char(help="The name of the method on the backend", required=True)
     shop_group_id = fields.Many2one(
         comodel_name="prestashop.shop.group",
         string="PrestaShop Shop Group",
@@ -48,7 +46,7 @@ class PrestashopShop(models.Model):
         string="PrestaShop Backend",
         store=True,
     )
-    default_url = fields.Char("Default url")
+    default_url = fields.Char()
 
 
 class ShopAdapter(Component):

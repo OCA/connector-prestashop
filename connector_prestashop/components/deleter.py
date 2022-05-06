@@ -19,7 +19,6 @@ class PrestashopDeleter(AbstractComponent):
         """
         resource = self.backend_adapter._prestashop_model
         self.backend_adapter.delete(resource, external_id, attributes)
-        return _("Record %s deleted on PrestaShop on resource %s") % (
-            external_id,
-            resource,
+        return _(
+            "Record %(external_id)s deleted on PrestaShop on resource %(resource)s"
         )

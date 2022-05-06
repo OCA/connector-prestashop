@@ -316,7 +316,7 @@
         <field name="name">prestashop.backend.tree</field>
         <field name="model">prestashop.backend</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Backend">
+            <tree>
                 <field name="name" />
                 <field name="location" />
             </tree>
@@ -349,7 +349,7 @@
         <field name="name">prestashop.shop.group.tree</field>
         <field name="model">prestashop.shop.group</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Shop Group">
+            <tree>
                 <field name="name" />
                 <field name="backend_id" />
             </tree>
@@ -388,7 +388,7 @@
         <field name="name">prestashop.shop.tree</field>
         <field name="model">prestashop.shop</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Shop">
+            <tree>
                 <field name="name" />
                 <field name="shop_group_id" />
                 <field name="odoo_id" />
