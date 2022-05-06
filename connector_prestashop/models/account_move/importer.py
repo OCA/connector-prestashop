@@ -1,10 +1,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
+
 from odoo import _
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 from odoo.addons.connector.exception import MappingError
+
+_logger = logging.getLogger(__name__)
 
 
 class RefundImporter(Component):
@@ -36,8 +40,9 @@ class RefundImporter(Component):
     #            % invoice.origin,
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self._open_refund(binding)
+        return res
 
     def _has_to_skip(self, binding=False):
         """Return True if the import can be skipped"""
@@ -191,7 +196,9 @@ class RefundMapper(Component):
         try:
             price_unit = float(price_unit) / float(quantity)
         except ValueError:
-            pass
+            _logger.info(
+                'Could not calculate price unit "%s" with quantity %s', price_unit
+            )
 
         discount = False
         if price_unit in ["0.00", ""] and order_line is not None:

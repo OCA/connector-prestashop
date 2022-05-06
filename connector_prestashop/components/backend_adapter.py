@@ -33,7 +33,7 @@ def retryable_error(func):
         except (ConnError, Timeout, HTTPError) as err:
             raise NetworkRetryableError(
                 "A network error caused the failure of the job: %s" % str(err)
-            )
+            ) from err
         except Exception as e:
             raise e
 
@@ -54,21 +54,23 @@ def api_handle_errors(message=""):
     try:
         yield
     except NetworkRetryableError as err:
-        raise exceptions.UserError(_("{}Network Error:\n\n{}").format(message, err))
+        raise exceptions.UserError(
+            _("{}Network Error:\n\n{}").format(message, err)
+        ) from err
     except (HTTPError, RequestException, ConnError) as err:
         raise exceptions.UserError(
             _("{}API / Network Error:\n\n{}").format(message, err)
-        )
+        ) from err
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
             _("{}Authentication Error:\n\n{}").format(message, err)
-        )
+        ) from err
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
             _("{}Error during synchronization with PrestaShop:\n\n{}").format(
                 message, str(err)
             )
-        )
+        ) from err
 
 
 class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
@@ -139,7 +141,7 @@ class PrestaShopCRUDAdapter(AbstractComponent):
             self.prestashop.api_url,
             self.prestashop.webservice_key,
             debug=self.backend_record.debug,
-            # verbose=self.backend_record.verbose
+            verbose=self.backend_record.verbose,
         )
 
     def search(self, filters=None):

@@ -29,7 +29,7 @@
         <field name="name">sale.order.state.tree</field>
         <field name="model">sale.order.state</field>
         <field name="arch" type="xml">
-            <tree string="Sale order State">
+            <tree>
                 <field name="name" />
             </tree>
         </field>
@@ -39,7 +39,7 @@
         <field name="name">prestashop.sale.order.state.tree</field>
         <field name="model">prestashop.sale.order.state</field>
         <field name="arch" type="xml">
-            <tree string="Sale order State">
+            <tree>
                 <field name="backend_id" />
                 <field name="prestashop_id" />
             </tree>
@@ -74,7 +74,7 @@
                 </group>
                 <group>
                     <field name="openerp_state_ids" nolabel="1" mode="tree">
-                        <tree string="States" editable="top">
+                        <tree editable="top">
                             <field name="name" />
                         </tree>
                     </field>
@@ -142,7 +142,7 @@
            <page name="connector" position="inside">
                 <separator string="PrestaShop" />
                 <field name="prestashop_bind_ids" readonly="True">
-                    <tree string="PrestaShop Binding">
+                    <tree>
                         <field name="total_amount" />
                         <field name="total_amount_tax" />
                     </tree>

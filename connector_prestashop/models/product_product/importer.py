@@ -80,8 +80,9 @@ class ProductCombinationImporter(Component):
             attr_line._update_product_template_attribute_values()
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self.import_supplierinfo(binding)
+        return res
 
     def set_variant_images(self, combinations):
         backend_adapter = self.component(
@@ -385,8 +386,9 @@ class ProductCombinationOptionImporter(Component):
             )
 
     def _after_import(self, binding):
-        super()._after_import(binding)
+        res = super()._after_import(binding)
         self._import_values(binding)
+        return res
 
 
 class ProductCombinationOptionMapper(Component):
