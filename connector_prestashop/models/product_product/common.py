@@ -14,7 +14,7 @@ class ProductProduct(models.Model):
         inverse_name="odoo_id",
         string="PrestaShop Bindings (combinations)",
     )
-    default_on = fields.Boolean(string="Default On")
+    default_on = fields.Boolean()
     impact_price = fields.Float(string="Price Impact", digits="Product Price")
 
     def update_prestashop_qty(self):
@@ -184,7 +184,7 @@ class PrestashopProductCombinationOption(models.Model):
         ondelete="cascade",
     )
     prestashop_position = fields.Integer("PrestaShop Position")
-    public_name = fields.Char(string="Public Name", translate=True)
+    public_name = fields.Char(translate=True)
     group_type = fields.Selection(
         [("color", "Color"), ("radio", "Radio"), ("select", "Select")],
         string="Type",

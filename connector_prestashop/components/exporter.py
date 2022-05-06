@@ -113,7 +113,7 @@ class PrestashopExporter(AbstractComponent):
                     "%s\n\n"
                     "Likely due to 2 concurrent jobs wanting to create "
                     "the same record. The job will be retried later." % err
-                )
+                ) from err
             else:
                 raise
 
@@ -288,7 +288,7 @@ class PrestashopExporter(AbstractComponent):
         )
         try:
             self.env.cr.execute(sql, (self.binding_id,), log_exceptions=False)
-        except psycopg2.OperationalError:
+        except psycopg2.OperationalError as err:
             _logger.info(
                 "A concurrent job is already exporting the same "
                 "record (%s with id %s). Job delayed later.",
@@ -299,7 +299,7 @@ class PrestashopExporter(AbstractComponent):
                 "A concurrent job is already exporting the same record "
                 "(%s with id %s). The job will be retried later."
                 % (self.model._name, self.binding_id)
-            )
+            ) from err
 
     def _run(self, fields=None, **kwargs):
         """Flow of the synchronization, implemented in inherited classes"""
