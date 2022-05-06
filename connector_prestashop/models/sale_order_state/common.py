@@ -9,7 +9,7 @@ class SaleOrderState(models.Model):
     _name = "sale.order.state"
     _description = "Sale Order States"
 
-    name = fields.Char("Name", translate=True)
+    name = fields.Char(translate=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",

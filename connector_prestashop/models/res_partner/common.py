@@ -81,8 +81,8 @@ class PrestashopResPartner(models.Model):
         comodel_name="prestashop.shop",
         string="PrestaShop Shop",
     )
-    newsletter = fields.Boolean(string="Newsletter")
-    birthday = fields.Date(string="Birthday")
+    newsletter = fields.Boolean()
+    birthday = fields.Date()
 
     def import_customers_since(self, backend_record=None, since_date=None, **kwargs):
         """Prepare the import of partners modified on PrestaShop"""

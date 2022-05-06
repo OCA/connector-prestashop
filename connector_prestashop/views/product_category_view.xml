@@ -4,7 +4,7 @@
     <record id="product_category_connector_prestashop_tree_view" model="ir.ui.view">
         <field name="model">prestashop.product.category</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Product Category" create="0">
+            <tree create="0">
                 <field name="backend_id" string="Backend" />
                 <field name="prestashop_id" />
                 <field name="date_add" />

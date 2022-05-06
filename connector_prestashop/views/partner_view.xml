@@ -45,7 +45,7 @@
         <field name="name">prestashop.res.partner.tree</field>
         <field name="model">prestashop.res.partner</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Partner">
+            <tree>
                 <field name="backend_id" />
                 <field name="shop_group_id" />
                 <field name="company" />
@@ -76,7 +76,7 @@
         <field name="name">prestashop.address.tree</field>
         <field name="model">prestashop.address</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Address">
+            <tree>
                 <field name="backend_id" />
                 <field name="shop_group_id" />
             </tree>
@@ -94,7 +94,7 @@
                         <field name="backend_id" />
                         <field name="prestashop_id" />
                     </form>
-                    <tree string="PrestaShop">
+                    <tree>
                         <field name="backend_id" />
                     </tree>
                 </field>
@@ -124,7 +124,7 @@
         <field name="name">prestashop.res.partner.category.tree</field>
         <field name="model">prestashop.res.partner.category</field>
         <field name="arch" type="xml">
-            <tree string="PrestaShop Partner Category">
+            <tree>
                 <field name="backend_id" />
                 <field name="prestashop_id" />
                 <field name="name" />
