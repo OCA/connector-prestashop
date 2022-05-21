@@ -9,6 +9,7 @@ from odoo import api, fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
+from odoo.addons.queue_job.job import identity_exact
 
 from ...components.backend_adapter import retryable_error
 
