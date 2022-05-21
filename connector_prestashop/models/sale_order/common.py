@@ -243,7 +243,7 @@ class OrderDiscountAdapter(Component):
     
     @property
     def _prestashop_model(self):
-        return self.backend_record.get_version_ps_key('order_discounts')
+        return self.backend_record.get_version_ps_key("order_discounts")
 
 
 class PrestashopSaleOrderListener(Component):
