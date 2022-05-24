@@ -145,9 +145,10 @@ class PrestashopBackend(models.Model):
         help="The selected fields will be matched to the ref field of the "
         "partner. Please adapt your datas consequently.",
     )
-    # matching_customer_ch = fields.Many2one(
-    #     comodel_name='prestashop.partner.field', string="Matched field",
-    #     help="Field that will be matched.")
+    matching_customer_ch = fields.Selection(
+        [("email", "Email"), ("vat", "Vat")], string="Matching Field for customer"
+    )
+
     tz = fields.Selection(
         _tz_get,
         "Timezone",
@@ -191,41 +192,6 @@ class PrestashopBackend(models.Model):
                             "install the module stock_available_unreserved."
                         )
                     )
-
-    @api.onchange("matching_customer")
-    def change_matching_customer(self):
-        # Update the field list so that if you API change you could find the
-        # new fields to map
-        if self._origin.id:
-            self.fill_matched_fields(self._origin.id)
-
-    def fill_matched_fields(self, backend_id):
-        self.ensure_one()
-
-        # options = {'limit': 1, 'display': 'full'}
-        # TODO : Unse new adapter pattern to get a simple partner json
-
-    #         prestashop = PrestaShopLocation(
-    #                         self.location.encode(),
-    #                         self.webservice_key,
-    #                     )
-    #
-    #         client = PrestaShopWebServiceDict(
-    #                     prestashop.api_url,
-    #                     prestashop.webservice_key)
-    #
-    #         customer = client.get('customers', options=options)
-    #         tab=customer['customers']['customer'].keys()
-    #         for key in tab:
-    #             key_present = self.env['prestashop.partner.field'].search(
-    #                     [('value', '=', key), ('backend_id', '=', backend_id)])
-    #
-    #             if len(key_present) == 0 :
-    #                 self.env['prestashop.partner.field'].create({
-    #                     'name' : key,
-    #                     'value' : key,
-    #                     'backend_id': backend_id
-    #                 })
 
     @api.model
     def _default_pricelist_id(self):

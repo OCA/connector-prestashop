@@ -96,11 +96,3 @@ class PrestashopBindingOdoo(models.AbstractModel):
         string="Odoo binding",
         selection=_get_selection,
     )
-
-    _sql_constraints = [
-        (
-            "prestashop_erp_uniq",
-            "unique(backend_id, odoo_id)",
-            "An ERP record with same ID already exists on PrestaShop.",
-        ),
-    ]
