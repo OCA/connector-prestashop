@@ -9,6 +9,7 @@ from odoo import api, fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
+from odoo.addons.queue_job.job import identity_exact
 
 from ...components.backend_adapter import retryable_error
 
@@ -279,4 +280,7 @@ class PrestashopProductQuantityListener(Component):
     def on_record_write(self, record, fields=None):
         inventory_fields = list(set(fields).intersection(self._get_inventory_fields()))
         if inventory_fields:
-            record.with_delay(priority=20).export_inventory(fields=inventory_fields)
+            record.with_delay(
+                priority=20,
+                identity_key=identity_exact,
+            ).export_inventory(fields=inventory_fields)

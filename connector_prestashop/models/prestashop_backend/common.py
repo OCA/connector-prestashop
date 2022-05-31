@@ -23,6 +23,9 @@ class PrestashopBackend(models.Model):
         "1.6.0.11": "prestashop.version.key.1.6.0.9",
         "1.6.1.2": "prestashop.version.key.1.6.1.2",
         "1.6.1.6": "prestashop.version.key.1.6.1.6",
+        "1.6.1.9": "prestashop.version.key.1.6.1.9",
+        "1.7.5.0": "prestashop.version.key.1.7.5.0",
+        "1.7.x.0": "prestashop.version.key.1.7.x.0",
     }
 
     @api.model
@@ -32,11 +35,14 @@ class PrestashopBackend(models.Model):
         Can be inherited to add custom versions.
         """
         return [
-            ("1.5", "<1.6.0.9"),
+            ("1.5", "< 1.6.0.9"),
             ("1.6.0.9", "1.6.0.9 - 1.6.0.10"),
-            ("1.6.0.11", ">=1.6.0.11 - <1.6.1.2"),
-            ("1.6.1.2", ">=1.6.1.2 - <1.6.1.6"),
-            ("1.6.1.6", ">=1.6.1.6"),
+            ("1.6.0.11", ">= 1.6.0.11 - <1.6.1.2"),
+            ("1.6.1.2", "=1.6.1.2"),
+            ("1.6.1.6", ">=1.6.1.6 - <1.6.1.9"),
+            ("1.6.1.9", "=1.6.1.9"),
+            ("1.7.x.0", ">=1.7.x.0 - <1.7.5.0"),
+            ("1.7.5.0", "=1.7.5.0"),
         ]
 
     @api.model

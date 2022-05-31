@@ -129,7 +129,7 @@ class ProductCombinationImporter(Component):
             tmpl_adapter = self.component(
                 usage="backend.adapter", model_name="prestashop.product.template"
             )
-            tmpl_record = tmpl_adapter.read(self.prestashop_record.get("147585"))
+            tmpl_record = tmpl_adapter.read(self.prestashop_record.get("id_product"))
             self.work.parent_presta_record = tmpl_record
             if "parent_presta_record" not in self.work._propagate_kwargs:
                 self.work._propagate_kwargs.append("parent_presta_record")
