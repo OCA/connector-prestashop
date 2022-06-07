@@ -229,7 +229,9 @@ class TemplateMapper(Component):
         template = model.with_context(active_test=False).search(
             [
                 ("default_code", "=", code),
+                "|",
                 ("company_id", "=", self.backend_record.company_id.id),
+                ("company_id", "=", False),
             ],
             limit=1,
         )
