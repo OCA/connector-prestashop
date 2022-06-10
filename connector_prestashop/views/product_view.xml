@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="product_normal_form_view_default_check" model="ir.ui.view">
-       <field name="model">product.product</field>
-       <field name="inherit_id" ref="product.product_normal_form_view" />
-       <field name="arch" type="xml">
-           <field name="default_code" position="after">
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
                 <field
                     name="default_on"
                     attrs="{'invisible': [
@@ -18,11 +18,11 @@
                         ('product_variant_count', '=', 1)
                         ]}"
                 />
-           </field>
-           <xpath expr="//field[@name='lst_price']" position="attributes">
-               <attribute name="readonly">1</attribute>
-           </xpath>
-       </field>
+            </field>
+            <xpath expr="//field[@name='lst_price']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
     </record>
 
     <record id="product_product_tree_prestashop_view" model="ir.ui.view">
@@ -48,72 +48,76 @@
         />
         <field name="arch" type="xml">
             <page name="connector" position="attributes">
-                 <attribute name="invisible">0</attribute>
+                <attribute name="invisible">0</attribute>
             </page>
             <page name="connector" position="inside">
                 <div attrs="{'invisible': [('product_variant_count', '>', 1)]}">
-                    <p>To show PrestaShop binding go to: <button
+                    <p>
+                        To show PrestaShop binding go to:
+                        <button
                             name="open_product_template"
                             type="object"
                             string="product template"
                             class="oe_link"
-                        /></p>
+                        />
+                    </p>
                 </div>
-                 <group
+                <group
                     string="PrestaShop Bindings"
                     attrs="{'invisible': [('attribute_line_ids', '=', [])]}"
                 >
-                     <field name="prestashop_combinations_bind_ids" nolabel="1" />
-                 </group>
+                    <field name="prestashop_combinations_bind_ids" nolabel="1" />
+                </group>
             </page>
         </field>
     </record>
 
     <!--This is a product inherited form that will be dynamically populated-->
     <record id="product_template_common_form" model="ir.ui.view">
-       <field name="model">product.template</field>
-       <field
+        <field name="model">product.template</field>
+        <field
             name="inherit_id"
             ref="connector_base_product.product_template_common_form"
         />
-       <field name="arch" type="xml">
-           <page name="connector" position="attributes">
+        <field name="arch" type="xml">
+            <page name="connector" position="attributes">
                 <attribute name="invisible">0</attribute>
-           </page>
-           <page name="connector" position="inside">
+            </page>
+            <page name="connector" position="inside">
                 <group string="PrestaShop Bindings">
                     <field name="prestashop_bind_ids" nolabel="1" />
                 </group>
-           </page>
-       </field>
+            </page>
+        </field>
     </record>
 
     <record id="product_template_default_category_form" model="ir.ui.view">
-       <field name="model">product.template</field>
-       <field
+        <field name="model">product.template</field>
+        <field
             name="inherit_id"
             ref="product_multi_category.product_template_only_form_view_add_categids"
         />
-       <field name="arch" type="xml">
-           <field name="categ_ids" position="after">
-               <field
+        <field name="arch" type="xml">
+            <field name="categ_ids" position="after">
+                <field
                     name="prestashop_default_category_id"
                     domain="[('id', 'in', categ_ids)]"
                     options="{'no_create': True}"
                 />
-           </field>
-       </field>
+            </field>
+        </field>
     </record>
 
     <record id="product_connector_presta_form_view" model="ir.ui.view">
-       <field name="model">prestashop.product.template</field>
-       <field name="arch" type="xml">
+        <field name="model">prestashop.product.template</field>
+        <field name="arch" type="xml">
             <form string="prestashop fields">
                 <sheet>
                     <group col="1">
                         <field name="name" />
                         <field name="backend_id" />
                         <field name="default_shop_id" />
+                        <field name="odoo_id" />
                         <field name="no_export" />
                         <field name="link_rewrite" />
                         <field name="description_short_html" />
@@ -135,7 +139,7 @@
                     </group>
                 </sheet>
             </form>
-       </field>
+        </field>
     </record>
 
     <record id="product_connector_presta_tree_view" model="ir.ui.view">
@@ -175,8 +179,8 @@
     </record>
 
     <record id="combination_connector_presta_form_view" model="ir.ui.view">
-       <field name="model">prestashop.product.combination</field>
-       <field name="arch" type="xml">
+        <field name="model">prestashop.product.combination</field>
+        <field name="arch" type="xml">
             <form string="prestashop fields">
                 <group col="2">
                     <field name="backend_id" />
@@ -184,7 +188,7 @@
                     <field name="quantity" />
                 </group>
             </form>
-       </field>
+        </field>
     </record>
 
     <record id="combination_connector_presta_tree_view" model="ir.ui.view">
