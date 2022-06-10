@@ -305,7 +305,10 @@ class SaleOrderImportMapper(Component):
         if self.backend_record.tz:
             local = pytz.timezone(self.backend_record.tz)
             naive = fields.Datetime.from_string(date_order)
-            local_dt = local.localize(naive, is_dst=None)
+            try:
+                local_dt = local.localize(naive, is_dst=None)
+            except (pytz.NonExistentTimeError, pytz.AmbiguousTimeError):
+                local_dt = local.localize(naive + timedelta(hours=1), is_dst=None)
             date_order = fields.Datetime.to_string(local_dt.astimezone(pytz.utc))
         return {"date_order": date_order}
 
@@ -530,7 +533,24 @@ class SaleOrderLineMapper(Component):
                 limit=1,
             )
         if not product:
-            return {}
+            raise FailedJobError(
+                _(
+                    "\nFailed to find associated product with this Prestashop Info:\n"
+                    " - ID of the product : '%s'\n"
+                    " - ID of the combination : '%s'\n\n"
+                    "Resolution on the Prestashop API: \n"
+                    " - Check that --/api/products/%s exists \n"
+                    " - And if it iss a combination that --/api/combinations/%s also exists\n"
+                    "\n"
+                    "Once solved in PS, rerun this job."
+                )
+                % (
+                    record["product_id"],
+                    record["product_attribute_id"],
+                    record["product_id"],
+                    record["product_attribute_id"],
+                )
+            )
         return {
             "product_id": product.id,
             "product_uom": product and product.uom_id.id,
