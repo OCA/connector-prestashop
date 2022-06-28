@@ -45,19 +45,19 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <field name="active" invisible="1" />
                         <button
-                            class="oe_stat_button"
                             type="object"
                             name="toggle_active"
-                            icon="fa-archive"
-                        >
-                            <field
-                                name="active"
-                                widget="boolean_button"
-                                options='{"terminology": "archive"}'
-                            />
-                        </button>
-
+                            string="Archive"
+                            attrs="{'invisible': [('active', '=', False)]}"
+                        />
+                        <button
+                            type="object"
+                            name="toggle_active"
+                            string="Restore"
+                            attrs="{'invisible': [('active', '=', True)]}"
+                        />
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" />
@@ -95,7 +95,7 @@
                             <field name="warehouse_id" />
                             <field name="stock_location_id" />
                             <field name="shipping_product_id" />
-                             <field name="product_qty_field" />
+                            <field name="product_qty_field" />
                         </group>
                         <group string="Accounting">
                             <field name="refund_journal_id" />
@@ -158,7 +158,7 @@
                             </group>
                             <group>
                                 <div>
-<!--                                    <span>Import payment mode</span>-->
+                                    <!--                                    <span>Import payment mode</span>-->
                                     <label
                                         string="Import payment mode"
                                         class="oe_inline"
