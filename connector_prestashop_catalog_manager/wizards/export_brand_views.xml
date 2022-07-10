@@ -2,7 +2,6 @@
 <!-- Copyright 2020 PlanetaTIC - Marc Poch <mpoch@planetatic.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record id="export_product_brand_form" model="ir.ui.view">
         <field name="name">wiz.prestashop.export.product.brand.form</field>
         <field name="model">wiz.prestashop.export.product.brand</field>
@@ -14,10 +13,10 @@
                 </group>
                 <footer>
                     <button
-                        name="export_product_brands"
-                        type="object"
-                        string="Export"
-                        class="oe_highlight"
+                            name="export_product_brands"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
                     />
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
@@ -34,5 +33,4 @@
         <field name="target">new</field>
         <field name="view_id" ref="export_product_brand_form" />
     </record>
-
 </odoo>

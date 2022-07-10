@@ -14,26 +14,15 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
         super().setUp()
 
         # create and bind attribute
-        attribute_size = self.env["product.attribute"].create(
-            {
-                "name": "Size",
-            }
-        )
+        attribute_size = self.env["product.attribute"].create({"name": "Size"})
         self.create_binding_no_export(
             "prestashop.product.combination.option", attribute_size.id, 1
         )
 
         # create attribute and value
-        self.attribute = self.env["product.attribute"].create(
-            {
-                "name": "New attribute",
-            }
-        )
+        self.attribute = self.env["product.attribute"].create({"name": "New attribute"})
         self.value = self.env["product.attribute.value"].create(
-            {
-                "attribute_id": attribute_size.id,
-                "name": "New value",
-            }
+            {"attribute_id": attribute_size.id, "name": "New value"}
         )
 
     def _bind_attribute(self):
@@ -50,10 +39,7 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
     def test_export_product_attribute_onbind(self):
         # create attribute binding
         self.env["prestashop.product.combination.option"].create(
-            {
-                "backend_id": self.backend_record.id,
-                "odoo_id": self.attribute.id,
-            }
+            {"backend_id": self.backend_record.id, "odoo_id": self.attribute.id}
         )
         # check export delayed
         self.assertEqual(1, self.instance_delay_record.export_record.call_count)
@@ -64,10 +50,7 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
         self._bind_attribute()
         # create value binding
         self.env["prestashop.product.combination.option.value"].create(
-            {
-                "backend_id": self.backend_record.id,
-                "odoo_id": self.value.id,
-            }
+            {"backend_id": self.backend_record.id, "odoo_id": self.value.id}
         )
         # check export delayed
         self.assertEqual(1, self.instance_delay_record.export_record.call_count)
@@ -133,19 +116,11 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_option = body["prestashop"]["product_options"]
             # check basic fields
-            for field, value in list(
-                {
-                    "group_type": "select",
-                    "position": "4",
-                }.items()
-            ):
+            for field, value in list({"group_type": "select", "position": "4"}.items()):
                 self.assertEqual(value, ps_option[field])
             # check translatable fields
             for field, value in list(
-                {
-                    "name": "New attribute",
-                    "public_name": "New attribute",
-                }.items()
+                {"name": "New attribute", "public_name": "New attribute"}.items()
             ):
                 self.assertEqual(value, ps_option[field]["language"]["value"])
 
@@ -153,10 +128,7 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
     def test_export_product_attribute_value_job(self):
         # create value binding
         binding = self.env["prestashop.product.combination.option.value"].create(
-            {
-                "backend_id": self.backend_record.id,
-                "odoo_id": self.value.id,
-            }
+            {"backend_id": self.backend_record.id, "odoo_id": self.value.id}
         )
         # export value
         with recorder.use_cassette(
@@ -175,16 +147,9 @@ class TestExportProductAttribute(CatalogManagerTransactionCase):
             ps_option = body["prestashop"]["product_option_value"]
             # check basic fields
             for field, value in list(
-                {
-                    "id_attribute_group": "1",
-                    "value": "New value",
-                }.items()
+                {"id_attribute_group": "1", "value": "New value"}.items()
             ):
                 self.assertEqual(value, ps_option[field])
             # check translatable fields
-            for field, value in list(
-                {
-                    "name": "New value",
-                }.items()
-            ):
+            for field, value in list({"name": "New value"}.items()):
                 self.assertEqual(value, ps_option[field]["language"]["value"])

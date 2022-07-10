@@ -36,14 +36,10 @@ class ExportMultipleProducts(models.TransientModel):
         return self.env["prestashop.shop"].search([], limit=1).id
 
     backend_id = fields.Many2one(
-        comodel_name="prestashop.backend",
-        default=_default_backend,
-        string="Backend",
+        comodel_name="prestashop.backend", default=_default_backend, string="Backend",
     )
     shop_id = fields.Many2one(
-        comodel_name="prestashop.shop",
-        default=_default_shop,
-        string="Default Shop",
+        comodel_name="prestashop.shop", default=_default_shop, string="Default Shop",
     )
 
     def _parent_length(self, categ):
@@ -62,11 +58,7 @@ class ExportMultipleProducts(models.TransientModel):
             categ_length = self._parent_length(product.categ_id.parent_id)
             if categ_length < parent_length:
                 if product.categ_id.id not in product.categ_ids.ids:
-                    product.write(
-                        {
-                            "categ_ids": [(4, product.categ_id.id)],
-                        }
-                    )
+                    product.write({"categ_ids": [(4, product.categ_id.id)]})
                     product.write(
                         {
                             "categ_id": max_parent["categ_id"],

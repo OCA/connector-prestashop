@@ -161,12 +161,6 @@ class ProductCombinationExportMapper(Component):
         else:
             return {"price": extra_to_export}
 
-    @changed_by("standard_price")
-    @mapping
-    def cost_price(self, record):
-        wholesale_price = float("{:.2f}".format(record.standard_price))
-        return {"wholesale_price": wholesale_price}
-
     def _get_product_option_value(self, record):
         option_value = []
         option_binder = self.binder_for("prestashop.product.combination.option.value")

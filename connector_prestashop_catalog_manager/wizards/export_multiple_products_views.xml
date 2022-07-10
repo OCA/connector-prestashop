@@ -11,10 +11,10 @@
                 </group>
                 <footer>
                     <button
-                        name="export_products"
-                        type="object"
-                        string="Export"
-                        class="oe_highlight"
+                            name="export_products"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
                     />
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
@@ -31,7 +31,6 @@
         <field name="target">new</field>
         <field name="view_id" ref="export_multiple_products_form" />
     </record>
-
     <record model="ir.ui.view" id="export_variant_stock_form">
         <field name="name">export.variant.stock.form</field>
         <field name="model">export.multiple.products</field>
@@ -39,10 +38,10 @@
             <form string="Export variant stock">
                 <footer>
                     <button
-                        name="export_variant_stock"
-                        type="object"
-                        string="Export"
-                        class="oe_highlight"
+                            name="export_variant_stock"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
                     />
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
@@ -59,5 +58,4 @@
         <field name="target">new</field>
         <field name="view_id" ref="export_variant_stock_form" />
     </record>
-
 </odoo>

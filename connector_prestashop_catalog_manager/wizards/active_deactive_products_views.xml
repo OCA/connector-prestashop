@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="active_product_form">
+        <field name="name">active.product.form</field>
+        <field name="model">active.deactive.products</field>
+        <field name="arch" type="xml">
+            <form string="Export Products">
+                <group>
+                    <div>
+                        <p>Active selected products</p>
+                    </div>
+                </group>
+                <group>
+                    <field name="force_status" />
+                </group>
+                <footer>
+                    <button
+                            name="active_products"
+                            type="object"
+                            string="Active"
+                            class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="act_active_products">
+        <field name="name">Active Products</field>
+        <field name="res_model">active.deactive.products</field>
+        <field name="binding_model_id" ref="product.model_product_template" />
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="active_product_form" />
+    </record>
+    <record model="ir.ui.view" id="deactive_product_form">
+        <field name="name">deactive.product.form</field>
+        <field name="model">active.deactive.products</field>
+        <field name="arch" type="xml">
+            <form string="Export Products">
+                <group>
+                    <div>
+                        <p>Dective selected products</p>
+                    </div>
+                </group>
+                <footer>
+                    <button
+                            name="deactive_products"
+                            type="object"
+                            string="Deactive"
+                            class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="act_deactive_products">
+        <field name="name">Deactive Products</field>
+        <field name="res_model">active.deactive.products</field>
+        <field name="binding_model_id" ref="product.model_product_template" />
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="deactive_product_form" />
+    </record>
+</odoo>

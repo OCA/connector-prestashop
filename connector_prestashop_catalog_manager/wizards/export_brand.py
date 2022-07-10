@@ -15,14 +15,10 @@ class PrestashopExportProductBrand(models.TransientModel):
         return self.env["prestashop.shop"].search([], limit=1).id
 
     backend_id = fields.Many2one(
-        comodel_name="prestashop.backend",
-        default=_default_backend,
-        string="Backend",
+        comodel_name="prestashop.backend", default=_default_backend, string="Backend",
     )
     shop_id = fields.Many2one(
-        comodel_name="prestashop.shop",
-        default=_default_shop,
-        string="Shop",
+        comodel_name="prestashop.shop", default=_default_shop, string="Shop",
     )
 
     def export_product_brands(self):
@@ -38,8 +34,5 @@ class PrestashopExportProductBrand(models.TransientModel):
             )
             if not ps_product_brand:
                 ps_product_brand_obj.create(
-                    {
-                        "backend_id": self.backend_id.id,
-                        "odoo_id": prod_brand.id,
-                    }
+                    {"backend_id": self.backend_id.id, "odoo_id": prod_brand.id}
                 )

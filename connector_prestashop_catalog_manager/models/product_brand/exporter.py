@@ -18,6 +18,7 @@ class ProductBrandExportMapper(Component):
 
     direct = [
         ("name", "name"),
+        ("active", "active"),
     ]
 
     @mapping

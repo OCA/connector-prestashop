@@ -20,10 +20,7 @@ class TestExportProductCategory(CatalogManagerTransactionCase):
 
         # Create a product category to export:
         self.category = self.env["product.category"].create(
-            {
-                "name": "New category",
-                "parent_id": parent.id,
-            }
+            {"name": "New category", "parent_id": parent.id}
         )
 
     def _bind_category(self):

@@ -13,9 +13,7 @@ from odoo.addons.connector_prestashop.models.product_template.common import (
 class PrestashopProductCombination(models.Model):
     _inherit = "prestashop.product.combination"
     minimal_quantity = fields.Integer(
-        string="Minimal Quantity",
-        default=1,
-        help="Minimal Sale quantity",
+        string="Minimal Quantity", default=1, help="Minimal Sale quantity",
     )
 
 

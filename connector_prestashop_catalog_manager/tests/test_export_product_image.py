@@ -17,9 +17,7 @@ class TestExportProductImage(CatalogManagerTransactionCase):
 
         # create and bind template
         template = self.env["product.template"].create(
-            {
-                "name": "Faded Short Sleeves T-shirt",
-            }
+            {"name": "Faded Short Sleeves T-shirt"}
         )
         self.create_binding_no_export(
             "prestashop.product.template",
@@ -61,9 +59,7 @@ class TestExportProductImage(CatalogManagerTransactionCase):
         )
         # check export delayed
         self.instance_delay_record.export_record.assert_called_once_with(
-            fields=[
-                "path",
-            ]
+            fields=["path"]
         )
 
     @assert_no_job_delayed
@@ -132,9 +128,7 @@ class TestExportProductImage(CatalogManagerTransactionCase):
                 "id_product": 1,
             }
             self.env["prestashop.product.image"].export_delete_record(
-                self.backend_record,
-                self.binding.prestashop_id,
-                attributes,
+                self.backend_record, self.binding.prestashop_id, attributes,
             )
 
             # check DELETE requests

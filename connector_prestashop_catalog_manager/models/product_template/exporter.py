@@ -73,7 +73,6 @@ class ProductTemplateExporter(Component):
         res = {
             "backend_id": self.backend_record.id,
             "odoo_id": category.id,
-            "link_rewrite": get_slug(category.name),
             "position": obj_position,
         }
         binding = ps_categ_obj.with_context(connector_no_export=True).create(res)
@@ -97,7 +96,6 @@ class ProductTemplateExporter(Component):
         res = {
             "backend_id": self.backend_record.id,
             "odoo_id": brand.id,
-            "link_rewrite": get_slug(brand.name),
         }
         binding = ps_brand_obj.with_context(connector_no_export=True).create(res)
         binding.export_record()
@@ -178,10 +176,7 @@ class ProductTemplateExporter(Component):
                         self.env["prestashop.product.image"]
                         .with_context(connector_no_export=True)
                         .create(
-                            {
-                                "backend_id": self.backend_record.id,
-                                "odoo_id": image.id,
-                            }
+                            {"backend_id": self.backend_record.id, "odoo_id": image.id}
                         )
                     )
                     image_ext.with_delay(priority=5).export_record()
@@ -211,7 +206,6 @@ class ProductTemplateExportMapper(Component):
         ("show_price", "show_price"),
         ("online_only", "online_only"),
         ("weight", "weight"),
-        ("standard_price", "wholesale_price"),
         (m2o_to_external("default_shop_id"), "id_shop_default"),
         ("always_available", "active"),
         ("barcode", "barcode"),
@@ -285,10 +279,7 @@ class ProductTemplateExportMapper(Component):
         return ext_image_ids
 
     @changed_by(
-        "attribute_line_ids",
-        "categ_ids",
-        "categ_id",
-        "image_ids",
+        "attribute_line_ids", "categ_ids", "categ_id", "image_ids",
     )
     @mapping
     def associations(self, record):

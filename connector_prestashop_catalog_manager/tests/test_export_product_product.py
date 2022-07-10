@@ -16,53 +16,35 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
         super().setUp()
 
         # create and bind color attribute
-        color_attribute = self.env["product.attribute"].create(
-            {
-                "name": "Color",
-            }
-        )
+        color_attribute = self.env["product.attribute"].create({"name": "Color"})
         self.create_binding_no_export(
             "prestashop.product.combination.option", color_attribute.id, 3
         )
 
         # create and bind color value
         color_value = self.env["product.attribute.value"].create(
-            {
-                "attribute_id": color_attribute.id,
-                "name": "Orange",
-            }
+            {"attribute_id": color_attribute.id, "name": "Orange"}
         )
         self.create_binding_no_export(
             "prestashop.product.combination.option.value", color_value.id, 13
         )
 
         # create and bind size attribute
-        size_attribute = self.env["product.attribute"].create(
-            {
-                "name": "Size",
-            }
-        )
+        size_attribute = self.env["product.attribute"].create({"name": "Size"})
         self.create_binding_no_export(
             "prestashop.product.combination.option", size_attribute.id, 1
         )
 
         # create and bind size value
         size_value = self.env["product.attribute.value"].create(
-            {
-                "attribute_id": size_attribute.id,
-                "name": "One size",
-            }
+            {"attribute_id": size_attribute.id, "name": "One size"}
         )
         self.create_binding_no_export(
             "prestashop.product.combination.option.value", size_value.id, 4
         )
 
         # create and bind template
-        template = self.env["product.template"].create(
-            {
-                "name": "Printed Dress",
-            }
-        )
+        template = self.env["product.template"].create({"name": "Printed Dress"})
         self.main_template_id = self.create_binding_no_export(
             "prestashop.product.template",
             template.id,
@@ -110,10 +92,7 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
             "prestashop.product.combination",
             self.product.id,
             None,
-            **{
-                "main_template_id": self.main_template_id.id,
-                "minimal_quantity": 2,
-            }
+            **{"main_template_id": self.main_template_id.id, "minimal_quantity": 2}
         ).with_context(connector_no_export=False)
 
     def test_export_product_product_oncreate(self):
@@ -201,7 +180,6 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
                     "price": "20.0",
                     "reference": "demo_3_OS",
                     "weight": "0.1",
-                    "wholesale_price": "10.0",
                 }.items()
             ):
                 self.assertEqual(value, ps_product[field])
@@ -214,8 +192,7 @@ class TestExportProductProduct(CatalogManagerTransactionCase):
 
             # delete combination in PS
             self.env["prestashop.product.combination"].export_delete_record(
-                self.backend_record,
-                binding.prestashop_id,
+                self.backend_record, binding.prestashop_id,
             )
 
             # check DELETE requests

@@ -62,18 +62,11 @@ class ProductImageExporter(Component):
             api_key=self.backend_record.webservice_key,
         )
         full_public_url = api.get_image_public_url(
-            {
-                "id_image": str(self.prestashop_id),
-                "type": "image/jpeg",
-            }
+            {"id_image": str(self.prestashop_id), "type": "image/jpeg"}
         )
         if self.binding.url != full_public_url:
             self.binding.with_context(connector_no_export=True).write(
-                {
-                    "url": full_public_url,
-                    "file_db_store": False,
-                    "storage": "url",
-                }
+                {"url": full_public_url, "file_db_store": False, "storage": "url"}
             )
 
 
@@ -100,8 +93,7 @@ class ProductImageExportMapper(Component):
             elif storage == "db":
                 if not record.odoo_id.filename:
                     file_name = "{}_{}.jpg".format(
-                        record.odoo_id.owner_model,
-                        record.odoo_id.owner_id,
+                        record.odoo_id.owner_model, record.odoo_id.owner_id,
                     )
                 file_name = os.path.splitext(
                     os.path.basename(record.odoo_id.filename or file_name)

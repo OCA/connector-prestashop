@@ -1,8 +1,37 @@
 # Copyright 2020 PlanetaTIC - Marc Poch <mpoch@planetatic.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+from odoo import fields, models
 
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
+
+
+class ProductBrand(models.Model):
+    _inherit = "product.brand"
+
+    prestashop_bind_ids = fields.One2many(
+        comodel_name="prestashop.product.brand",
+        inverse_name="odoo_id",
+        copy=False,
+        string="PrestaShop Product Brand Bindings",
+    )
+
+
+class PrestashopProductBrand(models.Model):
+    _name = "prestashop.product.brand"
+    _inherit = "prestashop.binding.odoo"
+    _inherits = {"product.brand": "odoo_id"}
+    _description = "Prestashop Product Brand"
+
+    odoo_id = fields.Many2one(
+        comodel_name="product.brand", string="Brand", required=True, ondelete="cascade",
+    )
+
+
+class PrestashopProductBrandModelBinder(Component):
+    _name = "prestashop.product.brand.binder"
+    _inherit = "prestashop.binder"
+    _apply_on = "prestashop.product.brand"
 
 
 class PrestashopProductBrandListener(Component):

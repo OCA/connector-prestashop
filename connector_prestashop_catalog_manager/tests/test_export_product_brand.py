@@ -18,11 +18,7 @@ class TestExportProductBrand(CatalogManagerTransactionCase):
         self.create_binding_no_export("prestashop.product.brand", parent.id, 2)
 
         # Create a product brand to export:
-        self.brand = self.env["product.brand"].create(
-            {
-                "name": "New brand",
-            }
-        )
+        self.brand = self.env["product.brand"].create({"name": "New brand"})
 
     def _bind_brand(self):
         return self.create_binding_no_export(
@@ -65,10 +61,7 @@ class TestExportProductBrand(CatalogManagerTransactionCase):
     def test_export_product_brand_job(self):
         # create binding
         binding = self.env["prestashop.product.brand"].create(
-            {
-                "backend_id": self.backend_record.id,
-                "odoo_id": self.brand.id,
-            }
+            {"backend_id": self.backend_record.id, "odoo_id": self.brand.id}
         )
         # export brand
         with recorder.use_cassette(
@@ -85,9 +78,5 @@ class TestExportProductBrand(CatalogManagerTransactionCase):
             body = self.xmltodict(request.body)
             ps_brand = body["prestashop"]["manufacturers"]
             # check name
-            for field, value in list(
-                {
-                    "name": "New brand",
-                }.items()
-            ):
+            for field, value in list({"name": "New brand"}.items()):
                 self.assertEqual(value, ps_brand[field])

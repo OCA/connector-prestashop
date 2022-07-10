@@ -15,47 +15,30 @@ class TestExportProduct(CatalogManagerTransactionCase):
         super().setUp()
 
         # create and bind category
-        category_home = self.env["product.category"].create(
-            {
-                "name": "Home",
-            }
-        )
+        category_home = self.env["product.category"].create({"name": "Home"})
         self.create_binding_no_export(
             "prestashop.product.category", category_home.id, 2
         )
         category_women = self.env["product.category"].create(
-            {
-                "name": "Women",
-                "parent_id": category_home.id,
-            }
+            {"name": "Women", "parent_id": category_home.id}
         )
         self.create_binding_no_export(
             "prestashop.product.category", category_women.id, 3
         )
         category_tops = self.env["product.category"].create(
-            {
-                "name": "Tops",
-                "parent_id": category_women.id,
-            }
+            {"name": "Tops", "parent_id": category_women.id}
         )
         self.create_binding_no_export(
             "prestashop.product.category", category_tops.id, 4
         )
         category_tshirts = self.env["product.category"].create(
-            {
-                "name": "T-shirts",
-                "parent_id": category_tops.id,
-            }
+            {"name": "T-shirts", "parent_id": category_tops.id}
         )
         self.create_binding_no_export(
             "prestashop.product.category", category_tshirts.id, 5
         )
 
-        acme_brand = self.env["product.brand"].create(
-            {
-                "name": "ACME",
-            }
-        )
+        acme_brand = self.env["product.brand"].create({"name": "ACME"})
         self.create_binding_no_export("prestashop.product.brand", acme_brand.id, 1)
 
         # create template
@@ -89,10 +72,7 @@ class TestExportProduct(CatalogManagerTransactionCase):
             "prestashop.product.template",
             self.template.id,
             8,
-            **{
-                "default_shop_id": self.shop.id,
-                "link_rewrite": "new-product",
-            }
+            **{"default_shop_id": self.shop.id, "link_rewrite": "new-product"}
         ).with_context(connector_no_export=False)
 
     @assert_no_job_delayed
@@ -243,7 +223,6 @@ class TestExportProduct(CatalogManagerTransactionCase):
                     "reference": "NEW_PRODUCT",
                     "show_price": "1",
                     "weight": "0.1",
-                    "wholesale_price": "10.0",
                     "id_manufacturer": "1",
                 }.items()
             ):

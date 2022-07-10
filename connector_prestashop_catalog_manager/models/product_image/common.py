@@ -49,3 +49,11 @@ class PrestashopProductImageListener(Component):
                     ].with_delay().export_delete_record(
                         binding.backend_id, prestashop_id, attributes
                     )
+
+
+class BrandAdapter(Component):
+    _inherit = "prestashop.product.brand.adapter"
+
+    def write(self, id_, attributes=None):
+        res = super().write(id_, attributes)
+        return res

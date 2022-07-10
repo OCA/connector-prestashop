@@ -16,14 +16,10 @@ class PrestashopExportCategory(models.TransientModel):
         return self.env["prestashop.shop"].search([], limit=1).id
 
     backend_id = fields.Many2one(
-        comodel_name="prestashop.backend",
-        default=_default_backend,
-        string="Backend",
+        comodel_name="prestashop.backend", default=_default_backend, string="Backend",
     )
     shop_id = fields.Many2one(
-        comodel_name="prestashop.shop",
-        default=_default_shop,
-        string="Shop",
+        comodel_name="prestashop.shop", default=_default_shop, string="Shop",
     )
 
     def export_categories(self):

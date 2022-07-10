@@ -68,8 +68,7 @@ class CategImageAdapter(Component):
         image_binary = attributes["image"]
         img_filename = attributes["name"]
         image_url = "images/{}/{}".format(
-            self._prestashop_image_model,
-            str(attributes["categ_id"]),
+            self._prestashop_image_model, str(attributes["categ_id"]),
         )
         return api.add(image_url, files=[("image", img_filename, image_binary)])
 
@@ -81,8 +80,7 @@ class CategImageAdapter(Component):
         delete_url = "images/%s" % (self._prestashop_image_model)
         api.delete(delete_url, str(attributes["categ_id"]))
         image_url = "images/{}/{}".format(
-            self._prestashop_image_model,
-            str(attributes["categ_id"]),
+            self._prestashop_image_model, str(attributes["categ_id"]),
         )
         return api.add(image_url, files=[("image", img_filename, image_binary)])
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="export_category_form" model="ir.ui.view">
         <field name="name">wiz.prestashop.export.category.form</field>
         <field name="model">wiz.prestashop.export.category</field>
@@ -12,10 +11,10 @@
                 </group>
                 <group>
                     <button
-                        name="export_categories"
-                        type="object"
-                        string="Export"
-                        class="oe_highlight"
+                            name="export_categories"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
                     />
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
@@ -23,13 +22,13 @@
             </form>
         </field>
     </record>
-
     <record model="ir.actions.act_window" id="act_export_prestashop_category">
         <field name="name">Export To PrestaShop</field>
         <field name="res_model">wiz.prestashop.export.category</field>
+        <field name="binding_model_id" ref="product.model_product_category" />
+        <field name="binding_view_types">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="view_id" ref="export_category_form" />
     </record>
-
 </odoo>
