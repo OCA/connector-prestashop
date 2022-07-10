@@ -364,9 +364,7 @@ class SaleOrderImporter(Component):
     def _import_dependencies(self):
         record = self.prestashop_record
         self._import_dependency(
-            record["id_customer"],
-            "prestashop.res.partner",
-            address_type="contact",
+            record["id_customer"], "prestashop.res.partner", address_type="contact",
         )
         if record["id_address_invoice"] != record["id_address_delivery"]:
             self._import_dependency(
@@ -514,8 +512,7 @@ class SaleOrderLineMapper(Component):
         if int(record.get("product_attribute_id", 0)):
             combination_binder = self.binder_for("prestashop.product.combination")
             product = combination_binder.to_internal(
-                record["product_attribute_id"],
-                unwrap=True,
+                record["product_attribute_id"], unwrap=True,
             )
         else:
             binder = self.binder_for("prestashop.product.template")

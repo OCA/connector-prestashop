@@ -25,10 +25,7 @@ class PrestashopSupplier(models.Model):
     _description = "Supplier prestashop bindings"
 
     odoo_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Partner",
-        required=True,
-        ondelete="cascade",
+        comodel_name="res.partner", string="Partner", required=True, ondelete="cascade",
     )
 
     def import_suppliers(self, backend, since_date, **kwargs):

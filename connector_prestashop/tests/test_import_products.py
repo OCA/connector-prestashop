@@ -69,8 +69,7 @@ class TestImportProduct(PrestashopTransactionCase):
         with recorder.use_cassette("test_import_product_batch") as cassette:
 
             self.env["prestashop.product.template"].import_products(
-                self.backend_record,
-                from_date,
+                self.backend_record, from_date,
             )
             expected_query = {
                 "date": ["1"],
@@ -124,9 +123,7 @@ class TestImportProduct(PrestashopTransactionCase):
         for idx in range(1, 6):
             cat = self.env["product.category"].create({"name": "ps_categ_%d" % idx})
             self.create_binding_no_export(
-                "prestashop.product.category",
-                cat.id,
-                idx,
+                "prestashop.product.category", cat.id, idx,
             )
             categs |= cat
         color_attr = self.env["product.attribute"].search([("name", "=", "Color")])

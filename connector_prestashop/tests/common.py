@@ -85,12 +85,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
         self.backend_record = self.env.ref(
             "connector_prestashop.prestashop_backend_demo"
         )
-        self.backend_record.write(
-            {
-                "location": prestashop_url,
-                "webservice_key": token,
-            }
-        )
+        self.backend_record.write({"location": prestashop_url, "webservice_key": token})
         self.configure()
 
     def configure(self):
@@ -334,12 +329,7 @@ class PrestashopTransactionCase(SavepointComponentCase):
         variant_ps_id=None,
         link_rewrite="link-rewrite",
     ):
-        product = self.env["product.product"].create(
-            {
-                "name": name,
-                "type": "product",
-            }
-        )
+        product = self.env["product.product"].create({"name": name, "type": "product"})
         template = product.product_tmpl_id
         template_binding = self.create_binding_no_export(
             "prestashop.product.template",
@@ -376,6 +366,5 @@ class ExportStockQuantityCase(PrestashopTransactionCase):
         }
         qty_change = self.env["stock.change.product.qty"].create(vals)
         qty_change.with_context(
-            active_id=product.id,
-            connector_no_export=True,
+            active_id=product.id, connector_no_export=True,
         ).change_product_qty()

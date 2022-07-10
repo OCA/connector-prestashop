@@ -42,8 +42,7 @@ class TestImportSale(PrestashopTransactionCase):
             self.backend_record.import_sale_orders()
             delay_record_instance = delay_record_mock.return_value
             delay_record_instance.import_orders_since.assert_called_with(
-                self.backend_record,
-                from_date,
+                self.backend_record, from_date,
             )
 
     @freeze_time("2019-01-30 00:00:00")
@@ -59,8 +58,7 @@ class TestImportSale(PrestashopTransactionCase):
         ) as delay_record_mock:
 
             self.env["prestashop.sale.order"].import_orders_since(
-                self.backend_record,
-                from_date,
+                self.backend_record, from_date,
             )
 
             expected_query = {
@@ -111,15 +109,10 @@ class TestImportSale(PrestashopTransactionCase):
         ship_product = self.env.ref("connector_ecommerce.product_product_shipping")
 
         carrier = self.env["delivery.carrier"].create(
-            {
-                "name": "My carrier",
-                "product_id": ship_product.id,
-            }
+            {"name": "My carrier", "product_id": ship_product.id}
         )
         self.create_binding_no_export(
-            "prestashop.delivery.carrier",
-            carrier.id,
-            prestashop_id=2,
+            "prestashop.delivery.carrier", carrier.id, prestashop_id=2,
         )
 
         variant_tshirt_orange_s_binding = self._create_product_binding(
@@ -130,10 +123,7 @@ class TestImportSale(PrestashopTransactionCase):
         )
         variant_tshirt_orange_s = variant_tshirt_orange_s_binding.odoo_id
         variant_blouse_black_s_binding = self._create_product_binding(
-            name="Blouse",
-            template_ps_id=2,
-            variant_ps_id=7,
-            link_rewrite="blouse",
+            name="Blouse", template_ps_id=2, variant_ps_id=7, link_rewrite="blouse",
         )
         variant_blouse_black_s = variant_blouse_black_s_binding.odoo_id
         variant_dress_orange_s_binding = self._create_product_binding(
@@ -144,11 +134,7 @@ class TestImportSale(PrestashopTransactionCase):
         )
         variant_dress_orange_s = variant_dress_orange_s_binding.odoo_id
 
-        partner = self.env["res.partner"].create(
-            {
-                "name": "John DOE",
-            }
-        )
+        partner = self.env["res.partner"].create({"name": "John DOE"})
         partner_binding = self.create_binding_no_export(
             "prestashop.res.partner",
             partner.id,
@@ -156,10 +142,7 @@ class TestImportSale(PrestashopTransactionCase):
             shop_group_id=self.shop_group.id,
         )
         address = self.env["res.partner"].create(
-            {
-                "name": "John DOE",
-                "parent_id": partner.id,
-            }
+            {"name": "John DOE", "parent_id": partner.id}
         )
         self.create_binding_no_export(
             "prestashop.address",

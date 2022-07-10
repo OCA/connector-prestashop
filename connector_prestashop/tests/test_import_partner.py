@@ -45,8 +45,7 @@ class TestImportPartner(PrestashopTransactionCase):
             self.backend_record.import_customers_since()
             delay_record_instance = delay_record_mock.return_value
             delay_record_instance.import_customers_since.assert_called_with(
-                backend_record=self.backend_record,
-                since_date=from_date,
+                backend_record=self.backend_record, since_date=from_date,
             )
 
     @freeze_time("2016-09-13 00:00:00")
@@ -62,8 +61,7 @@ class TestImportPartner(PrestashopTransactionCase):
         ) as delay_record_mock:
 
             self.env["prestashop.res.partner"].import_customers_since(
-                self.backend_record,
-                since_date=from_date,
+                self.backend_record, since_date=from_date,
             )
             expected_query = {
                 "date": ["1"],
@@ -98,11 +96,7 @@ class TestImportPartner(PrestashopTransactionCase):
         category_bindings = category_model.search(domain)
         category_bindings.ensure_one()
 
-        expected = [
-            ExpectedCategory(
-                name="Customer A",
-            )
-        ]
+        expected = [ExpectedCategory(name="Customer A",)]
 
         self.assert_records(expected, category_bindings)
 
@@ -122,8 +116,7 @@ class TestImportPartner(PrestashopTransactionCase):
             self.env["prestashop.res.partner"].import_record(self.backend_record, 1)
             delay_record_instance = delay_record_mock.return_value
             delay_record_instance.import_batch.assert_called_with(
-                backend=self.backend_record,
-                filters={"filter[id_customer]": "1"},
+                backend=self.backend_record, filters={"filter[id_customer]": "1"},
             )
 
         domain = [("prestashop_id", "=", 1)]

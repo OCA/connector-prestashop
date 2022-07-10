@@ -28,14 +28,8 @@ class PrestashopResPartnerCategory(models.Model):
         required=True,
         ondelete="cascade",
     )
-    date_add = fields.Datetime(
-        string="Created At (on PrestaShop)",
-        readonly=True,
-    )
-    date_upd = fields.Datetime(
-        string="Updated At (on PrestaShop)",
-        readonly=True,
-    )
+    date_add = fields.Datetime(string="Created At (on PrestaShop)", readonly=True,)
+    date_upd = fields.Datetime(string="Updated At (on PrestaShop)", readonly=True,)
 
     # TODO add prestashop shop when the field will be available in the api.
     # we have reported the bug for it

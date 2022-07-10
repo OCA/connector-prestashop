@@ -98,10 +98,7 @@ class SupplierInfoMapper(Component):
     def product_id(self, record):
         if record["id_product_attribute"] != "0":
             binder = self.binder_for("prestashop.product.combination")
-            product = binder.to_internal(
-                record["id_product_attribute"],
-                unwrap=True,
-            )
+            product = binder.to_internal(record["id_product_attribute"], unwrap=True,)
             return {"product_id": product.id}
         return {}
 

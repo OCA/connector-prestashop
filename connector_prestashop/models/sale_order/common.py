@@ -47,19 +47,13 @@ class PrestashopSaleOrder(models.Model):
     prestashop_invoice_number = fields.Char("PrestaShop Invoice Number")
     prestashop_delivery_number = fields.Char("PrestaShop Delivery Number")
     total_amount = fields.Float(
-        string="Total amount in PrestaShop",
-        digits="Account",
-        readonly=True,
+        string="Total amount in PrestaShop", digits="Account", readonly=True,
     )
     total_amount_tax = fields.Float(
-        string="Total tax in PrestaShop",
-        digits="Account",
-        readonly=True,
+        string="Total tax in PrestaShop", digits="Account", readonly=True,
     )
     total_shipping_tax_included = fields.Float(
-        string="Total shipping with tax in PrestaShop",
-        digits="Account",
-        readonly=True,
+        string="Total shipping with tax in PrestaShop", digits="Account", readonly=True,
     )
     total_shipping_tax_excluded = fields.Float(
         string="Total shipping without tax in PrestaShop",

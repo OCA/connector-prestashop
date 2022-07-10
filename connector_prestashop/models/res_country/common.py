@@ -13,10 +13,7 @@ class PrestashopResCountry(models.Model):
     _description = "Country prestashop bindings"
 
     odoo_id = fields.Many2one(
-        comodel_name="res.country",
-        required=True,
-        ondelete="cascade",
-        string="Country",
+        comodel_name="res.country", required=True, ondelete="cascade", string="Country",
     )
 
 

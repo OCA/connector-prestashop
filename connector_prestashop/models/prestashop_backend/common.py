@@ -56,9 +56,7 @@ class PrestashopBackend(models.Model):
 
     name = fields.Char(string="Name", required=True)
     version = fields.Selection(
-        selection="select_versions",
-        string="Version",
-        required=True,
+        selection="select_versions", string="Version", required=True,
     )
     location = fields.Char("Location")
     webservice_key = fields.Char(
@@ -91,8 +89,7 @@ class PrestashopBackend(models.Model):
     )
 
     refund_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Refund Journal",
+        comodel_name="account.journal", string="Refund Journal",
     )
 
     taxes_included = fields.Boolean("Use tax included prices")
@@ -406,10 +403,7 @@ class PrestashopBackend(models.Model):
         # 'prestashop_synchronized', consider we want all of them in the tree
         if not locations:
             locations = self.env["stock.location"].search(
-                [
-                    ("id", "child_of", root_location.id),
-                    ("usage", "=", "internal"),
-                ]
+                [("id", "child_of", root_location.id), ("usage", "=", "internal")]
             )
         if not locations:
             # we must not pass an empty location or we would have the

@@ -26,14 +26,6 @@ class RefundImporter(Component):
             + float(self.prestashop_record["shipping_cost_amount"])
         ):
             invoice.action_post()
-        # TODO else add activity to warn about differnt amount
-
-    #        else:
-    #            message=_(
-    #                "The refund for order %s has a different amount "
-    #                "in PrestaShop and in Odoo."
-    #            )
-    #            % invoice.origin,
 
     def _after_import(self, binding):
         super()._after_import(binding)
@@ -150,10 +142,7 @@ class RefundMapper(Component):
         if not sale_order.carrier_id:
             return None
         sale_order_lines = self.env["sale.order.line"].search(
-            [
-                ("order_id", "=", sale_order.id),
-                ("is_delivery", "=", True),
-            ]
+            [("order_id", "=", sale_order.id), ("is_delivery", "=", True)]
         )
         if not sale_order_lines:
             return None

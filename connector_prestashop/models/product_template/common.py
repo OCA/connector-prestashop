@@ -34,8 +34,7 @@ class ProductTemplate(models.Model):
 
     # TODO remove when https://github.com/odoo/odoo/pull/30024 is merged
     @api.depends(
-        "product_variant_ids",
-        "product_variant_ids.stock_quant_ids",
+        "product_variant_ids", "product_variant_ids.stock_quant_ids",
     )
     def _compute_quantities(self):
         return super()._compute_quantities()
@@ -115,10 +114,7 @@ class PrestashopProductTemplate(models.Model):
         translate=True,
         help="HTML description from PrestaShop",
     )
-    description_short_html = fields.Html(
-        string="Short Description",
-        translate=True,
-    )
+    description_short_html = fields.Html(string="Short Description", translate=True,)
     date_add = fields.Datetime(string="Created at (in PrestaShop)", readonly=True)
     date_upd = fields.Datetime(string="Updated at (in PrestaShop)", readonly=True)
     default_shop_id = fields.Many2one(
@@ -126,8 +122,7 @@ class PrestashopProductTemplate(models.Model):
     )
     link_rewrite = fields.Char(string="Friendly URL", required=True, translate=True)
     available_for_order = fields.Boolean(
-        string="Available for Order Taking",
-        default=True,
+        string="Available for Order Taking", default=True,
     )
     show_price = fields.Boolean(string="Display Price", default=True)
     combinations_ids = fields.One2many(
@@ -137,10 +132,7 @@ class PrestashopProductTemplate(models.Model):
     )
     reference = fields.Char(string="Original reference")
     on_sale = fields.Boolean(string="Show on sale icon")
-    wholesale_price = fields.Float(
-        string="Cost Price",
-        digits="Product Price",
-    )
+    wholesale_price = fields.Float(string="Cost Price", digits="Product Price",)
     out_of_stock = fields.Selection(
         [("0", "Refuse order"), ("1", "Accept order"), ("2", "Default prestashop")],
         string="If stock shortage",
@@ -211,15 +203,11 @@ class ProductInventoryAdapter(Component):
 
     def export_quantity(self, filters, quantity):
         self.export_quantity_url(
-            filters,
-            quantity,
+            filters, quantity,
         )
 
         shops = self.env["prestashop.shop"].search(
-            [
-                ("backend_id", "=", self.backend_record.id),
-                ("default_url", "!=", False),
-            ]
+            [("backend_id", "=", self.backend_record.id), ("default_url", "!=", False)]
         )
         for shop in shops:
             url = "%s/api" % shop.default_url
@@ -281,6 +269,5 @@ class PrestashopProductQuantityListener(Component):
         inventory_fields = list(set(fields).intersection(self._get_inventory_fields()))
         if inventory_fields:
             record.with_delay(
-                priority=20,
-                identity_key=identity_exact,
+                priority=20, identity_key=identity_exact,
             ).export_inventory(fields=inventory_fields)

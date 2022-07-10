@@ -27,15 +27,9 @@ class PrestashopDeliveryCarrier(models.Model):
         "ID' (only the last copied carrier will be synchronized with the "
         "ERP)",
     )
-    name_ext = fields.Char(
-        string="Name in PrestaShop",
-    )
-    active_ext = fields.Boolean(
-        string="Active in PrestaShop",
-    )
-    export_tracking = fields.Boolean(
-        string="Export tracking numbers to PrestaShop",
-    )
+    name_ext = fields.Char(string="Name in PrestaShop",)
+    active_ext = fields.Boolean(string="Active in PrestaShop",)
+    export_tracking = fields.Boolean(string="Export tracking numbers to PrestaShop",)
 
     _sql_constraints = [
         (

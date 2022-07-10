@@ -31,14 +31,8 @@ class PrestashopPartnerMixin(models.AbstractModel):
         column2="category_id",
         string="PrestaShop Groups",
     )
-    date_add = fields.Datetime(
-        string="Created At (on PrestaShop)",
-        readonly=True,
-    )
-    date_upd = fields.Datetime(
-        string="Updated At (on PrestaShop)",
-        readonly=True,
-    )
+    date_add = fields.Datetime(string="Created At (on PrestaShop)", readonly=True,)
+    date_upd = fields.Datetime(string="Updated At (on PrestaShop)", readonly=True,)
     default_category_id = fields.Many2one(
         comodel_name="prestashop.res.partner.category",
         string="PrestaShop default category",
@@ -59,10 +53,7 @@ class PrestashopResPartner(models.Model):
     _description = "Partner prestashop bindings"
 
     odoo_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Partner",
-        required=True,
-        ondelete="cascade",
+        comodel_name="res.partner", string="Partner", required=True, ondelete="cascade",
     )
     backend_id = fields.Many2one(
         related="shop_group_id.backend_id",
@@ -77,10 +68,7 @@ class PrestashopResPartner(models.Model):
         required=True,
         ondelete="restrict",
     )
-    shop_id = fields.Many2one(
-        comodel_name="prestashop.shop",
-        string="PrestaShop Shop",
-    )
+    shop_id = fields.Many2one(comodel_name="prestashop.shop", string="PrestaShop Shop",)
     newsletter = fields.Boolean(string="Newsletter")
     birthday = fields.Date(string="Birthday")
 
@@ -104,14 +92,8 @@ class PrestashopAddressMixin(models.AbstractModel):
     _name = "prestashop.address.mixin"
     _description = "Mixin for prestashop adress bindings"
 
-    date_add = fields.Datetime(
-        string="Created At (on PrestaShop)",
-        readonly=True,
-    )
-    date_upd = fields.Datetime(
-        string="Updated At (on PrestaShop)",
-        readonly=True,
-    )
+    date_add = fields.Datetime(string="Created At (on PrestaShop)", readonly=True,)
+    date_upd = fields.Datetime(string="Updated At (on PrestaShop)", readonly=True,)
     company = fields.Char(string="Address Company")
 
 
@@ -139,10 +121,7 @@ class PrestashopAddress(models.Model):
         readonly=True,
     )
     odoo_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Partner",
-        required=True,
-        ondelete="cascade",
+        comodel_name="res.partner", string="Partner", required=True, ondelete="cascade",
     )
     shop_group_id = fields.Many2one(
         comodel_name="prestashop.shop.group",

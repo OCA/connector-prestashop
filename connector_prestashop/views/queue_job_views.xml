@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <record id="view_queue_job_tree" model="ir.ui.view">
         <field name="name">queue.job.tree</field>
         <field name="inherit_id" ref="queue_job.view_queue_job_tree" />
@@ -11,5 +10,4 @@
             </field>
         </field>
     </record>
-
 </odoo>

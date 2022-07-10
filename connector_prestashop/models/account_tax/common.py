@@ -15,10 +15,7 @@ class PrestashopAccountTax(models.Model):
     _description = "Acccount Tax Prestashop Bindings"
 
     odoo_id = fields.Many2one(
-        comodel_name="account.tax",
-        string="Tax",
-        required=True,
-        ondelete="cascade",
+        comodel_name="account.tax", string="Tax", required=True, ondelete="cascade",
     )
 
 

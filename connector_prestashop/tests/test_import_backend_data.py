@@ -33,9 +33,7 @@ class TestImportBackendData(PrestashopTransactionCase):
         self.assertEqual(len(shop_groups), 1)
         expected = [
             ExpectedShopGroup(
-                name="Default",
-                prestashop_id=1,
-                backend_id=self.backend_record,
+                name="Default", prestashop_id=1, backend_id=self.backend_record,
             ),
         ]
         self.assert_records(expected, shop_groups)

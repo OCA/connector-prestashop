@@ -23,9 +23,7 @@ class TestExportPicking(PrestashopTransactionCase):
         customer_loc = self.ref("stock.stock_location_customers")
 
         self.customer_partner = self.env["res.partner"].create(
-            {
-                "name": "Unittest customer partner",
-            }
+            {"name": "Unittest customer partner"}
         )
 
         self.shop = self.env["prestashop.shop"].search([])
@@ -68,11 +66,7 @@ class TestExportPicking(PrestashopTransactionCase):
         )
 
         procurement_group = self.env["procurement.group"].create(
-            {
-                "name": "Test",
-                "move_type": "direct",
-                "sale_id": self.sale.id,
-            }
+            {"name": "Test", "move_type": "direct", "sale_id": self.sale.id}
         )
 
         self.picking = self.env["stock.picking"].create(
@@ -114,9 +108,7 @@ class TestExportPicking(PrestashopTransactionCase):
     def test_event_tracking_number__prestashop_sale(self):
         """Test that tracking number is exported"""
         self.create_binding_no_export(
-            "prestashop.sale.order",
-            self.sale.id,
-            prestashop_id=2,
+            "prestashop.sale.order", self.sale.id, prestashop_id=2,
         )
         self.picking.carrier_tracking_ref = "xyz"
 
@@ -127,9 +119,7 @@ class TestExportPicking(PrestashopTransactionCase):
     @assert_no_job_delayed
     def test_export_tracking_number(self):
         sale_binding = self.create_binding_no_export(
-            "prestashop.sale.order",
-            self.sale.id,
-            prestashop_id=2,
+            "prestashop.sale.order", self.sale.id, prestashop_id=2,
         )
         self.picking.carrier_tracking_ref = "xyz"
         cassette_name = "test_export_tracking_number"

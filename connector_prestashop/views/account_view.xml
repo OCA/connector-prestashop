@@ -2,7 +2,6 @@
 <!-- © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
 <odoo>
-
     <record id="account_tax_group_connector_prestashop_tree_view" model="ir.ui.view">
         <field name="model">prestashop.account.tax.group</field>
         <field name="arch" type="xml">
@@ -12,7 +11,6 @@
             </tree>
         </field>
     </record>
-
     <record id="view_tax_group_tree" model="ir.ui.view">
         <field name="name">account.tax.group</field>
         <field name="model">account.tax.group</field>
@@ -23,7 +21,6 @@
             </tree>
         </field>
     </record>
-
     <record id="prestashop_binding_tax_group_form_view" model="ir.ui.view">
         <field name="model">account.tax.group</field>
         <field name="arch" type="xml">
@@ -36,17 +33,14 @@
             </form>
         </field>
     </record>
-
     <record id="action_tax_group_form" model="ir.actions.act_window">
         <field name="name">Tax Groups</field>
         <field name="res_model">account.tax.group</field>
         <field name="view_mode">tree,form</field>
     </record>
-
     <menuitem
         action="action_tax_group_form"
         id="menu_action_tax_group_form"
         parent="account.account_account_menu"
     />
-
 </odoo>

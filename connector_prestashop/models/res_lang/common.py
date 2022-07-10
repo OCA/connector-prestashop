@@ -12,15 +12,9 @@ class PrestashopResLang(models.Model):
     _description = "Shop lang prestashop bindings"
 
     odoo_id = fields.Many2one(
-        comodel_name="res.lang",
-        required=True,
-        ondelete="cascade",
-        string="Language",
+        comodel_name="res.lang", required=True, ondelete="cascade", string="Language",
     )
-    active = fields.Boolean(
-        string="Active in PrestaShop",
-        default=False,
-    )
+    active = fields.Boolean(string="Active in PrestaShop", default=False,)
 
 
 class ResLang(models.Model):

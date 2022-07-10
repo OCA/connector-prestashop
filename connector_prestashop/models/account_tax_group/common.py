@@ -15,14 +15,10 @@ class AccountTaxGroup(models.Model):
         readonly=True,
     )
     company_id = fields.Many2one(
-        comodel_name="res.company",
-        index=True,
-        string="Company",
+        comodel_name="res.company", index=True, string="Company",
     )
     tax_ids = fields.One2many(
-        comodel_name="account.tax",
-        inverse_name="tax_group_id",
-        string="Taxes",
+        comodel_name="account.tax", inverse_name="tax_group_id", string="Taxes",
     )
 
 

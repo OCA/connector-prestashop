@@ -36,9 +36,7 @@ class TestImportCarrier(PrestashopTransactionCase):
             delay_record_path
         ) as delay_record_mock:
 
-            self.env["prestashop.delivery.carrier"].import_batch(
-                self.backend_record,
-            )
+            self.env["prestashop.delivery.carrier"].import_batch(self.backend_record,)
             expected_query = {
                 "filter[deleted]": ["0"],
             }
@@ -68,8 +66,7 @@ class TestImportCarrier(PrestashopTransactionCase):
 
         expected = [
             ExpectedCarrier(
-                name="My carrier",
-                company_id=self.backend_record.company_id,
+                name="My carrier", company_id=self.backend_record.company_id,
             )
         ]
 

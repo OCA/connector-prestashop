@@ -26,9 +26,7 @@ class SaleOrderStateImporter(Component):
     _apply_on = "prestashop.sale.order.state"
 
     _translatable_fields = {
-        "prestashop.sale.order.state": [
-            "name",
-        ],
+        "prestashop.sale.order.state": ["name"],
     }
 
 

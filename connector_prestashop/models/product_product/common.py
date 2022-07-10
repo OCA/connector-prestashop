@@ -149,11 +149,7 @@ class PrestashopProductCombination(models.Model):
 
     @api.model
     def export_product_quantities(self, backend):
-        self.search(
-            [
-                ("backend_id", "=", backend.id),
-            ]
-        ).recompute_prestashop_qty()
+        self.search([("backend_id", "=", backend.id)]).recompute_prestashop_qty()
 
     def set_product_image_variant(self, backend, combination_ids, **kwargs):
         with backend.work_on(self._name) as work:
@@ -214,10 +210,7 @@ class PrestashopProductCombinationOptionValue(models.Model):
         required=True,
         ondelete="cascade",
     )
-    prestashop_position = fields.Integer(
-        string="PrestaShop Position",
-        default=1,
-    )
+    prestashop_position = fields.Integer(string="PrestaShop Position", default=1,)
     id_attribute_group = fields.Many2one(
         comodel_name="prestashop.product.combination.option"
     )

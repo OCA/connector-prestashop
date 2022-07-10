@@ -404,10 +404,7 @@ class ProductCombinationOptionMapper(Component):
     @mapping
     def odoo_id(self, record):
         name = self.name(record).get("name")
-        binding = self.env["product.attribute"].search(
-            [("name", "=", name)],
-            limit=1,
-        )
+        binding = self.env["product.attribute"].search([("name", "=", name)], limit=1,)
         if binding:
             return {"odoo_id": binding.id}
 

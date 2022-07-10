@@ -144,8 +144,7 @@ class TemplateMapper(Component):
             combinations = [combinations]
         for prod in combinations:
             backend_adapter = self.component(
-                usage="backend.adapter",
-                model_name="prestashop.product.combination",
+                usage="backend.adapter", model_name="prestashop.product.combination",
             )
             variant = backend_adapter.read(int(prod["id"]))
             code = variant.get(self.backend_record.matching_product_ch)
@@ -304,10 +303,7 @@ class TemplateMapper(Component):
         product_categories = self.env["product.category"].browse()
         binder = self.binder_for("prestashop.product.category")
         for ps_category in categories:
-            product_categories |= binder.to_internal(
-                ps_category["id"],
-                unwrap=True,
-            )
+            product_categories |= binder.to_internal(ps_category["id"], unwrap=True,)
         return {"categ_ids": [(6, 0, product_categories.ids)]}
 
     @mapping
@@ -315,10 +311,7 @@ class TemplateMapper(Component):
         if not int(record["id_category_default"]):
             return
         binder = self.binder_for("prestashop.product.category")
-        category = binder.to_internal(
-            record["id_category_default"],
-            unwrap=True,
-        )
+        category = binder.to_internal(record["id_category_default"], unwrap=True,)
         if category:
             return {"prestashop_default_category_id": category.id}
 
@@ -350,10 +343,7 @@ class TemplateMapper(Component):
         # if record['id_tax_rules_group'] == '0':
         #     return {}
         binder = self.binder_for("prestashop.account.tax.group")
-        tax_group = binder.to_internal(
-            record["id_tax_rules_group"],
-            unwrap=True,
-        )
+        tax_group = binder.to_internal(record["id_tax_rules_group"], unwrap=True,)
         tax_ids = tax_group.tax_ids
         if tax_group:
             ERROR = "Tax group `{}` should have one and only one tax, currently have {}"
@@ -531,8 +521,7 @@ class ProductInventoryImporter(Component):
             }
             template_qty = self.env["stock.change.product.qty"].create(vals)
             template_qty.with_context(
-                active_id=product.id,
-                connector_no_export=True,
+                active_id=product.id, connector_no_export=True,
             ).change_product_qty()
 
 
@@ -653,8 +642,7 @@ class ProductTemplateImporter(Component):
 
     def _delay_product_image_variant(self, combinations, **kwargs):
         delayable = self.env["prestashop.product.combination"].with_delay(
-            priority=15,
-            identity_key=identity_exact,
+            priority=15, identity_key=identity_exact,
         )
         delayable.set_product_image_variant(self.backend_record, combinations, **kwargs)
 
@@ -693,8 +681,7 @@ class ProductTemplateImporter(Component):
         for image in images:
             if image.get("id"):
                 delayable = self.env["prestashop.product.image"].with_delay(
-                    priority=10,
-                    identity_key=identity_exact,
+                    priority=10, identity_key=identity_exact,
                 )
                 delayable.import_product_image(
                     self.backend_record, prestashop_record["id"], image["id"]

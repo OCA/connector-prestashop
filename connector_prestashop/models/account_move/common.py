@@ -44,16 +44,10 @@ class AccountMove(models.Model):
     def _reconcile_invoice_refund(self, invoice, refund):
         move_line_obj = self.env["account.move.line"]
         move_lines = move_line_obj.search(
-            [
-                ("move_id", "=", invoice.id),
-                ("debit", "!=", 0.0),
-            ]
+            [("move_id", "=", invoice.id), ("debit", "!=", 0.0)]
         )
         move_lines += move_line_obj.search(
-            [
-                ("move_id", "=", refund.id),
-                ("credit", "!=", 0.0),
-            ]
+            [("move_id", "=", refund.id), ("credit", "!=", 0.0)]
         )
         move_lines.reconcile()
 

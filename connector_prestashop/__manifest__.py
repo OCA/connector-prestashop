@@ -6,7 +6,7 @@
 
 {
     "name": "PrestaShop-Odoo connector",
-    "version": "14.0.2.0.0",
+    "version": "13.0.1.0.0",
     "license": "AGPL-3",
     "depends": [
         "account",
@@ -22,7 +22,6 @@
         "python": [
             "html2text",
             "prestapyt",
-            # tests dependencies
             "freezegun",
             "vcrpy",
             "bs4",
@@ -36,7 +35,6 @@
     "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
-    "demo": [],
     "data": [
         "security/ir.model.access.csv",
         "security/prestashop_security.xml",

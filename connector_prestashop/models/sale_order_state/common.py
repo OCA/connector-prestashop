@@ -11,9 +11,7 @@ class SaleOrderState(models.Model):
 
     name = fields.Char("Name", translate=True)
     company_id = fields.Many2one(
-        comodel_name="res.company",
-        string="Company",
-        required=True,
+        comodel_name="res.company", string="Company", required=True,
     )
     prestashop_bind_ids = fields.One2many(
         comodel_name="prestashop.sale.order.state",
@@ -57,8 +55,7 @@ class SaleOrderStateList(models.Model):
         required=True,
     )
     prestashop_state_id = fields.Many2one(
-        comodel_name="prestashop.sale.order.state",
-        string="PrestaShop State",
+        comodel_name="prestashop.sale.order.state", string="PrestaShop State",
     )
     prestashop_id = fields.Integer(
         related="prestashop_state_id.prestashop_id",

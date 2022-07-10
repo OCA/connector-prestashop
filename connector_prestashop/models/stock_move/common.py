@@ -16,10 +16,7 @@ class StockLocation(models.Model):
     @api.model
     def get_prestashop_stock_locations(self):
         prestashop_locations = self.search(
-            [
-                ("prestashop_synchronized", "=", True),
-                ("usage", "=", "internal"),
-            ]
+            [("prestashop_synchronized", "=", True), ("usage", "=", "internal")]
         )
         return prestashop_locations
 

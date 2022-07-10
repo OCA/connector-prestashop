@@ -1,22 +1,18 @@
 <odoo noupdate="1">
-
     <record model="queue.job.channel" id="channel_prestashop_import">
         <field name="name">prestashop_import</field>
         <field name="parent_id" ref="queue_job.channel_root" />
     </record>
-
     <record model="queue.job.channel" id="channel_prestashop_export">
         <field name="name">prestashop_export</field>
         <field name="parent_id" ref="queue_job.channel_root" />
     </record>
-
     <!-- import_batch -->
     <record id="job_function_prestashop_import_batch" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_binding" />
         <field name="method">import_batch</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_batch_supplierinfo"
         model="queue.job.function"
@@ -28,13 +24,11 @@
         <field name="method">import_batch</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_record" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_binding" />
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <!-- import_record -->
     <record
         id="job_function_prestashop_import_record_supplierinfo"
@@ -47,7 +41,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_record_template"
         model="queue.job.function"
@@ -59,7 +52,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_record_product_category"
         model="queue.job.function"
@@ -71,7 +63,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_record_partner_category"
         model="queue.job.function"
@@ -83,7 +74,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_record_product"
         model="queue.job.function"
@@ -95,7 +85,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_record_carrier"
         model="queue.job.function"
@@ -107,7 +96,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_record_carrier_batch"
         model="queue.job.function"
@@ -119,7 +107,6 @@
         <field name="method">import_batch</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <!-- export record -->
     <record id="job_function_prestashop_export_record" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_binding" />
@@ -127,7 +114,6 @@
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_export" />
         <field name="related_action" eval='{"func_name": "related_action_record"}' />
     </record>
-
     <record
         id="job_function_prestashop_export_delete_record"
         model="queue.job.function"
@@ -136,7 +122,6 @@
         <field name="method">export_delete_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_partner_single"
         model="queue.job.function"
@@ -148,7 +133,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_partner" model="queue.job.function">
         <field
             name="model_id"
@@ -157,19 +141,16 @@
         <field name="method">import_customers_since</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_address" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_address" />
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_sale_single" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_sale_order" />
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_mail_message" model="queue.job.function">
         <field
             name="model_id"
@@ -178,7 +159,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_product_image"
         model="queue.job.function"
@@ -190,13 +170,11 @@
         <field name="method">import_product_image</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_sale_order" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_sale_order" />
         <field name="method">import_orders_since</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_export_tracking_number"
         model="queue.job.function"
@@ -209,7 +187,6 @@
             eval='{"func_name": "related_action_unwrap_binding"}'
         />
     </record>
-
     <record id="job_function_prestashop_export_sale_state" model="queue.job.function">
         <field name="model_id" ref="connector_prestashop.model_prestashop_sale_order" />
         <field name="method">export_sale_state</field>
@@ -219,7 +196,6 @@
             eval='{"func_name": "related_action_unwrap_binding"}'
         />
     </record>
-
     <record id="job_function_prestashop_export_inventory" model="queue.job.function">
         <field
             name="model_id"
@@ -228,7 +204,6 @@
         <field name="method">export_inventory</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_export" />
     </record>
-
     <record
         id="job_function_prestashop_export_product_product_quantities"
         model="queue.job.function"
@@ -240,7 +215,6 @@
         <field name="method">export_product_quantities</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_export" />
     </record>
-
     <record
         id="job_function_prestashop_set_product_image_variant"
         model="queue.job.function"
@@ -252,7 +226,6 @@
         <field name="method">set_product_image_variant</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_inventory" model="queue.job.function">
         <field
             name="model_id"
@@ -261,7 +234,6 @@
         <field name="method">import_record</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record id="job_function_prestashop_import_products" model="queue.job.function">
         <field
             name="model_id"
@@ -270,7 +242,6 @@
         <field name="method">import_products</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_import_product_inventory"
         model="queue.job.function"
@@ -282,7 +253,6 @@
         <field name="method">import_inventory</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_import" />
     </record>
-
     <record
         id="job_function_prestashop_export_product_inventory"
         model="queue.job.function"
@@ -294,5 +264,4 @@
         <field name="method">export_inventory</field>
         <field name="channel_id" ref="connector_prestashop.channel_prestashop_export" />
     </record>
-
 </odoo>
