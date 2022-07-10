@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  connector_prestashop for Odoo
+  Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
+  The licence is in the file __manifest__.py
+-->
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="connector.view_partner_connector_form" />
+        <field name="arch" type="xml">
+            <page name="connector" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <page name="connector" position="inside">
+                <group string="PrestaShop Bindings">
+                    <field name="prestashop_bind_ids" nolabel="1" />
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

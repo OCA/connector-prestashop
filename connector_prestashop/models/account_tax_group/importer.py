@@ -39,13 +39,7 @@ class TaxGroupImporter(Component):
     _apply_on = "prestashop.account.tax.group"
 
 
-#     _model_name = 'prestashop.account.tax.group'
-
-
 class TaxGroupBatchImporter(Component):
     _name = "prestashop.account.tax.group.direct.batch.importer"
     _inherit = "prestashop.direct.batch.importer"
     _apply_on = "prestashop.account.tax.group"
-
-
-#     _model_name = 'prestashop.account.tax.group'

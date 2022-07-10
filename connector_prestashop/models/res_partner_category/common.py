@@ -31,12 +31,6 @@ class PrestashopResPartnerCategory(models.Model):
     date_add = fields.Datetime(string="Created At (on PrestaShop)", readonly=True,)
     date_upd = fields.Datetime(string="Updated At (on PrestaShop)", readonly=True,)
 
-    # TODO add prestashop shop when the field will be available in the api.
-    # we have reported the bug for it
-    # see http://forge.prestashop.com/browse/PSCFV-8284
-    # 2016-10-13 UPDATE: the bug has been fixed since a while:
-    # check if we can drop this!
-
 
 class PartnerCategoryAdapter(Component):
     _name = "prestashop.res.partner.category.adapter"

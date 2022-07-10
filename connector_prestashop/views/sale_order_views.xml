@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_connector_prestashop_form" model="ir.ui.view">
+        <field name="name">sale.order.connector.prestashop.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="connector_ecommerce.view_order_connector_form" />
+        <field name="arch" type="xml">
+            <page name="connector" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <page name="connector" position="inside">
+                <separator string="PrestaShop" />
+                <field name="prestashop_bind_ids" readonly="True">
+                    <tree string="PrestaShop Binding">
+                        <field name="total_amount" />
+                        <field name="total_amount_tax" />
+                    </tree>
+                </field>
+            </page>
+        </field>
+    </record>
+</odoo>

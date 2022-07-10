@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Copyright (C) 2013 Akretion (http://www.akretion.com/) @author Alexis
+        de Lattre <alexis.delattre@akretion.com> The licence is in the file __manifest__.py -->
+    <record id="view_prestashop_shop_form" model="ir.ui.view">
+        <field name="name">prestashop.shop.form</field>
+        <field name="model">prestashop.shop</field>
+        <field name="arch" type="xml">
+            <form string="PrestaShop Shop">
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group>
+                        <field name="shop_group_id" />
+                        <field name="odoo_id" />
+                    </group>
+                    <group>
+                        <field name="default_url" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_prestashop_shop_tree" model="ir.ui.view">
+        <field name="name">prestashop.shop.tree</field>
+        <field name="model">prestashop.shop</field>
+        <field name="arch" type="xml">
+            <tree string="PrestaShop Shop">
+                <field name="name" />
+                <field name="shop_group_id" />
+                <field name="odoo_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="action_prestashop_shop" model="ir.actions.act_window">
+        <field name="name">PrestaShop Shops</field>
+        <field name="res_model">prestashop.shop</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

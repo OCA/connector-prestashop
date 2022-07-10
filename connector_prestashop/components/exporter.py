@@ -339,7 +339,6 @@ class PrestashopExporter(AbstractComponent):
                 raise exceptions.Warning(
                     _("Record on PrestaShop have not been created")
                 )
-
         message = _("Record exported with ID %s on PrestaShop.")
         return message % self.prestashop_id
 
@@ -347,10 +346,3 @@ class PrestashopExporter(AbstractComponent):
 class TranslationPrestashopExporter(AbstractComponent):
     _name = "translation.prestashop.exporter"
     _inherit = "prestashop.exporter"
-
-
-#    @property
-#    def mapper(self):
-#        if self._mapper is None:
-#            self._mapper = self.component(usage='translation.export.mapper')
-#        return self._mapper

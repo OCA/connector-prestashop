@@ -149,7 +149,6 @@
                             </group>
                             <group>
                                 <div>
-                                    <!--                                    <span>Import payment mode</span>-->
                                     <label
                                         string="Import payment mode"
                                         class="oe_inline"
@@ -313,71 +312,6 @@
     <record id="action_prestashop_backend" model="ir.actions.act_window">
         <field name="name">PrestaShop Backends</field>
         <field name="res_model">prestashop.backend</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-    <record id="view_prestashop_shop_group_form" model="ir.ui.view">
-        <field name="name">prestashop.shop.group.form</field>
-        <field name="model">prestashop.shop.group</field>
-        <field name="arch" type="xml">
-            <form string="PrestaShop Shop Group">
-                <h1>
-                    <field name="name" class="oe_inline" />
-                </h1>
-                <group>
-                    <field name="backend_id" />
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="view_prestashop_shop_group_tree" model="ir.ui.view">
-        <field name="name">prestashop.shop.group.tree</field>
-        <field name="model">prestashop.shop.group</field>
-        <field name="arch" type="xml">
-            <tree string="PrestaShop Shop Group">
-                <field name="name" />
-                <field name="backend_id" />
-            </tree>
-        </field>
-    </record>
-    <record id="action_prestashop_shop_group" model="ir.actions.act_window">
-        <field name="name">PrestaShop Shop Groups</field>
-        <field name="res_model">prestashop.shop.group</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-    <record id="view_prestashop_shop_form" model="ir.ui.view">
-        <field name="name">prestashop.shop.form</field>
-        <field name="model">prestashop.shop</field>
-        <field name="arch" type="xml">
-            <form string="PrestaShop Shop">
-                <sheet>
-                    <h1>
-                        <field name="name" class="oe_inline" />
-                    </h1>
-                    <group>
-                        <field name="shop_group_id" />
-                        <field name="odoo_id" />
-                    </group>
-                    <group>
-                        <field name="default_url" />
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    <record id="view_prestashop_shop_tree" model="ir.ui.view">
-        <field name="name">prestashop.shop.tree</field>
-        <field name="model">prestashop.shop</field>
-        <field name="arch" type="xml">
-            <tree string="PrestaShop Shop">
-                <field name="name" />
-                <field name="shop_group_id" />
-                <field name="odoo_id" />
-            </tree>
-        </field>
-    </record>
-    <record id="action_prestashop_shop" model="ir.actions.act_window">
-        <field name="name">PrestaShop Shops</field>
-        <field name="res_model">prestashop.shop</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

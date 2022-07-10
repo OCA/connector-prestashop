@@ -39,10 +39,6 @@ class ProductCategoryMapper(Component):
             return {"name": ""}
         return {"name": record["name"]}
 
-    #     @mapping
-    #     def backend_id(self, record):
-    #         return {'backend_id': self.backend_record.id}
-
     @mapping
     def parent_id(self, record):
         if record["id_parent"] == "0":
@@ -96,19 +92,7 @@ class ProductCategoryImporter(Component):
                 binder = self.binder_for()
                 binder.to_internal(record["id"])
                 # TODO add activity to warn about this failure
-                _logger.warn(msg % (record["id_parent"], err))
-
-                # if category:
-                #     name = category.name
-                # else:
-                #     # not imported yet, retrieve name in default lang
-                #     values = self._split_per_language(
-                #         record,
-                #         fields=[
-                #             "name",
-                #         ],
-                #     )
-                #     name = values[self._default_language]["name"]
+                _logger.warning(msg % (record["id_parent"], err))
 
 
 class ProductCategoryBatchImporter(Component):

@@ -39,7 +39,6 @@ class TemplateMapper(Component):
     _apply_on = "prestashop.product.template"
 
     direct = [
-        ("wholesale_price", "wholesale_price"),
         (external_to_m2o("id_shop_default"), "default_shop_id"),
         ("link_rewrite", "link_rewrite"),
         ("reference", "reference"),
@@ -48,13 +47,6 @@ class TemplateMapper(Component):
         ("low_stock_threshold", "low_stock_threshold"),
         ("low_stock_alert", "low_stock_alert"),
     ]
-
-    @mapping
-    def standard_price(self, record):
-        if self.has_combinations(record):
-            return {}
-        else:
-            return {"standard_price": record.get("wholesale_price", 0.0)}
 
     @mapping
     def weight(self, record):
@@ -82,28 +74,6 @@ class TemplateMapper(Component):
             price = float(record["price"])
         price = self._apply_taxes(tax, price)
         return {"list_price": price}
-
-    # obsolete ? TODO clean all tags stuff of create a field to store it
-    #    @mapping
-    #    def tags_to_text(self, record):
-    #        associations = record.get("associations", {})
-    #        tags = associations.get("tags", {}).get(
-    #            self.backend_record.get_version_ps_key("tag"), []
-    #        )
-    #        tag_adapter = self.component(
-    #            usage="backend.adapter", model_name="_prestashop_product_tag"
-    #        )
-    #        if not isinstance(tags, list):
-    #            tags = [tags]
-    #        if tags:
-    #            ps_tags = tag_adapter.search(
-    #                filters={
-    #                    "filter[id]": "[%s]" % "|".join(x["id"] for x in tags),
-    #                    "display": "[name]",
-    #                }
-    #            )
-    #            if ps_tags:
-    #                return {"tags": ",".join(x["name"] for x in ps_tags)}
 
     @mapping
     def name(self, record):
@@ -211,10 +181,6 @@ class TemplateMapper(Component):
     @mapping
     def odoo_id(self, record):
         """Will bind the product to an existing one with the same code"""
-        #         product = self.env['product.template'].search(
-        #             [('default_code', '=', record['reference'])], limit=1)
-        #         if product:
-        #             return {'odoo_id': product.id}
         if not self.backend_record.matching_product_template:
             return {}
         if self.has_combinations(record):
@@ -361,17 +327,6 @@ class TemplateMapper(Component):
         if record["type"]["value"] and record["type"]["value"] == "virtual":
             return {"type": "service"}
         return {"type": "product"}
-
-    # TODO FIXME
-    #    @mapping
-    #    def extras_features(self, record):
-    #        mapper = self.component(usage='feature.product.import.mapper')
-    #        return mapper.map_record(record).values(**self.options)
-    #
-    #    @mapping
-    #    def extras_manufacturer(self, record):
-    #        mapper = self.component(usage='manufacturer.product.import.mapper')
-    #        return mapper.map_record(record).values(**self.options)
 
     @mapping
     def visibility(self, record):

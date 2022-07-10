@@ -77,13 +77,6 @@ class RefundMapper(Component):
             "partner_id": partner.id,
         }
 
-    # TODO maybe add a mail_message after_import?
-    # but comment does not exist anymore and narration is not the good field for this
-    # as it appear on invoice PDF
-    #    @mapping
-    #    def comment(self, record):
-    #        return {"comment": _("PrestaShop amount: %s") % record["amount"]}
-
     @mapping
     @only_create
     def invoice_lines(self, record):

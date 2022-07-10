@@ -9,7 +9,6 @@
         sequence="10"
         groups="connector.group_connector_manager"
     />
-    <!-- TODO group: PrestaShop Manager -->
     <menuitem
         id="menu_prestashop_backend"
         name="Backends"
@@ -67,15 +66,12 @@
         <field name="res_model">prestashop.res.lang</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!-- TODO: Implement security strategy groups="odoo_base.group_oc_manager" -->
     <menuitem
         id="menu_prestashop_external_objects"
         name="External Objects"
         parent="menu_prestashop_root"
         sequence="100"
     />
-    <!-- <menuitem id="menu_prestashop_external_uom" name="External UOM" parent="menu_prestashop_external_objects"
-        action="action_prestashop_uom" /> -->
     <menuitem
         id="menu_prestashop_external_languauges"
         name="External Languages"

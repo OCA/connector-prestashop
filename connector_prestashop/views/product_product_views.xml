@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_normal_form_view_default_check" model="ir.ui.view">
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
+                <field
+                    name="default_on"
+                    attrs="{'invisible': [
+                                        ('product_variant_count', '=', 1)
+                                    ]}"
+                />
+                <field
+                    name="impact_price"
+                    attrs="{'invisible': [
+                        ('product_variant_count', '=', 1)
+                        ]}"
+                />
+            </field>
+            <xpath expr="//field[@name='lst_price']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_product_tree_prestashop_view" model="ir.ui.view">
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view" />
+        <field name="arch" type="xml">
+            <field name="lst_price" position="after">
+                <field name="default_on" />
+            </field>
+            <field name="lst_price" position="after">
+                <field name="impact_price" />
+            </field>
+        </field>
+    </record>
+    <!--This is a product inherited form that will be dynamically populated-->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="model">product.product</field>
+        <field
+            name="inherit_id"
+            ref="connector_base_product.product_normal_form_view"
+        />
+        <field name="arch" type="xml">
+            <page name="connector" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <page name="connector" position="inside">
+                <div attrs="{'invisible': [('product_variant_count', '>', 1)]}">
+                    <p>To show PrestaShop binding go to: <button
+                            name="open_product_template"
+                            type="object"
+                            string="product template"
+                            class="oe_link"
+                        /></p>
+                </div>
+                <group
+                    string="PrestaShop Bindings"
+                    attrs="{'invisible': [('attribute_line_ids', '=', [])]}"
+                >
+                    <field name="prestashop_combinations_bind_ids" nolabel="1" />
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_prestashop_sale_order_form" model="ir.ui.view">
+        <field name="name">prestashop.sale.order.form</field>
+        <field name="model">prestashop.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Prestashop Sale Order">
+                <group name="binding">
+                    <field name="backend_id" />
+                    <field name="prestashop_id" />
+                </group>
+                <group name="references">
+                    <field name="prestashop_invoice_number" />
+                    <field name="prestashop_delivery_number" />
+                </group>
+                <group name="amounts">
+                    <field name="total_amount" />
+                    <field name="total_amount_tax" />
+                    <field name="total_shipping_tax_included" />
+                    <field name="total_shipping_tax_excluded" />
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

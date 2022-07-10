@@ -19,33 +19,6 @@ class ProductCombinationImporter(Component):
     _inherit = "prestashop.importer"
     _apply_on = "prestashop.product.combination"
 
-    #    def _import_dependencies(self):
-    #        record = self.prestashop_record
-    #        ps_key = self.backend_record.get_version_ps_key("product_option_value")
-    #        option_values = (
-    #            record.get("associations", {})
-    #            .get("product_option_values", {})
-    #            .get(ps_key, [])
-    #        )
-    #        if not isinstance(option_values, list):
-    #            option_values = [option_values]
-    #        backend_adapter = self.component(
-    #            usage="backend.adapter",
-    #            model_name="prestashop.product.combination.option.value",
-    #        )
-    #        presta_option_values = []
-    #        for option_value in option_values:
-    #            option_value = backend_adapter.read(option_value["id"])
-    #            self._import_dependency(
-    #                option_value["id_attribute_group"],
-    #                "prestashop.product.combination.option",
-    #            )
-    #            self._import_dependency(
-    #                option_value["id"], "prestashop.product.combination.option.value"
-    #            )
-    #            presta_option_values.append(option_value)
-    #        self.template_attribute_lines(presta_option_values)
-
     def template_attribute_lines(self, option_values):
         record = self.prestashop_record
         template_binder = self.binder_for("prestashop.product.template")
@@ -140,10 +113,6 @@ class ProductCombinationMapper(Component):
     _name = "prestashop.product.combination.mapper"
     _inherit = "prestashop.import.mapper"
     _apply_on = "prestashop.product.combination"
-
-    direct = []
-
-    from_main = []
 
     @mapping
     def weight(self, record):
@@ -259,10 +228,6 @@ class ProductCombinationMapper(Component):
             current_code = "{}_{}".format(code, i)
         return {"default_code": current_code}
 
-    #     @mapping
-    #     def backend_id(self, record):
-    #         return {'backend_id': self.backend_record.id}
-
     @mapping
     def barcode(self, record):
         barcode = record.get("barcode") or record.get("ean13")
@@ -308,10 +273,8 @@ class ProductCombinationMapper(Component):
         )
         tax = product.product_tmpl_id.taxes_id[:1] or self._get_tax_ids(record)
         impact = float(self._apply_taxes(tax, float(record["price"] or "0.0")))
-        cost_price = float(record["wholesale_price"] or "0.0")
         return {
             "list_price": product_template.list_price,
-            "standard_price": cost_price or product_template.wholesale_price,
             "impact_price": impact,
         }
 
@@ -393,8 +356,6 @@ class ProductCombinationOptionMapper(Component):
     _name = "prestashop.product.combination.option.mapper"
     _inherit = "prestashop.import.mapper"
     _apply_on = "prestashop.product.combination.option"
-
-    direct = []
 
     @mapping
     def backend_id(self, record):

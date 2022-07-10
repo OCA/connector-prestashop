@@ -132,7 +132,6 @@ class PrestashopProductTemplate(models.Model):
     )
     reference = fields.Char(string="Original reference")
     on_sale = fields.Boolean(string="Show on sale icon")
-    wholesale_price = fields.Float(string="Cost Price", digits="Product Price",)
     out_of_stock = fields.Selection(
         [("0", "Refuse order"), ("1", "Accept order"), ("2", "Default prestashop")],
         string="If stock shortage",
@@ -189,6 +188,14 @@ class TemplateAdapter(Component):
     _apply_on = "prestashop.product.template"
     _prestashop_model = "products"
     _export_node_name = "product"
+
+
+class BrandAdapter(Component):
+    _name = "prestashop.product.brand.adapter"
+    _inherit = "prestashop.adapter"
+    _apply_on = "prestashop.product.brand"
+    _prestashop_model = "manufacturers"
+    _export_node_name = "manufacturer"
 
 
 class ProductInventoryAdapter(Component):
