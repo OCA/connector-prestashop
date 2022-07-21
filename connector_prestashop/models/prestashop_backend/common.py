@@ -151,9 +151,11 @@ class PrestashopBackend(models.Model):
         help="The selected fields will be matched to the ref field of the "
         "partner. Please adapt your datas consequently.",
     )
-    # matching_customer_ch = fields.Many2one(
-    #     comodel_name='prestashop.partner.field', string="Matched field",
-    #     help="Field that will be matched.")
+    
+    matching_customer_ch = fields.Selection(
+        [("email", "Email"), ("vat", "Vat")], string="Matching Field for customer"
+    )
+    
     tz = fields.Selection(
         _tz_get,
         "Timezone",
@@ -198,15 +200,15 @@ class PrestashopBackend(models.Model):
                         )
                     )
 
-    @api.onchange("matching_customer")
-    def change_matching_customer(self):
-        # Update the field list so that if you API change you could find the
-        # new fields to map
-        if self._origin.id:
-            self.fill_matched_fields(self._origin.id)
-
-    def fill_matched_fields(self, backend_id):
-        self.ensure_one()
+#     @api.onchange("matching_customer")
+#     def change_matching_customer(self):
+#         # Update the field list so that if you API change you could find the
+#         # new fields to map
+#         if self._origin.id:
+#             self.fill_matched_fields(self._origin.id)
+# 
+#     def fill_matched_fields(self, backend_id):
+#         self.ensure_one()
 
         # options = {'limit': 1, 'display': 'full'}
         # TODO : Unse new adapter pattern to get a simple partner json
