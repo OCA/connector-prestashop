@@ -32,6 +32,60 @@ class PartnerImportMapper(Component):
         (external_to_m2o("id_default_group"), "default_category_id"),
     ]
 
+    def get_vat(self,address):
+        vat_number=''        
+        if address.get("vat_number"):
+            vat_number = (
+                address["vat_number"].replace(".", "").replace(" ", "")
+            )
+        # TODO move to custom localization module
+        elif  address.get("dni"):
+            vat_number = (
+                address["dni"]
+                .replace(".", "")
+                .replace(" ", "")
+                .replace("-", "")
+            )
+        return vat_number
+
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        result ={}
+        domain=[]
+        partner_exists = self.env["res.partner"]
+        if self.backend_record.matching_customer:
+            if self.backend_record.matching_customer_ch == "email":
+                partner_exists = self.env["res.partner"].search(
+                [
+                    ("email", "=", record.get("email")),
+                    ("parent_id", "=", False),
+                ],
+                limit=1,
+            )
+            elif self.backend_record.matching_customer_ch == "vat":
+                adapter = self.component(
+                    usage="backend.adapter", model_name="prestashop.address"
+                )
+                address_ids = adapter.search({"filter[id_customer]": record["id"]})
+                i=0
+                while i<len(address_ids) and len(partner_exists) ==0:
+                    address = adapter.read(address_ids[i])
+                    if address.get("vat_number") or address.get("dni"):
+                        vat_number=self.get_vat(address)
+                        partner_exists = self.env["res.partner"].search(
+                        [
+                            ("vat", "=ilike", vat_number),
+                            ("parent_id", "=", False),
+                            ("is_company", "=", True),
+                        ],
+                        limit=1,
+                    )
+                    i +=1
+            if partner_exists:
+                result= {"odoo_id": partner_exists.id}
+        return result
+
     @mapping
     def pricelist(self, record):
         binder = self.binder_for("prestashop.groups.pricelist")

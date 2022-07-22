@@ -302,6 +302,11 @@
                                 </group>
                                 <group string="Matching option for partner">
                                     <field name="matching_customer" />
+                                    <field
+                                        name="matching_customer_ch"
+                                        attrs="{'invisible':[('matching_customer', '=', False)],
+                                                    'required':[('matching_customer', '=', True)]}"
+                                    />
 
                                 </group>
                             </group>
