@@ -323,15 +323,28 @@ class ProductCombinationMapper(Component):
             code = record.get(self.backend_record.matching_product_ch)
             if self.backend_record.matching_product_ch == "reference":
                 if code:
-                    product = self.env["product.product"].search(
-                        [("default_code", "=", code)], limit=1
+                    product = (
+                        self.env["product.product"]
+                        .with_context(active_test=False)
+                        .search(
+                            [
+                                ("default_code", "=", code),
+                                "|",
+                                ("active", "=", True),
+                                ("active", "=", False),
+                            ],
+                            limit=1,
+                        )
                     )
+
                     if product:
                         return {"odoo_id": product.id}
             if self.backend_record.matching_product_ch == "barcode":
                 if code:
-                    product = self.env["product.product"].search(
-                        [("barcode", "=", code)], limit=1
+                    product = (
+                        self.env["product.product"]
+                        .with_context(active_test=False)
+                        .search([("default_code", "=", code)], limit=1)
                     )
                     if product:
                         return {"odoo_id": product.id}

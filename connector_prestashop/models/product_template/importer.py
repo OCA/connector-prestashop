@@ -171,7 +171,7 @@ class TemplateMapper(Component):
                     raise ValidationError(
                         _(
                             "Error! Multiple products found with "
-                            "combinations reference %s. Maybe consider to "
+                            "combinations barcode %s. Maybe consider to "
                             "update you datas"
                         )
                         % code
@@ -212,10 +212,6 @@ class TemplateMapper(Component):
     @mapping
     def odoo_id(self, record):
         """Will bind the product to an existing one with the same code"""
-        #         product = self.env['product.template'].search(
-        #             [('default_code', '=', record['reference'])], limit=1)
-        #         if product:
-        #             return {'odoo_id': product.id}
         if not self.backend_record.matching_product_template:
             return {}
         if self.has_combinations(record):
