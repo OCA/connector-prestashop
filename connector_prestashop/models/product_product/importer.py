@@ -329,9 +329,6 @@ class ProductCombinationMapper(Component):
                         .search(
                             [
                                 ("default_code", "=", code),
-                                "|",
-                                ("active", "=", True),
-                                ("active", "=", False),
                             ],
                             limit=1,
                         )
