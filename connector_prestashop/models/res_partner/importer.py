@@ -3,6 +3,7 @@
 import logging
 
 from odoo import _
+from odoo.exceptions import ValidationError
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
@@ -12,6 +13,35 @@ from odoo.addons.connector.components.mapper import (
 )
 
 _logger = logging.getLogger(__name__)
+
+try:
+    from email_validator import (
+        EmailSyntaxError,
+        EmailUndeliverableError,
+        validate_email,
+    )
+except ImportError:
+    _logger.debug('Cannot import "email_validator".')
+    validate_email = None
+
+# Inspired from https://github.com/OCA/partner-contact/blob/14.0/partner_email_check/models/res_partner.py#L58
+# to prevent dependancy development
+def _normalize_email(email):
+    if validate_email is None:
+        _logger.warning(
+            "Can not validate email, " 'python dependency required "email_validator"'
+        )
+        return email
+    try:
+        result = validate_email(
+            email,
+            check_deliverability=False,
+        )
+    except EmailSyntaxError:
+        raise ValidationError(_("%s is an invalid email") % email.strip())
+    except EmailUndeliverableError:
+        raise ValidationError(_("Cannot deliver to email address %s") % email.strip())
+    return result["local"].lower() + "@" + result["domain_i18n"]
 
 
 class PartnerImportMapper(Component):
@@ -32,58 +62,60 @@ class PartnerImportMapper(Component):
         (external_to_m2o("id_default_group"), "default_category_id"),
     ]
 
-    def get_vat(self,address):
-        vat_number=''        
+    def get_vat(self, address):
+        vat_number = ""
         if address.get("vat_number"):
-            vat_number = (
-                address["vat_number"].replace(".", "").replace(" ", "")
-            )
+            vat_number = address["vat_number"].replace(".", "").replace(" ", "")
         # TODO move to custom localization module
-        elif  address.get("dni"):
+        elif address.get("dni"):
             vat_number = (
-                address["dni"]
-                .replace(".", "")
-                .replace(" ", "")
-                .replace("-", "")
+                address["dni"].replace(".", "").replace(" ", "").replace("-", "")
             )
         return vat_number
+
+    @mapping
+    def email(self, record):
+        email = record.get("email")
+        if self.backend_record.matching_customer_ch == "email":
+            email = _normalize_email(record.get("email"))
+        return {"email": email}
 
     @only_create
     @mapping
     def odoo_id(self, record):
-        result ={}
-        domain=[]
+        result = {}
         partner_exists = self.env["res.partner"]
         if self.backend_record.matching_customer:
             if self.backend_record.matching_customer_ch == "email":
+                email = _normalize_email(record.get("email"))
                 partner_exists = self.env["res.partner"].search(
-                [
-                    ("email", "=", record.get("email")),
-                    ("parent_id", "=", False),
-                ],
-                limit=1,
-            )
+                    [
+                        ("email", "=", email),
+                        ("parent_id", "=", False),
+                    ],
+                    limit=1,
+                )
             elif self.backend_record.matching_customer_ch == "vat":
                 adapter = self.component(
                     usage="backend.adapter", model_name="prestashop.address"
                 )
                 address_ids = adapter.search({"filter[id_customer]": record["id"]})
-                i=0
-                while i<len(address_ids) and len(partner_exists) ==0:
+                i = 0
+                while i < len(address_ids) and len(partner_exists) == 0:
                     address = adapter.read(address_ids[i])
                     if address.get("vat_number") or address.get("dni"):
-                        vat_number=self.get_vat(address)
+                        vat_number = self.get_vat(address)
                         partner_exists = self.env["res.partner"].search(
-                        [
-                            ("vat", "=ilike", vat_number),
-                            ("parent_id", "=", False),
-                            ("is_company", "=", True),
-                        ],
-                        limit=1,
-                    )
-                    i +=1
+                            [
+                                ("vat", "=ilike", vat_number),
+                                ("parent_id", "=", False),
+                                ("is_company", "=", True),
+                            ],
+                            limit=1,
+                        )
+                    i += 1
             if partner_exists:
-                result= {"odoo_id": partner_exists.id}
+                result = {"odoo_id": partner_exists.id}
         return result
 
     @mapping
