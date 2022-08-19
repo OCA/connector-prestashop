@@ -151,11 +151,11 @@ class PrestashopBackend(models.Model):
         help="The selected fields will be matched to the ref field of the "
         "partner. Please adapt your datas consequently.",
     )
-    
+
     matching_customer_ch = fields.Selection(
         [("email", "Email"), ("vat", "Vat")], string="Matching Field for customer"
     )
-    
+
     tz = fields.Selection(
         _tz_get,
         "Timezone",
@@ -165,6 +165,7 @@ class PrestashopBackend(models.Model):
         selection=[
             ("qty_available_not_res", "Immediately usable qty"),
             ("qty_available", "Qty available"),
+            ("immediately_usable_qty", "Available To Promise"),
         ],
         string="Product qty",
         help="Select how you want to calculate the qty to push to PS. ",
@@ -199,19 +200,32 @@ class PrestashopBackend(models.Model):
                             "install the module stock_available_unreserved."
                         )
                     )
+            if backend.product_qty_field == "	immediately_usable_qty":
+                module = (
+                    self.env["ir.module.module"]
+                    .sudo()
+                    .search([("name", "=", "stock_available_immediately")], limit=1)
+                )
+                if not module or module.state != "installed":
+                    raise exceptions.UserError(
+                        _(
+                            "In order to choose this option, you have to "
+                            "install the module stock_available_unreserved."
+                        )
+                    )
 
-#     @api.onchange("matching_customer")
-#     def change_matching_customer(self):
-#         # Update the field list so that if you API change you could find the
-#         # new fields to map
-#         if self._origin.id:
-#             self.fill_matched_fields(self._origin.id)
-# 
-#     def fill_matched_fields(self, backend_id):
-#         self.ensure_one()
+    #     @api.onchange("matching_customer")
+    #     def change_matching_customer(self):
+    #         # Update the field list so that if you API change you could find the
+    #         # new fields to map
+    #         if self._origin.id:
+    #             self.fill_matched_fields(self._origin.id)
+    #
+    #     def fill_matched_fields(self, backend_id):
+    #         self.ensure_one()
 
-        # options = {'limit': 1, 'display': 'full'}
-        # TODO : Unse new adapter pattern to get a simple partner json
+    # options = {'limit': 1, 'display': 'full'}
+    # TODO : Unse new adapter pattern to get a simple partner json
 
     #         prestashop = PrestaShopLocation(
     #                         self.location.encode(),
