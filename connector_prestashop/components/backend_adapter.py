@@ -1,6 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import base64
+import json
 import logging
 from contextlib import contextmanager
 
@@ -137,11 +138,15 @@ class PrestaShopCRUDAdapter(AbstractComponent):
         self.prestashop = PrestaShopLocation(
             self.backend_record.location, self.backend_record.webservice_key
         )
+        custom_headers = False
+        if self.backend_record.custom_headers:
+            custom_headers = json.loads(self.backend_record.custom_headers)
         self.client = PrestaShopWebServiceDict(
             self.prestashop.api_url,
             self.prestashop.webservice_key,
             debug=self.backend_record.debug,
             verbose=self.backend_record.verbose,
+            custom_headers=custom_headers,
         )
 
     def search(self, filters=None):

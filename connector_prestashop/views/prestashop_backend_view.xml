@@ -77,6 +77,10 @@
                             <field name="version" />
                             <field name="verbose" />
                             <field name="debug" />
+                            <field
+                                name="custom_headers"
+                                placeholder="{'Cookie': 'XDEBUG_SESSION=PHPSTORM'}"
+                            />
                         </group>
                     </group>
                     <group name="main_configuration" string="Main Configuration">

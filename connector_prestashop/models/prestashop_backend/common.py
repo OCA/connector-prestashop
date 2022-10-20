@@ -130,6 +130,11 @@ class PrestashopBackend(models.Model):
 
     verbose = fields.Boolean(help="Output requests details in the logs")
     debug = fields.Boolean(help="Activate PrestaShop's webservice debug mode")
+    custom_headers = fields.Char(
+        help="""If you need to debug your Prestashop instance with xDebug (eg)
+        you can use these headers to indicate the IDE
+        that will interpret the breakpoints"""
+    )
 
     matching_product_template = fields.Boolean(string="Match product template")
 
