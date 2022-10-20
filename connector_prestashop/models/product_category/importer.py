@@ -94,15 +94,11 @@ class ProductCategoryImporter(Component):
             except PrestaShopWebServiceError as err:
                 parent_id = record["id_parent"]
                 category_id = record["id"]
-                msg = _(
-                    """Parent category %(category_id)s
-                    for `%(parent_id)s`
-                    cannot be imported. Error: %(err)s"""
-                )
                 binder = self.binder_for()
                 binder.to_internal(category_id)
                 # TODO add activity to warn about this failure
-                _logger.warn(msg % (parent_id, err))
+                msg = _("""Parent category {} for {} cannot be imported. Error: {}""")
+                _logger.warning(msg.format(parent_id, category_id, err))
 
                 # if category:
                 #     name = category.name

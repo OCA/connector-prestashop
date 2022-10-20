@@ -83,24 +83,10 @@ class SaleImportRule(Component):
         ps_payment_method = record["payment"]
         mode_binder = self.binder_for("account.payment.mode")
         payment_mode = mode_binder.to_internal(ps_payment_method)
-        if not payment_mode:
-            raise FailedJobError(
-                _(
-                    "Missing configuration for the Payment Mode '%(ps_payment_method)s'.\n\n"
-                    "Resolution:\n"
-                    " - Use the automatic import in 'Connectors > PrestaShop "
-                    "Backends', button 'Import payment modes', or:\n"
-                    "\n"
-                    "- Go to 'Invoicing > Configuration > Management "
-                    "> Payment Modes'\n"
-                    "- Create a new Payment Mode with name '%(ps_payment_method)s'\n"
-                    "-Eventually  link the Payment Method to an existing Workflow "
-                    "Process or create a new one."
-                )
-                % {"ps_payment_method": ps_payment_method}
-            )
         self._rule_global(record, payment_mode)
         self._rule_state(record, payment_mode)
+        if not payment_mode:
+            return False
         self._rules[payment_mode.import_rule](self, record, payment_mode)
 
     def _rule_global(self, record, mode):
@@ -164,6 +150,7 @@ class SaleOrderImportMapper(Component):
         ("total_paid", "total_amount"),
         ("total_shipping_tax_incl", "total_shipping_tax_included"),
         ("total_shipping_tax_excl", "total_shipping_tax_excluded"),
+        ("reference", "name"),
     ]
 
     def _get_sale_order_lines(self, record):
@@ -172,6 +159,12 @@ class SaleOrderImportMapper(Component):
             .get("order_rows", {})
             .get(self.backend_record.get_version_ps_key("order_row"), [])
         )
+        if not orders:
+            orders = (
+                record["associations"]
+                .get("order_rows", {})
+                .get(self.backend_record.get_version_ps_key("order_rows"), [])
+            )
         if isinstance(orders, dict):
             return [orders]
         return orders
@@ -218,7 +211,16 @@ class SaleOrderImportMapper(Component):
             items = mapper.get_items(
                 [detail_record], map_record, to_attr, options=self.options
             )
-            children.extend(items)
+            binder = self.binder_for(model_name)
+            result = []
+            for item in items:
+                order_line_id = binder.to_internal(child_record["id"], unwrap=False)
+                if order_line_id:
+                    update_values = item[2]
+                    result.append((1, order_line_id.id, update_values))
+                else:
+                    result.append((0, 0, item[2]))
+            children.extend(result)
         return children
 
     def _sale_order_exists(self, name):
@@ -230,18 +232,6 @@ class SaleOrderImportMapper(Component):
             limit=1,
         )
         return len(sale_order) == 1
-
-    @mapping
-    def name(self, record):
-        basename = record["reference"]
-        if not self._sale_order_exists(basename):
-            return {"name": basename}
-        i = 1
-        name = basename + "_%d" % (i)
-        while self._sale_order_exists(name):
-            i += 1
-            name = basename + "_%d" % (i)
-        return {"name": name}
 
     @mapping
     def partner_id(self, record):
@@ -363,6 +353,7 @@ class SaleOrderImporter(Component):
 
     def _import_dependencies(self):
         record = self.prestashop_record
+        self._import_dependency(record["payment"], "account.payment.mode")
         self._import_dependency(
             record["id_customer"],
             "prestashop.res.partner",
@@ -393,12 +384,18 @@ class SaleOrderImporter(Component):
             .get("order_rows", {})
             .get(self.backend_record.get_version_ps_key("order_row"), [])
         )
+        if not rows:
+            rows = (
+                record["associations"]
+                .get("order_rows", {})
+                .get(self.backend_record.get_version_ps_key("order_rows"), [])
+            )
         if isinstance(rows, dict):
             rows = [rows]
         for row in rows:
             try:
                 self._import_dependency(
-                    row["product_id"], "prestashop.product.template"
+                    row["product_id"], "prestashop.product.template", always=True
                 )
             except PrestaShopWebServiceError as err:
                 # we ignore it, the order line will be imported without product
@@ -458,7 +455,11 @@ class SaleOrderImporter(Component):
     def _has_to_skip(self, binding=False):
         """Return True if the import can be skipped"""
         if binding:
-            return int(
+            return len(
+                self.backend_record.mapped(
+                    "importable_order_state_ids.prestashop_bind_ids.prestashop_id"
+                )
+            ) and int(
                 self.prestashop_record["current_state"]
             ) not in self.backend_record.mapped(
                 "importable_order_state_ids.prestashop_bind_ids.prestashop_id"

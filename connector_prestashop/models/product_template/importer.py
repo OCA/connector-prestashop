@@ -147,7 +147,12 @@ class TemplateMapper(Component):
                 model_name="prestashop.product.combination",
             )
             variant = backend_adapter.read(int(prod["id"]))
-            code = variant.get(self.backend_record.matching_product_ch)
+            matchfield_mapping_func = getattr(
+                self, self.backend_record.matching_product_ch
+            )
+            code = matchfield_mapping_func(variant).get(
+                self.backend_record.matching_product_ch
+            )
             if not code:
                 continue
             if self.backend_record.matching_product_ch == "reference":
@@ -189,7 +194,10 @@ class TemplateMapper(Component):
             )
 
     def _match_template_odoo_record(self, record):
-        code = record.get(self.backend_record.matching_product_ch)
+        matchfield_mapping_func = getattr(self, self.backend_record.matching_product_ch)
+        code = matchfield_mapping_func(record).get(
+            self.backend_record.matching_product_ch
+        )
         if self.backend_record.matching_product_ch == "reference":
             if code:
                 if self._template_code_exists(code):
@@ -341,9 +349,7 @@ class TemplateMapper(Component):
         barcode = record.get("barcode") or record.get("ean13")
         if barcode in ["", "0"]:
             return {}
-        if self.env["barcode.nomenclature"].check_ean(barcode):
-            return {"barcode": barcode}
-        return {}
+        return {"barcode": barcode}
 
     def _get_tax_ids(self, record):
         # if record['id_tax_rules_group'] == '0':
@@ -367,9 +373,17 @@ class TemplateMapper(Component):
     @mapping
     def type(self, record):
         # The same if the product is a virtual one in prestashop.
-        if record["type"]["value"] and record["type"]["value"] == "virtual":
+        if self._get_type(record) == "virtual":
             return {"type": "service"}
         return {"type": "product"}
+
+    def _get_type(self, record):
+        if "type" in record:
+            return record["type"]["value"] and record["type"]["value"]
+        elif "is_virtual" in record:
+            return "virtual" if record["is_virtual"] == "1" else "standard"
+        else:
+            raise ValidationError(_("Can't get type for product record"))
 
     # TODO FIXME
     #    @mapping

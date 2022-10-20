@@ -160,6 +160,9 @@ class SupplierInfoImporter(Component):
         except PrestaShopWebServiceError as err:
             raise FailedJobError("Error fetching a dependency") from err
 
+    def _has_to_skip(self, binding=False):
+        return not binding or binding["id_supplier"] == 0 or binding["id_product"] == 0
+
 
 class SupplierInfoBatchImporter(Component):
     _name = "prestashop.product.supplierinfo.batch.importer"

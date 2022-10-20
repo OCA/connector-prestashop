@@ -19,32 +19,59 @@ class ProductCombinationImporter(Component):
     _inherit = "prestashop.importer"
     _apply_on = "prestashop.product.combination"
 
-    #    def _import_dependencies(self):
-    #        record = self.prestashop_record
-    #        ps_key = self.backend_record.get_version_ps_key("product_option_value")
-    #        option_values = (
-    #            record.get("associations", {})
-    #            .get("product_option_values", {})
-    #            .get(ps_key, [])
-    #        )
-    #        if not isinstance(option_values, list):
-    #            option_values = [option_values]
-    #        backend_adapter = self.component(
-    #            usage="backend.adapter",
-    #            model_name="prestashop.product.combination.option.value",
-    #        )
-    #        presta_option_values = []
-    #        for option_value in option_values:
-    #            option_value = backend_adapter.read(option_value["id"])
-    #            self._import_dependency(
-    #                option_value["id_attribute_group"],
-    #                "prestashop.product.combination.option",
-    #            )
-    #            self._import_dependency(
-    #                option_value["id"], "prestashop.product.combination.option.value"
-    #            )
-    #            presta_option_values.append(option_value)
-    #        self.template_attribute_lines(presta_option_values)
+    def _get_binding(
+        self,
+    ):
+        binding = super()._get_binding()
+        if not binding:
+            if self.backend_record.matching_product_template:
+                record = self.prestashop_record
+                code = record.get(self.backend_record.matching_product_ch)
+                if self.backend_record.matching_product_ch == "reference":
+                    if code:
+                        binding = self.env["prestashop.product.combination"].search(
+                            [("default_code", "=", code)]
+                        )
+                        if len(binding) == 1:
+                            return binding
+                if self.backend_record.matching_product_ch == "barcode":
+                    if not code and "ean13" in record.keys():
+                        code = record["ean13"]
+                    if code:
+                        binding = self.env["prestashop.product.combination"].search(
+                            [("barcode", "=", code)]
+                        )
+                        if len(binding) == 1:
+                            return binding
+            template_binder = self.binder_for("prestashop.product.template")
+            template = template_binder.to_internal(record["id_product"])
+            # if variant already exists linked it since we can't have 2 variants with
+            # the exact same attributes
+
+            ps_key = self.backend_record.get_version_ps_key("product_option_value")
+            option_values = (
+                record.get("associations", {})
+                .get("product_option_values", {})
+                .get(ps_key, [])
+            )
+            if not isinstance(option_values, list):
+                option_values = [option_values]
+            option_value_binder = self.binder_for(
+                "prestashop.product.combination.option.value"
+            )
+            value_ids = [
+                option_value_binder.to_internal(option_value["id"]).odoo_id.id
+                for option_value in option_values
+            ]
+            if value_ids:
+                for variant in template.product_variant_ids:
+                    if sorted(
+                        variant.product_template_attribute_value_ids.mapped(
+                            "product_attribute_value_id"
+                        ).ids
+                    ) == sorted(value_ids):
+                        return variant.prestashop_combinations_bind_ids
+        return binding
 
     def template_attribute_lines(self, option_values):
         record = self.prestashop_record
@@ -119,9 +146,9 @@ class ProductCombinationImporter(Component):
             # 'filter[id_product]': ps_id,
             "filter[id_product_attribute]": ps_id
         }
-        self.env["prestashop.product.supplierinfo"].with_delay().import_batch(
-            self.backend_record, filters=filters
-        )
+        self.env["prestashop.product.supplierinfo"].with_delay(
+            priority=17
+        ).import_batch(self.backend_record, filters=filters)
 
     def _import(self, binding, **kwargs):
         # We need to pass the template presta record because we need it
@@ -130,10 +157,45 @@ class ProductCombinationImporter(Component):
             tmpl_adapter = self.component(
                 usage="backend.adapter", model_name="prestashop.product.template"
             )
-            tmpl_record = tmpl_adapter.read(self.prestashop_record.get("147585"))
+            tmpl_record = tmpl_adapter.read(self.prestashop_record.get("id_product"))
             self.work.parent_presta_record = tmpl_record
             if "parent_presta_record" not in self.work._propagate_kwargs:
                 self.work._propagate_kwargs.append("parent_presta_record")
+        if not binding and self.backend_record.matching_product_template:
+            product_tmpl_binder = self.binder_for("prestashop.product.template")
+            template_binding = product_tmpl_binder.to_internal(tmpl_record["id"])
+            record = self.prestashop_record
+            code = record.get(self.backend_record.matching_product_ch)
+            if self.backend_record.matching_product_ch == "reference":
+                if code:
+                    product_id = self.env["product.product"].search(
+                        [("default_code", "=", code)]
+                    )
+                    if len(product_id) == 1:
+                        binding = self.env["prestashop.product.combination"].create(
+                            {
+                                "backend_id": self.backend_record.id,
+                                "odoo_id": product_id.id,
+                                "prestashop_id": record["id"],
+                                "main_template_id": template_binding.id,
+                            }
+                        )
+            if self.backend_record.matching_product_ch == "barcode":
+                if not code and "ean13" in record.keys():
+                    code = record["ean13"]
+                if code:
+                    product_id = self.env["product.product"].search(
+                        [("barcode", "=", code)]
+                    )
+                    if len(product_id) == 1:
+                        binding = self.env["prestashop.product.combination"].create(
+                            {
+                                "backend_id": self.backend_record.id,
+                                "odoo_id": product_id.id,
+                                "prestashop_id": record["id"],
+                                "main_template_id": template_binding.id,
+                            }
+                        )
         return super()._import(binding, **kwargs)
 
 
@@ -267,14 +329,13 @@ class ProductCombinationMapper(Component):
     @mapping
     def barcode(self, record):
         barcode = record.get("barcode") or record.get("ean13")
-        check_ean = self.env["barcode.nomenclature"].check_ean
         if barcode in ["", "0"]:
             backend_adapter = self.component(
                 usage="backend.adapter", model_name="prestashop.product.template"
             )
             template = backend_adapter.read(record["id_product"])
             barcode = template.get("barcode") or template.get("ean13")
-        if barcode and barcode != "0" and check_ean(barcode):
+        if barcode and barcode != "0":
             return {"barcode": barcode}
         return {}
 
@@ -330,6 +391,8 @@ class ProductCombinationMapper(Component):
                     if product:
                         return {"odoo_id": product.id}
             if self.backend_record.matching_product_ch == "barcode":
+                if not code and "ean13" in record.keys():
+                    code = record.get("ean13")
                 if code:
                     product = self.env["product.product"].search(
                         [("barcode", "=", code)], limit=1
@@ -356,13 +419,14 @@ class ProductCombinationMapper(Component):
             option_value_binder.to_internal(option_value["id"]).odoo_id.id
             for option_value in option_values
         ]
-        for variant in template.product_variant_ids:
-            if sorted(
-                variant.product_template_attribute_value_ids.mapped(
-                    "product_attribute_value_id"
-                ).ids
-            ) == sorted(value_ids):
-                return {"odoo_id": variant.id}
+        if value_ids:
+            for variant in template.product_variant_ids:
+                if sorted(
+                    variant.product_template_attribute_value_ids.mapped(
+                        "product_attribute_value_id"
+                    ).ids
+                ) == sorted(value_ids):
+                    return {"odoo_id": variant.id}
         return {}
 
 

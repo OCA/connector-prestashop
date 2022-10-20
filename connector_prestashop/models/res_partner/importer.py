@@ -1,8 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+import datetime
 import logging
-
-from odoo import _
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import (
@@ -20,8 +19,6 @@ class PartnerImportMapper(Component):
     _apply_on = "prestashop.res.partner"
 
     direct = [
-        ("date_add", "date_add"),
-        ("date_upd", "date_upd"),
         ("email", "email"),
         ("newsletter", "newsletter"),
         ("company", "company"),
@@ -31,6 +28,18 @@ class PartnerImportMapper(Component):
         (external_to_m2o("id_shop"), "shop_id"),
         (external_to_m2o("id_default_group"), "default_category_id"),
     ]
+
+    @mapping
+    def date_add(self, record):
+        if record["date_add"] == "0000-00-00 00:00:00":
+            return {"date_add": datetime.datetime.now()}
+        return {"date_add": record["date_add"]}
+
+    @mapping
+    def date_upd(self, record):
+        if record["date_upd"] == "0000-00-00 00:00:00":
+            return {"date_upd": datetime.datetime.now()}
+        return {"date_upd": record["date_upd"]}
 
     @mapping
     def pricelist(self, record):
@@ -71,7 +80,7 @@ class PartnerImportMapper(Component):
         partner_category_bindings = self.env[model_name].browse()
         binder = self.binder_for(model_name)
         for group in groups:
-            partner_category_bindings |= binder.to_internal(group["id"])
+            partner_category_bindings |= binder.to_internal(group["id"], unwrap=True)
 
         result = {
             "group_ids": [(6, 0, partner_category_bindings.ids)],
@@ -86,7 +95,7 @@ class PartnerImportMapper(Component):
         # We can't put unactive lang so ensure it is active.
         # if not lang, take the one on company
         if record.get("id_lang"):
-            erp_lang = binder.to_internal(record["id_lang"])
+            erp_lang = binder.to_internal(record["id_lang"], unwrap=True)
             erp_lang = erp_lang.filtered("active")
             lang = erp_lang.code
         if not erp_lang:
@@ -111,6 +120,9 @@ class ResPartnerImporter(Component):
         )
         if not isinstance(groups, list):
             groups = [groups]
+        default_group = self.prestashop_record.get("id_default_group", False)
+        if default_group:
+            groups.append({"id": default_group})
         for group in groups:
             self._import_dependency(group["id"], "prestashop.res.partner.category")
 
@@ -118,7 +130,7 @@ class ResPartnerImporter(Component):
         res = super()._after_import(binding)
         binder = self.binder_for()
         ps_id = binder.to_external(binding)
-        self.env["prestashop.address"].with_delay(priority=10).import_batch(
+        self.env["prestashop.address"].with_delay(priority=25).import_batch(
             backend=self.backend_record,
             filters={"filter[id_customer]": "%d" % (ps_id,)},
         )
@@ -144,12 +156,34 @@ class AddressImportMapper(Component):
         ("phone", "phone"),
         ("phone_mobile", "mobile"),
         ("postcode", "zip"),
-        ("date_add", "date_add"),
-        ("date_upd", "date_upd"),
         ("alias", "alias"),
         ("company", "company"),
         (external_to_m2o("id_customer"), "prestashop_partner_id"),
     ]
+
+    @mapping
+    def date_add(self, record):
+        if record["date_add"] == "0000-00-00 00:00:00":
+            return {"date_add": datetime.datetime.now()}
+        return {"date_add": record["date_add"]}
+
+    @mapping
+    def date_upd(self, record):
+        if record["date_upd"] == "0000-00-00 00:00:00":
+            return {"date_upd": datetime.datetime.now()}
+        return {"date_upd": record["date_upd"]}
+
+    @mapping
+    def country_id(self, record):
+        binder = self.binder_for("prestashop.res.country")
+        country_id = binder.to_internal(record["id_country"], unwrap=True)
+        return {"country_id": country_id.id}
+
+    @mapping
+    def state_id(self, record):
+        binder = self.binder_for("prestashop.res.country.state")
+        state_id = binder.to_internal(record["id_state"], unwrap=True)
+        return {"state_id": state_id.id}
 
     @mapping
     def backend_id(self, record):
@@ -166,14 +200,6 @@ class AddressImportMapper(Component):
         parts = [record["firstname"], record["lastname"]]
         name = " ".join(p.strip() for p in parts if p.strip())
         return {"name": name}
-
-    @mapping
-    def country(self, record):
-        if record.get("id_country"):
-            binder = self.binder_for("prestashop.res.country")
-            country = binder.to_internal(record["id_country"], unwrap=True)
-            return {"country_id": country.id}
-        return {}
 
     @mapping
     def company_id(self, record):
@@ -207,18 +233,6 @@ class AddressImporter(Component):
             pass  # let mapper to set default value
         return map_record
 
-    def _check_vat(self, vat_number, partner_country):
-        vat_country, vat_number_ = self.env["res.partner"]._split_vat(vat_number)
-        if not self.env["res.partner"].simple_vat_check(vat_country, vat_number_):
-            # if fails, check with country code from country
-            country_code = partner_country.code
-            if country_code:
-                if not self.env["res.partner"].simple_vat_check(
-                    country_code.lower(), vat_number
-                ):
-                    return False
-        return True
-
     def _after_import(self, binding):
         record = self.prestashop_record
         vat_number = None
@@ -230,12 +244,7 @@ class AddressImporter(Component):
                 record["dni"].replace(".", "").replace(" ", "").replace("-", "")
             )
         if vat_number:
-            if self._check_vat(vat_number, binding.odoo_id.country_id):
-                binding.parent_id.write({"vat": vat_number})
-            else:
-                msg = _("Please, check the VAT number: %s") % vat_number
-                # TODO create activity to warn the vat is incorrect ?
-                _logger.warn(msg)
+            binding.parent_id.write({"vat": vat_number})
 
 
 class AddressBatchImporter(Component):

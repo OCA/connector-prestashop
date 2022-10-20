@@ -45,3 +45,16 @@ class PaymentModeBatchImporter(Component):
             }
         )
         # TODO add activity to warn the user it has  to configure something?
+
+
+class AccountPaymentModeRecordImporter(Component):
+    _name = "account.payment.mode.record.importer"
+    _inherit = "prestashop.translatable.record.importer"
+    _apply_on = "account.payment.mode"
+
+    def run(self, prestashop_id, force=False):
+        """Run the synchronization"""
+        batch_importer = self.component(
+            usage="batch.importer", model_name="account.payment.mode"
+        )
+        batch_importer._import_record({"payment": prestashop_id})

@@ -81,6 +81,24 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="action_prestashop_partners" model="ir.actions.act_window">
+        <field name="name">Partners</field>
+        <field name="res_model">prestashop.res.partner</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_prestashop_partners_categories" model="ir.actions.act_window">
+        <field name="name">Partner Categories</field>
+        <field name="res_model">prestashop.res.partner.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_prestashop_countries" model="ir.actions.act_window">
+        <field name="name">Countries</field>
+        <field name="res_model">prestashop.res.country</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     <!-- TODO: Implement security strategy groups="odoo_base.group_oc_manager" -->
     <menuitem
         id="menu_prestashop_external_objects"
@@ -128,7 +146,23 @@
         parent="menu_prestashop_external_objects"
         action="action_prestashop_products"
     />
-
-
+    <menuitem
+        id="menu_prestashop_external_partners"
+        name="External Partners"
+        parent="menu_prestashop_external_objects"
+        action="action_prestashop_partners"
+    />
+    <menuitem
+        id="menu_prestashop_external_partners_categories"
+        name="External Partner Categories"
+        parent="menu_prestashop_external_objects"
+        action="action_prestashop_partners_categories"
+    />
+    <menuitem
+        id="menu_prestashop_external_countries"
+        name="External Countries"
+        parent="menu_prestashop_external_objects"
+        action="action_prestashop_countries"
+    />
 
 </odoo>

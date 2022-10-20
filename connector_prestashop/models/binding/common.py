@@ -52,6 +52,7 @@ class PrestashopBinding(models.AbstractModel):
             filters = {}
         with backend.work_on(self._name) as work:
             importer = work.component(usage="batch.importer")
+            kwargs["priority"] = kwargs.get("priority", 20)
             return importer.run(filters=filters, **kwargs)
 
     def export_record(self, fields=None):

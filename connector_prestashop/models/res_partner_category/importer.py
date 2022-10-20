@@ -1,5 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
+import datetime
+
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 
@@ -17,9 +19,19 @@ class PartnerCategoryImportMapper(Component):
 
     direct = [
         ("name", "name"),
-        ("date_add", "date_add"),
-        ("date_upd", "date_upd"),
     ]
+
+    @mapping
+    def date_add(self, record):
+        if record["date_add"] == "0000-00-00 00:00:00":
+            return {"date_add": datetime.datetime.now()}
+        return {"date_add": record["date_add"]}
+
+    @mapping
+    def date_upd(self, record):
+        if record["date_upd"] == "0000-00-00 00:00:00":
+            return {"date_upd": datetime.datetime.now()}
+        return {"date_upd": record["date_upd"]}
 
     @mapping
     def prestashop_id(self, record):

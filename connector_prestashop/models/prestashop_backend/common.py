@@ -251,6 +251,7 @@ class PrestashopBackend(models.Model):
             for model_name in [
                 "prestashop.res.lang",
                 "prestashop.res.country",
+                "prestashop.res.country.state",
                 "prestashop.res.currency",
                 "prestashop.account.tax",
             ]:
@@ -314,10 +315,24 @@ class PrestashopBackend(models.Model):
 
     def import_sale_orders(self):
         for backend_record in self:
+            pending_job_ids = self.env["queue.job"].search(
+                [
+                    ("state", "in", ["pending", "enqueued", "started"]),
+                    (
+                        "func_string",
+                        "like",
+                        "import_orders_since(prestashop.backend({},)".format(
+                            backend_record.id
+                        ),
+                    ),
+                ]
+            )
+            if pending_job_ids:
+                continue
             since_date = backend_record.import_orders_since
-            backend_record.env[
-                "prestashop.sale.order"
-            ].with_delay().import_orders_since(backend_record, since_date)
+            backend_record.env["prestashop.sale.order"].with_delay(
+                priority=10
+            ).import_orders_since(backend_record, since_date)
         return True
 
     def import_payment_modes(self):

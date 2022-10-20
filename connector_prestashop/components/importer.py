@@ -156,31 +156,30 @@ class PrestashopImporter(AbstractComponent):
         This can be used to make a preemptive check in a new transaction,
         for instance to see if another transaction already made the work.
         """
-        with odoo.api.Environment.manage():
-            registry = odoo.modules.registry.Registry(self.env.cr.dbname)
-            with closing(registry.cursor()) as cr:
-                try:
-                    new_env = odoo.api.Environment(cr, self.env.uid, self.env.context)
-                    # connector_env = self.connector_env.create_environment(
-                    #     self.backend_record.with_env(new_env),
-                    #     model_name or self.model._name,
-                    #     connector_env=self.connector_env
-                    # )
-                    with self.backend_record.with_env(new_env).work_on(
-                        self.model._name
-                    ) as work2:
-                        yield work2
-                except BaseException:
-                    cr.rollback()
-                    raise
-                else:
-                    # Despite what pylint says, this a perfectly valid
-                    # commit (in a new cursor). Disable the warning.
-                    self.env[
-                        "base"
-                    ].flush()  # TODO FIXME check if and why flush is mandatory here
-                    if not getattr(threading.currentThread(), "testing", False):
-                        cr.commit()  # pylint: disable=invalid-commit
+        registry = odoo.modules.registry.Registry(self.env.cr.dbname)
+        with closing(registry.cursor()) as cr:
+            try:
+                new_env = odoo.api.Environment(cr, self.env.uid, self.env.context)
+                # connector_env = self.connector_env.create_environment(
+                #     self.backend_record.with_env(new_env),
+                #     model_name or self.model._name,
+                #     connector_env=self.connector_env
+                # )
+                with self.backend_record.with_env(new_env).work_on(
+                    self.model._name
+                ) as work2:
+                    yield work2
+            except BaseException:
+                cr.rollback()
+                raise
+            else:
+                # Despite what pylint says, this a perfectly valid
+                # commit (in a new cursor). Disable the warning.
+                self.env[
+                    "base"
+                ].flush()  # TODO FIXME check if and why flush is mandatory here
+                if not getattr(threading.currentThread(), "testing", False):
+                    cr.commit()  # pylint: disable=invalid-commit
 
     def _check_in_new_connector_env(self):
         # with self.do_in_new_connector_env() as new_connector_env:
@@ -512,7 +511,9 @@ class TranslatableRecordImporter(AbstractComponent):
         """Hook called at the end of the import"""
         for lang_code, lang_record in self.other_langs_data.items():
             map_record = self.mapper.map_record(lang_record)
-            binding.with_context(
-                lang=lang_code,
-                connector_no_export=True,
-            ).write(map_record.values())
+            values = map_record.values()
+            if "name" in values.keys() and values.get("name"):
+                binding.with_context(
+                    lang=lang_code,
+                    connector_no_export=True,
+                ).write(values)
