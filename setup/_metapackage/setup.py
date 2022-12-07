@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo14-addon-connector_prestashop',
+        'odoo14-addon-connector_prestashop_environment',
     ],
     classifiers=[
         'Programming Language :: Python',
