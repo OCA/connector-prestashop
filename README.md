@@ -22,6 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [connector_prestashop](connector_prestashop/) | 14.0.2.0.2 |  | PrestaShop-Odoo connector
+[connector_prestashop_environment](connector_prestashop_environment/) | 14.0.1.0.0 |  | Connector Prestashop Environment
 
 [//]: # (end addons)
 
