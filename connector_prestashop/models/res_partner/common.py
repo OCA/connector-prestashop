@@ -1,5 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from prestapyt import PrestaShopWebServiceDict
+
 from odoo import fields, models
 
 from odoo.addons.component.core import Component
@@ -160,6 +162,20 @@ class PartnerAdapter(Component):
     _inherit = "prestashop.adapter"
     _apply_on = "prestashop.res.partner"
     _prestashop_model = "customers"
+
+    def search(self, filters=None):
+        result = super().search(filters=filters)
+        shops = self.env["prestashop.shop"].search(
+            [("backend_id", "=", self.backend_record.id)]
+        )
+        for shop in shops:
+            if not shop.default_url:
+                continue
+            api = PrestaShopWebServiceDict(
+                "%s/api" % shop.default_url, self.prestashop.webservice_key
+            )
+            result += api.search(self._prestashop_model, filters)
+        return result
 
 
 class PartnerAddressAdapter(Component):
