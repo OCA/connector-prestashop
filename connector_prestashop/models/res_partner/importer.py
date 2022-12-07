@@ -44,7 +44,7 @@ class PartnerImportMapper(Component):
     def is_company(self, record):
         if record.get("company"):
             return {"is_company": True}
-        return {}
+        return {"is_company": False}
 
     @mapping
     def birthday(self, record):
