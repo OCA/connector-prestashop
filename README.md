@@ -9,7 +9,7 @@
 
 # connector-prestashop
 
-TODO: add repo description.
+Module around Prestashop
 
 <!-- /!\ do not modify below this line -->
 
