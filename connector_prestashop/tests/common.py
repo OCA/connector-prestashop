@@ -260,15 +260,12 @@ class PrestashopTransactionCase(TransactionCase):
         self.journal = self.env["account.journal"].create(
             {"name": "Test journal", "code": "TEST", "type": "general"}
         )
-        income_type = self.env.ref("account.data_account_type_revenue")
-        expense_type = self.env.ref("account.data_account_type_expenses")
-        receivable_type = self.env.ref("account.data_account_type_receivable")
         self.debit_account = self.env["account.account"].create(
             {
                 "company_id": company.id,
                 "code": "DB",
                 "name": "Debit Account",
-                "user_type_id": income_type.id,
+                "account_type": "income",
                 "reconcile": False,
             }
         )
@@ -277,7 +274,7 @@ class PrestashopTransactionCase(TransactionCase):
                 "company_id": company.id,
                 "code": "CR",
                 "name": "Credit Account",
-                "user_type_id": expense_type.id,
+                "account_type": "income",
                 "reconcile": False,
             }
         )
@@ -286,22 +283,19 @@ class PrestashopTransactionCase(TransactionCase):
                 "company_id": company.id,
                 "code": "RA",
                 "name": "Receivable Account",
-                "user_type_id": receivable_type.id,
+                "account_type": "asset_receivable",
                 "reconcile": True,
             }
         )
         self.env["ir.property"].search(
             [("name", "=", "property_account_receivable_id"), ("res_id", "=", False)]
         ).value_reference = ("account.account,%s" % self.receivable_account.id)
-        liabilities_account = self.env.ref(
-            "account.data_account_type_current_liabilities"
-        )
         self.tax_account = self.env["account.account"].create(
             {
                 "company_id": company.id,
                 "code": "tax",
                 "name": "Tax Account",
-                "user_type_id": liabilities_account.id,
+                "account_type": "liability_current",
                 "reconcile": False,
             }
         )
@@ -337,7 +331,7 @@ class PrestashopTransactionCase(TransactionCase):
         product = self.env["product.product"].create(
             {
                 "name": name,
-                "type": "product",
+                "detailed_type": "product",
             }
         )
         template = product.product_tmpl_id

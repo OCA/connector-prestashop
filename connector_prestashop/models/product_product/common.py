@@ -61,7 +61,7 @@ class ProductProduct(models.Model):
     def _set_variants_default_on(self, default_on_list=None):
         if self.env.context.get("skip_check_default_variant", False):
             return True
-        templates = self.mapped("product_tmpl_id")
+        templates = self.product_tmpl_id
         for template in templates:
             variants = template.with_context(
                 skip_check_default_variant=True
@@ -79,11 +79,11 @@ class ProductProduct(models.Model):
                 else:
                     variants[1:].write({"default_on": False})
 
-    @api.model
-    def create(self, vals):
-        res = super().create(vals)
-        res._set_variants_default_on()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super().create(vals_list)
+        products._set_variants_default_on()
+        return products
 
     def write(self, vals):
         if not vals.get("active", True):

@@ -298,14 +298,13 @@ class ProductCombinationMapper(Component):
     @mapping
     def barcode(self, record):
         barcode = record.get("barcode") or record.get("ean13")
-        check_ean = self.env["barcode.nomenclature"].check_ean
         if barcode in ["", "0"]:
             backend_adapter = self.component(
                 usage="backend.adapter", model_name="prestashop.product.template"
             )
             template = backend_adapter.read(record["id_product"])
             barcode = template.get("barcode") or template.get("ean13")
-        if barcode and barcode != "0" and check_ean(barcode):
+        if barcode and barcode != "0":
             return {"barcode": barcode}
         return {}
 
