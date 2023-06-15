@@ -156,31 +156,28 @@ class PrestashopImporter(AbstractComponent):
         This can be used to make a preemptive check in a new transaction,
         for instance to see if another transaction already made the work.
         """
-        with odoo.api.Environment.manage():
-            registry = odoo.modules.registry.Registry(self.env.cr.dbname)
-            with closing(registry.cursor()) as cr:
-                try:
-                    new_env = odoo.api.Environment(cr, self.env.uid, self.env.context)
-                    # connector_env = self.connector_env.create_environment(
-                    #     self.backend_record.with_env(new_env),
-                    #     model_name or self.model._name,
-                    #     connector_env=self.connector_env
-                    # )
-                    with self.backend_record.with_env(new_env).work_on(
-                        self.model._name
-                    ) as work2:
-                        yield work2
-                except BaseException:
-                    cr.rollback()
-                    raise
-                else:
-                    # Despite what pylint says, this a perfectly valid
-                    # commit (in a new cursor). Disable the warning.
-                    self.env[
-                        "base"
-                    ].flush()  # TODO FIXME check if and why flush is mandatory here
-                    if not getattr(threading.currentThread(), "testing", False):
-                        cr.commit()  # pylint: disable=invalid-commit
+        registry = odoo.modules.registry.Registry(self.env.cr.dbname)
+        with closing(registry.cursor()) as cr:
+            try:
+                new_env = odoo.api.Environment(cr, self.env.uid, self.env.context)
+                # connector_env = self.connector_env.create_environment(
+                #     self.backend_record.with_env(new_env),
+                #     model_name or self.model._name,
+                #     connector_env=self.connector_env
+                # )
+                with self.backend_record.with_env(new_env).work_on(
+                    self.model._name
+                ) as work2:
+                    yield work2
+            except BaseException:
+                cr.rollback()
+                raise
+            else:
+                # Despite what pylint says, this a perfectly valid
+                # commit (in a new cursor). Disable the warning.
+                self.env.flush_all()  # TODO FIXME check if and why flush is mandatory here
+                if not getattr(threading.current_thread(), "testing", False):
+                    cr.commit()  # pylint: disable=invalid-commit
 
     def _check_in_new_connector_env(self):
         # with self.do_in_new_connector_env() as new_connector_env:

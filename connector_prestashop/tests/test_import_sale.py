@@ -93,17 +93,17 @@ class TestImportSale(PrestashopTransactionCase):
     def test_import_sale_record(self):
         """Import a sale order"""
         # setup for sale order with id 5, create the dependencies
-        mode_journal = self.env["account.journal"].search([], limit=1)
+        mode_journal = self.env["account.journal"].search(
+            [("type", "=", "bank"), ("company_id", "=", self.env.company.id)], limit=1
+        )
         payment_method_xmlid = "account.account_payment_method_manual_in"
         payment_method = self.env.ref(payment_method_xmlid)
-        mode_journal.inbound_payment_method_ids = payment_method
         payment_mode = self.env["account.payment.mode"].create(
             {
                 "name": "Bank wire",
                 "company_id": self.backend_record.company_id.id,
                 "bank_account_link": "fixed",
                 "fixed_journal_id": mode_journal.id,
-                "payment_type": "inbound",
                 "payment_method_id": payment_method.id,
             }
         )

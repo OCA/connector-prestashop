@@ -147,13 +147,14 @@ class PrestashopSaleOrderLine(models.Model):
         index=True,
     )
 
-    @api.model
-    def create(self, vals):
-        ps_sale_order = self.env["prestashop.sale.order"].search(
-            [("id", "=", vals["prestashop_order_id"])], limit=1
-        )
-        vals["order_id"] = ps_sale_order.odoo_id.id
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            ps_sale_order = self.env["prestashop.sale.order"].search(
+                [("id", "=", vals["prestashop_order_id"])], limit=1
+            )
+            vals["order_id"] = ps_sale_order.odoo_id.id
+        return super().create(vals_list)
 
 
 class PrestashopSaleOrderLineDiscount(models.Model):
@@ -176,13 +177,14 @@ class PrestashopSaleOrderLineDiscount(models.Model):
         index=True,
     )
 
-    @api.model
-    def create(self, vals):
-        ps_sale_order = self.env["prestashop.sale.order"].search(
-            [("id", "=", vals["prestashop_order_id"])], limit=1
-        )
-        vals["order_id"] = ps_sale_order.odoo_id.id
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            ps_sale_order = self.env["prestashop.sale.order"].search(
+                [("id", "=", vals["prestashop_order_id"])], limit=1
+            )
+            vals["order_id"] = ps_sale_order.odoo_id.id
+        return super().create(vals_list)
 
 
 class OrderPaymentModel(models.TransientModel):

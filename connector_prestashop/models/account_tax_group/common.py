@@ -54,5 +54,8 @@ class TaxGroupAdapter(Component):
     def search(self, filters=None):
         if filters is None:
             filters = {}
-        filters["filter[deleted]"] = 0
+        # deleted does not exist in 1.5 version. Not sure when it arrived though
+        # adapt the version if needed.
+        if self.work.collection.version > "1.5":
+            filters["filter[deleted]"] = 0
         return super().search(filters)

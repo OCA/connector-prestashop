@@ -27,14 +27,15 @@ class StockLocation(models.Model):
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         location_obj = self.env["stock.location"]
         ps_locations = location_obj.get_prestashop_stock_locations()
-        quant = super().create(vals)
-        if quant.location_id in ps_locations:
-            quant.product_id.update_prestashop_qty()
-        return quant
+        quants = super().create(vals_list)
+        for quant in quants:
+            if quant.location_id in ps_locations:
+                quant.product_id.update_prestashop_qty()
+        return quants
 
     def write(self, vals):
         location_obj = self.env["stock.location"]

@@ -80,7 +80,7 @@ class TestExportPicking(PrestashopTransactionCase):
                 "picking_type_id": self.ref("stock.picking_type_out"),
                 "location_id": stock_loc,
                 "location_dest_id": customer_loc,
-                "move_lines": [
+                "move_ids": [
                     (
                         0,
                         0,

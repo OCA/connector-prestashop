@@ -315,17 +315,6 @@ class SaleOrderImportMapper(Component):
             for k, v in values.items()
             if k in self.env["sale.order"]._fields.keys()
         }
-        sale_vals = self.env["sale.order"].play_onchanges(
-            sale_vals,
-            [
-                "fiscal_position_id",
-                "partner_id",
-                "partner_shipping_id",
-                "partner_invoice_id",
-                "payment_mode_id",
-                "workflow_process_id",
-            ],
-        )
         values.update(sale_vals)
         presta_line_list = []
         for line_vals_command in values["prestashop_order_line_ids"]:
@@ -337,9 +326,6 @@ class SaleOrderImportMapper(Component):
                 for k, v in presta_line_vals.items()
                 if k in self.env["sale.order.line"]._fields.keys()
             }
-            line_vals = self.env["sale.order.line"].play_onchanges(
-                line_vals, ["product_id"]
-            )
             presta_line_vals.update(line_vals)
             presta_line_list.append(
                 (line_vals_command[0], line_vals_command[1], presta_line_vals)
@@ -428,21 +414,10 @@ class SaleOrderImporter(Component):
             if self.backend_record.taxes_included
             else binding.total_shipping_tax_excluded
         )
-        # when we have a carrier_id, even with a 0.0 price,
-        # Odoo will adda a shipping line in the SO when the picking
-        # is done, so we better add the line directly even when the
-        # price is 0.0
         if binding.odoo_id.carrier_id:
             binding.odoo_id._create_delivery_line(
                 binding.odoo_id.carrier_id, shipping_total
             )
-        binding.odoo_id.recompute()
-
-    def _create(self, data):
-        binding = super()._create(data)
-        if binding.fiscal_position_id:
-            binding.odoo_id._compute_tax_id()
-        return binding
 
     def _after_import(self, binding):
         res = super()._after_import(binding)

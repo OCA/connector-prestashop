@@ -6,7 +6,7 @@
 
 {
     "name": "PrestaShop-Odoo connector",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "depends": [
         "account",
@@ -16,7 +16,6 @@
         "product_multi_image",  # oca/product-attribute
         "connector_ecommerce",  # oca/connector-ecommerce
         "purchase",
-        "onchange_helper",
     ],
     "external_dependencies": {
         "python": [
@@ -36,7 +35,9 @@
     "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
-    "demo": [],
+    "demo": [
+        "demo/backend.xml",
+    ],
     "data": [
         "security/ir.model.access.csv",
         "security/prestashop_security.xml",
@@ -55,7 +56,6 @@
         "views/account_view.xml",
         "views/stock_view.xml",
         "views/queue_job_views.xml",
-        "demo/backend.xml",
     ],
     "installable": True,
     "application": True,

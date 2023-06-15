@@ -54,7 +54,7 @@ class PrestashopBaseExporter(AbstractComponent):
         self.binder.bind(self.prestashop_id, self.binding)
         # commit so we keep the external ID if several cascading exports
         # are called and one of them fails
-        if not getattr(threading.currentThread(), "testing", False):
+        if not getattr(threading.current_thread(), "testing", False):
             self.env.cr.commit()  # pylint: disable=invalid-commit
         self._after_export()
         return result
@@ -162,7 +162,7 @@ class PrestashopExporter(AbstractComponent):
                     # Eager commit to avoid having 2 jobs
                     # exporting at the same time.
                     # do never commit during tests
-                    if not getattr(threading.currentThread(), "testing", False):
+                    if not getattr(threading.current_thread(), "testing", False):
                         model_c._cr.commit()  # pylint: disable=invalid-commit
         else:
             # If prestashop_bind_ids does not exist we are typically in a
