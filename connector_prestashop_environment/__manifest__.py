@@ -2,7 +2,7 @@
 
 {
     "name": "Connector Prestashop Environment",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "author": "akretion,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
