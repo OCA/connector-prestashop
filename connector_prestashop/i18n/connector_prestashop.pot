@@ -2376,6 +2376,11 @@ msgid "Has Reconciled Entries"
 msgstr ""
 
 #. module: connector_prestashop
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__has_reconciled_items
+msgid "Has Reconciled Items"
+msgstr ""
+
+#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__has_sms_error
 msgid "Has SMS error"
 msgstr ""
@@ -5899,6 +5904,12 @@ msgid "Show Name Warning"
 msgstr ""
 
 #. module: connector_prestashop
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__show_on_hand_qty_status_button
+#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__show_on_hand_qty_status_button
+msgid "Show On Hand Qty Status Button"
+msgstr ""
+
+#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__show_reset_to_draft_button
 msgid "Show Reset To Draft Button"
 msgstr ""
@@ -6416,6 +6427,11 @@ msgstr ""
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__posted_before
 msgid "Technical field for knowing if the move has been posted before"
+msgstr ""
+
+#. module: connector_prestashop
+#: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__has_reconciled_items
+msgid "Technical field for supporting the editability of the payment mode"
 msgstr ""
 
 #. module: connector_prestashop
