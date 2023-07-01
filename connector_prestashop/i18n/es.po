@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-31 13:54+0000\n"
-"PO-Revision-Date: 2023-07-01 20:09+0000\n"
+"PO-Revision-Date: 2023-07-01 23:08+0000\n"
 "Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -3747,7 +3747,7 @@ msgstr ""
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__letter_ids
 msgid "Letter"
-msgstr ""
+msgstr "Carta"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_option__attribute_line_ids
@@ -3775,7 +3775,7 @@ msgstr "Location used to import stock quantities."
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr ""
+msgstr "Bloquear entradas publicadas con Hash"
 
 #. module: connector_prestashop
 #: model:ir.model.fields.selection,name:connector_prestashop.selection__sale_order_state_list__name__done
@@ -3785,7 +3785,7 @@ msgstr "Locked"
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Registro de solicitudes para facilitar la depuración"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__low_stock_alert
@@ -3800,17 +3800,17 @@ msgstr "Low Stock Threshold"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Tipo de actividad postal"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_mail_message
 msgid "Mail message prestashop bindings"
-msgstr ""
+msgstr "Mensaje de correo vinculaciones prestashop"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__mail_ids
 msgid "Mails"
-msgstr ""
+msgstr "Correos"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__message_main_attachment_id
@@ -3821,7 +3821,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__message_main_attachment_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Archivo adjunto principal"
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
@@ -3856,6 +3856,11 @@ msgid ""
 "inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
+"Manual: Las entradas contables para valorar el inventario no se contabilizan "
+"automáticamente.\n"
+"                  Automático: Se crea automáticamente una entrada contable "
+"para valorar el inventario cuando un producto entra o sale de la empresa.\n"
+"        "
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__service_type
@@ -3868,6 +3873,13 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
+"Fijar manualmente las cantidades en el pedido: Facture en función de la "
+"cantidad introducida manualmente, sin crear una cuenta analítica.\n"
+"Hojas de horas en el contrato: Facture en función de las horas registradas "
+"en la hoja de horas correspondiente.\n"
+"Crear una tarea y realizar un seguimiento de las horas: Cree una tarea en la "
+"validación del pedido de cliente y realice un seguimiento de las horas de "
+"trabajo."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier__margin
@@ -3903,7 +3915,7 @@ msgstr "Matching option for partner"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__medium_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__medium_id
 msgid "Medium"
-msgstr ""
+msgstr "Media"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__image_main_medium
@@ -3943,7 +3955,7 @@ msgstr "Mensaje"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__message_has_error
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "error de entrega de mensaje"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__record_name
@@ -3954,6 +3966,7 @@ msgstr "Nombre de registro del mensaje"
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_mail_message__description
 msgid "Message description: either the subject, or the beginning of the body"
 msgstr ""
+"Descripción del mensaje: el asunto o el principio del cuerpo del mensaje"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__invoice_warn_msg
@@ -4044,7 +4057,7 @@ msgstr "Meta title"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__qty_delivered_method
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Método para actualizar la cantidad entregada"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__orderpoint_ids
@@ -4054,12 +4067,12 @@ msgstr "Reglas de stock mínimo"
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_partner_mixin
 msgid "Mixin for Partner Bindings"
-msgstr ""
+msgstr "Combinación para enlaces de socios"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_address_mixin
 msgid "Mixin for prestashop adress bindings"
-msgstr ""
+msgstr "Combinación de direcciones para enlaces prestashop"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__mobile
@@ -4071,12 +4084,12 @@ msgstr "Móvil"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Moderado por"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Estado de moderación"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__my_activity_date_deadline
@@ -4087,7 +4100,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__my_activity_date_deadline
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Mi fecha límite de la actividad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax_group__name
@@ -4119,7 +4132,7 @@ msgstr "Name in PrestaShop"
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__signed_by
 msgid "Name of the person that signed the SO."
-msgstr ""
+msgstr "Nombre de la persona que firmó el pliego de cargos."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__needaction
@@ -4130,7 +4143,7 @@ msgstr "Requiere acción"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__need_moderation
 msgid "Need moderation"
-msgstr ""
+msgstr "Moderación necesaria"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__need_cancel
@@ -4151,7 +4164,7 @@ msgstr "Newsletter"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_date_deadline
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Fecha límite para la próxima actividad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__activity_summary
@@ -4162,7 +4175,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_summary
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Resumen de próxima actividad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__activity_type_id
@@ -4173,7 +4186,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_type_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "tipo de la siguiente actividad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax__no_export
@@ -4239,7 +4252,7 @@ msgstr "No hay un hilo para las respuestas"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__email_normalized
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Email normalizado"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__comment
@@ -4278,7 +4291,7 @@ msgstr "Número de acciones"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr ""
+msgstr "Número de órdenes de compra generadas"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order_line__customer_lead
@@ -4296,6 +4309,8 @@ msgstr ""
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
 msgstr ""
+"Número de días para enviar un correo electrónico recordatorio antes de la "
+"fecha de recepción prometida"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__message_has_error_counter
@@ -4306,13 +4321,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__message_has_error_counter
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "número de errores"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__purchase_line_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Número de artículos de compra generados"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__message_needaction_counter
@@ -4334,13 +4349,13 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__message_has_error_counter
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "número de mensajes con error de entrega"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__pricelist_item_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr ""
+msgstr "Número de reglas de precio"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__message_unread_counter
@@ -4356,17 +4371,17 @@ msgstr "Número de mensajes no leidos"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_option__odoo_id
 msgid "Odoo Attribute"
-msgstr ""
+msgstr "Atributo de Odoo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_currency__odoo_id
 msgid "Odoo Currency"
-msgstr ""
+msgstr "Divisa de Odoo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_option_value__odoo_id
 msgid "Odoo Option"
-msgstr ""
+msgstr "Opción de Odoo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_groups_pricelist__odoo_id
@@ -4376,7 +4391,7 @@ msgstr "Odoo Pricelist"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__odoo_id
 msgid "Odoo Product"
-msgstr ""
+msgstr "Producto de Odoo"
 
 #. module: connector_prestashop
 #: model:ir.actions.act_window,name:connector_prestashop.action_prestashop_product_templates
@@ -4410,13 +4425,17 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"Sobre cantidades pedidas: Controlar las facturas en función de las "
+"cantidades pedidas.\n"
+"Sobre cantidades recibidas: Controlar las facturas en función de las "
+"cantidades recibidas."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__on_time_rate
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__on_time_rate
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr ""
+msgstr "Porcentaje de entregas a tiempo"
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
@@ -4444,12 +4463,12 @@ msgstr ""
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__require_payment
 msgid "Online Payment"
-msgstr ""
+msgstr "Pago en línea"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "firma en línea"
 
 #. module: connector_prestashop
 #: model:ir.model.fields.selection,name:connector_prestashop.selection__prestashop_product_template__visibility__catalog
@@ -4466,7 +4485,7 @@ msgstr "Sólo resultados de búsqueda"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__sale_order_option_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__sale_order_option_ids
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "Líneas de productos opcionales"
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
@@ -4503,16 +4522,18 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Cantidad pedida: Cantidades facturadas pedidas por el cliente.\n"
+"Cantidad entregada: Cantidades facturadas entregadas al cliente."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__invoice_origin
 msgid "Origin"
-msgstr ""
+msgstr "Origen"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__tax_cash_basis_move_id
 msgid "Origin Tax Cash Basis Entry"
-msgstr ""
+msgstr "Origen de impuesto de entrada básica de caja"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__reference
@@ -4544,6 +4565,8 @@ msgid ""
 "Over the past 12 months; the number of products received on time divided by "
 "the number of ordered products."
 msgstr ""
+"En los últimos 12 meses; el número de productos recibidos a tiempo dividido "
+"por el número de productos pedidos."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_image__owner_id
@@ -4553,13 +4576,13 @@ msgstr "Propietario"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_image__owner_model
 msgid "Owner Model"
-msgstr ""
+msgstr "Modelo de propietario"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__product_packaging
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__product_packaging
 msgid "Package"
-msgstr ""
+msgstr "Paquete"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_category__parent_id
@@ -4581,7 +4604,7 @@ msgstr "Parent Order"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_category__parent_path
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "recorrido parental"
 
 #. module: connector_prestashop
 #: code:addons/connector_prestashop/models/product_category/importer.py:0
@@ -4607,7 +4630,7 @@ msgstr "Empresa"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__partner_bank_filter_type_domain
 msgid "Partner Bank Filter Type Domain"
-msgstr ""
+msgstr "Tipo de filtro de banco asociado Dominio"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner_category__odoo_id
@@ -4618,14 +4641,14 @@ msgstr "Partner Category"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_partner_mixin__company
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__company
 msgid "Partner Company"
-msgstr ""
+msgstr "Empresa asociada"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__contract_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__contract_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__contract_ids
 msgid "Partner Contracts"
-msgstr ""
+msgstr "Contratos de socios"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_res_partner_category
@@ -4635,12 +4658,12 @@ msgstr "Etiquetas de empresa"
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_res_partner_category
 msgid "Partner category prestashop bindings"
-msgstr ""
+msgstr "Categoría asociada Vinculaciones Prestashop"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_res_partner
 msgid "Partner prestashop bindings"
-msgstr ""
+msgstr "Enlaces prestashop asociados"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__same_vat_partner_id
