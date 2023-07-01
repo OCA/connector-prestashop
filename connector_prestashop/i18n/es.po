@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-31 13:54+0000\n"
-"PO-Revision-Date: 2023-06-28 18:10+0000\n"
+"PO-Revision-Date: 2023-07-01 20:09+0000\n"
 "Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -32,11 +32,24 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Grupo de Impuestos: El impuesto es un conjunto de subimpuestos.\n"
+"         - Fijo: El importe del impuesto permanece invariable sea cual sea "
+"el precio.\n"
+"         - Porcentaje del precio: El importe del impuesto es un % del precio:"
+"\n"
+"                  p.ej. 100 * (1 + 10%) = 110 (precio no incluido)\n"
+"                  p.ej. 110 / (1 + 10%) = 100 (precio incluido)\n"
+"         - Porcentaje del precio con impuestos incluidos: El importe del "
+"impuesto es una división del precio:\n"
+"                  p.ej. 180 / (1 - 10%) = 200 (precio no incluido)\n"
+"                  p.ej. 200 * (1 - 10%) = 180 (precio incluido)\n"
+"        "
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_base_multi_image_image
 msgid " image model for multiple image functionality "
-msgstr ""
+msgstr " modelo de imagen para la funcionalidad de imágenes múltiples "
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__product_variant_count
@@ -67,21 +80,28 @@ msgid ""
 "        Note: the variants creation mode cannot be changed once the "
 "attribute is used on at least one product."
 msgstr ""
+"- Al instante: Todas las variantes posibles se crean en cuanto el atributo y "
+"sus valores se añaden a un producto.\n"
+"                   - Dinámicamente: Cada variante se crea sólo cuando sus "
+"atributos y valores correspondientes se añaden a un pedido de cliente.\n"
+"                   - Nunca:- Nunca se crean variantes para el atributo.\n"
+"                   Nota: el modo de creación de variantes no se puede "
+"cambiar una vez que el atributo se utiliza en al menos un producto."
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
 msgid "<span>Export stock quantities</span>"
-msgstr ""
+msgstr "<span>Exportar cantidades de stock</span>"
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
 msgid "<span>Import carriers</span>"
-msgstr ""
+msgstr "<span>Importar transportistas</span>"
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
 msgid "<span>Import stock quantities</span>"
-msgstr ""
+msgstr "<span>Importar cantidades de stock</span>"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__description_sale
@@ -91,6 +111,9 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Descripción del Producto que desea comunicar a sus clientes. Esta "
+"descripción se copiará en cada Pedido de Venta, Orden de Entrega y Factura/"
+"Abono de Cliente"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__parent_need_cancel
@@ -152,11 +175,16 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Un producto almacenable es un producto para el que se gestionan existencias. "
+"La aplicación Inventario debe estar instalada.\n"
+"Un producto consumible es un producto para el que no se gestionan "
+"existencias.\n"
+"Un servicio es un producto no material que usted proporciona."
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_account_tax
 msgid "Acccount Tax Prestashop Bindings"
-msgstr ""
+msgstr "Cuenta Impuesto Prestashop Bindings"
 
 #. module: connector_prestashop
 #: model:ir.model.fields.selection,name:connector_prestashop.selection__prestashop_product_template__out_of_stock__1
@@ -167,7 +195,7 @@ msgstr "Accept order"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__access_warning
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Alerta de acceso"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order_line__qty_delivered_method
@@ -182,6 +210,14 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Según la configuración del producto, la cantidad entregada se puede calcular "
+"automáticamente por mecanismo:\n"
+"     - Manual: la cantidad se establece manualmente en la línea\n"
+"     - Analítica de gastos: la cantidad es la suma de la cantidad de gastos "
+"contabilizados\n"
+"     - Hoja de tiempo: la cantidad es la suma de horas registradas en tareas "
+"vinculadas a esta línea de venta\n"
+"     - Movimientos de stock: la cantidad proviene de pickings confirmados\n"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__property_account_payable_id
@@ -206,7 +242,7 @@ msgstr "Grupo de Cuenta Fiscal"
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_account_tax_group
 msgid "Account Tax Group Prestashop Bindings"
-msgstr ""
+msgstr "Cuenta de Impuestos Grupo Prestashop Bindings"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_account_tax__cash_basis_transition_account_id
@@ -216,6 +252,10 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"Cuenta utilizada para la transición del importe de los impuestos de caja. "
+"Contendrá el importe del impuesto mientras la factura original no haya sido "
+"conciliada; en la conciliación, este importe se cancela en esta cuenta y se "
+"pone en la cuenta de impuestos regulares."
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_backend_form
@@ -289,12 +329,12 @@ msgstr "Activo"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__active_lang_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__active_lang_count
 msgid "Active Lang Count"
-msgstr ""
+msgstr "Recuento de Idiomas Activos"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__always_available
 msgid "Active Prestashop"
-msgstr ""
+msgstr "Prestashop activo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier__active_ext
@@ -311,7 +351,7 @@ msgstr "Active in PrestaShop"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "actividades"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__activity_exception_decoration
@@ -322,7 +362,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_exception_decoration
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "decoración de actividades de excepción"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__activity_state
@@ -333,7 +373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_state
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "estado de la actividad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__activity_type_icon
@@ -344,30 +384,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__activity_type_icon
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "tipo de icono de actividad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Añadir signo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__additional_info
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__additional_info
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__additional_info
 msgid "Additional info"
-msgstr ""
+msgstr "Información adicional"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_address
 msgid "Addreses prestashop bindings"
-msgstr ""
+msgstr "Direcciones prestashop vinculantes"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__company
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address_mixin__company
 msgid "Address Company"
-msgstr ""
+msgstr "Dirección Compañía"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__type
@@ -379,7 +419,7 @@ msgstr "Tipo de dirección"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax_group__property_advance_tax_payment_account_id
 msgid "Advance Tax payment account"
-msgstr ""
+msgstr "Cuenta de pago anticipado de impuestos"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax__include_base_amount
@@ -404,11 +444,15 @@ msgid ""
 "All the emails and documents sent to this contact will be translated in this "
 "language."
 msgstr ""
+"Todos los correos electrónicos y documentos enviados a este contacto se "
+"traducirán a este idioma."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination_option_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
 msgstr ""
+"Permitir a los usuarios introducir valores personalizados para este valor de "
+"atributo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax__amount
@@ -419,7 +463,7 @@ msgstr "Importe"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Importe antes del descuento"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__amount_residual
@@ -429,7 +473,7 @@ msgstr "Importe adeudado"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__amount_residual_signed
 msgid "Amount Due Signed"
-msgstr ""
+msgstr "Importe adeudado Firmado"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_delivery_carrier__amount
@@ -488,7 +532,7 @@ msgstr "Etiquetas analíticas"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__analytic_line_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__analytic_line_ids
 msgid "Analytic lines"
-msgstr ""
+msgstr "Líneas Analíticas"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_mail_message__no_auto_thread
@@ -518,7 +562,7 @@ msgstr "Adjunto"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__message_attachment_count
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "recuento de anexos"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__attachment_ids
@@ -543,12 +587,12 @@ msgstr "Atributo"
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_product_attribute_value
 msgid "Attribute Value"
-msgstr ""
+msgstr "Valor del Atributo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr ""
+msgstr "Valores del Atributo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__author_id
@@ -573,27 +617,27 @@ msgstr "Avatar del autor"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__authorized_transaction_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Transacciones autorizadas"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__purchase_vendor_bill_id
 msgid "Auto-complete"
-msgstr ""
+msgstr "Autocompletado"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__purchase_vendor_bill_id
 msgid "Auto-complete from a past bill / purchase order."
-msgstr ""
+msgstr "Autocompletar a partir de una factura / orden de compra anterior."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__invoice_vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr ""
+msgstr "Autocompletar a partir de una factura anterior."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__purchase_id
 msgid "Auto-complete from a past purchase order."
-msgstr ""
+msgstr "Autocompletar a partir de un pedido anterior."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__workflow_process_id
@@ -608,6 +652,9 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
+"Enviar automáticamente un correo electrónico de confirmación al vendedor X "
+"días antes de la fecha prevista de recepción, pidiéndole que confirme la "
+"fecha exacta."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__available_for_order
@@ -642,6 +689,10 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
+"Número de cuenta bancaria en la que se abonará la factura. Una cuenta "
+"bancaria de empresa si se trata de una factura de cliente o una nota de "
+"crédito de proveedor; en caso contrario, un número de cuenta bancaria de "
+"socio."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__bank_account_required
@@ -651,7 +702,7 @@ msgstr "Cuenta bancaria requerida"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__bank_partner_id
 msgid "Bank Partner"
-msgstr ""
+msgstr "Socio bancario"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__bank_ids
@@ -677,6 +728,9 @@ msgid ""
 "Based on Payment: the tax is due as soon as the payment of the invoice is "
 "received."
 msgstr ""
+"Basado en factura: el impuesto se devenga en cuanto se valida la factura.\n"
+"Basado en el pago: el impuesto se devenga en cuanto se recibe el pago de la "
+"factura."
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_partner_category_form
@@ -693,21 +747,21 @@ msgstr "Birthday"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "Lista Negra"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__mobile_blacklisted
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__mobile_blacklisted
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "El teléfono de la lista negra es móvil"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__phone_blacklisted
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__phone_blacklisted
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "El teléfono de la lista negra es el teléfono"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__message_bounce
@@ -743,29 +797,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__campaign_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__campaign_id
 msgid "Campaign"
-msgstr ""
+msgstr "Campaña"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__product_updatable
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "Puede editar el producto"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier__can_generate_return
 msgid "Can Generate Return"
-msgstr ""
+msgstr "Puede generar beneficios"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Se puede ampliar la imagen 1024"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "Se puede ampliar la Imagen Variante 1024"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__purchase_ok
@@ -797,7 +851,7 @@ msgstr "Cancelled"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__canned_response_ids
 msgid "Canned Responses"
-msgstr ""
+msgstr "Respuestas conservadas"
 
 #. module: connector_prestashop
 #: model:ir.ui.menu,name:connector_prestashop.menu_prestashop_carrier
@@ -807,18 +861,18 @@ msgstr "Carriers"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr ""
+msgstr "cuenta de transición base de caja"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__invoice_cash_rounding_id
 msgid "Cash Rounding Method"
-msgstr ""
+msgstr "Método de redondeo de efectivo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__product_uom_category_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "categoría"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__route_from_categ_ids
@@ -915,7 +969,7 @@ msgstr "Índice de Colores"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Combinación de índices"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__combinations_ids
@@ -996,7 +1050,7 @@ msgstr "Tipo de Compañía"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__partner_gid
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__partner_gid
 msgid "Company database ID"
-msgstr ""
+msgstr "Identidad de la base de datos de la empresa"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__contact_address
@@ -1008,12 +1062,12 @@ msgstr "Dirección completa"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_category__complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "Nombre completo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Fecha de finalización de la primera orden de entrega."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__quantity
@@ -1032,7 +1086,7 @@ msgstr "Connector"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__child_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__child_ids
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__body
@@ -1043,7 +1097,7 @@ msgstr "Contenidos"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__purchase_method
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__purchase_method
 msgid "Control Policy"
-msgstr ""
+msgstr "Política de control"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order_line__product_uom_category_id
@@ -1052,6 +1106,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"La conversión entre Unidades de Medida sólo puede producirse si pertenecen a "
+"la misma categoría. La conversión se realizará en función de las "
+"proporciones."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__standard_price
@@ -1063,7 +1120,7 @@ msgstr "Coste"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__cost_currency_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Divisa de coste"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__wholesale_price
@@ -1099,6 +1156,12 @@ msgid ""
 "                set on the source location. This is the default value for "
 "all products in this category. It can also directly be set on each product."
 msgstr ""
+"Los artículos diarios de contrapartida de todos los movimientos de entrada "
+"de existencias se contabilizarán en esta cuenta, a menos que exista una "
+"cuenta de valoración específica\n"
+"                                    en la ubicación de origen. Este es el "
+"valor por defecto para todos los productos de esta categoría. También puede "
+"establecerse directamente en cada producto."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier__country_ids
@@ -1140,7 +1203,7 @@ msgstr "Nombre del país"
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_res_country
 msgid "Country prestashop bindings"
-msgstr ""
+msgstr "Vinculaciones prestashop del país"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__date_add
@@ -1241,6 +1304,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Fecha de creación de las órdenes giradas/enviadas,\n"
+"Fecha de confirmación de las órdenes confirmadas."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__credit_limit
@@ -1275,32 +1340,32 @@ msgstr "Código de moneda (ISO 4217)"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr ""
+msgstr "Tipo de divisa"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_currency__currency_subunit_label
 msgid "Currency Subunit"
-msgstr ""
+msgstr "Subunidad de divisa"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_currency__currency_subunit_label
 msgid "Currency Subunit Name"
-msgstr ""
+msgstr "Nombre de subunidad de divisa"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_currency__currency_unit_label
 msgid "Currency Unit"
-msgstr ""
+msgstr "Unidad de divisa"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_currency__currency_unit_label
 msgid "Currency Unit Name"
-msgstr ""
+msgstr "Nombre de unidad de divisa"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_res_currency
 msgid "Currency prestashop bindings"
-msgstr ""
+msgstr "vinculación de divisas prestashop"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_currency__symbol
@@ -1343,7 +1408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__product_custom_attribute_value_ids
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Valores Personalizados"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__partner_id
@@ -1368,7 +1433,7 @@ msgstr "Ubicación del cliente"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_country__name_position
 msgid "Customer Name Position"
-msgstr ""
+msgstr "posición del nombre del cliente"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__customer_payment_mode_id
@@ -1388,14 +1453,14 @@ msgstr "Plazo de pago de cliente"
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__access_url
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL del portal del cliente"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__customer_rank
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__customer_rank
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__customer_rank
 msgid "Customer Rank"
-msgstr ""
+msgstr "Rango del Cliente"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__partner_ref
@@ -1431,14 +1496,14 @@ msgstr "Formato de fecha"
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__signed_on
 msgid "Date of the signature."
-msgstr ""
+msgstr "Fecha de la firma."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__reminder_date_before_receipt
 msgid "Days Before Receipt"
-msgstr ""
+msgstr "Días antes de la recepción"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_backend__debug
@@ -1448,12 +1513,12 @@ msgstr "Debug"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "Registro de depuración"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_currency__decimal_places
 msgid "Decimal Places"
-msgstr ""
+msgstr "Posiciones decimales"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_lang__decimal_point
@@ -1463,7 +1528,7 @@ msgstr "Separador de decimales"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_backend__default_language
 msgid "Default Language"
-msgstr ""
+msgstr "Idioma por defecto"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__default_on
@@ -1474,14 +1539,14 @@ msgstr "Default On"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_category__default_shop_id
 msgid "Default Shop"
-msgstr ""
+msgstr "Tienda por defecto"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__property_delivery_carrier_id
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr ""
+msgstr "Método de entrega por defecto utilizado en los pedidos de venta."
 
 #. module: connector_prestashop
 #: model:ir.model.fields.selection,name:connector_prestashop.selection__prestashop_product_template__out_of_stock__2
@@ -1497,19 +1562,20 @@ msgstr "Default shop"
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__supplier_taxes_id
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr ""
+msgstr "Impuestos por defecto utilizados al comprar el producto."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__taxes_id
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr ""
+msgstr "Impuestos por defecto utilizados al vender el producto."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__uom_id
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
+"Unidad de medida por defecto utilizada para todas las operaciones de stock."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__uom_po_id
@@ -1518,6 +1584,8 @@ msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
 msgstr ""
+"Unidad de medida por defecto utilizada para los pedidos de compra. Debe "
+"pertenecer a la misma categoría que la unidad de medida por defecto."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_shop__default_url
@@ -1528,13 +1596,14 @@ msgstr "Default url"
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__seller_ids
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_template__seller_ids
 msgid "Define vendor pricelists."
-msgstr ""
+msgstr "Definir listas de precios de proveedores."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__invoice_cash_rounding_id
 msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by cash."
 msgstr ""
+"Define la moneda más pequeña que puede utilizarse para pagar en efectivo."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__trust
@@ -1547,13 +1616,13 @@ msgstr "Grado de confianza para este deudor"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__qty_delivered_manual
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr ""
+msgstr "Entregado manualmente"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__qty_delivered
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__qty_delivered
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "Cantidad entregada"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__partner_shipping_id
@@ -1564,7 +1633,7 @@ msgstr "Dirección de entrega"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__commitment_date
 msgid "Delivery Date"
-msgstr ""
+msgstr "Fecha de entrega"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_supplierinfo__delay
@@ -1574,7 +1643,7 @@ msgstr "Tiempo inicial entrega"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Mensaje de entrega"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__property_delivery_carrier_id
@@ -1598,12 +1667,12 @@ msgstr "Producto de envío"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "Éxito de la calificación de entrega"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr ""
+msgstr "Conjunto de entrega"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__partner_shipping_id
@@ -1620,7 +1689,7 @@ msgstr "Delivery carrier"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__recompute_delivery_price
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr ""
+msgstr "Los gastos de envío deben calcularse de nuevo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__expected_date
@@ -1630,6 +1699,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Fecha de entrega que puede prometer al cliente, calculada a partir del plazo "
+"mínimo de las líneas de pedido en caso de productos de Servicio. En caso de "
+"envío, se tendrá en cuenta la política de envío del pedido para utilizar el "
+"plazo de entrega mínimo o máximo de las líneas de pedido."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__sale_delay
@@ -1638,6 +1711,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Plazo de entrega, en días. Es el número de días, prometidos al cliente, "
+"entre la confirmación del pedido de venta y la entrega."
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_prestashop_delivery_carrier_form
@@ -1653,6 +1728,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
+"En función de los módulos instalados, le permitirá definir el recorrido del "
+"producto: si se comprará, se fabricará, se repondrá bajo pedido, etc."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_category__description
@@ -1666,13 +1743,13 @@ msgstr "Descripción"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__description_html
 msgid "Description HTML"
-msgstr ""
+msgstr "Descripción en HTML"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__description_pickingout
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr ""
+msgstr "Descripción de las órdenes de entrega"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__description_picking
@@ -1684,7 +1761,7 @@ msgstr "Descripción en albarán"
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__description_pickingin
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__description_pickingin
 msgid "Description on Receptions"
-msgstr ""
+msgstr "Descripción sobre las recepciones"
 
 #. module: connector_prestashop
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.product_category_connector_prestashop_form_view
@@ -1713,6 +1790,8 @@ msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
 msgstr ""
+"Determina dónde debe colocarse el nombre del cliente/empresa, es decir, "
+"después o antes de la dirección."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_account_tax__type_tax_use
@@ -1721,6 +1800,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Determina dónde se puede seleccionar el impuesto. Nota : 'Ninguno' significa "
+"que un impuesto no puede ser usado por si mismo, sin embargo puede ser usado "
+"en un grupo. 'Ajuste' se utiliza para realizar el ajuste de impuestos."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_lang__direction
@@ -1736,7 +1818,7 @@ msgstr "Descuento (%)"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_groups_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr ""
+msgstr "Política de descuento"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_backend__discount_product_id
@@ -1818,18 +1900,18 @@ msgstr "Display Price"
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__display_qr_code
 msgid "Display QR-code"
-msgstr ""
+msgstr "Visualizar código QR"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__display_qty_widget
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Mostrar widget de cantidad"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_currency__display_rounding_warning
 msgid "Display Rounding Warning"
-msgstr ""
+msgstr "Visualizar aviso de redondeo"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination_option__display_type
@@ -1837,7 +1919,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line__display_type
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Tipo de visualización"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_country__address_format
@@ -1851,26 +1933,36 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"Formato de visualización a utilizar para las direcciones pertenecientes a "
+"este país.\n"
+"\n"
+"Puede utilizar el patrón de cadenas estilo python con todos los campos de la "
+"dirección (por ejemplo, utilice '%(street)s' para mostrar el campo 'street') "
+"más\n"
+"%(state_name)s: el nombre del estado\n"
+"%(state_code)s: el código del estado\n"
+"%(country_name)s: el nombre del país\n"
+"%(country_code)s: el código del país"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax__invoice_repartition_line_ids
 msgid "Distribution for Invoices"
-msgstr ""
+msgstr "Distribución para facturas"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr ""
+msgstr "Distribución de las facturas de reembolso"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr ""
+msgstr "Distribución cuando el impuesto se utiliza en un reembolso"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr ""
+msgstr "Distribución cuando el impuesto se utiliza en una factura"
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order_line__is_downpayment
@@ -1879,6 +1971,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Los anticipos se realizan al crear facturas a partir de un pedido de "
+"cliente. No se copian al duplicar un pedido de cliente."
 
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__invoice_date_due
@@ -1888,7 +1982,7 @@ msgstr "Fecha vencimiento"
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model__import_stock_available
 msgid "Dummy Import Inventory Transient model"
-msgstr ""
+msgstr "Inventario ficticio de importación Modelo transitorio"
 
 #. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model__prestashop_product_tag
