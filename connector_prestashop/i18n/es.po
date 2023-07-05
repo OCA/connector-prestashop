@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-31 13:54+0000\n"
-"PO-Revision-Date: 2023-07-04 13:08+0000\n"
+"PO-Revision-Date: 2023-07-05 11:08+0000\n"
 "Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -4916,7 +4916,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_partner_category_form
 #: model_terms:ir.ui.view,arch_db:connector_prestashop.view_stock_form
 msgid "PrestaShop"
-msgstr "PrestaShop"
+msgstr "tienda virtual"
 
 #. module: connector_prestashop
 #: model:ir.actions.server,name:connector_prestashop.ir_cron_update_product_stock_qty_ir_actions_server
