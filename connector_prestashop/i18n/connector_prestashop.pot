@@ -338,13 +338,6 @@ msgid "Add Sign"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__additional_info
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__additional_info
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__additional_info
-msgid "Additional info"
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model,name:connector_prestashop.model_prestashop_address
 msgid "Addreses prestashop bindings"
 msgstr ""
@@ -671,20 +664,6 @@ msgid "Blacklist"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__mobile_blacklisted
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__mobile_blacklisted
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__mobile_blacklisted
-msgid "Blacklisted Phone Is Mobile"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__phone_blacklisted
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__phone_blacklisted
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__phone_blacklisted
-msgid "Blacklisted Phone is Phone"
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__message_bounce
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__message_bounce
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__message_bounce
@@ -951,13 +930,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__company_type
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__company_type
 msgid "Company Type"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__partner_gid
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__partner_gid
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__partner_gid
-msgid "Company database ID"
 msgstr ""
 
 #. module: connector_prestashop
@@ -2109,15 +2081,6 @@ msgid "Favorited By"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__phone_sanitized
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__phone_sanitized
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__phone_sanitized
-msgid ""
-"Field used to store sanitized phone number. Helps speeding up searches and "
-"comparisons."
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_image__extension
 msgid "File extension"
 msgstr ""
@@ -2381,11 +2344,6 @@ msgid "Has Reconciled Items"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__has_sms_error
-msgid "Has SMS error"
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__has_unreconciled_entries
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__has_unreconciled_entries
@@ -2400,7 +2358,6 @@ msgstr ""
 #. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__has_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_mail_message__has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_mail_message__has_sms_error
 msgid "Has error"
 msgstr ""
 
@@ -2610,19 +2567,12 @@ msgstr ""
 
 #. module: connector_prestashop
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__message_has_sms_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_combination__message_has_sms_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_template__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_product_template__message_has_sms_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_refund__message_has_sms_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_sale_order__message_has_sms_error
 #: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__message_has_error
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -2679,15 +2629,6 @@ msgstr ""
 msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__phone_sanitized_blacklisted
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__phone_sanitized_blacklisted
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__phone_sanitized_blacklisted
-msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
 msgstr ""
 
 #. module: connector_prestashop
@@ -2978,26 +2919,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__invoice_incoterm_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__incoterm
 msgid "Incoterm"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__mobile_blacklisted
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__mobile_blacklisted
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__mobile_blacklisted
-msgid ""
-"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_address__phone_blacklisted
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_res_partner__phone_blacklisted
-#: model:ir.model.fields,help:connector_prestashop.field_prestashop_supplier__phone_blacklisted
-msgid ""
-"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
 msgstr ""
 
 #. module: connector_prestashop
@@ -3548,11 +3469,6 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__letter_ids
-msgid "Letter"
 msgstr ""
 
 #. module: connector_prestashop
@@ -4512,13 +4428,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__phone
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__phone
 msgid "Phone"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__phone_sanitized_blacklisted
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__phone_sanitized_blacklisted
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__phone_sanitized_blacklisted
-msgid "Phone Blacklisted"
 msgstr ""
 
 #. module: connector_prestashop
@@ -5586,17 +5495,6 @@ msgid "Routes can be selected on this product"
 msgstr ""
 
 #. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__message_has_sms_error
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_combination__message_has_sms_error
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_product_template__message_has_sms_error
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_refund__message_has_sms_error
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__message_has_sms_error
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__message_has_sms_error
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr ""
-
-#. module: connector_prestashop
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order__odoo_id
 msgid "Sale Order"
 msgstr ""
@@ -5728,13 +5626,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_sale_order_line_discount__salesman_id
 #: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__user_id
 msgid "Salesperson"
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_address__phone_sanitized
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_res_partner__phone_sanitized
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_supplier__phone_sanitized
-msgid "Sanitized Number"
 msgstr ""
 
 #. module: connector_prestashop
@@ -5997,11 +5888,6 @@ msgstr ""
 msgid ""
 "Small-sized image. It is automatically resized as a 64 x 64 px image, with "
 "aspect ratio preserved. Use this field anywhere a small image is required."
-msgstr ""
-
-#. module: connector_prestashop
-#: model:ir.model.fields,field_description:connector_prestashop.field_prestashop_mail_message__snailmail_error
-msgid "Snailmail message in error"
 msgstr ""
 
 #. module: connector_prestashop
