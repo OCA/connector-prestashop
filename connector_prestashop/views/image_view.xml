@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
+<odoo>
+
+<record id="image_prestashop_binding_form_view" model="ir.ui.view">
+    <field name="name">Multi image prestashop binding form</field>
+    <field name="model">prestashop.product.image</field>
+    <field name="inherit_id" ref="base_multi_image.image_form_view" />
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='comments']/.." position="after">
+            <group string="PrestaShop Binding">
+                <field name="prestashop_bind_ids" nolabel="1" />
+            </group>
+        </xpath>
+    </field>
+</record>
+
+</odoo>
