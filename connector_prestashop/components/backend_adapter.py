@@ -55,21 +55,23 @@ def api_handle_errors(message=""):
         yield
     except NetworkRetryableError as err:
         raise exceptions.UserError(
-            _("{}Network Error:\n\n{}").format(message, err)
+            _("%(message)s Network Error:\n\n%(error)s")
+            % {"message": message, "error": err}
         ) from err
     except (HTTPError, RequestException, ConnError) as err:
         raise exceptions.UserError(
-            _("{}API / Network Error:\n\n{}").format(message, err)
+            _("%(message)s API / Network Error:\n\n%(error)s")
+            % {"message": message, "error": err}
         ) from err
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
-            _("{}Authentication Error:\n\n{}").format(message, err)
+            _("%(message)s Authentication Error:\n\n%(error)s")
+            % {"message": message, "error": err}
         ) from err
     except PrestaShopWebServiceError as err:
         raise exceptions.UserError(
-            _("{}Error during synchronization with PrestaShop:\n\n{}").format(
-                message, str(err)
-            )
+            _("%(message)s Error during synchronization with PrestaShop:\n\n%(error)s")
+            % {"message": message, "error": str(err)}
         ) from err
 
 
