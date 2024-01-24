@@ -1,0 +1,92 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.20.0]
+      method: GET
+      uri: http://172.30.0.5/api/orders?limit=0%2C1000&filter%5Bdate_upd%5D=%3E%5B2019-01-23+00%3A00%3A00%5D&date=1
+    response:
+      body: {string: '<?xml version="1.0" encoding="UTF-8"?>
+
+            <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+            <orders>
+
+            <order id="1" xlink:href="http://172.30.0.5/api/orders/1"/>
+
+            <order id="2" xlink:href="http://172.30.0.5/api/orders/2"/>
+
+            <order id="3" xlink:href="http://172.30.0.5/api/orders/3"/>
+
+            <order id="4" xlink:href="http://172.30.0.5/api/orders/4"/>
+
+            <order id="5" xlink:href="http://172.30.0.5/api/orders/5"/>
+
+            </orders>
+
+            </prestashop>
+
+            '}
+      headers:
+        Access-Time: ["1548807520"]
+        Connection: [Keep-Alive]
+        Content-Sha1: [1830f87f47e8953efad8681803b44e75d251f246]
+        Content-Type: [text/xml;charset=utf-8]
+        Date: ["Wed, 30 Jan 2019 00:18:40 GMT"]
+        Execution-Time: ["0.003"]
+        Keep-Alive: ["timeout=5, max=100"]
+        PSWS-Version: [1.6.1.23]
+        Server: [Apache/2.4.25 (Debian)]
+        Set-Cookie:
+          [
+            "PrestaShop-daf117f818c8eeecfa2bccccdd849a8c=0697a65cde5d98b520fb49cd7d9b323cae13db0fd2adff02fd072b6377fda387%3AKBV2aH54UES0ZSMGBNILzFYrG58%2BLoBkl3VjqKI%2Bzmc93do%2FoNcG7i7I%2BzQ82cho8BlPkXSZjDkqNUkTIwT8obwutfpOsLsqZBlnWm8qshQ%3D;
+            expires=Tue, 19-Feb-2019 00:18:40 GMT; Max-Age=1728000; path=/; httponly",
+          ]
+        Vary: [Accept-Encoding]
+        X-Powered-By: [PrestaShop Webservice]
+        content-length: ["428"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.20.0]
+      method: GET
+      uri: http://172.30.0.5/api/customer_messages?limit=0%2C1000&filter%5Bdate_add%5D=%3E%5B2019-01-23+00%3A00%3A00%5D&date=1
+    response:
+      body: {string: '<?xml version="1.0" encoding="UTF-8"?>
+
+            <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+            <customer_messages>
+
+            </customer_messages>
+
+            </prestashop>
+
+            '}
+      headers:
+        Access-Time: ["1548807520"]
+        Connection: [Keep-Alive]
+        Content-Sha1: [f785adb02abb8a8536247bfb654e6e7d2304a891]
+        Content-Type: [text/xml;charset=utf-8]
+        Date: ["Wed, 30 Jan 2019 00:18:40 GMT"]
+        Execution-Time: ["0.002"]
+        Keep-Alive: ["timeout=5, max=100"]
+        PSWS-Version: [1.6.1.23]
+        Server: [Apache/2.4.25 (Debian)]
+        Set-Cookie:
+          [
+            "PrestaShop-daf117f818c8eeecfa2bccccdd849a8c=0697a65cde5d98b520fb49cd7d9b323cae13db0fd2adff02fd072b6377fda387%3AKBV2aH54UES0ZSMGBNILzFYrG58%2BLoBkl3VjqKI%2Bzmc93do%2FoNcG7i7I%2BzQ82cho8BlPkXSZjDkqNUkTIwT8obwutfpOsLsqZBlnWm8qshQ%3D;
+            expires=Tue, 19-Feb-2019 00:18:40 GMT; Max-Age=1728000; path=/; httponly",
+          ]
+        Vary: [Accept-Encoding]
+        X-Powered-By: [PrestaShop Webservice]
+        content-length: ["150"]
+      status: {code: 200, message: OK}
+version: 1

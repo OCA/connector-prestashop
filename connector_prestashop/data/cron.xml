@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record forcecreate="True" id="ir_cron_import_sale_orders" model="ir.cron">
+        <field name="name">PrestaShop - Import Sales Orders</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="state">code</field>
+        <field name="code">model._scheduler_import_sale_orders()</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+    <record forcecreate="True" id="ir_cron_update_product_stock_qty" model="ir.cron">
+        <field name="name">PrestaShop - Export Stock Quantities</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="state">code</field>
+        <field name="code">model._scheduler_update_product_stock_qty()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+    <record forcecreate="True" id="ir_cron_import_customers" model="ir.cron">
+        <field name="name">PrestaShop - Import Customers and Groups</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="state">code</field>
+        <field name="code">model._scheduler_import_customers()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+    <record forcecreate="True" id="ir_cron_import_products" model="ir.cron">
+        <field name="name">PrestaShop - Import Products and Categories</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="state">code</field>
+        <field name="code">model._scheduler_import_products()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+    <record forcecreate="True" id="ir_cron_import_suppliers" model="ir.cron">
+        <field name="name">PrestaShop - Import suppliers</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="state">code</field>
+        <field name="code">model._scheduler_import_suppliers()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+    <record forcecreate="True" id="ir_cron_import_carriers" model="ir.cron">
+        <field name="name">PrestaShop - Import Carriers</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="state">code</field>
+        <field name="code">model._scheduler_import_carriers()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+    <record forcecreate="True" id="ir_cron_import_payment_modes" model="ir.cron">
+        <field name="name">PrestaShop - Payment modes</field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="state">code</field>
+        <field name="code">model._scheduler_import_payment_modes()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="connector_prestashop.model_prestashop_backend" />
+    </record>
+
+</odoo>

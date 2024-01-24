@@ -1,0 +1,36 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.6.0 CPython/2.7.9 Linux/4.4.0-51-generic]
+      method: GET
+      uri: http://172.22.0.4/api/stock_availables?filter%5Bid_product_attribute%5D=1&filter%5Bid_product%5D=1&display=%5Bquantity%5D
+    response:
+      body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+            <prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<stock_availables>\n\
+            <stock_available>\n\t<quantity><![CDATA[299]]></quantity>\n</stock_available>\n\
+            </stock_availables>\n</prestashop>\n"}
+      headers:
+        access-time: ["1481293390"]
+        connection: [Keep-Alive]
+        content-length: ["223"]
+        content-sha1: [7c35cfa05f88b825e373e85e8a3d675daeaeb9db]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Fri, 09 Dec 2016 14:23:10 GMT"]
+        execution-time: ["0.003"]
+        keep-alive: ["timeout=5, max=100"]
+        psws-version: [1.6.1.9]
+        server: [Apache/2.4.10 (Debian)]
+        set-cookie:
+          [
+            "PrestaShop-095ca4fa56f569ddf56f692e2249251a=DYHr6QQHnOuI4%2BKs9hL5Tc5%2F25YbtlPp6Qp5D8d5rsOdA7SSrCgwsQjUULayWhLEb0NyFh1lymvNC7fb5yrMkZH9wBL6PJNw%2Bf5dIgFRXmE%3D000078;
+            expires=Thu, 29-Dec-2016 14:23:10 GMT; Max-Age=1728000; path=/; httponly",
+          ]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
+version: 1

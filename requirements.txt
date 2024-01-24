@@ -1,0 +1,6 @@
+# generated from manifests external_dependencies
+bs4
+freezegun
+html2text
+prestapyt
+vcrpy
