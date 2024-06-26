@@ -1,9 +1,15 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
 import re
 import unicodedata
+from functools import reduce
 
-from openerp import api, fields, models
+from odoo import _, fields, models
+from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
+
 
 try:
     import slugify as slugify_lib
@@ -15,8 +21,8 @@ def get_slug(name):
     if slugify_lib:
         try:
             return slugify_lib.slugify(name)
-        except TypeError:
-            pass
+        except TypeError as e:
+            _logger.info("get_slug TypeError: %s", e)
     uni = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
     slug = re.sub(r"[\W_]", " ", uni).strip().lower()
     slug = re.sub(r"[-\s]+", "-", slug)
@@ -25,12 +31,11 @@ def get_slug(name):
 
 class ExportMultipleProducts(models.TransientModel):
     _name = "export.multiple.products"
+    _description = "Export Multiple Products"
 
-    @api.multi
     def _default_backend(self):
         return self.env["prestashop.backend"].search([], limit=1).id
 
-    @api.multi
     def _default_shop(self):
         return self.env["prestashop.shop"].search([], limit=1).id
 
@@ -80,7 +85,6 @@ class ExportMultipleProducts(models.TransientModel):
                         }
                     )
 
-    @api.multi
     def set_category(self):
         product_obj = self.env["product.template"]
         for product in product_obj.browse(self.env.context["active_ids"]):
@@ -103,19 +107,17 @@ class ExportMultipleProducts(models.TransientModel):
         if len(product.product_variant_ids) > 1 and not product.attribute_line_ids:
             check_count = reduce(
                 lambda x, y: x * y,
-                map(lambda x: len(x.value_ids), product.attribute_line_ids),
+                [len(x.value_ids) for x in product.attribute_line_ids],
             )
             if check_count < len(product.product_variant_ids):
                 return False
         return True
 
-    @api.multi
     def export_variant_stock(self):
         template_obj = self.env["product.template"]
         products = template_obj.browse(self.env.context["active_ids"])
         products.update_prestashop_quantities()
 
-    @api.multi
     def create_prestashop_template(self, product):
         presta_tmpl_obj = self.env["prestashop.product.template"]
         return presta_tmpl_obj.create(
@@ -127,7 +129,6 @@ class ExportMultipleProducts(models.TransientModel):
             }
         )
 
-    @api.multi
     def export_products(self):
         self.ensure_one()
         product_obj = self.env["product.template"]
@@ -145,7 +146,14 @@ class ExportMultipleProducts(models.TransientModel):
                 cat = self._check_category(product)
                 var = self._check_variants(product)
                 if not (var and cat):
-                    continue
+                    raise ValidationError(
+                        _(
+                            """Product "%s" cannot be exported to Prestashop \
+because is not assigned to any Prestashop category or \
+has not any Product Variant."""
+                        )
+                        % product.name
+                    )
                 self.create_prestashop_template(product)
             else:
                 for tmpl in presta_tmpl:

@@ -1,0 +1,137 @@
+# © 2018 PlanetaTIC
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
+from odoo.tests import tagged
+
+from odoo.addons.connector_prestashop.tests.common import (
+    assert_no_job_delayed,
+    recorder,
+)
+
+from .common import CatalogManagerTransactionCase
+
+
+@tagged("post_install", "-at_install")
+class TestExportProductImage(CatalogManagerTransactionCase):
+    def setUp(self):
+        super().setUp()
+
+        # create and bind template
+        template = self.env["product.template"].create(
+            {
+                "name": "Faded Short Sleeves T-shirt",
+            }
+        )
+        self.create_binding_no_export(
+            "prestashop.product.template",
+            template.id,
+            1,
+            **{
+                "default_shop_id": self.shop.id,
+                "link_rewrite": "faded-short-sleaves-t-shirt",
+            }
+        )
+        self.transparent_image = (  # 1x1 Transparent GIF
+            b"R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        )
+        self.grey_image = (  # 1x1 Grey GIF
+            b"R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw =="
+        )
+        # create image and binding
+        self.image = self.env["base_multi_image.image"].create(
+            {
+                "owner_id": template.id,
+                "owner_model": "product.template",
+                "image_1920": self.transparent_image,
+            }
+        )
+        self.image._onchange_load_from()
+        self.binding = self.create_binding_no_export(
+            "prestashop.product.image", self.image.id, None
+        )
+
+    @assert_no_job_delayed
+    def test_01_export_product_image_onwrite(self):
+        # write in image
+        self.image.write(
+            {
+                "image_1920": self.grey_image,
+            }
+        )
+        # check export delayed
+        self.instance_delay_record.export_record.assert_called_once_with(
+            fields=[
+                "load_from",
+            ]
+        )
+
+    @assert_no_job_delayed
+    def test_02_export_product_image_ondelete(self):
+        # bind image
+        self.binding.prestashop_id = 24
+
+        # delete image
+        self.image.unlink()
+        # check export delete delayed
+        self.instance_delay_record.export_delete_record.assert_called_once_with(
+            self.backend_record, 24, {"id_product": 1}
+        )
+
+    @assert_no_job_delayed
+    def test_03_export_product_image_jobs(self):
+        with recorder.use_cassette(
+            "test_export_product_image", cassette_library_dir=self.cassette_library_dir
+        ) as cassette:
+
+            # create image in PS
+            self.binding.export_record()
+
+            # check POST request
+            request = cassette.requests[0]
+            self.assertEqual("POST", request.method)
+            self.assertEqual("/api/images/products/1", self.parse_path(request.uri))
+            self.assertDictEqual({}, self.parse_qs(request.uri))
+
+            # VCR.py does not support urllib v1 request in
+            # OCA/server-tools/base_multi_image/models/image.py:
+            # to get image from URL so...
+
+            # ...update test is avoided
+            # update image in PS
+            #             prestashop_id = self.binding.prestashop_id
+            #             self.binding.export_record()
+            #
+            #             # check DELETE requests
+            #             request = cassette.requests[1]
+            #             self.assertEqual('DELETE', request.method)
+            #             self.assertEqual(
+            #                 '/api/images/products/1/%s' % prestashop_id,
+            #                 self.parse_path(request.uri))
+            #             self.assertDictEqual({}, self.parse_qs(request.uri))
+            #
+            #             # check POST request
+            #             request = cassette.requests[2]
+            #             self.assertEqual('POST', request.method)
+            #             self.assertEqual('/api/images/products/1',
+            #                              self.parse_path(request.uri))
+            #             self.assertDictEqual({}, self.parse_qs(request.uri))
+
+            # ...and delete test is hacked
+
+            self.image.write({"image_1920": self.grey_image})
+
+            # delete image in PS
+            attributes = {"id_product": 1}
+            self.env["prestashop.product.image"].export_delete_record(
+                self.backend_record,
+                self.binding.prestashop_id,
+                attributes,
+            )
+
+            # check DELETE requests
+            request = cassette.requests[1]
+            self.assertEqual("DELETE", request.method)
+            self.assertEqual(
+                "/api/images/products/1/%s" % self.binding.prestashop_id,
+                self.parse_path(request.uri),
+            )
+            self.assertDictEqual({}, self.parse_qs(request.uri))

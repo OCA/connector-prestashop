@@ -1,0 +1,110 @@
+interactions:
+  - request:
+      body:
+        !!python/unicode <?xml version="1.0"
+        encoding="UTF-8"?><prestashop><product><date_add>2020-02-06
+        16:57:24</date_add><ean13>8411788010150</ean13><meta_title><language id="1">New
+        product meta
+        title</language></meta_title><minimal_quantity>2</minimal_quantity><link_rewrite><language
+        id="1">new-product</language></link_rewrite><description><language
+        id="1">&lt;p&gt;New product
+        description&lt;/p&gt;</language></description><id_manufacturer>1</id_manufacturer><available_for_order>1</available_for_order><wholesale_price>10.0</wholesale_price><price>20.0</price><barcode>8411788010150</barcode><id_tax_rules_group></id_tax_rules_group><id_category_default>5</id_category_default><meta_keywords><language
+        id="1">New product meta
+        keywords</language></meta_keywords><available_date>2016-08-29</available_date><id_shop_default>1</id_shop_default><active>1</active><reference>NEW_PRODUCT</reference><name><language
+        id="1">New product</language></name><meta_description><language id="1">New
+        product meta
+        description</language></meta_description><low_stock_alert>0</low_stock_alert><additional_shipping_cost>1.0</additional_shipping_cost><weight>0.1</weight><show_price>1</show_price><on_sale>1</on_sale><online_only>1</online_only><state>1</state><tags><language
+        id="1">New product
+        tags</language></tags><low_stock_threshold></low_stock_threshold><associations><images/><categories><category_id><id>2</id></category_id><category_id><id>3</id></category_id><category_id><id>4</id></category_id><category_id><id>5</id></category_id></categories></associations><available_now><language
+        id="1">New product available
+        now</language></available_now><description_short><language id="1">&lt;p&gt;New
+        product description
+        short&lt;/p&gt;</language></description_short><available_later><language
+        id="1">New product available
+        later</language></available_later></product></prestashop>
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Content-Length: ["1845"]
+        Content-Type: [text/xml]
+        User-Agent: [python-requests/2.11.1]
+      method: POST
+      uri: http://localhost:8080/api/products
+    response:
+      body:
+        {
+          string:
+            !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<product>\n\t<id><![CDATA[19]]></id>\n\t<id_manufacturer
+            xlink:href=\"http://localhost:8080/api/manufacturers/1\"><![CDATA[1]]></id_manufacturer>\n\t<id_supplier></id_supplier>\n\t<id_category_default
+            xlink:href=\"http://localhost:8080/api/categories/5\"><![CDATA[5]]></id_category_default>\n\t<new></new>\n\t<cache_default_attribute></cache_default_attribute>\n\t<id_default_image
+            notFilterable=\"true\"></id_default_image>\n\t<id_default_combination
+            notFilterable=\"true\"></id_default_combination>\n\t<id_tax_rules_group></id_tax_rules_group>\n\t<position_in_category
+            notFilterable=\"true\"><![CDATA[3]]></position_in_category>\n\t<manufacturer_name
+            notFilterable=\"true\"><![CDATA[Fashion
+            Manufacturer]]></manufacturer_name>\n\t<quantity
+            notFilterable=\"true\"></quantity>\n\t<type
+            notFilterable=\"true\"><![CDATA[simple]]></type>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\t<reference><![CDATA[NEW_PRODUCT]]></reference>\n\t<supplier_reference></supplier_reference>\n\t<location></location>\n\t<width></width>\n\t<height></height>\n\t<depth></depth>\n\t<weight><![CDATA[0.1]]></weight>\n\t<quantity_discount></quantity_discount>\n\t<ean13><![CDATA[8411788010150]]></ean13>\n\t<upc></upc>\n\t<cache_is_pack></cache_is_pack>\n\t<cache_has_attachments></cache_has_attachments>\n\t<is_virtual></is_virtual>\n\t<on_sale><![CDATA[1]]></on_sale>\n\t<online_only><![CDATA[1]]></online_only>\n\t<ecotax></ecotax>\n\t<minimal_quantity><![CDATA[2]]></minimal_quantity>\n\t<price><![CDATA[20.0]]></price>\n\t<wholesale_price><![CDATA[10.0]]></wholesale_price>\n\t<unity></unity>\n\t<unit_price_ratio></unit_price_ratio>\n\t<additional_shipping_cost><![CDATA[1.0]]></additional_shipping_cost>\n\t<customizable></customizable>\n\t<text_fields></text_fields>\n\t<uploadable_files></uploadable_files>\n\t<active><![CDATA[1]]></active>\n\t<redirect_type></redirect_type>\n\t<id_product_redirected></id_product_redirected>\n\t<available_for_order><![CDATA[1]]></available_for_order>\n\t<available_date><![CDATA[2016-08-29]]></available_date>\n\t<condition><![CDATA[new]]></condition>\n\t<show_price><![CDATA[1]]></show_price>\n\t<indexed></indexed>\n\t<visibility><![CDATA[both]]></visibility>\n\t<advanced_stock_management></advanced_stock_management>\n\t<date_add><![CDATA[2020-02-06
+            17:57:24]]></date_add>\n\t<date_upd><![CDATA[2020-02-06
+            17:57:24]]></date_upd>\n\t<pack_stock_type></pack_stock_type>\n\t<meta_description><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            product meta
+            description]]></language></meta_description>\n\t<meta_keywords><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            product meta keywords]]></language></meta_keywords>\n\t<meta_title><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            product meta title]]></language></meta_title>\n\t<link_rewrite><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[new-product]]></language></link_rewrite>\n\t<name><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            product]]></language></name>\n\t<description><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[<p>New product
+            description</p>]]></language></description>\n\t<description_short><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[<p>New product
+            description
+            short</p>]]></language></description_short>\n\t<available_now><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            product available
+            now]]></language></available_now>\n\t<available_later><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New product
+            available later]]></language></available_later>\n<associations>\n<categories
+            nodeType=\"category\" api=\"categories\">\n\t<category
+            xlink:href=\"http://localhost:8080/api/categories/2\">\n\t<id><![CDATA[2]]></id>\n\t</category>\n\t<category
+            xlink:href=\"http://localhost:8080/api/categories/3\">\n\t<id><![CDATA[3]]></id>\n\t</category>\n\t<category
+            xlink:href=\"http://localhost:8080/api/categories/4\">\n\t<id><![CDATA[4]]></id>\n\t</category>\n\t<category
+            xlink:href=\"http://localhost:8080/api/categories/5\">\n\t<id><![CDATA[5]]></id>\n\t</category>\n</categories>\n<images
+            nodeType=\"image\" api=\"images\"/>\n<combinations nodeType=\"combination\"
+            api=\"combinations\"/>\n<product_option_values
+            nodeType=\"product_option_value\"
+            api=\"product_option_values\"/>\n<product_features
+            nodeType=\"product_feature\" api=\"product_features\"/>\n<tags
+            nodeType=\"tag\" api=\"tags\"/>\n<stock_availables
+            nodeType=\"stock_available\" api=\"stock_availables\">\n\t<stock_available
+            xlink:href=\"http://localhost:8080/api/stock_availables/106\">\n\t<id><![CDATA[106]]></id>\n\t<id_product_attribute><![CDATA[0]]></id_product_attribute>\n\t</stock_available>\n</stock_availables>\n<accessories
+            nodeType=\"product\" api=\"products\"/>\n<product_bundle
+            nodeType=\"product\"
+            api=\"products\"/>\n</associations>\n</product>\n</prestashop>\n",
+        }
+      headers:
+        access-time: ["1581008244"]
+        connection: [keep-alive]
+        content-length: ["5218"]
+        content-sha1: [c70fd4a619a4a4bf71229b57e465b3aace21f256]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Thu, 06 Feb 2020 16:57:24 GMT"]
+        execution-time: ["0.051"]
+        psws-version: [1.6.1.22]
+        server: [nginx/1.10.3 (Ubuntu)]
+        set-cookie:
+          [
+            "PrestaShop-6afe1be0fe41e536d378c33ccb8576a7=99ef58a58fe325ebc994812ea04fec000e7d9e4532b86e166abaa438d78e6711%3AERwbwgjnbPhegaRWNyAjEDGs9Ou1AWI7j6aOPwsre8LNHD2QLBTUTdzjB3g7IWQeicISDrhEhOu4WTKS9MpUFEgN1N3HM7BH145oU1%2FGeuo%3D;
+            expires=Wed, 26-Feb-2020 16:57:24 GMT; Max-Age=1728000; path=/;
+            domain=localhost:8080; HttpOnly",
+          ]
+        transfer-encoding: [chunked]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 201, message: Created}
+version: 1

@@ -1,0 +1,77 @@
+interactions:
+  - request:
+      body:
+        !!python/unicode <?xml version="1.0"
+        encoding="UTF-8"?><prestashop><combination><associations><images/><product_option_values><product_option_value><id>4</id></product_option_value><product_option_value><id>13</id></product_option_value></product_option_values></associations><ean13>8411788010150</ean13><reference>demo_3_OS</reference><weight>0.1</weight><default_on>0</default_on><active>1</active><wholesale_price>10.0</wholesale_price><price>20.0</price><minimal_quantity>2</minimal_quantity><id_product>3</id_product></combination></prestashop>
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Content-Length: ["532"]
+        Content-Type: [text/xml]
+        User-Agent: [python-requests/2.11.1]
+      method: POST
+      uri: http://localhost:8080/api/combinations
+    response:
+      body:
+        {
+          string:
+            !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<combination>\n\t<id><![CDATA[60]]></id>\n\t<id_product
+            xlink:href=\"http://localhost:8080/api/products/3\"><![CDATA[3]]></id_product>\n\t<location></location>\n\t<ean13><![CDATA[8411788010150]]></ean13>\n\t<upc></upc>\n\t<quantity></quantity>\n\t<reference><![CDATA[demo_3_OS]]></reference>\n\t<supplier_reference></supplier_reference>\n\t<wholesale_price><![CDATA[10.0]]></wholesale_price>\n\t<price><![CDATA[20.0]]></price>\n\t<ecotax></ecotax>\n\t<weight><![CDATA[0.1]]></weight>\n\t<unit_price_impact></unit_price_impact>\n\t<minimal_quantity><![CDATA[2]]></minimal_quantity>\n\t<default_on></default_on>\n\t<available_date></available_date>\n<associations>\n<product_option_values
+            nodeType=\"product_option_value\"
+            api=\"product_option_values\">\n\t<product_option_value
+            xlink:href=\"http://localhost:8080/api/product_option_values/4\">\n\t<id><![CDATA[4]]></id>\n\t</product_option_value>\n\t<product_option_value
+            xlink:href=\"http://localhost:8080/api/product_option_values/13\">\n\t<id><![CDATA[13]]></id>\n\t</product_option_value>\n</product_option_values>\n<images
+            nodeType=\"image\"
+            api=\"images/products\"/>\n</associations>\n</combination>\n</prestashop>\n",
+        }
+      headers:
+        access-time: ["1544010356"]
+        connection: [keep-alive]
+        content-length: ["1200"]
+        content-sha1: [7a46cf797b3653f5c063bf16e0a898a08fc411cb]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Wed, 05 Dec 2018 11:45:56 GMT"]
+        execution-time: ["0.026"]
+        psws-version: [1.6.1.22]
+        server: [nginx/1.10.3 (Ubuntu)]
+        set-cookie:
+          [
+            "PrestaShop-ac85e42aef73418ac8f31f6687398719=a6ba7c94454759752a139fc6fdae9b327c99c9b1c42f846b56f69caf29139e71%3Ay9dT%2FUvu1KNqFoEFFplK6Otra9jGVczMTxQ0zVLeniD4jwMTT5sp%2F2lnJQCK1O3fW7QmPITjvETXHqyribPUUOy6ImdWABG%2F43xhrzi%2BccQ%3D;
+            expires=Tue, 25-Dec-2018 11:45:56 GMT; Max-Age=1728000; path=/; HttpOnly",
+          ]
+        transfer-encoding: [chunked]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 201, message: Created}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Content-Length: ["0"]
+        User-Agent: [python-requests/2.11.1]
+      method: DELETE
+      uri: http://localhost:8080/api/combinations/60
+    response:
+      body: {string: !!python/unicode ""}
+      headers:
+        access-time: ["1544010356"]
+        connection: [keep-alive]
+        content-length: ["0"]
+        date: ["Wed, 05 Dec 2018 11:45:56 GMT"]
+        execution-time: ["0.018"]
+        psws-version: [1.6.1.22]
+        server: [nginx/1.10.3 (Ubuntu)]
+        set-cookie:
+          [
+            "PrestaShop-ac85e42aef73418ac8f31f6687398719=a6ba7c94454759752a139fc6fdae9b327c99c9b1c42f846b56f69caf29139e71%3Ay9dT%2FUvu1KNqFoEFFplK6Otra9jGVczMTxQ0zVLeniD4jwMTT5sp%2F2lnJQCK1O3fW7QmPITjvETXHqyribPUUOy6ImdWABG%2F43xhrzi%2BccQ%3D;
+            expires=Tue, 25-Dec-2018 11:45:56 GMT; Max-Age=1728000; path=/; HttpOnly",
+          ]
+        transfer-encoding: [chunked]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
+version: 1

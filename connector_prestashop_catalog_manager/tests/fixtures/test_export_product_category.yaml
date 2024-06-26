@@ -1,0 +1,69 @@
+interactions:
+  - request:
+      body:
+        !!python/unicode <?xml version="1.0"
+        encoding="UTF-8"?><prestashop><category><meta_description><language id="1">New
+        category meta description</language></meta_description><link_rewrite><language
+        id="1">new-category</language></link_rewrite><meta_title><language id="1">New
+        category meta title</language></meta_title><meta_keywords><language id="1">New
+        category keywords</language></meta_keywords><name><language id="1">New
+        category</language></name><id_parent>2</id_parent><id_shop_default>1</id_shop_default><active>1</active><position>1</position><description><language
+        id="1">&lt;p&gt;New category
+        description&lt;/p&gt;</language></description></category></prestashop>
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Content-Length: ["654"]
+        Content-Type: [text/xml]
+        User-Agent: [python-requests/2.11.1]
+      method: POST
+      uri: http://localhost:8080/api/categories
+    response:
+      body:
+        {
+          string:
+            !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<category>\n\t<id><![CDATA[19]]></id>\n\t<id_parent
+            xlink:href=\"http://localhost:8080/api/categories/2\"><![CDATA[2]]></id_parent>\n\t<level_depth><![CDATA[2]]></level_depth>\n\t<nb_products_recursive
+            notFilterable=\"true\"><![CDATA[-1]]></nb_products_recursive>\n\t<active><![CDATA[1]]></active>\n\t<id_shop_default><![CDATA[1]]></id_shop_default>\n\t<is_root_category></is_root_category>\n\t<position><![CDATA[1]]></position>\n\t<date_add><![CDATA[2018-12-05
+            12:45:11]]></date_add>\n\t<date_upd><![CDATA[2018-12-05
+            12:45:11]]></date_upd>\n\t<name><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            category]]></language></name>\n\t<link_rewrite><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[new-category]]></language></link_rewrite>\n\t<description><language
+            id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[<p>New
+            category
+            description</p>]]></language></description>\n\t<meta_title><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            category meta
+            title]]></language></meta_title>\n\t<meta_description><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New category
+            meta
+            description]]></language></meta_description>\n\t<meta_keywords><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            category keywords]]></language></meta_keywords>\n<associations>\n<categories
+            nodeType=\"category\" api=\"categories\"/>\n<products nodeType=\"product\"
+            api=\"products\"/>\n</associations>\n</category>\n</prestashop>\n",
+        }
+      headers:
+        access-time: ["1544010311"]
+        connection: [keep-alive]
+        content-length: ["1614"]
+        content-sha1: [73b504e1f3e7d44f8511f02cc8b1e8764b3380da]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Wed, 05 Dec 2018 11:45:11 GMT"]
+        execution-time: ["0.044"]
+        psws-version: [1.6.1.22]
+        server: [nginx/1.10.3 (Ubuntu)]
+        set-cookie:
+          [
+            "PrestaShop-ac85e42aef73418ac8f31f6687398719=8a23211feb6747fd92d7117800b697fe81b83282d61b7482c14fd1156239b1ef%3Ay9dT%2FUvu1KNqFoEFFplK6GUHezpItVFXBKxry0vskUErKLdJXddpHQxmwbDxzWLGiJLOUqe2aMh%2Bsa40YPqEWMWyRAoyMLZ3CDMF1J8HvEQ%3D;
+            expires=Tue, 25-Dec-2018 11:45:11 GMT; Max-Age=1728000; path=/; HttpOnly",
+          ]
+        transfer-encoding: [chunked]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 201, message: Created}
+version: 1

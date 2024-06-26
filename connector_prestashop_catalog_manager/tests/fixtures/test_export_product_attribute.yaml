@@ -1,0 +1,50 @@
+interactions:
+  - request:
+      body:
+        !!python/unicode <?xml version="1.0"
+        encoding="UTF-8"?><prestashop><product_options><public_name><language id="1">New
+        attribute</language></public_name><position>4</position><name><language
+        id="1">New
+        attribute</language></name><group_type>select</group_type></product_options></prestashop>
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Content-Length: ["273"]
+        Content-Type: [text/xml]
+        User-Agent: [python-requests/2.11.1]
+      method: POST
+      uri: http://localhost:8080/api/product_options
+    response:
+      body:
+        {
+          string:
+            !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<product_option>\n\t<id><![CDATA[7]]></id>\n\t<is_color_group></is_color_group>\n\t<group_type><![CDATA[select]]></group_type>\n\t<position><![CDATA[4]]></position>\n\t<name><language
+            id=\"1\" xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            attribute]]></language></name>\n\t<public_name><language id=\"1\"
+            xlink:href=\"http://localhost:8080/api/languages/1\"><![CDATA[New
+            attribute]]></language></public_name>\n<associations>\n<product_option_values
+            nodeType=\"product_option_value\"
+            api=\"product_option_values\"/>\n</associations>\n</product_option>\n</prestashop>\n",
+        }
+      headers:
+        access-time: ["1544009921"]
+        connection: [keep-alive]
+        content-length: ["652"]
+        content-sha1: [4290e789a9ce1823ce4ac91b063ca96ff36f04ea]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Wed, 05 Dec 2018 11:38:41 GMT"]
+        execution-time: ["0.02"]
+        psws-version: [1.6.1.22]
+        server: [nginx/1.10.3 (Ubuntu)]
+        set-cookie:
+          [
+            "PrestaShop-ac85e42aef73418ac8f31f6687398719=785d98e9bd28108f77b731d15480adab26832755ccb4f95be30db352aeea3ac5%3Ay9dT%2FUvu1KNqFoEFFplK6NS2kY3JMur8CJSWpxVtPnDlJXtgJWHexZZTRsadIcbiwDNh4vUR3%2B5XjBpOfoNRUDLN4zMfjjUQnwJD8t04vsM%3D;
+            expires=Tue, 25-Dec-2018 11:38:41 GMT; Max-Age=1728000; path=/; HttpOnly",
+          ]
+        transfer-encoding: [chunked]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 201, message: Created}
+version: 1
