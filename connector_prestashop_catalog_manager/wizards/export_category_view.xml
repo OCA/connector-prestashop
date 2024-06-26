@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <openerp>
 <data>
 
@@ -8,28 +8,33 @@
         <field name="arch" type="xml">
             <form string="Export Categories">
                 <group>
-                    <field name="backend_id"/>
-                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]"/>
+                    <field name="backend_id" />
+                    <field name="shop_id" domain="[('backend_id', '=', backend_id)]" />
                 </group>
                 <footer>
-                    <button name="export_categories" type="object"
-                            string="Export" class="oe_highlight"/>
+                    <button
+                            name="export_categories"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
+                        />
                     or
-                    <button string="Cancel" class="oe_link"
-                            special="cancel"/>
+                    <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
             </form>
         </field>
     </record>
 
-    <act_window id="act_export_prestashop_category"
-                name="Export To PrestaShop"
-                res_model="wiz.prestashop.export.category"
-                src_model="product.category"
-                view_mode="form"
-                target="new"
-                key2="client_action_multi"
-                view_id="export_category_form"/>
+    <act_window
+            id="act_export_prestashop_category"
+            name="Export To PrestaShop"
+            res_model="wiz.prestashop.export.category"
+            src_model="product.category"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            view_id="export_category_form"
+        />
 
 </data>
 </openerp>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <openerp>
     <data>
         <record model="ir.ui.view" id="export_multiple_products_form">
@@ -7,27 +7,35 @@
             <field name="arch" type="xml">
                 <form string="Export Products">
                     <group>
-                        <field name="backend_id"/>
-                        <field name="shop_id" domain="[('backend_id', '=', backend_id)]"/>
+                        <field name="backend_id" />
+                        <field
+                            name="shop_id"
+                            domain="[('backend_id', '=', backend_id)]"
+                        />
                     </group>
                     <footer>
-                        <button name="export_products" type="object"
-                                string="Export" class="oe_highlight"/>
+                        <button
+                            name="export_products"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
+                        />
                         or
-                        <button string="Cancel" class="oe_link"
-                                special="cancel"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
-        <act_window name="Export Products"
-                    res_model="export.multiple.products"
-                    src_model="product.template"
-                    view_mode="form"
-                    target="new"
-                    key2="client_action_multi"
-                    id="act_export_multiple_products"
-                    view_id="export_multiple_products_form"/>
+        <act_window
+            name="Export Products"
+            res_model="export.multiple.products"
+            src_model="product.template"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="act_export_multiple_products"
+            view_id="export_multiple_products_form"
+        />
 
         <record model="ir.ui.view" id="export_variant_stock_form">
             <field name="name">export.variant.stock.form</field>
@@ -35,23 +43,28 @@
             <field name="arch" type="xml">
                 <form string="Export variant stock">
                     <footer>
-                        <button name="export_variant_stock" type="object"
-                                string="Export" class="oe_highlight"/>
+                        <button
+                            name="export_variant_stock"
+                            type="object"
+                            string="Export"
+                            class="oe_highlight"
+                        />
                         or
-                        <button string="Cancel" class="oe_link"
-                                special="cancel"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
-        <act_window name="Export Products Stock"
-                    res_model="export.multiple.products"
-                    src_model="product.template"
-                    view_mode="form"
-                    target="new"
-                    key2="client_action_multi"
-                    id="act_export_products_stock"
-                    view_id="export_variant_stock_form"/>
+        <act_window
+            name="Export Products Stock"
+            res_model="export.multiple.products"
+            src_model="product.template"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="act_export_products_stock"
+            view_id="export_variant_stock_form"
+        />
 
     </data>
 </openerp>

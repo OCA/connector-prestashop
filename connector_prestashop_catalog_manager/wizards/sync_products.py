@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, api
 import logging
+
+from openerp import api, models
 
 _logger = logging.getLogger(__name__)
 
