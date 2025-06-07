@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_tax_group_tree" model="ir.ui.view">
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="tax_ids" />
+            </field>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_tax_group_form" model="ir.ui.view">
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_form" />
+        <field name="arch" type="xml">
+            <field name="name" colspan="4" position="after">
+                <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
+            </field>
+            <xpath expr="//sheet/group/.." position="inside">
+                <group string="PrestaShop Binding">
+                    <field name="prestashop_bind_ids" nolabel="1" colspan="2" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
