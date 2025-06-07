@@ -96,7 +96,6 @@ class VersionKey1616(Component):
         "manufacturers": "manufacturers",
     }
 
-
 class VersionKey1751(Component):
     _name = "_prestashop.version.key.1.7.5.1"
     _inherit = "_prestashop.version.key"
