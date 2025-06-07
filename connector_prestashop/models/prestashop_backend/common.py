@@ -105,9 +105,7 @@ class PrestashopBackend(models.Model):
         comodel_name="res.company",
         index=True,
         required=True,
-        default=lambda self: self.env["res.company"]._company_default_get(
-            "prestashop.backend"
-        ),
+        default=lambda self: self.env.company,
         string="Company",
     )
     discount_product_id = fields.Many2one(
