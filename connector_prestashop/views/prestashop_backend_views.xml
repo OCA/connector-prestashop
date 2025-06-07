@@ -103,9 +103,15 @@
                                 You will find the list
                                 of the
                                 new records to review
-                                in the menu 'Connectors > Checkpoint'.
+                                in the menu 'Job Queue'.
                             </p>
                             <group>
+                                <button
+                                    name="import_products"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"
+                                />
                                 <div>
                                     <label
                                         string="Import product categories and products"
@@ -118,23 +124,23 @@
                                         nolabel="1"
                                     />
                                 </div>
-                                <button
-                                    name="import_products"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import in background"
-                                />
                             </group>
                             <group>
-                                <span>Import stock quantities</span>
                                 <button
                                     name="import_stock_qty"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
                                 />
+                                <span>Import stock quantities</span>
                             </group>
                             <group>
+                                <button
+                                    name="import_payment_modes"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"
+                                />
                                 <div>
 <!--                                    <span>Import payment mode</span>-->
                                     <label
@@ -148,14 +154,14 @@
                                         nolabel="1"
                                     />
                                 </div>
+                            </group>
+                            <group>
                                 <button
-                                    name="import_payment_modes"
+                                    name="import_customers_since"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
                                 />
-                            </group>
-                            <group>
                                 <div>
                                     <label
                                         string="Import customer groups and customers since"
@@ -168,14 +174,14 @@
                                         nolabel="1"
                                     />
                                 </div>
+                            </group>
+                            <group>
                                 <button
-                                    name="import_customers_since"
+                                    name="import_sale_orders"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
                                 />
-                            </group>
-                            <group>
                                 <div>
                                     <label
                                         string="Import sale orders since"
@@ -188,14 +194,14 @@
                                         nolabel="1"
                                     />
                                 </div>
+                            </group>
+                            <group>
                                 <button
-                                    name="import_sale_orders"
+                                    name="import_refunds"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
                                 />
-                            </group>
-                            <group>
                                 <div>
                                     <label
                                         string="Import refunds"
@@ -208,14 +214,14 @@
                                         nolabel="1"
                                     />
                                 </div>
+                            </group>
+                            <group>
                                 <button
-                                    name="import_refunds"
+                                    name="import_suppliers"
                                     type="object"
                                     class="oe_highlight"
                                     string="Import in background"
                                 />
-                            </group>
-                            <group>
                                 <div>
                                     <label
                                         string="Import suppliers"
@@ -228,23 +234,15 @@
                                         nolabel="1"
                                     />
                                 </div>
-                                <button
-                                    name="import_suppliers"
-                                    type="object"
-                                    class="oe_highlight"
-                                    string="Import in background"
-                                />
                             </group>
                             <group>
-                                <span>Import carriers</span>
-                                <div>
-                                    <button
+                                <button
                                         name="import_carriers"
                                         type="object"
                                         class="oe_highlight"
                                         string="Import in background"
                                     />
-                                </div>
+                                <span>Import carriers</span>
                             </group>
                         </page>
                         <page string="Export">
