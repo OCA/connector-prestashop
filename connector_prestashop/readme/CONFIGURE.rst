@@ -26,7 +26,7 @@ Steps in Odoo
 #. Click on "Synchronize Base Data" button. This will import carriers,
    languages, tax groups and the rest of base data that are needed for the
    proper work.
-#. Go to *Accounting > Configuration > Taxes > Tax Groups*, and include
+#. Go to *Invoicing > Configuration > Accounting > Tax Groups*, and include
    for each of the tax definition imported from PrestaShop, the corresponding
    taxes in Odoo.
 #. Activate the job runner, checking the connector documentation for setting

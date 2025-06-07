@@ -48,7 +48,7 @@
                     <group>
                         <group>
                             <field name="company_id"/>
-                            <field name="location" required="True" placeholder="e.g. http://your-prestashop.com/api (without https)"/>
+                            <field name="location" string="Main URL" required="True" placeholder="e.g. http://your-prestashop.com/api (without https)"/>
                             <field name="webservice_key" required="True"/>
                         </group>
                         <group>
