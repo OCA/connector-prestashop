@@ -29,45 +29,27 @@
                         string="Synchronize Base Data"
                         attrs="{'invisible':[('state', 'in', ['draft'])]}"
                     />
-
                     <button
                         name="button_reset_to_draft"
                         type="object"
                         string="Reset To draft Connection"
                         attrs="{'invisible':[('state', 'in', ['draft'])]}"
                     />
-
                     <field name="state" widget="statusbar" readonly="1" />
                 </header>
                 <sheet>
+                    <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button
-                            class="oe_stat_button"
-                            type="object"
-                            name="toggle_active"
-                            icon="fa-archive"
-                        >
-                            <field
-                                name="active"
-                                widget="boolean_button"
-                                options='{"terminology": "archive"}'
-                            />
-                        </button>
-
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" />
                     </h1>
-
                     <group>
-                        <field name="company_id" />
-                    </group>
-                    <group>
-
-                        <group col="4">
-                            <field name="location" colspan="4" />
-                            <field name="webservice_key" colspan="4" />
-
+                        <group>
+                            <field name="company_id"/>
+                            <field name="location" required="True" placeholder="e.g. http://your-prestashop.com/api (without https)"/>
+                            <field name="webservice_key" required="True"/>
                         </group>
                         <group>
                             <field name="version" />
