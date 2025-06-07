@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
-
     <record id="excep_order_wrong_total_amount" model="exception.rule">
         <field name="name">Total Amount differs from PrestaShop</field>
         <field
@@ -44,6 +43,4 @@ if self.prestashop_bind_ids:
         failed = True</field>
         <field name="active" eval="True" />
     </record>
-
-
 </odoo>
