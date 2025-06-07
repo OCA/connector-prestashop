@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- prestashoperpconnect for Odoo Copyright (C) 2012 Akretion Benoît Guillot
-    <benoit.guillot@akretion.com> The licence is in the file __openerp__.py -->
+    <benoit.guillot@akretion.com> The licence is in the file __manifest__.py -->
 <odoo>
-
     <menuitem
         id="menu_prestashop_root"
         parent="connector.menu_connector_root"

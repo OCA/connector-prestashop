@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_prestashop_sale_order_state_tree" model="ir.ui.view">
+        <field name="model">prestashop.sale.order.state</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="backend_id" />
+                <field name="prestashop_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_prestashop_sale_order_state_form" model="ir.ui.view">
+        <field name="model">prestashop.sale.order.state</field>
+        <field name="arch" type="xml">
+            <form string="Sale order State">
+                <group>
+                    <field name="backend_id" />
+                    <field name="prestashop_id" />
+                </group>
+                <group>
+                    <field name="openerp_state_ids" nolabel="1" mode="tree" colspan="2">
+                        <tree editable="top">
+                            <field name="name" />
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>
