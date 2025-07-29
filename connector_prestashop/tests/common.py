@@ -34,7 +34,7 @@ if exists(filename):
     with open(filename, "r") as fp:
         assert len(fp.readlines()) == 2, "secret.txt must have 2 lines: url, token"
         fp.seek(0)
-        prestashop_url = next(fp).strip()
+        prestashop_url = fp.readline().strip()
         token = next(fp).strip()
 
 
@@ -82,9 +82,16 @@ class PrestashopTransactionCase(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.backend_record = self.env.ref(
-            "connector_prestashop.prestashop_backend_demo"
-        )
+        self.backend_record = self.env["prestashop.backend"].create({
+            "name": "Prestashop",
+            "version": "1.6.1.2",
+            "location": "http://localhost:8080",
+            "warehouse_id": self.env.ref("stock.warehouse0").id,
+            "discount_product_id": self.env.ref(
+                "connector_ecommerce.product_product_discount").id,
+            "shipping_product_id": self.env.ref(
+                "connector_ecommerce.product_product_shipping").id,
+        })
         self.backend_record.write(
             {
                 "location": prestashop_url,

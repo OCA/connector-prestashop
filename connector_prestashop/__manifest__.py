@@ -34,9 +34,6 @@
     "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-prestashop",
     "category": "Connector",
-    "demo": [
-        "demo/backend.xml",
-    ],
     "data": [
         "security/ir.model.access.csv",
         "security/prestashop_security.xml",

@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 
-from odoo import exceptions
+from odoo.exceptions import UserError
 
 from .common import PrestashopTransactionCase, recorder
 
@@ -17,5 +17,5 @@ class TestAuth(PrestashopTransactionCase):
     @recorder.use_cassette
     def test_auth_failure(self):
         self.backend_record.webservice_key = "xyz"
-        with self.assertRaisesRegexp(exceptions.UserError, "Connection failed"):
+        with self.assertRaisesRegex(UserError, "Connection failed"):
             self.backend_record.button_check_connection()
