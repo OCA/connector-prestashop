@@ -95,3 +95,27 @@ class VersionKey1616(Component):
         "messages": "customer_messages",
         "manufacturers": "manufacturers",
     }
+
+
+class VersionKey1751(Component):
+    _name = "_prestashop.version.key.1.7.5.1"
+    _inherit = "_prestashop.version.key"
+    _usage = "prestashop.version.key.1.7.5.1"
+
+    keys = {
+        "product_option_value": "product_option_value",
+        "category": "categories",
+        "image": "image",
+        "order_slip": "order_slip",
+        "order_slip_detail": "order_slip_details",
+        "order_row": "order_row",
+        "group": "groups",
+        "tax": "tax",
+        "product_features": "product_features",
+        "combinations": "combination",
+        "tag": "tags",
+        "messages": "customer_messages",
+        "manufacturers": "manufacturers",
+        "order_histories": "order_histories?sendemail=1"
+        # https://github.com/PrestaShop/PrestaShop/issues/25639
+    }
