@@ -12,6 +12,7 @@
 * Marc Poch <mpoch@planetatic.com>
 * JesusVMayor <jesus@comunitea.com>
 * Hai Lang <hailn@trobz.com>
+* Florent THOMAS <florent.thomas@mind-and-go.com>
 
 * `Greenice <https://www.greenice.com>`_:
 
