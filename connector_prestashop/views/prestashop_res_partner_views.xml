@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   connector_prestashop for Odoo
   Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
@@ -25,12 +25,12 @@
     <record id="view_prestashop_res_partner_tree" model="ir.ui.view">
         <field name="model">prestashop.res.partner</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="backend_id" />
                 <field name="shop_group_id" />
                 <field name="company" />
                 <button name="resync" type="object" string="Resync" />
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

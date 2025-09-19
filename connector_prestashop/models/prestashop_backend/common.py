@@ -3,7 +3,6 @@
 import logging
 
 from odoo import _, api, exceptions, fields, models
-
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.component.core import Component
 
@@ -24,6 +23,7 @@ class PrestashopBackend(models.Model):
         "1.6.1.2": "prestashop.version.key.1.6.1.2",
         "1.6.1.6": "prestashop.version.key.1.6.1.6",
         "1.7.5.1": "prestashop.version.key.1.7.5.1",
+        "8.1.0": "prestashop.version.key.8.1.0",
     }
 
     @api.model
@@ -39,6 +39,7 @@ class PrestashopBackend(models.Model):
             ("1.6.1.2", ">=1.6.1.2 - <1.6.1.6"),
             ("1.6.1.6", ">=1.6.1.6"),
             ("1.7.5.1", ">=1.7.5.1"),
+            ("8.1.0", ">=8.1.0"),
         ]
 
     @api.model
@@ -322,7 +323,7 @@ class PrestashopBackend(models.Model):
             filters = {}
             if since_date:
                 filters = {"date": "1", "filter[date_upd]": ">[%s]" % (since_date)}
-            with backend_record.work_on("account.payment.mode") as work:
+            with backend_record.work_on("account.payment.method.line") as work:
                 importer = work.component(usage="batch.importer")
                 importer.run(filters=filters)
             backend_record.import_payment_mode_since = now_fmt

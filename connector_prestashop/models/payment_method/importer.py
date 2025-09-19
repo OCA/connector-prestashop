@@ -4,9 +4,9 @@ from odoo.addons.component.core import Component
 
 
 class PaymentModeBatchImporter(Component):
-    _name = "account.payment.mode.importer"
+    _name = "account.payment.method.line.importer"
     _inherit = "prestashop.batch.importer"
-    _apply_on = "account.payment.mode"
+    _apply_on = "account.payment.method.line"
 
     def run(self, filters=None, **kwargs):
         if filters is None:

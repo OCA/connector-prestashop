@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_order_connector_form" model="ir.ui.view">
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="connector_ecommerce.view_order_connector_form" />
+        <field name="inherit_id" ref="connector_ecommerce.sale_order_view_form" />
         <field name="arch" type="xml">
-           <page name="connector" position="attributes">
+            <page name="connector" position="attributes">
                 <attribute name="invisible">0</attribute>
-           </page>
-           <page name="connector" position="inside">
+            </page>
+            <page name="connector" position="inside">
                 <separator string="PrestaShop" />
                 <field name="prestashop_bind_ids" readonly="True">
-                    <tree>
+                    <list>
                         <field name="total_amount" />
                         <field name="total_amount_tax" />
-                    </tree>
+                    </list>
                 </field>
-           </page>
+            </page>
         </field>
     </record>
 </odoo>

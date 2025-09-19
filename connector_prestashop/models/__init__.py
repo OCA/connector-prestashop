@@ -2,7 +2,7 @@
 from . import binding
 
 from . import account_move
-from . import account_payment_mode
+from . import payment_method
 from . import account_tax
 from . import account_tax_group
 from . import delivery_carrier

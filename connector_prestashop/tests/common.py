@@ -8,9 +8,8 @@ from contextlib import contextmanager
 from os.path import dirname, exists, join
 from urllib import parse
 
-from vcr import VCR
-
 from odoo.tests.common import TransactionCase
+from vcr import VCR
 
 _logger = logging.getLogger(__name__)
 try:

@@ -1,0 +1,3 @@
+- [PrestaShop logo](http://seeklogo.com/prestashop-logo-178788.html).
+- [Odoo logo](https://www.odoo.com/es_ES/page/brand-assets).
+- [Cable](https://openclipart.org/detail/174134/cable-with-connector).

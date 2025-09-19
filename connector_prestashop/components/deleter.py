@@ -1,8 +1,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tools.translate import _
-
 from odoo.addons.component.core import AbstractComponent
+from odoo.tools.translate import _
 
 
 class PrestashopDeleter(AbstractComponent):

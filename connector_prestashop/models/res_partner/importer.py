@@ -4,14 +4,10 @@ import logging
 from datetime import datetime
 
 from odoo import _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import (
-    external_to_m2o,
-    mapping,
-    only_create,
-)
+from odoo.addons.connector.components.mapper import (external_to_m2o, mapping,
+                                                     only_create)
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 

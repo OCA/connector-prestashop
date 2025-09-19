@@ -3,7 +3,6 @@
 import logging
 
 from odoo import models
-
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
 

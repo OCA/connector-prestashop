@@ -3,11 +3,9 @@
 import logging
 from datetime import timedelta
 
-from prestapyt import PrestaShopWebServiceDict
-
 from odoo import api, fields, models
-
 from odoo.addons.component.core import Component
+from prestapyt import PrestaShopWebServiceDict
 
 _logger = logging.getLogger(__name__)
 

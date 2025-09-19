@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_sale_order_state_form" model="ir.ui.view">
         <field name="model">sale.order.state</field>
@@ -12,7 +12,7 @@
                         </h1>
                     </div>
                     <notebook>
-                       <page name="connector" string="Connector">
+                        <page name="connector" string="Connector">
                             <group string="PrestaShop Bindings">
                                 <field
                                     name="prestashop_bind_ids"
@@ -20,7 +20,7 @@
                                     colspan="2"
                                 />
                             </group>
-                       </page>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
@@ -29,24 +29,26 @@
     <record id="view_sale_order_state_tree" model="ir.ui.view">
         <field name="model">sale.order.state</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="action_prestashop_sale_order_state_form" model="ir.actions.act_window">
         <field name="name">Sale Order States</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order.state</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_sale_order_state_tree" />
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Here are the sale order states mapped with e-commerce.
-          </p><p>
-            Each state can be linked between PrestaShop and Odoo.
-            When a sale order state change, the connector will update the sale order in PrestaShop.
-          </p>
+            <p class="oe_view_nocontent_create">
+                Here are the sale order states mapped with e-commerce.
+            </p>
+            <p>
+                Each state can be linked between PrestaShop and Odoo.
+                When a sale order state change, the connector will update the sale order in
+                PrestaShop.
+            </p>
         </field>
     </record>
     <menuitem

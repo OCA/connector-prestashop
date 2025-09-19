@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="combination_connector_presta_form_view" model="ir.ui.view">
-       <field name="model">prestashop.product.combination</field>
-       <field name="arch" type="xml">
+        <field name="model">prestashop.product.combination</field>
+        <field name="arch" type="xml">
             <form string="prestashop fields">
                 <group col="2">
                     <field name="backend_id" />
@@ -10,12 +10,12 @@
                     <field name="quantity" />
                 </group>
             </form>
-       </field>
+        </field>
     </record>
     <record id="combination_connector_presta_tree_view" model="ir.ui.view">
         <field name="model">prestashop.product.combination</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field
                     name="product_template_attribute_value_ids"
@@ -33,7 +33,7 @@
                     string="Export quantity"
                 />
                 <button name="resync" type="object" string="Resync" />
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

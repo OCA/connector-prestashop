@@ -1,13 +1,15 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-
 from odoo.addons.component.core import Component
 
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _inherit = [_name, "base_multi_image.owner"]
+    _inherit = [
+        _name,
+        # "base_multi_image.owner"
+    ]
 
     prestashop_combinations_bind_ids = fields.One2many(
         comodel_name="prestashop.product.combination",

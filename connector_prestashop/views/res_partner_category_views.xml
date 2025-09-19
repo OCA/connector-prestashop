@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   connector_prestashop for Odoo
   Copyright (C) 2012 Akretion Benoît GUILLOT <benoit.guillot@akretion.com>
@@ -15,9 +15,9 @@
                         <field name="backend_id" />
                         <field name="prestashop_id" />
                     </form>
-                    <tree>
+                    <list>
                         <field name="backend_id" />
-                    </tree>
+                    </list>
                 </field>
             </field>
         </field>

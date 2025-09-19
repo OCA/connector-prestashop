@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- © 2016 Sergio Teruel <sergio.teruel@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
 <odoo>
-    <record id="image_form_view" model="ir.ui.view">
+    <!-- <record id="image_form_view" model="ir.ui.view">
         <field name="model">prestashop.product.image</field>
         <field name="inherit_id" ref="base_multi_image.image_form_view" />
         <field name="arch" type="xml">
@@ -12,5 +12,5 @@
                 </group>
             </xpath>
         </field>
-    </record>
+    </record> -->
 </odoo>

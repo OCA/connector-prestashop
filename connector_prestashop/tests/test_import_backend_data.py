@@ -5,12 +5,8 @@ from collections import namedtuple
 
 from odoo import tools
 
-from .common import (
-    PrestashopTransactionCase,
-    assert_no_job_delayed,
-    quiet_logger,
-    recorder,
-)
+from .common import (PrestashopTransactionCase, assert_no_job_delayed,
+                     quiet_logger, recorder)
 
 ExpectedShopGroup = namedtuple("ExpectedShopGroup", "name prestashop_id backend_id")
 

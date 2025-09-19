@@ -5,9 +5,7 @@ import threading
 from contextlib import contextmanager
 
 import psycopg2
-
 from odoo import _, exceptions
-
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.exception import RetryableJobError
 

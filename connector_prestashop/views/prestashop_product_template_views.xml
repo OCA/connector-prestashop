@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="product_connector_presta_form_view" model="ir.ui.view">
-       <field name="model">prestashop.product.template</field>
-       <field name="arch" type="xml">
+        <field name="model">prestashop.product.template</field>
+        <field name="arch" type="xml">
             <form string="prestashop fields">
                 <sheet>
                     <group col="1">
@@ -30,12 +30,12 @@
                     </group>
                 </sheet>
             </form>
-       </field>
+        </field>
     </record>
     <record id="product_connector_presta_tree_view" model="ir.ui.view">
         <field name="model">prestashop.product.template</field>
         <field name="arch" type="xml">
-            <tree create="0">
+            <list create="0">
                 <field name="name" />
                 <field name="backend_id" string="Backend" />
                 <field name="date_add" />
@@ -52,7 +52,7 @@
                     string="Export quantity"
                 />
                 <button name="resync" type="object" string="Resync" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="product_connector_presta_search" model="ir.ui.view">

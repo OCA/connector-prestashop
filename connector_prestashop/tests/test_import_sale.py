@@ -5,7 +5,6 @@ from collections import namedtuple
 from unittest import mock
 
 from freezegun import freeze_time
-
 from odoo import fields
 
 from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder
@@ -98,7 +97,7 @@ class TestImportSale(PrestashopTransactionCase):
         )
         payment_method_xmlid = "account.account_payment_method_manual_in"
         payment_method = self.env.ref(payment_method_xmlid)
-        payment_mode = self.env["account.payment.mode"].create(
+        payment_mode = self.env["account.payment.method.line"].create(
             {
                 "name": "Bank wire",
                 "company_id": self.backend_record.company_id.id,

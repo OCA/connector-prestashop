@@ -3,12 +3,10 @@
 import logging
 from collections import defaultdict
 
-from prestapyt import PrestaShopWebServiceDict
-
 from odoo import api, fields, models
-
 from odoo.addons.component.core import Component
 from odoo.addons.component_event import skip_if
+from prestapyt import PrestaShopWebServiceDict
 
 from ...components.backend_adapter import retryable_error
 

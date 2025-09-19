@@ -2,7 +2,6 @@
 
 
 from odoo import fields, models
-
 from odoo.addons.component.core import Component
 
 

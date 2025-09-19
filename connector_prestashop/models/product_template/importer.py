@@ -4,15 +4,11 @@ import datetime
 import logging
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
-
 from odoo.addons.component.core import Component
-from odoo.addons.connector.components.mapper import (
-    external_to_m2o,
-    mapping,
-    only_create,
-)
+from odoo.addons.connector.components.mapper import (external_to_m2o, mapping,
+                                                     only_create)
 from odoo.addons.queue_job.exception import FailedJobError
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -363,11 +359,11 @@ class TemplateMapper(Component):
         return {"taxes_id": [(6, 0, taxes.ids)]}
 
     @mapping
-    def detailed_type(self, record):
+    def type(self, record):
         # The same if the product is a virtual one in prestashop.
         if record["type"]["value"] and record["type"]["value"] == "virtual":
-            return {"detailed_type": "service"}
-        return {"detailed_type": "product"}
+            return {"type": "service"}
+        return {"type": "consu"}
 
     # TODO FIXME
     #    @mapping
@@ -564,7 +560,7 @@ class ProductTemplateImporter(Component):
 
     def _after_import(self, binding):
         res = super()._after_import(binding)
-        self.import_images(binding)
+        # self.import_images(binding) #TODO: migrate
         self.attribute_line(binding)
         self.import_combinations()
         self.import_supplierinfo(binding)

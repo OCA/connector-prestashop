@@ -4,9 +4,9 @@ from odoo.addons.component.core import Component
 
 
 class PaymentMethodImporter(Component):
-    _name = "payment.method.importer"
+    _name = "account.payment.method.line.importer"
     _inherit = "prestashop.direct.batch.importer"
-    _apply_on = "payment.method"
+    _apply_on = "account.payment.method.line"
 
     def run(self, filters=None, **kwargs):
         if filters is None:
@@ -15,7 +15,7 @@ class PaymentMethodImporter(Component):
         return super().run(filters, **kwargs)
 
     def _import_record(self, record):
-        ids = self.env["payment.method"].search(
+        ids = self.env["account.payment.method.line"].search(
             [
                 ("name", "=", record["payment"]),
                 ("company_id", "=", self.backend_record.company_id.id),
@@ -23,7 +23,7 @@ class PaymentMethodImporter(Component):
         )
         if ids:
             return
-        self.env["payment.method"].create(
+        self.env["account.payment.method.line"].create(
             {
                 "name": record["payment"],
                 "company_id": self.backend_record.company_id.id,

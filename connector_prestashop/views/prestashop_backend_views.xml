@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_prestashop_backend_form" model="ir.ui.view">
         <field name="name">prestashop.backend.form</field>
@@ -11,45 +11,49 @@
                         type="object"
                         class="oe_highlight"
                         string="Check Connection"
-                        attrs="{'invisible':[('state', 'not in', ['draft'])]}"
                     />
+                    <!-- attrs="{'invisible':[('state', 'not in', ['draft'])]}" -->
                     <button
                         name="synchronize_metadata"
                         type="object"
                         class="oe_highlight"
                         help="Synchonize shop and shop groups"
                         string="Synchronize Metadata"
-                        attrs="{'invisible':[('state', 'in', ['draft'])]}"
                     />
+                    <!-- attrs="{'invisible':[('state', 'in', ['draft'])]}" -->
+
                     <button
                         name="synchronize_basedata"
                         type="object"
                         class="oe_highlight"
                         help="Synchonize datas like language, country, currency, tax"
                         string="Synchronize Base Data"
-                        attrs="{'invisible':[('state', 'in', ['draft'])]}"
                     />
+                    <!-- attrs="{'invisible':[('state', 'in', ['draft'])]}" -->
                     <button
                         name="button_reset_to_draft"
                         type="object"
                         string="Reset To draft Connection"
-                        attrs="{'invisible':[('state', 'in', ['draft'])]}"
                     />
+                    <!-- attrs="{'invisible':[('state', 'in', ['draft'])]}" -->
                     <field name="state" widget="statusbar" readonly="1" />
                 </header>
                 <sheet>
-                    <field name="active" invisible="1"/>
+                    <field name="active" invisible="1" />
                     <div class="oe_button_box" name="button_box">
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                        />
+                        <!-- attrs="{'invisible': [('active', '=', True)]}" -->
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" />
                     </h1>
                     <group>
                         <group>
-                            <field name="company_id"/>
-                            <field name="location" string="Main URL" required="True" placeholder="e.g. http://your-prestashop.com/api (without https)"/>
-                            <field name="webservice_key" required="True"/>
+                            <field name="company_id" />
+                            <field name="location" string="Main URL" required="True"
+                                placeholder="e.g. http://your-prestashop.com/api (without https)" />
+                            <field name="webservice_key" required="True" />
                         </group>
                         <group>
                             <field name="version" />
@@ -73,7 +77,7 @@
                             <field name="warehouse_id" />
                             <field name="stock_location_id" />
                             <field name="shipping_product_id" />
-                             <field name="product_qty_field" />
+                            <field name="product_qty_field" />
                         </group>
                         <group string="Accounting">
                             <field name="refund_journal_id" />
@@ -81,7 +85,8 @@
                         </group>
 
                     </group>
-                    <notebook attrs="{'invisible':[('state', 'in', ['draft'])]}">
+                    <notebook>
+                        <!-- attrs="{'invisible':[('state', 'in', ['draft'])]}" -->
                         <page name="import" string="Imports">
                             <p class="oe_grey oe_inline">
                                 By clicking on the buttons,
@@ -142,7 +147,7 @@
                                     string="Import in background"
                                 />
                                 <div>
-<!--                                    <span>Import payment mode</span>-->
+                                    <!--                                    <span>Import payment mode</span>-->
                                     <label
                                         string="Import payment mode"
                                         class="oe_inline"
@@ -237,11 +242,11 @@
                             </group>
                             <group>
                                 <button
-                                        name="import_carriers"
-                                        type="object"
-                                        class="oe_highlight"
-                                        string="Import in background"
-                                    />
+                                    name="import_carriers"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"
+                                />
                                 <span>Import carriers</span>
                             </group>
                         </page>
@@ -258,11 +263,11 @@
                         </page>
                         <page string="Languages">
                             <field name="language_ids" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="active" />
                                     <field name="code" />
                                     <field name="name" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Options">
@@ -271,10 +276,10 @@
                                     <field name="matching_product_template" />
                                     <field
                                         name="matching_product_ch"
-                                        attrs="{'invisible':[('matching_product_template', '=', False)],
-                                                    'required':[('matching_product_template', '=', True)]}"
                                     />
-
+                                    <!-- attrs="{'invisible':[('matching_product_template', '=',
+                                    False)],
+                                                    'required':[('matching_product_template', '=', True)]}" -->
                                 </group>
                                 <group string="Matching option for partner">
                                     <field name="matching_customer" />
@@ -290,15 +295,15 @@
     <record id="view_prestashop_backend_tree" model="ir.ui.view">
         <field name="model">prestashop.backend</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="location" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="action_prestashop_backend" model="ir.actions.act_window">
         <field name="name">PrestaShop Backends</field>
         <field name="res_model">prestashop.backend</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

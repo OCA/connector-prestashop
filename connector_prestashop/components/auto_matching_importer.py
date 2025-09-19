@@ -3,7 +3,6 @@
 import logging
 
 from odoo import _, exceptions
-
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)

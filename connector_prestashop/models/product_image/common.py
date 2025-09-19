@@ -4,9 +4,8 @@ import base64
 import logging
 
 from odoo import fields, models
-from odoo.tools import config
-
 from odoo.addons.component.core import Component
+from odoo.tools import config
 
 from ...components.backend_adapter import PrestaShopWebServiceImage
 
@@ -14,7 +13,8 @@ _logger = logging.getLogger(__name__)
 
 
 class ProductImage(models.Model):
-    _inherit = "base_multi_image.image"
+    # TODO: uglly patch
+    _name = "base_multi_image.image"
 
     prestashop_bind_ids = fields.One2many(
         comodel_name="prestashop.product.image",

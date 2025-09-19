@@ -4,15 +4,12 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 import pytz
-
 from odoo import _, fields
-
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
-from odoo.addons.connector_ecommerce.components.sale_order_onchange import (
-    SaleOrderOnChange,
-)
-from odoo.addons.queue_job.exception import FailedJobError, NothingToDoJob
+from odoo.addons.connector_ecommerce.components.sale_order_onchange import \
+    SaleOrderOnChange
+from odoo.addons.queue_job.exception import FailedJobError, RetryableJobError
 
 from ...components.exception import OrderImportRuleRetry
 
@@ -40,7 +37,7 @@ class SaleImportRule(Component):
 
     def _rule_never(self, record, mode):
         """Never import the order"""
-        raise NothingToDoJob(
+        raise RetryableJobError(
             "Orders with payment modes %s "
             "are never imported." % record["payment"]["method"]
         )
@@ -81,7 +78,7 @@ class SaleImportRule(Component):
         :rtype: boolean
         """
         ps_payment_method = record["payment"]
-        mode_binder = self.binder_for("account.payment.mode")
+        mode_binder = self.binder_for("account.payment.method.line")
         payment_mode = mode_binder.to_internal(ps_payment_method)
         if not payment_mode:
             raise FailedJobError(
@@ -114,7 +111,7 @@ class SaleImportRule(Component):
         fmt = "%Y-%m-%d %H:%M:%S"
         order_date = datetime.strptime(record["date_add"], fmt)
         if order_date + timedelta(days=max_days) < datetime.now():
-            raise NothingToDoJob(
+            raise RetryableJobError(
                 "Import of the order %s canceled "
                 "because it has not been paid since %d "
                 "days" % (order_id, max_days)
@@ -144,7 +141,7 @@ class SaleImportRule(Component):
                     % (ps_state_id,)
                 )
             if state not in self.backend_record.importable_order_state_ids:
-                raise NothingToDoJob(
+                raise RetryableJobError(
                     _(
                         "Import of the order with PS ID=%s canceled "
                         "because its state is not importable"
@@ -194,11 +191,11 @@ class SaleOrderImportMapper(Component):
             "prestashop_order_line_ids",
             "prestashop.sale.order.line",
         ),
-        (
-            _get_discounts_lines,
-            "prestashop_discount_line_ids",
-            "prestashop.sale.order.line.discount",
-        ),
+        # (
+        #     _get_discounts_lines,
+        #     "prestashop_discount_line_ids",
+        #     "prestashop.sale.order.line.discount",
+        # ),
     ]
 
     def _map_child(self, map_record, from_attr, to_attr, model_name):
@@ -276,13 +273,13 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def payment(self, record):
-        binder = self.binder_for("account.payment.mode")
+        binder = self.binder_for("account.payment.method.line")
         mode = binder.to_internal(record["payment"])
         assert mode, (
             "import of error fail in SaleImportRule.check "
             "when the payment mode is missing"
         )
-        return {"payment_mode_id": mode.id}
+        return {"payment_method_line_id": mode.id}
 
     @mapping
     def carrier_id(self, record):
@@ -441,8 +438,8 @@ class SaleOrderImporter(Component):
         rules = self.component(usage="sale.import.rule")
         try:
             return rules.check(self.prestashop_record)
-        except NothingToDoJob as err:
-            # we don't let the NothingToDoJob exception let go out, because if
+        except RetryableJobError as err:
+            # we don't let the RetryableJobError exception let go out, because if
             # we are in a cascaded import, it would stop the whole
             # synchronization and set the whole job to done
             return str(err)

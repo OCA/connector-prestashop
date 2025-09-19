@@ -4,11 +4,11 @@ from odoo.addons.component.core import Component
 
 
 class PaymentModeAdapter(Component):
-    _name = "account.payment.mode.adapter"
+    _name = "account.payment.method.line.adapter"
     _inherit = "prestashop.adapter"
-    _apply_on = "account.payment.mode"
+    _apply_on = "account.payment.method.line"
 
-    _model_name = "account.payment.mode"
+    _model_name = "account.payment.method.line"
     _prestashop_model = "orders"
     _export_node_name = "order"
 
@@ -23,11 +23,11 @@ class PaymentModeAdapter(Component):
 
 
 class PaymentModeBinder(Component):
-    _name = "account.payment.mode.binder"
+    _name = "account.payment.method.line.binder"
     _inherit = "prestashop.binder"
-    _apply_on = "account.payment.mode"
+    _apply_on = "account.payment.method.line"
 
-    _model_name = "account.payment.mode"
+    _model_name = "account.payment.method.line"
     _external_field = "name"
 
     def to_internal(self, external_id, unwrap=False, company=None):
@@ -40,7 +40,7 @@ class PaymentModeBinder(Component):
             ).search(
                 [
                     (self._external_field, "=", external_id),
-                    ("company_id", "=", company.id),
+                    # ("company_id", "=", company.id),
                 ]
             )
         if not bindings:

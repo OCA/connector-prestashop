@@ -4,18 +4,12 @@ import base64
 import logging
 from contextlib import contextmanager
 
-from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
-from requests.exceptions import (
-    ConnectionError as ConnError,
-    HTTPError,
-    RequestException,
-    Timeout,
-)
-
 from odoo import _, exceptions
-
 from odoo.addons.component.core import AbstractComponent
 from odoo.addons.connector.exception import NetworkRetryableError
+from prestapyt import PrestaShopWebServiceDict, PrestaShopWebServiceError
+from requests.exceptions import ConnectionError as ConnError
+from requests.exceptions import HTTPError, RequestException, Timeout
 
 _logger = logging.getLogger(__name__)
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_prestashop_shop_group_form" model="ir.ui.view">
         <field name="model">prestashop.shop.group</field>
@@ -16,15 +16,15 @@
     <record id="view_prestashop_shop_group_tree" model="ir.ui.view">
         <field name="model">prestashop.shop.group</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="backend_id" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="action_prestashop_shop_group" model="ir.actions.act_window">
         <field name="name">PrestaShop Shop Groups</field>
         <field name="res_model">prestashop.shop.group</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

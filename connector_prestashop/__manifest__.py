@@ -12,7 +12,7 @@
         "account",
         "base_vat",  # for vat validation on partner address
         "product_multi_category",  # oca/product-attribute
-        "product_multi_image",  # oca/product-attribute
+        # "product_multi_image",  # oca/product-attribute #TODO
         "connector_ecommerce",  # oca/connector-ecommerce
         "purchase",
     ],
@@ -47,7 +47,8 @@
         "views/account_tax_group_views.xml",
         "views/prestashop_address_views.xml",
         "views/prestashop_backend_views.xml",
-        "views/connector_prestashop_menu.xml",
+        "views/prestashop_shop_group_views.xml",
+        "views/prestashop_shop_views.xml",
         "views/prestahop_sale_order_views.xml",
         "views/prestashop_account_tax_group_views.xml",
         "views/prestashop_delivery_carrier_views.xml",
@@ -58,8 +59,6 @@
         "views/prestashop_res_partner_category_views.xml",
         "views/prestashop_res_partner_views.xml",
         "views/prestashop_sale_order_state_views.xml",
-        "views/prestashop_shop_group_views.xml",
-        "views/prestashop_shop_views.xml",
         "views/product_category_views.xml",
         "views/product_product_views.xml",
         "views/product_template_views.xml",
@@ -70,6 +69,7 @@
         "views/sale_order_views.xml",
         "views/stock_location_views.xml",
         "views/stock_warehouse_views.xml",
+        "views/connector_prestashop_menu.xml",
     ],
     "application": True,
 }

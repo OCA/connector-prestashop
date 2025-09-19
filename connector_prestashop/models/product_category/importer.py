@@ -4,7 +4,6 @@ import datetime
 import logging
 
 from odoo import _
-
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import external_to_m2o, mapping
 

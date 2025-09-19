@@ -4,11 +4,11 @@ from odoo.addons.component.core import Component
 
 
 class PaymentMethodAdapter(Component):
-    _name = "payment.method.adapter"
+    _name = "account.payment.method.line.adapter"
     _inherit = "prestashop.adapter"
-    _apply_on = "payment.method"
+    _apply_on = "account.payment.method.line"
 
-    _model_name = "payment.method"
+    _model_name = "account.payment.method.line"
     _prestashop_model = "orders"
     _export_node_name = "order"
 

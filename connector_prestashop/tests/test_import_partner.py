@@ -5,7 +5,6 @@ from collections import namedtuple
 from unittest import mock
 
 from freezegun import freeze_time
-
 from odoo import fields
 
 from .common import PrestashopTransactionCase, assert_no_job_delayed, recorder

@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 from odoo import models
-
 from odoo.addons.component.core import Component
 
 
@@ -96,6 +95,7 @@ class VersionKey1616(Component):
         "manufacturers": "manufacturers",
     }
 
+
 class VersionKey1751(Component):
     _name = "_prestashop.version.key.1.7.5.1"
     _inherit = "_prestashop.version.key"
@@ -109,6 +109,30 @@ class VersionKey1751(Component):
         "order_slip_detail": "order_slip_details",
         "order_row": "order_row",
         "group": "groups",
+        "tax": "tax",
+        "product_features": "product_features",
+        "combinations": "combination",
+        "tag": "tags",
+        "messages": "customer_messages",
+        "manufacturers": "manufacturers",
+        "order_histories": "order_histories?sendemail=1"
+        # https://github.com/PrestaShop/PrestaShop/issues/25639
+    }
+
+
+class VersionKey810(Component):
+    _name = "_prestashop.version.key.8.1.0"
+    _inherit = "_prestashop.version.key"
+    _usage = "prestashop.version.key.8.1.0"
+
+    keys = {
+        "product_option_value": "product_option_value",
+        "category": "categories",
+        "image": "image",
+        "order_slip": "order_slip",
+        "order_slip_detail": "order_slip_details",
+        "order_row": "order_row",
+        "group": "group",
         "tax": "tax",
         "product_features": "product_features",
         "combinations": "combination",
