@@ -1,5 +1,4 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
-
 from odoo.addons.component.core import Component
 
 
@@ -16,16 +15,17 @@ class PaymentModeBatchImporter(Component):
 
     def _import_record(self, record, **kwargs):
         """Create the missing payment method
-
         If we have only 1 bank journal, we link the payment method to it,
         otherwise, the user will have to create manually the payment mode.
         """
         if self.binder_for().to_internal(record["payment"]):
             return  # already exists
+        
         method_xmlid = "account.account_payment_method_manual_in"
         payment_method = self.env.ref(method_xmlid, raise_if_not_found=False)
         if not payment_method:
             return
+        
         journals = self.env["account.journal"].search(
             [
                 ("type", "=", "bank"),
@@ -35,13 +35,17 @@ class PaymentModeBatchImporter(Component):
         )
         if len(journals) != 1:
             return
-        self.model.create(
+        
+        # En Odoo 18, on crée d'abord la ligne de méthode de paiement
+        # puis on la lie au journal
+        payment_method_line = self.model.create(
             {
                 "name": record["payment"],
                 "company_id": self.backend_record.company_id.id,
-                "bank_account_link": "fixed",
-                "fixed_journal_id": journals.id,
                 "payment_method_id": payment_method.id,
+                "journal_id": journals.id,
             }
         )
-        # TODO add activity to warn the user it has  to configure something?
+        
+        return payment_method_line
+        # TODO add activity to warn the user it has to configure something?

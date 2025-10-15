@@ -89,10 +89,10 @@ class SupplierInfoMapper(Component):
         return {"backend_id": self.backend_record.id}
 
     @mapping
-    def name(self, record):
+    def partner_id(self, record):
         binder = self.binder_for("prestashop.supplier")
         partner = binder.to_internal(record["id_supplier"], unwrap=True)
-        return {"name": partner.id}
+        return {"partner_id": partner.id}
 
     @mapping
     def product_id(self, record):

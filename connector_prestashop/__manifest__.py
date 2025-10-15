@@ -12,7 +12,7 @@
         "account",
         "base_vat",  # for vat validation on partner address
         "product_multi_category",  # oca/product-attribute
-        # "product_multi_image",  # oca/product-attribute #TODO
+        "product_multi_image",  # oca/product-attribute #TODO
         "connector_ecommerce",  # oca/connector-ecommerce
         "purchase",
     ],
