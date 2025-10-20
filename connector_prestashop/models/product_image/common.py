@@ -22,10 +22,8 @@ class ProductImage(models.Model):
 
 
 class BaseMultiImageOwner(models.AbstractModel):
-    """Fix pour la relation image_ids qui ne fonctionne pas avec owner_id Integer"""
     _inherit = "base_multi_image.owner"
 
-    # Override du champ pour corriger la relation
     image_ids = fields.One2many(
         comodel_name="base_multi_image.image",
         compute="_compute_image_ids",
@@ -35,7 +33,6 @@ class BaseMultiImageOwner(models.AbstractModel):
     )
 
     def _compute_image_ids(self):
-        """Récupère les images liées à cet enregistrement."""
         Image = self.env["base_multi_image.image"]
         for record in self:
             if record.id:
@@ -47,29 +44,23 @@ class BaseMultiImageOwner(models.AbstractModel):
                 record.image_ids = Image
 
     def _inverse_image_ids(self):
-        """Gère l'écriture des images."""
         Image = self.env["base_multi_image.image"]
         for record in self:
             if not record.id:
                 continue
 
-            # Images actuellement définies dans le recordset
             new_images = record.image_ids
 
-            # Images existantes en base
             existing_images = Image.search([
                 ("owner_model", "=", record._name),
                 ("owner_id", "=", record.id)
             ])
 
-            # Pour chaque image dans le recordset
             for image in new_images:
                 if not image.id:
-                    # Nouvelle image : assigner l'owner
                     image.owner_model = record._name
                     image.owner_id = record.id
                 elif image not in existing_images:
-                    # Image existante mais pas pour cet owner : mise à jour
                     image.write({
                         'owner_model': record._name,
                         'owner_id': record.id

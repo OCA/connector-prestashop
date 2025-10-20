@@ -36,8 +36,6 @@ class PaymentModeBatchImporter(Component):
         if len(journals) != 1:
             return
         
-        # En Odoo 18, on crée d'abord la ligne de méthode de paiement
-        # puis on la lie au journal
         payment_method_line = self.model.create(
             {
                 "name": record["payment"],
