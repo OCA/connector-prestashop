@@ -560,7 +560,7 @@ class ProductTemplateImporter(Component):
 
     def _after_import(self, binding):
         res = super()._after_import(binding)
-        # self.import_images(binding) #TODO: migrate
+        self.import_images(binding)
         self.attribute_line(binding)
         self.import_combinations()
         self.import_supplierinfo(binding)
@@ -674,18 +674,22 @@ class ProductTemplateImporter(Component):
                 self._delay_product_image_variant([first_exec] + combinations)
 
     def import_images(self, binding):
+        """Import images for this product"""
         prestashop_record = self._get_prestashop_data()
         associations = prestashop_record.get("associations", {})
         images = associations.get("images", {}).get(
             self.backend_record.get_version_ps_key("image"), {}
         )
+        
         if not isinstance(images, list):
             images = [images]
+        
         for image in images:
             if image.get("id"):
-                delayable = self.env["prestashop.product.image"].with_delay(priority=10)
-                delayable.import_product_image(
-                    self.backend_record, prestashop_record["id"], image["id"]
+                self.env["prestashop.product.image"].import_product_image(
+                    self.backend_record,
+                    prestashop_record["id"],
+                    image["id"]
                 )
 
     def import_supplierinfo(self, binding):

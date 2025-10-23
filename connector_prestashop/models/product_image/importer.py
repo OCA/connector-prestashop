@@ -18,19 +18,21 @@ class ProductImageMapper(Component):
     _name = "prestashop.product.image.import.mapper"
     _inherit = "prestashop.import.mapper"
     _apply_on = "prestashop.product.image"
-
     _model_name = "prestashop.product.image"
 
-    direct = [
-        # ('content', 'file_db_store'),
-    ]
+    direct = []
 
     @mapping
     def from_template(self, record):
         binder = self.binder_for("prestashop.product.template")
         template = binder.to_internal(record["id_product"], unwrap=True)
         name = "{}_{}".format(template.name, record["id_image"])
-        return {"owner_id": template.id, "name": name}
+        
+        return {
+            "owner_id": template.id,
+            "owner_model": "product.template",
+            "name": name,
+        }
 
     @mapping
     def backend_id(self, record):
@@ -51,11 +53,6 @@ class ProductImageMapper(Component):
     @mapping
     def storage(self, record):
         return {"storage": "url"}
-        # return {'storage': 'db'}
-
-    @mapping
-    def owner_model(self, record):
-        return {"owner_model": "product.template"}
 
 
 class ProductImageImporter(Component):
@@ -71,21 +68,29 @@ class ProductImageImporter(Component):
     def run(self, template_id, image_id, **kwargs):
         self.template_id = template_id
         self.image_id = image_id
-        binder = self.binder_for("prestashop.product.template")
-        product_tmpl = binder.to_internal(template_id, unwrap=True)
-
+        
+        template_binder = self.binder_for("prestashop.product.template")
+        product_tmpl = template_binder.to_internal(template_id, unwrap=True)
+        
         try:
             super().run(image_id, **kwargs)
-        except PrestaShopWebServiceError:
-            # TODO add activity to warn about he failure
-            if product_tmpl:
-                pass
-        # msg = _("Import of image id `%s` failed. Error: `%s`") % (
-        #     image_id,
-        #     error.msg,
-        # )
-        if str(product_tmpl.default_image_id) != str(image_id):
+        except PrestaShopWebServiceError as error:
+            if hasattr(product_tmpl, 'prestashop_default_image_id'):
+                if str(product_tmpl.prestashop_default_image_id) != str(image_id):
+                    return
+            _logger.warning(
+                "Import of main image id %s for product %s failed: %s",
+                image_id, template_id, error
+            )
             return
-        self.binder_for("prestashop.product.image")
-        image = binder.to_internal(image_id, unwrap=True)
-        product_tmpl.image_1920 = image.image_main
+        
+        if not product_tmpl.image_1920:
+            product_tmpl._compute_image_1920()
+        
+        if hasattr(product_tmpl, 'prestashop_default_image_id'):
+            if str(product_tmpl.prestashop_default_image_id) == str(image_id):
+                image_binder = self.binder_for("prestashop.product.image")
+                image = image_binder.to_internal(image_id, unwrap=True)
+                if image:
+                    product_tmpl.image_1920 = image.image_1920
+
