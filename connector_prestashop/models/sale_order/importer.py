@@ -420,7 +420,31 @@ class SaleOrderImporter(Component):
         res = super()._after_import(binding)
         self._add_shipping_line(binding)
         self.warning_line_without_template(binding)
+
+        data = self.prestashop_record
+        discount = False
+        
+        if self.backend_record.taxes_included:
+            if "total_discounts" in data and data["total_discounts"] != "0.00":
+                discount = data["total_discounts"]
+        else: 
+            if "total_discounts_tax_excl" in data and data["total_discounts_tax_excl"]!= "0.00":
+                discount = data["total_discounts_tax_excl"]
+
+        if discount:
+            self._prepare_order_line_discount_values(self.backend_record.discount_product_id, binding.odoo_id, -1, discount)
+
         return res
+    
+    def _prepare_order_line_discount_values(self, product_id, order_id, product_uom_qty, price_unit):
+        vals = {
+            'order_id': order_id.id,
+            'name': product_id.name,
+            'product_id': product_id.id,
+            'product_uom_qty': product_uom_qty,
+            'price_unit': price_unit,
+        }
+        return self.env['sale.order.line'].sudo().create(vals)
 
     def warning_line_without_template(self, binding):
         if not self.line_template_errors:
