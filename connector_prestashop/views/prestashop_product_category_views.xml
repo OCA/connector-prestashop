@@ -5,6 +5,7 @@
         <field name="arch" type="xml">
             <list create="0">
                 <field name="backend_id" string="Backend" />
+                <field name="odoo_id"/>
                 <field name="prestashop_id" />
                 <field name="date_add" />
                 <field name="date_upd" />

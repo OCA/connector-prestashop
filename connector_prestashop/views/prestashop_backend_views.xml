@@ -41,9 +41,8 @@
                 <sheet>
                     <field name="active" invisible="1" />
                     <div class="oe_button_box" name="button_box">
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
-                        />
-                        <!-- attrs="{'invisible': [('active', '=', True)]}" -->
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
                     </div>
                     <h1>
                         <field name="name" class="oe_inline" />

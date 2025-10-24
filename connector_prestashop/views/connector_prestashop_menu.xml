@@ -79,6 +79,18 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <record id="action_prestashop_res_partner" model="ir.actions.act_window">
+        <field name="name">Partner</field>
+        <field name="res_model">prestashop.res.partner</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_prestashop_sale_orders" model="ir.actions.act_window">
+        <field name="name">PrestaShop Sale Order</field>
+        <field name="res_model">prestashop.sale.order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
     <!-- TODO: Implement security strategy groups="odoo_base.group_oc_manager" -->
     <menuitem
         id="menu_prestashop_external_objects"
@@ -96,6 +108,18 @@
         name="External Languages"
         parent="menu_prestashop_external_objects"
         action="action_prestashop_res_langs"
+    />
+    <menuitem
+        id="menu_prestashop_external_partners"
+        name="External Parters"
+        parent="menu_prestashop_external_objects"
+        action="action_prestashop_res_partner"
+    />
+    <menuitem
+        id="menu_prestashop_external_sale_order"
+        name="External PS Order"
+        parent="menu_prestashop_external_objects"
+        action="action_prestashop_sale_orders"
     />
     <menuitem
         id="menu_prestashop_external_attribute"

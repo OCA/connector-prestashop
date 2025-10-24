@@ -42,6 +42,7 @@
                 <field name="date_upd" />
                 <field name="quantity" />
                 <field name="visibility" />
+                <field name="odoo_id"/>
                 <field name="prestashop_id" />
                 <field name="reference" />
                 <field name="no_export" />

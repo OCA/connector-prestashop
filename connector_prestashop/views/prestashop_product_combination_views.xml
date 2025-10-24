@@ -23,6 +23,7 @@
                 />
                 <field name="backend_id" string="Backend" />
                 <field name="quantity" />
+                <field name="odoo_id"/>
                 <field name="prestashop_id" />
                 <field name="reference" />
                 <field name="no_export" />
