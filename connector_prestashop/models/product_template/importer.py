@@ -779,6 +779,16 @@ class ProductTemplateImporter(Component):
         for category in categories:
             self._import_dependency(category["id"], "prestashop.product.category")
 
+    def _has_to_skip(self, binding=False):
+        """Return True if the import can be skipped"""
+        skip = False
+        if (
+            self.prestashop_record["active"] == "0"
+            and self.backend_record.is_skip_product_not_active
+        ):
+            skip = True
+        return skip
+
 
 class ManufacturerProductDependency(Component):
     # To extend in connector_prestashop_feature module. In this way we

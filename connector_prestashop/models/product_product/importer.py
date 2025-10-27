@@ -276,6 +276,13 @@ class ProductCombinationMapper(Component):
     @mapping
     def default_code(self, record):
         code = record.get("reference")
+        reject_empty_default_code = self.backend_record.reject_empty_default_code
+        if not code and reject_empty_default_code:
+            raise MappingError(
+                _(
+                    "Your product has an empty SKU in PS. <br/>The PrestaShop Backend options is set to reject this behaviour."
+                )
+            )
         if not code:
             code = "{}_{}".format(record["id_product"], record["id"])
         if (
@@ -284,10 +291,10 @@ class ProductCombinationMapper(Component):
         ):
             return {"default_code": code}
         i = 1
-        current_code = "{}_{}".format(code, i)
+        current_code = f"{code}_{i}"
         while self._product_code_exists(current_code):
             i += 1
-            current_code = "{}_{}".format(code, i)
+            current_code = f"{code}_{i}"
         return {"default_code": current_code}
 
     #     @mapping

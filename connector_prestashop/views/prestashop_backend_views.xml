@@ -272,17 +272,15 @@
                         <page string="Options">
                             <group colspan="4">
                                 <group string="Matching option for Product">
-                                    <field name="matching_product_template" />
-                                    <field
-                                        name="matching_product_ch"
-                                    />
-                                    <!-- attrs="{'invisible':[('matching_product_template', '=',
-                                    False)],
-                                                    'required':[('matching_product_template', '=', True)]}" -->
+                                    <field name="matching_product_template"/>
+                                    <field name="matching_product_ch"
+                                        invisible="not matching_product_template"
+                                        required="matching_product_template"/>
+                                    <field name="is_skip_product_not_active"/>
+                                    <field name="reject_empty_default_code"/>
                                 </group>
                                 <group string="Matching option for partner">
-                                    <field name="matching_customer" />
-
+                                    <field name="matching_customer"/>
                                 </group>
                             </group>
                         </page>

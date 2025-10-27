@@ -139,6 +139,14 @@ class PrestashopBackend(models.Model):
         string="Matching Field for product",
     )
 
+    is_skip_product_not_active = fields.Boolean(
+        help="If not active key on product in prestashop, product will be not imported."
+    )
+    reject_empty_default_code = fields.Boolean(
+        string="If default code is empty, don't generate a code based on prestashop_id",
+        default=False,
+    )
+
     matching_customer = fields.Boolean(
         help="The selected fields will be matched to the ref field of the "
         "partner. Please adapt your datas consequently.",
