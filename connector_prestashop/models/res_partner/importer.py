@@ -68,6 +68,8 @@ class PartnerImportMapper(Component):
     def name(self, record):
         parts = [record["firstname"], record["lastname"]]
         name = " ".join(p.strip() for p in parts if p.strip())
+        if record.get("company"):
+            name = record["company"]
         return {"name": name}
 
     @mapping
@@ -248,6 +250,7 @@ class AddressImporter(Component):
                 msg = _("Please, check the VAT number: %s") % vat_number
                 # TODO create activity to warn the vat is incorrect ?
                 _logger.warn(msg)
+
 
 
 class AddressBatchImporter(Component):

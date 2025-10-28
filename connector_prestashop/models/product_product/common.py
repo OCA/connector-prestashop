@@ -8,7 +8,7 @@ class ProductProduct(models.Model):
     _name = "product.product"
     _inherit = [
         _name,
-        # "base_multi_image.owner"
+        #"base_multi_image.owner"
     ]
 
     prestashop_combinations_bind_ids = fields.One2many(
