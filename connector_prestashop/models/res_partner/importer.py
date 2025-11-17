@@ -44,6 +44,18 @@ class PartnerImportMapper(Component):
             return {"date_upd": False}
         return {"date_upd": record["date_upd"]}
 
+    @only_create
+    @mapping
+    def odoo_id(self, record):
+        email = record['email']
+        if self.backend_record.matching_customer:
+            part = self.env['res.partner'].search([('email', '=', email),
+                                                  ('parent_id', '=', False),])
+            if part :
+                return {'odoo_id': part[0].id}
+
+        return {}
+    
     @mapping
     def pricelist(self, record):
         binder = self.binder_for("prestashop.groups.pricelist")
