@@ -194,7 +194,7 @@ class TemplateMapper(Component):
                     product = self.env["product.template"].search(
                         [("default_code", "=", code)], limit=1
                     )
-                    _logger.debug("=== Code and product values: %s" % (product ,code))
+                    _logger.debug("=== Code and product %s values: %s" % (product ,code))
                     if product:
                         return {"odoo_id": product.id}
 
@@ -228,8 +228,8 @@ class TemplateMapper(Component):
             [
                 ("default_code", "=", code),
                 "|",
-                ("company_id", "=", self.backend_record.company_id.id),
-                ("company_id", "=", False),
+                    ("company_id", "=", self.backend_record.company_id.id),
+                    ("company_id", "=", False),
 
             ],
             limit=1,
