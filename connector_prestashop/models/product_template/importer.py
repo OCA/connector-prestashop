@@ -190,7 +190,7 @@ class TemplateMapper(Component):
         if self.backend_record.matching_product_ch == "reference":
             if code:
                 if self._template_code_exists(code):
-                    _logger.debug("=== Code values: %s" % code)
+                    _logger.debug("=== Code values refund: %s" % code)
                     product = self.env["product.template"].search(
                         [("default_code", "=", code)], limit=1
                     )
