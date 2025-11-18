@@ -336,7 +336,9 @@ class TemplateMapper(Component):
     @only_create
     @mapping
     def company_id(self, record):
+        _logger.debbug("ammping company id %s" % record)
         return {"company_id": self.backend_record.company_id.id}
+    
 
     @mapping
     def barcode(self, record):
