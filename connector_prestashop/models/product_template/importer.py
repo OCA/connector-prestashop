@@ -231,6 +231,7 @@ class TemplateMapper(Component):
             ],
             limit=1,
         )
+        _logger.debug("Template values: %s" % template)
         return template and not template_binder.to_external(template, wrap=True)
 
     @mapping
