@@ -51,8 +51,10 @@ class PartnerImportMapper(Component):
         if self.backend_record.matching_customer:
             part = self.env['res.partner'].search([('email', '=', email),
                                                   ('parent_id', '=', False),])
+            part.sorted("sale_order_count")
+
             if part :
-                return {'odoo_id': part[0].id}
+                return {'odoo_id': part[-1:].id}
 
         return {}
     
