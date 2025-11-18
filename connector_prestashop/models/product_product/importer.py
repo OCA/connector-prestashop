@@ -372,6 +372,7 @@ class ProductCombinationMapper(Component):
                     )
                     if product:
                         return {"odoo_id": product.id}
+                _logger.debug("Code values: %s", code)
             if self.backend_record.matching_product_ch == "barcode":
                 if code:
                     product = self.env["product.product"].search(
@@ -383,7 +384,7 @@ class ProductCombinationMapper(Component):
         template = self.get_main_template_binding(record).odoo_id
         # if variant already exists linked it since we can't have 2 variants with
         # the exact same attributes
-
+        _logger.debug("Template values: %s", template)
         ps_key = self.backend_record.get_version_ps_key("product_option_value")
         option_values = (
             record.get("associations", {})
