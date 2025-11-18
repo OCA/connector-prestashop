@@ -18,7 +18,7 @@
                     <field name="prestashop_id" />
                 </group>
                 <group>
-                    <field name="openerp_state_ids" nolabel="1" mode="tree" colspan="2">
+                    <field name="openerp_state_ids" nolabel="1" mode="list" colspan="2">
                         <list editable="top">
                             <field name="name" />
                         </list>
