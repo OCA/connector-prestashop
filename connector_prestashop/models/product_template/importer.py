@@ -186,12 +186,15 @@ class TemplateMapper(Component):
 
     def _match_template_odoo_record(self, record):
         code = record.get(self.backend_record.matching_product_ch)
+        _logger.debug("=== Code values: %s" % code)
         if self.backend_record.matching_product_ch == "reference":
             if code:
                 if self._template_code_exists(code):
+                    _logger.debug("=== Code values: %s" % code)
                     product = self.env["product.template"].search(
                         [("default_code", "=", code)], limit=1
                     )
+                    _logger.debug("=== Code and product values: %s" % (product ,code))
                     if product:
                         return {"odoo_id": product.id}
 
