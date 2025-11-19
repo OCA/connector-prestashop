@@ -645,6 +645,16 @@ class ProductTemplateImporter(Component):
         data.pop('company_id', None)
         return super()._update(binding, data)
     
+    def _create(self, record):
+        data = self.mapper.map_record(record).values()
+        
+        if data.get('odoo_id'):
+            data.pop('company_id', None)
+        
+        binding = self.model.with_context(**self._create_context()).create(data)
+        self.binder.bind(self.prestashop_id, binding)
+        return binding
+    
     def _import_combination(self, combination, **kwargs):
         """Import a combination
 
