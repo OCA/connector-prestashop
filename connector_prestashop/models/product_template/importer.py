@@ -35,7 +35,7 @@ class TemplateMapper(Component):
 
     direct = [
         ("wholesale_price", "wholesale_price"),
-        (external_to_m2o("id_shop_default"), "default_shop_id"),
+        #(external_to_m2o("id_shop_default"), "default_shop_id"),
         ("link_rewrite", "link_rewrite"),
         ("reference", "reference"),
         ("available_for_order", "available_for_order"),
@@ -50,6 +50,16 @@ class TemplateMapper(Component):
             return {}
         else:
             return {"standard_price": record.get("wholesale_price", 0.0)}
+        
+    @mapping
+    def default_shop_id(self, record):
+        """Map id_shop_default only if it exists"""
+        if record.get('id_shop_default'):
+            binder = self.binder_for('prestashop.shop')
+            shop = binder.to_internal(record['id_shop_default'], unwrap=True)
+            if shop:
+                return {'default_shop_id': shop.id}
+        return {}
 
     @mapping
     def weight(self, record):
