@@ -53,7 +53,6 @@ class TemplateMapper(Component):
         
     @mapping
     def default_shop_id(self, record):
-        """Map id_shop_default only if it exists"""
         if record.get('id_shop_default'):
             binder = self.binder_for('prestashop.shop')
             shop = binder.to_internal(record['id_shop_default'], unwrap=True)
@@ -294,7 +293,8 @@ class TemplateMapper(Component):
 
     @mapping
     def active(self, record):
-        return {"always_available": bool(int(record["active"]))}
+        active = record.get('active', '1')
+        return {"always_available": bool(int(active))}
 
     @mapping
     def sale_ok(self, record):
