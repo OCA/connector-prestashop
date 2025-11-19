@@ -332,12 +332,13 @@ class TemplateMapper(Component):
     @mapping
     def backend_id(self, record):
         return {"backend_id": self.backend_record.id}
-
-    # @only_create
-    # @mapping
-    # def company_id(self, record):
-    #     _logger.debug("maping company id %s" % record)
-    #     return {"company_id": self.backend_record.company_id.id}
+    
+    #TODO: find a better solution
+    @only_create
+    @mapping
+    def company_id(self, record):
+        _logger.debug("maping company id %s" % record)
+        return {}
     
 
     @mapping
