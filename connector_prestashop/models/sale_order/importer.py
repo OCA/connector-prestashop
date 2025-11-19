@@ -12,6 +12,7 @@ from odoo.addons.connector_ecommerce.components.sale_order_onchange import \
 from odoo.addons.queue_job.exception import FailedJobError, RetryableJobError
 
 from ...components.exception import OrderImportRuleRetry
+from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -422,17 +423,22 @@ class SaleOrderImporter(Component):
         self.warning_line_without_template(binding)
 
         data = self.prestashop_record
-        discount = False
+        discount = 0.0
         
         if self.backend_record.taxes_included:
-            if "total_discounts" in data and data["total_discounts"] != "0.00":
-                discount = data["total_discounts"]
+            if "total_discounts" in data:
+                discount = float(data["total_discounts"])
         else: 
-            if "total_discounts_tax_excl" in data and data["total_discounts_tax_excl"]!= "0.00":
-                discount = data["total_discounts_tax_excl"]
+            if "total_discounts_tax_excl" in data:
+                discount = float(data["total_discounts_tax_excl"])
 
-        if discount:
-            self._prepare_order_line_discount_values(self.backend_record.discount_product_id, binding.odoo_id, -1, discount)
+        if not float_is_zero(discount, precision_digits=2):
+            self._prepare_order_line_discount_values(
+                self.backend_record.discount_product_id, 
+                binding.odoo_id, 
+                -1, 
+                discount
+            )
 
         return res
     
