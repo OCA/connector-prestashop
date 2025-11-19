@@ -640,7 +640,11 @@ class ProductTemplateImporter(Component):
                 )
         if remaining_attr_lines:
             remaining_attr_lines.unlink()
-
+            
+    def _update(self, binding, data):
+        data.pop('company_id', None)
+        return super()._update(binding, data)
+    
     def _import_combination(self, combination, **kwargs):
         """Import a combination
 
