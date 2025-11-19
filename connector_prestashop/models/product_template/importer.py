@@ -35,7 +35,7 @@ class TemplateMapper(Component):
 
     direct = [
         ("wholesale_price", "wholesale_price"),
-        #(external_to_m2o("id_shop_default"), "default_shop_id"),
+        (external_to_m2o("id_shop_default"), "default_shop_id"),
         ("link_rewrite", "link_rewrite"),
         ("reference", "reference"),
         ("available_for_order", "available_for_order"),
@@ -50,15 +50,6 @@ class TemplateMapper(Component):
             return {}
         else:
             return {"standard_price": record.get("wholesale_price", 0.0)}
-        
-    @mapping
-    def default_shop_id(self, record):
-        if record.get('id_shop_default'):
-            binder = self.binder_for('prestashop.shop')
-            shop = binder.to_internal(record['id_shop_default'], unwrap=True)
-            if shop:
-                return {'default_shop_id': shop.id}
-        return {}
 
     @mapping
     def weight(self, record):
@@ -293,8 +284,7 @@ class TemplateMapper(Component):
 
     @mapping
     def active(self, record):
-        active = record.get('active', '1')
-        return {"always_available": bool(int(active))}
+        return {"always_available": bool(int(record["active"]))}
 
     @mapping
     def sale_ok(self, record):
@@ -651,20 +641,6 @@ class ProductTemplateImporter(Component):
         if remaining_attr_lines:
             remaining_attr_lines.unlink()
             
-    def _update(self, binding, data):
-        data.pop('company_id', None)
-        return super()._update(binding, data)
-    
-    def _create(self, record):
-        data = self.mapper.map_record(record).values()
-        
-        if data.get('odoo_id'):
-            data.pop('company_id', None)
-        
-        binding = self.model.with_context(**self._create_context()).create(data)
-        self.binder.bind(self.prestashop_id, binding)
-        return binding
-    
     def _import_combination(self, combination, **kwargs):
         """Import a combination
 
