@@ -175,6 +175,13 @@ class PrestashopBackend(models.Model):
         .search([("code", "=", self.env.user.lang)])[0]
         .id,
     )
+    default_invoice_policy = fields.Selection(
+        [('order', 'Quantités commandées'),
+         ('delivery', 'Quantités livrées')],
+        string="Politique de facturation par défaut",
+        default='delivery',
+        help="Politique de facturation appliquée lors de l'import des produits depuis PrestaShop"
+    )
 
     @api.constrains("product_qty_field")
     def check_product_qty_field_dependencies_installed(self):

@@ -45,6 +45,11 @@ class TemplateMapper(Component):
     ]
 
     @mapping
+    def invoice_policy(self, record):
+        policy = self.backend_record.default_invoice_policy
+        return {'invoice_policy': policy}
+
+    @mapping
     def standard_price(self, record):
         if self.has_combinations(record):
             return {}
