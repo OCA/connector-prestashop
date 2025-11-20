@@ -43,7 +43,7 @@ class StockQuant(models.Model):
             location = quant.location_id
             super().write(vals)
             if location in ps_locations:
-                quant.invalidate_cache()
+                quant.invalidate_recordset()
                 quant.product_id.update_prestashop_qty()
         return True
 
