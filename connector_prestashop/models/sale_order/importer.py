@@ -10,9 +10,9 @@ from odoo.addons.connector.components.mapper import mapping
 from odoo.addons.connector_ecommerce.components.sale_order_onchange import \
     SaleOrderOnChange
 from odoo.addons.queue_job.exception import FailedJobError, RetryableJobError
+from odoo.tools import float_is_zero
 
 from ...components.exception import OrderImportRuleRetry
-from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -413,7 +413,7 @@ class SaleOrderImporter(Component):
             else binding.total_shipping_tax_excluded
         )
         if binding.odoo_id.carrier_id:
-            binding.odoo_id.with_context(from_prestashop = True)._create_delivery_line(
+            binding.odoo_id.with_context(from_prestashop=True)._create_delivery_line(
                 binding.odoo_id.carrier_id, shipping_total
             )
 
@@ -424,33 +424,36 @@ class SaleOrderImporter(Component):
 
         data = self.prestashop_record
         discount = 0.0
-        
+
         if self.backend_record.taxes_included:
             if "total_discounts" in data:
                 discount = float(data["total_discounts"])
-        else: 
+        else:
             if "total_discounts_tax_excl" in data:
                 discount = float(data["total_discounts_tax_excl"])
 
         if not float_is_zero(discount, precision_digits=2):
             self._prepare_order_line_discount_values(
-                self.backend_record.discount_product_id, 
-                binding.odoo_id, 
-                -1, 
-                discount
+                self.backend_record.discount_product_id, binding.odoo_id, -1, discount
             )
 
+        if binding.fical_position_id:
+            _logger.debug("Apply fiscal position %s" % binding.fical_position_id)
+            binding.action_update_taxes()
+
         return res
-    
-    def _prepare_order_line_discount_values(self, product_id, order_id, product_uom_qty, price_unit):
+
+    def _prepare_order_line_discount_values(
+        self, product_id, order_id, product_uom_qty, price_unit
+    ):
         vals = {
-            'order_id': order_id.id,
-            'name': product_id.name,
-            'product_id': product_id.id,
-            'product_uom_qty': product_uom_qty,
-            'price_unit': price_unit,
+            "order_id": order_id.id,
+            "name": product_id.name,
+            "product_id": product_id.id,
+            "product_uom_qty": product_uom_qty,
+            "price_unit": price_unit,
         }
-        return self.env['sale.order.line'].sudo().create(vals)
+        return self.env["sale.order.line"].sudo().create(vals)
 
     def warning_line_without_template(self, binding):
         if not self.line_template_errors:
@@ -568,19 +571,17 @@ class SaleOrderLineMapper(Component):
         if not result:
             product_data = self.product_id(record)
             _logger.debug(product_data)
-            product_id = product_data['product_id']
+            product_id = product_data["product_id"]
             _logger.debug(product_id)
-            product_id = self.env['product.product'].browse([product_id])
+            product_id = self.env["product.product"].browse([product_id])
             _logger.debug(product_id)
 
             result = product_id.taxes_id
-
 
         if not result:
             return {}
 
         return {"tax_id": [(6, 0, result.ids)]}
-
 
     @mapping
     def backend_id(self, record):
