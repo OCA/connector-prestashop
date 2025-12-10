@@ -413,7 +413,7 @@ class SaleOrderImporter(Component):
             else binding.total_shipping_tax_excluded
         )
         if binding.odoo_id.carrier_id:
-            binding.odoo_id._create_delivery_line(
+            binding.odoo_id.with_context(from_prestashop = True)._create_delivery_line(
                 binding.odoo_id.carrier_id, shipping_total
             )
 
@@ -563,34 +563,15 @@ class SaleOrderLineMapper(Component):
         for ps_tax in taxes:
             if ps_tax and ps_tax.get("id"):
                 result |= self._find_tax(ps_tax["id"])
+        _logger.debug(result)
 
         if not result:
+            product_data = self.product_id(record)
+            product_id = product_data['product_id']
+            product_id = self.env['product.product'].browse(['product_id'])
 
-            product = False
+            result = product_id.taxes_id
 
-            attr_id = record.get("product_attribute_id")
-            if attr_id and str(attr_id).isdigit() and int(attr_id) != 0:
-                combination_binder = self.binder_for("prestashop.product.combination")
-                product = combination_binder.to_internal(int(attr_id), unwrap=True)
-
-            else:
-                tmpl_id = record.get("product_id")
-                if tmpl_id and str(tmpl_id).isdigit():
-                    binder = self.binder_for("prestashop.product.template")
-                    template = binder.to_internal(int(tmpl_id), unwrap=True)
-                    if template:
-                        product = self.env["product.product"].search(
-                            [
-                                ("product_tmpl_id", "=", template.id),
-                                "|",
-                                ("company_id", "=", self.backend_record.company_id.id),
-                                ("company_id", "=", False),
-                            ],
-                            limit=1,
-                        )
-
-            if product:
-                result = product.taxes_id or product.product_tmpl_id.taxes_id
 
         if not result:
             return {}

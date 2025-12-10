@@ -21,14 +21,10 @@ class SaleOrder(models.Model):
 
     def _create_delivery_line(self, carrier, price_unit):
         sol = super()._create_delivery_line(carrier, price_unit)
-
-        if carrier.invoice_policy == 'real':
-            sol['name'] = _(
-                "%(name)s (Estimated Cost: %(cost)s)",
-                name=sol["name"],
-                cost=self.currency_id.format(price_unit),
-            )
-
+        from_prestashop = self.env.context.get('from_prestashop', False)
+        if from_prestashop:
+            sol.price_unit =price_unit
+            
         return sol
 
 
