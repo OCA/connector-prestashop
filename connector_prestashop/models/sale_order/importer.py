@@ -437,8 +437,8 @@ class SaleOrderImporter(Component):
                 self.backend_record.discount_product_id, binding.odoo_id, -1, discount
             )
 
-        if binding.fical_position_id:
-            _logger.debug("Apply fiscal position %s" % binding.fical_position_id)
+        if binding.fiscal_position_id:
+            _logger.debug("Apply fiscal position %s" % binding.fiscal_position_id)
             binding.action_update_taxes()
 
         return res
