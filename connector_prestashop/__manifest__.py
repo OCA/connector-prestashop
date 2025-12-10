@@ -15,6 +15,7 @@
         "product_multi_image",  # oca/product-attribute #TODO
         "connector_ecommerce",  # oca/connector-ecommerce
         "purchase",
+        "stock_delivery",
     ],
     "external_dependencies": {
         "python": [

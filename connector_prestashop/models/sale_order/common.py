@@ -3,7 +3,7 @@
 import logging
 from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.component.core import Component
 from prestapyt import PrestaShopWebServiceDict
 
@@ -18,6 +18,18 @@ class SaleOrder(models.Model):
         inverse_name="odoo_id",
         string="PrestaShop Bindings",
     )
+
+    def _create_delivery_line(self, carrier, price_unit):
+        sol = super()._create_delivery_line(carrier, price_unit)
+
+        if carrier.invoice_policy == 'real':
+            sol['name'] = _(
+                "%(name)s (Estimated Cost: %(cost)s)",
+                name=sol["name"],
+                cost=self.currency_id.format(price_unit),
+            )
+
+        return sol
 
 
 class PrestashopSaleOrder(models.Model):

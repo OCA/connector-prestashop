@@ -412,22 +412,10 @@ class SaleOrderImporter(Component):
             if self.backend_record.taxes_included
             else binding.total_shipping_tax_excluded
         )
-        
         if binding.odoo_id.carrier_id:
             binding.odoo_id._create_delivery_line(
-                binding.odoo_id.carrier_id, 
-                shipping_total
+                binding.odoo_id.carrier_id, shipping_total
             )
-            
-            delivery_line = binding.odoo_id.order_line.filtered(
-                lambda l: l.is_delivery and l.product_id == binding.odoo_id.carrier_id.product_id
-            )
-            
-            if delivery_line:
-                delivery_line.write({
-                    'price_unit': shipping_total,
-                    'name': binding.odoo_id.carrier_id.name,
-                })
 
     def _after_import(self, binding):
         res = super()._after_import(binding)
@@ -561,45 +549,54 @@ class SaleOrderLineMapper(Component):
 
     @mapping
     def tax_id(self, record):
-        taxes = (
-            record.get("associations", {})
-            .get("taxes", {})
-            .get(self.backend_record.get_version_ps_key("tax"), [])
-        )
-        if not isinstance(taxes, list):
+
+        taxes_block = record.get("associations", {}).get("taxes", {})
+        tax_key = self.backend_record.get_version_ps_key("tax")
+        taxes = taxes_block.get(tax_key, [])
+
+        if isinstance(taxes, dict):
             taxes = [taxes]
-        
+        elif not isinstance(taxes, list):
+            taxes = []
+
         result = self.env["account.tax"].browse()
         for ps_tax in taxes:
-            result |= self._find_tax(ps_tax["id"])
-        
+            if ps_tax and ps_tax.get("id"):
+                result |= self._find_tax(ps_tax["id"])
+
         if not result:
-            product = self._get_product_from_record(record)
-            if product and product.taxes_id:
-                result = product.taxes_id
-        
+
+            product = False
+
+            attr_id = record.get("product_attribute_id")
+            if attr_id and str(attr_id).isdigit() and int(attr_id) != 0:
+                combination_binder = self.binder_for("prestashop.product.combination")
+                product = combination_binder.to_internal(int(attr_id), unwrap=True)
+
+            else:
+                tmpl_id = record.get("product_id")
+                if tmpl_id and str(tmpl_id).isdigit():
+                    binder = self.binder_for("prestashop.product.template")
+                    template = binder.to_internal(int(tmpl_id), unwrap=True)
+                    if template:
+                        product = self.env["product.product"].search(
+                            [
+                                ("product_tmpl_id", "=", template.id),
+                                "|",
+                                ("company_id", "=", self.backend_record.company_id.id),
+                                ("company_id", "=", False),
+                            ],
+                            limit=1,
+                        )
+
+            if product:
+                result = product.taxes_id or product.product_tmpl_id.taxes_id
+
+        if not result:
+            return {}
+
         return {"tax_id": [(6, 0, result.ids)]}
 
-    def _get_product_from_record(self, record):
-        if int(record.get("product_attribute_id", 0)):
-            combination_binder = self.binder_for("prestashop.product.combination")
-            product = combination_binder.to_internal(
-                record["product_attribute_id"],
-                unwrap=True,
-            )
-        else:
-            binder = self.binder_for("prestashop.product.template")
-            template = binder.to_internal(record["product_id"], unwrap=True)
-            product = self.env["product.product"].search(
-                [
-                    ("product_tmpl_id", "=", template.id),
-                    "|",
-                    ("company_id", "=", self.backend_record.company_id.id),
-                    ("company_id", "=", False),
-                ],
-                limit=1,
-            )
-        return product
 
     @mapping
     def backend_id(self, record):
