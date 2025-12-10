@@ -567,8 +567,11 @@ class SaleOrderLineMapper(Component):
 
         if not result:
             product_data = self.product_id(record)
+            _logger.debug(product_data)
             product_id = product_data['product_id']
+            _logger.debug(product_id)
             product_id = self.env['product.product'].browse(['product_id'])
+            _logger.debug(product_id)
 
             result = product_id.taxes_id
 
