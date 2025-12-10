@@ -439,7 +439,7 @@ class SaleOrderImporter(Component):
 
         if binding.fiscal_position_id:
             _logger.debug("Apply fiscal position %s" % binding.fiscal_position_id)
-            binding.action_update_taxes()
+            binding.odoo_id.action_update_taxes()
 
         return res
 
