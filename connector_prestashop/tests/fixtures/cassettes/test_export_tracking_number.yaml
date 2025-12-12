@@ -1,0 +1,129 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+      method: GET
+      uri: http://172.24.0.3/api/order_carriers?filter%5Bid_order%5D=2
+    response:
+      body: {string: !!python/unicode '<?xml version="1.0" encoding="UTF-8"?>
+
+            <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+
+            <order_carriers>
+
+            <order_carrier id="2" xlink:href="http://172.24.0.3/api/order_carriers/2"/>
+
+            </order_carriers>
+
+            </prestashop>
+
+            '}
+      headers:
+        access-time: ["1473775010"]
+        connection: [Keep-Alive]
+        content-length: ["220"]
+        content-sha1: [45a0fe9a60581f394413f9412c495b188b305c7b]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Tue, 13 Sep 2016 13:56:50 GMT"]
+        execution-time: ["0.003"]
+        keep-alive: ["timeout=5, max=100"]
+        psws-version: [1.6.1.6]
+        server: [Apache/2.4.10 (Debian)]
+        set-cookie:
+          [
+            "PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkdV3taYp5U8ee8JE2MZ4ahqZurApm1q0zNi86k20DjmlLBZx5FFQ5pElTk%2F2IYMXUF1X5YTLlZ%2FPxVTEBrS2s%2B0%3D000079;
+            expires=Mon, 03-Oct-2016 13:56:50 GMT; Max-Age=1728000; path=/; httponly",
+          ]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Cookie:
+          [
+            PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkdV3taYp5U8ee8JE2MZ4ahqZurApm1q0zNi86k20DjmlLBZx5FFQ5pElTk%2F2IYMXUF1X5YTLlZ%2FPxVTEBrS2s%2B0%3D000079,
+          ]
+        User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+      method: GET
+      uri: http://172.24.0.3/api/order_carriers/2
+    response:
+      body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+            <prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<order_carrier>\n\
+            \t<id><![CDATA[2]]></id>\n\t<id_order
+            xlink:href=\"http://172.24.0.3/api/orders/2\"\
+            ><![CDATA[2]]></id_order>\n\t<id_carrier
+            xlink:href=\"http://172.24.0.3/api/carriers/2\"\
+            ><![CDATA[2]]></id_carrier>\n\t<id_order_invoice><![CDATA[2]]></id_order_invoice>\n\
+            \t<weight><![CDATA[0.000000]]></weight>\n\t<shipping_cost_tax_excl><![CDATA[2.000000]]></shipping_cost_tax_excl>\n\
+            \t<shipping_cost_tax_incl><![CDATA[2.000000]]></shipping_cost_tax_incl>\n\t\
+            <tracking_number><![CDATA[ABCD]]></tracking_number>\n\t<date_add><![CDATA[2016-09-02\
+            \ 14:37:22]]></date_add>\n</order_carrier>\n</prestashop>\n"}
+      headers:
+        access-time: ["1473775010"]
+        connection: [Keep-Alive]
+        content-length: ["672"]
+        content-sha1: [58d1914d4b9b27ca2c7dd63a1a26a8004281335f]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Tue, 13 Sep 2016 13:56:50 GMT"]
+        execution-time: ["0.002"]
+        keep-alive: ["timeout=5, max=99"]
+        psws-version: [1.6.1.6]
+        server: [Apache/2.4.10 (Debian)]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
+  - request:
+      body:
+        !!python/unicode '<?xml version="1.0"
+        encoding="UTF-8"?><prestashop><order_carrier><date_add>2016-09-02
+        14:37:22</date_add><shipping_cost_tax_incl>2.000000</shipping_cost_tax_incl><id_order>2</id_order><weight>0.000000</weight><tracking_number>xyz</tracking_number><id_carrier>2</id_carrier><id>2</id><id_order_invoice>2</id_order_invoice><shipping_cost_tax_excl>2.000000</shipping_cost_tax_excl></order_carrier></prestashop>'
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        Content-Length: ["407"]
+        Content-Type: [text/xml]
+        Cookie:
+          [
+            PrestaShop-5d8d433970511c3f73f62801a1af4b33=1FIe2YdPik06ZunxEubtkdV3taYp5U8ee8JE2MZ4ahqZurApm1q0zNi86k20DjmlLBZx5FFQ5pElTk%2F2IYMXUF1X5YTLlZ%2FPxVTEBrS2s%2B0%3D000079,
+          ]
+        User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+      method: PUT
+      uri: http://172.24.0.3/api/order_carriers
+    response:
+      body: {string: !!python/unicode "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+            <prestashop
+            xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<order_carrier>\n\
+            \t<id><![CDATA[2]]></id>\n\t<id_order
+            xlink:href=\"http://172.24.0.3/api/orders/2\"\
+            ><![CDATA[2]]></id_order>\n\t<id_carrier
+            xlink:href=\"http://172.24.0.3/api/carriers/2\"\
+            ><![CDATA[2]]></id_carrier>\n\t<id_order_invoice><![CDATA[2]]></id_order_invoice>\n\
+            \t<weight><![CDATA[0.000000]]></weight>\n\t<shipping_cost_tax_excl><![CDATA[2.000000]]></shipping_cost_tax_excl>\n\
+            \t<shipping_cost_tax_incl><![CDATA[2.000000]]></shipping_cost_tax_incl>\n\t\
+            <tracking_number><![CDATA[xyz]]></tracking_number>\n\t<date_add><![CDATA[2016-09-02\
+            \ 14:37:22]]></date_add>\n</order_carrier>\n</prestashop>\n"}
+      headers:
+        access-time: ["1473775010"]
+        connection: [Keep-Alive]
+        content-length: ["671"]
+        content-sha1: [ce0bdc6073a4876212c7673d686d5904b667c5b1]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Tue, 13 Sep 2016 13:56:50 GMT"]
+        execution-time: ["0.011"]
+        keep-alive: ["timeout=5, max=98"]
+        psws-version: [1.6.1.6]
+        server: [Apache/2.4.10 (Debian)]
+        vary: [Accept-Encoding]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
+version: 1

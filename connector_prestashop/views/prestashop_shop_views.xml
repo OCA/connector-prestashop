@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_prestashop_shop_form" model="ir.ui.view">
+        <field name="model">prestashop.shop</field>
+        <field name="arch" type="xml">
+            <form string="PrestaShop Shop">
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group>
+                        <field name="shop_group_id" />
+                        <field name="odoo_id" />
+                    </group>
+                    <group>
+                        <field name="default_url" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_prestashop_shop_tree" model="ir.ui.view">
+        <field name="model">prestashop.shop</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="shop_group_id" />
+                <field name="odoo_id" />
+            </list>
+        </field>
+    </record>
+    <record id="action_prestashop_shop" model="ir.actions.act_window">
+        <field name="name">PrestaShop Shops</field>
+        <field name="res_model">prestashop.shop</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

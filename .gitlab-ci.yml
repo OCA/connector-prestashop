@@ -1,0 +1,36 @@
+stages:
+  - git-robot
+  - check_repository_structure
+  - check_python_syntax
+
+git-rebase-branch:
+  stage: git-robot
+  script:
+    - echo 'Has to be improved to autoamtically rebase'
+    #- git clone git@gitlab.dev.mind-and-go.net:${CI_PROJECT_PATH}.git
+    #- cd ${CI_PROJECT_NAME}
+    #- git checkout ts
+    #- git rebase master
+    #- git push --force origin ts
+
+check_repository_minimum_files:
+  stage: check_repository_structure
+  script:
+    - echo "Checking minimal repository structure"
+    - echo 'Is .gitignore file preset and created FROM gitlab.dev.mind-and-go.net and use templates'
+    - test -e ./.gitignore
+    - echo 'Is a README.md file present? Precise whats going on there'
+    - test -e ./README.md
+    - echo 'Is a requirements.txt file present ? put inside the python libraries dependencies'
+    - test -e ./requirements.txt
+
+check_modules_structure:
+  stage: check_repository_structure
+  script:
+    - echo "Checking minimal module structure"
+
+pylint:
+  stage: check_python_syntax
+  script:
+    - echo "Running pylint on the project"
+    - pylint --load-plugins=pylint_odoo -d all -e odoolint ./*

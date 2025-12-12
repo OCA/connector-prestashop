@@ -1,0 +1,25 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.4.3 CPython/2.7.9 Linux/4.4.0-36-generic]
+      method: HEAD
+      uri: http://172.24.0.3/api/
+    response:
+      body: {string: !!python/unicode ""}
+      headers:
+        access-time: ["1473763571"]
+        connection: [Keep-Alive]
+        content-sha1: [d2357b59b19acaa550f3073323b54743ad80f413]
+        content-type: [text/xml;charset=utf-8]
+        date: ["Tue, 13 Sep 2016 10:46:11 GMT"]
+        execution-time: ["0.001"]
+        keep-alive: ["timeout=5, max=100"]
+        psws-version: [1.6.1.6]
+        server: [Apache/2.4.10 (Debian)]
+        x-powered-by: [PrestaShop Webservice]
+      status: {code: 200, message: OK}
+version: 1

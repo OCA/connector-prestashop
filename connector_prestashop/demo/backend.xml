@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record id="prestashop_backend_demo" model="prestashop.backend">
+        <field name="name">Prestashop</field>
+        <field name="version">1.6.1.2</field>
+        <field name="location">http://localhost:8080</field>
+        <field name="warehouse_id" ref="stock.warehouse0" />
+        <field
+            name="discount_product_id"
+            ref="connector_ecommerce.product_product_discount"
+        />
+        <field
+            name="shipping_product_id"
+            ref="connector_ecommerce.product_product_shipping"
+        />
+    </record>
+
+</odoo>
